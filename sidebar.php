@@ -6,7 +6,9 @@
 
     echo "CONTRIBUTOR<BR>";
     echo "<INPUT TYPE=TEXT><BR>";
-    echo "Contributor Location:<BR><SELECT></SELECT><P>";
+    echo "Contributor Location:<BR><SELECT>";
+    fill_state_list ();
+    echo "</SELECT><P>";
 
     echo "<INPUT TYPE=CHECKBOX> CANDIDATES<BR>";
     echo "<INPUT TYPE=RADIO NAME=candidates> All candidates<BR>";
@@ -34,6 +36,14 @@
     echo "<INPUT TYPE=SUBMIT VALUE='Search'>";
 
     echo "</FORM><P>";
+  }
+
+
+  function fill_state_list () {
+    $result = my_query ("SELECT StateName, StateCode FROM sub_states WHERE IsState = 1 ORDER BY StateName");
+    while ($row = $result->fetch_assoc()) {
+      echo "<OPTION VALUE={$row["StateCode"]}>{$row["StateName"]}</OPTION>";
+    }
   }
 
 
