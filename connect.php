@@ -9,11 +9,4 @@
     $ret = $my_conn->query ($query);
     return $ret;
   }  
-
-
-#===============================================================================================
-# process data row
-  function my_fetch_row ($ret) {
-    return $ret->fetch_assoc();  	  
-  }
 ?>
