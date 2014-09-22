@@ -3,9 +3,6 @@
   # MapLight
   # Mike Krejci
 
-  # Turn on error_reporting during development
-  error_reporting (E_ALL);
-
   # Connect to mysql database
   require ("connect.php");
 
