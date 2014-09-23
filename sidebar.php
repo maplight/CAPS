@@ -10,7 +10,7 @@
     fill_state_list ();
     echo "</SELECT><P>";
 
-    echo "<INPUT TYPE=CHECKBOX> CANDIDATES<BR>";
+    echo "CANDIDATES<BR>";
     echo "<INPUT TYPE=RADIO NAME=candidates> All candidates<BR>";
     echo "<INPUT TYPE=RADIO NAME=candidates> These candidates<BR> <INPUT TYPE=TEXT><BR><SELECT>";
     fill_candidate_names ();
@@ -19,13 +19,15 @@
     fill_offices_sought ();
     echo "</SELECT><P>";
 
-    echo "<INPUT TYPE=CHECKBOX> BALLOT MEASURES<BR>";
-    echo "Elections<BR> <SELECT></SELECT><BR>";
-    echo "Propositions<BR> <SELECT></SELECT><BR>";
+    echo "BALLOT MEASURES<BR>";
+    echo "<INPUT TYPE=RADIO NAME=measures> Elections<BR> <SELECT>";
+    fill_elections ();
+    echo "</SELECT><BR>";
+    echo "<INPUT TYPE=RADIO NAME=measures> Propositions<BR> <SELECT></SELECT><BR>";
     echo "Support & Oppose<BR> <SELECT></SELECT><BR>";
     echo "<INPUT TYPE=CHECKBOX> Exclude contributions between allied committees<P>";
 
-    echo "<INPUT TYPE=CHECKBOX> COMMITTES<BR>";
+    echo "COMMITTES<BR>";
     echo "These committees<BR> <INPUT TYPE=TEXT><BR><SELECT></SELECT><P>";
     
     echo "DATE<BR>";
@@ -61,6 +63,14 @@
     $result = my_query ("SELECT DISTINCT RecipientCandidateOffice FROM smry_offices ORDER BY RecipientCandidateOffice");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION>{$row["RecipientCandidateOffice"]}</OPTION>";
+    }
+  }
+
+
+  function fill_elections () {
+    $result = my_query ("SELECT Election FROM smry_elections ORDER BY Election DESC");
+    while ($row = $result->fetch_assoc()) {
+      echo "<OPTION VALUE={$row["Election"]}>" . date ("M j, Y", strtotime ($row["Election"])) . "</OPTION>";
     }
   }
 ?>
