@@ -24,9 +24,12 @@ CREATE TABLE smry_offices (
 );
 INSERT INTO smry_offices SELECT DISTINCT RecipientCandidateOffice, RecipientCandidateDistrict FROM pwr_ca_contrib_cand_committees;
 
-DROP TABLE IF EXISTS smry_elections;
-CREATE TABLE smry_elections (
+DROP TABLE IF EXISTS smry_propositions;
+CREATE TABLE smry_propositions (
   Election DATE NOT NULL,
-  KEY Election(Election)
+  Target VARCHAR(100) NOT NULL,
+  KEY Election(Election),
+  KEY Target(Target(10))
 );
-INSERT INTO smry_elections SELECT DISTINCT Election FROM pwr_ca_contrib_other_committees;
+INSERT INTO smry_propositions SELECT DISTINCT Election, Target FROM pwr_ca_contrib_other_committees;
+
