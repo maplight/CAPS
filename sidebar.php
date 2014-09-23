@@ -12,8 +12,8 @@
 
     echo "<B>CANDIDATES</B><BR>";
     echo "<INPUT TYPE=RADIO NAME=candidates VALUE=0 CHECKED> All candidates<BR>";
-    echo "<INPUT TYPE=RADIO NAME=candidates VALUE=1> Search candidates:<BR><INPUT TYPE=TEXT NAME=search_candidates STYLE=\"width:95%;\"><BR>";
-    echo "<SELECT NAME=candidates STYLE=\"width:95%;\">";
+    echo "<INPUT TYPE=RADIO NAME=candidates VALUE=1> Search candidates:<BR><INPUT TYPE=TEXT NAME=search_candidates ID=search_candidates STYLE=\"width:95%;\" onkeyup=\"filter_candidates_list();\"><BR>";
+    echo "<SELECT NAME=candidates_list ID=candidates_list STYLE=\"width:95%;\">";
     $js_candidates = fill_candidate_names ();
     echo "</SELECT><BR>";
     echo "<INPUT TYPE=RADIO NAME=candidates VALUE=2> Office sought<BR><SELECT NAME=office STYLE=\"width:95%;\">";
@@ -48,7 +48,7 @@
 
     echo "</FORM><P>";
 
-    echo "<SCRIPT>";
+    echo "<SCRIPT type=text/javascript>";
     echo "var candidates = [{$js_candidates}\"\"];";
     echo "var propositions = [{$js_propositions}\"\"];";
     echo "</SCRIPT>";
@@ -68,7 +68,7 @@
     $result = my_query ("SELECT RecipientCandidateNameNormalized FROM smry_candidates ORDER BY RecipientCandidateNameNormalized");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION>{$row["RecipientCandidateNameNormalized"]}</OPTION>";
-      $javascript_array .= "\"{$row["RecipientCandidateNameNormalized"]}\",";
+      $javascript_array .= "\"" . str_replace ("\"", "", $row["RecipientCandidateNameNormalized"]) . "\",";
     }
     return $javascript_array;
   }
@@ -95,7 +95,7 @@
     $result = my_query ("SELECT * FROM smry_propositions ORDER BY Target, Election DESC");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION VALUE={$row["Election"]}>{$row["Target"]} (" . date ("M j, Y", strtotime ($row["Election"])) . ")</OPTION>";
-      $javascript_array .= "\"{$row["Target"]}\",";
+      $javascript_array .= "\"" . str_replace ("\"", "'", $row["Target"]) . "\",";
     }
     return $javascript_array;
   }

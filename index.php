@@ -3,6 +3,8 @@
   <META http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <TITLE>CAPS Project Development</TITLE>
   <LINK rel="stylesheet" type="text/css" href="style.css"/>
+  <SCRIPT type=text/javascript src=jquery.js></SCRIPT>
+  <SCRIPT type=text/javascript src=jscript.js></SCRIPT>
 </HEAD>
 <BODY>
 
