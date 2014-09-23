@@ -32,7 +32,7 @@
     echo "<INPUT TYPE=CHECKBOX> Exclude contributions between allied committees<P>";
 
     echo "COMMITTES<BR>";
-    echo "These committees<BR> <INPUT TYPE=TEXT><BR><SELECT></SELECT><P>";
+    echo "Committee name contains<BR><INPUT TYPE=TEXT><P>";
     
     echo "DATE<BR>";
     echo "<INPUT TYPE=RADIO NAME=dates> All dates and election cycles<BR>";
