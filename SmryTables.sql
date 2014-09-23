@@ -33,3 +33,10 @@ CREATE TABLE smry_propositions (
 );
 INSERT INTO smry_propositions SELECT DISTINCT Election, Target FROM pwr_ca_contrib_other_committees;
 
+DROP TABLE IF EXISTS smry_cycles;
+CREATE TABLE smry_cycles (
+  ElectionCycle SMALLINT NOT NULL,
+  KEY ElectionCycle(ElectionCycle)
+);
+INSERT INTO smry_cycles SELECT DISTINCT ElectionCycle FROM pwr_ca_contrib_cand_committees WHERE ElectionCycle > 2000 UNION SELECT DISTINCT ElectionCycle FROM pwr_ca_contrib_other_committees WHERE ElectionCycle > 2000;
+
