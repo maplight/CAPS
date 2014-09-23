@@ -15,7 +15,9 @@
     echo "<INPUT TYPE=RADIO NAME=candidates> These candidates<BR> <INPUT TYPE=TEXT><BR><SELECT>";
     fill_candidate_names ();
     echo "</SELECT><BR>";
-    echo "<INPUT TYPE=RADIO NAME=candidates> Office sought<BR> <SELECT></SELECT><P>";
+    echo "<INPUT TYPE=RADIO NAME=candidates> Office sought<BR> <SELECT>";
+    fill_offices_sought ();
+    echo "</SELECT><P>";
 
     echo "<INPUT TYPE=CHECKBOX> BALLOT MEASURES<BR>";
     echo "Elections<BR> <SELECT></SELECT><BR>";
@@ -48,9 +50,17 @@
 
 
   function fill_candidate_names () {
-    $result = my_query ("SELECT RecipientCandidateNameNormalized FROM sub_candidate_names ORDER BY RecipientCandidateNameNormalized");
+    $result = my_query ("SELECT RecipientCandidateNameNormalized FROM sub_candidates ORDER BY RecipientCandidateNameNormalized");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION>{$row["RecipientCandidateNameNormalized"]}</OPTION>";
+    }
+  }
+
+
+  function fill_offices_sought () {
+    $result = my_query ("SELECT DISTINCT RecipientCandidateOffice FROM sub_offices ORDER BY RecipientCandidateOffice");
+    while ($row = $result->fetch_assoc()) {
+      echo "<OPTION>{$row["RecipientCandidateOffice"]}</OPTION>";
     }
   }
 ?>
