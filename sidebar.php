@@ -42,7 +42,7 @@
 
 
   function fill_state_list () {
-    $result = my_query ("SELECT StateName, StateCode FROM sub_states WHERE IsState = 1 ORDER BY StateName");
+    $result = my_query ("SELECT StateName, StateCode FROM smry_states WHERE IsState = 1 ORDER BY StateName");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION VALUE={$row["StateCode"]}>{$row["StateName"]}</OPTION>";
     }
@@ -50,7 +50,7 @@
 
 
   function fill_candidate_names () {
-    $result = my_query ("SELECT RecipientCandidateNameNormalized FROM sub_candidates ORDER BY RecipientCandidateNameNormalized");
+    $result = my_query ("SELECT RecipientCandidateNameNormalized FROM smry_candidates ORDER BY RecipientCandidateNameNormalized");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION>{$row["RecipientCandidateNameNormalized"]}</OPTION>";
     }
@@ -58,7 +58,7 @@
 
 
   function fill_offices_sought () {
-    $result = my_query ("SELECT DISTINCT RecipientCandidateOffice FROM sub_offices ORDER BY RecipientCandidateOffice");
+    $result = my_query ("SELECT DISTINCT RecipientCandidateOffice FROM smry_offices ORDER BY RecipientCandidateOffice");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION>{$row["RecipientCandidateOffice"]}</OPTION>";
     }
