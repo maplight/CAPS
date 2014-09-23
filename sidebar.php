@@ -14,7 +14,7 @@
     echo "<INPUT TYPE=RADIO NAME=candidates VALUE=0 CHECKED> All candidates<BR>";
     echo "<INPUT TYPE=RADIO NAME=candidates VALUE=1> Search candidates:<BR><INPUT TYPE=TEXT NAME=search_candidates STYLE=\"width:95%;\"><BR>";
     echo "<SELECT NAME=candidates STYLE=\"width:95%;\">";
-    fill_candidate_names ();
+    $js_candidates = fill_candidate_names ();
     echo "</SELECT><BR>";
     echo "<INPUT TYPE=RADIO NAME=candidates VALUE=2> Office sought<BR><SELECT NAME=office STYLE=\"width:95%;\">";
     fill_offices_sought ();
@@ -24,8 +24,9 @@
     echo "<INPUT TYPE=RADIO NAME=measures VALUE=0 CHECKED> Select election<BR><SELECT NAME=elections STYLE=\"width:95%;\">";
     fill_elections ();
     echo "</SELECT><BR>";
-    echo "<INPUT TYPE=RADIO NAME=measures VALUE=1> Select proposition<BR><SELECT NAME=propositions STYLE=\"width:95%;\">";
-    fill_propositions ();
+    echo "<INPUT TYPE=RADIO NAME=measures VALUE=1> Search propositions:<BR><INPUT TYPE=TEXT NAME=search_propositions STYLE=\"width:95%;\"><BR>";
+    echo "<SELECT NAME=propositions STYLE=\"width:95%;\">";
+    $js_propositions = fill_propositions ();
     echo "</SELECT><BR>";
     echo "Support & Oppose<BR>";
     echo "<INPUT TYPE=CHECKBOX CHECKED> Support<BR>";
@@ -46,6 +47,11 @@
     echo "<INPUT TYPE=SUBMIT VALUE='Search'>";
 
     echo "</FORM><P>";
+
+    echo "<SCRIPT>";
+    echo "var candidates = [{$js_candidates}\"\"];";
+    echo "var propositions = [{$js_propositions}\"\"];";
+    echo "</SCRIPT>";
   }
 
 
@@ -58,10 +64,13 @@
 
 
   function fill_candidate_names () {
+    $javascript_array = "";
     $result = my_query ("SELECT RecipientCandidateNameNormalized FROM smry_candidates ORDER BY RecipientCandidateNameNormalized");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION>{$row["RecipientCandidateNameNormalized"]}</OPTION>";
+      $javascript_array .= "\"{$row["RecipientCandidateNameNormalized"]}\",";
     }
+    return $javascript_array;
   }
 
 
@@ -82,10 +91,13 @@
 
 
   function fill_propositions () {
+    $javascript_array = "";
     $result = my_query ("SELECT * FROM smry_propositions ORDER BY Target, Election DESC");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION VALUE={$row["Election"]}>{$row["Target"]} (" . date ("M j, Y", strtotime ($row["Election"])) . ")</OPTION>";
+      $javascript_array .= "\"{$row["Target"]}\",";
     }
+    return $javascript_array;
   }
 
 
