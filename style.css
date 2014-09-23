@@ -1,0 +1,56 @@
+body {
+  top: 0px;
+  margin: 0px;
+  padding: 0px;
+  font: 12px Tahoma, sans-serif;
+}
+
+input, select, textarea {
+  border: 1px solid #000000;
+  margin: 2px 2px 2px 2px;
+  padding: 0px;
+  font: 12px Tahoma, sans-serif;
+  background-color: #CCCCCC;
+  color: #220033;
+}
+
+#page {
+  background: white;
+  min-width: 780px;
+  max-width: 1260px;
+}
+
+#page-wrap #inside {
+}
+
+#header {
+  background: #267f23;
+  text-align: center;
+  padding: 2px;
+}
+
+#sidebar {
+  border-right: 1px solid #000000;
+  width: 150px;
+  float: left;
+  padding-left: 5px;
+  padding-top: 10px;
+}
+
+
+	
+#main-content {
+	background: url(images/left-sidebar.gif) repeat-y white;
+	padding-left: 230px;
+	padding-top: 20px;
+}
+	
+	
+
+#footer {
+	background: #267f23;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	color: white;
+}
