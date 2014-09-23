@@ -39,7 +39,8 @@
     echo "<INPUT TYPE=RADIO NAME=dates> Date range<BR> <INPUT TYPE=TEXT> <INPUT TYPE=TEXT><P>";
 
     echo "ELECTION CYCLES<BR>";
-    echo "<INPUT TYPE=CHECKBOX> xxxx<P>";
+    fill_election_cycles ();
+    echo "<P>";
 
     echo "<INPUT TYPE=SUBMIT VALUE='Search'>";
 
@@ -83,6 +84,14 @@
     $result = my_query ("SELECT * FROM smry_propositions ORDER BY Target, Election DESC");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION VALUE={$row["Election"]}>{$row["Target"]} (" . date ("M j, Y", strtotime ($row["Election"])) . ")</OPTION>";
+    }
+  }
+
+
+  function fill_election_cycles () {
+    $result = my_query ("SELECT ElectionCycle FROM smry_cycles ORDER BY ElectionCycle DESC");
+    while ($row = $result->fetch_assoc()) {
+      echo "<INPUT TYPE=CHECKBOX> {$row["ElectionCycle"]}<BR>";
     }
   }
 ?>
