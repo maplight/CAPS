@@ -12,7 +12,7 @@
 
     echo "CANDIDATES<BR>";
     echo "<INPUT TYPE=RADIO NAME=candidates> All candidates<BR>";
-    echo "<INPUT TYPE=RADIO NAME=candidates> These candidates<BR> <INPUT TYPE=TEXT><BR><SELECT>";
+    echo "<INPUT TYPE=RADIO NAME=candidates> These candidates<BR><INPUT TYPE=TEXT><BR><SELECT>";
     fill_candidate_names ();
     echo "</SELECT><BR>";
     echo "<INPUT TYPE=RADIO NAME=candidates> Office sought<BR> <SELECT>";
@@ -20,13 +20,15 @@
     echo "</SELECT><P>";
 
     echo "BALLOT MEASURES<BR>";
-    echo "<INPUT TYPE=RADIO NAME=measures> Elections<BR> <SELECT>";
+    echo "<INPUT TYPE=RADIO NAME=measures> Elections<BR><SELECT>";
     fill_elections ();
     echo "</SELECT><BR>";
-    echo "<INPUT TYPE=RADIO NAME=measures> Propositions<BR> <SELECT>";
+    echo "<INPUT TYPE=RADIO NAME=measures> Propositions<BR><SELECT>";
     fill_propositions ();
     echo "</SELECT><BR>";
-    echo "Support & Oppose<BR> <SELECT></SELECT><BR>";
+    echo "Support & Oppose<BR>";
+    echo "<INPUT TYPE=CHECKBOX CHECKED> Support<BR>";
+    echo "<INPUT TYPE=CHECKBOX CHECKED> Oppose<BR>";
     echo "<INPUT TYPE=CHECKBOX> Exclude contributions between allied committees<P>";
 
     echo "COMMITTES<BR>";
