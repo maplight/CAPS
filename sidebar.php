@@ -5,7 +5,7 @@
     echo "<FORM>";
 
     echo "<B>CONTRIBUTOR</B><BR>";
-    echo "Contributor name:<BR><INPUT TYPE=TEXT NAME=contributor STYLE=\"width:95%;\"><BR>";
+    echo "Contributor name contains:<BR><INPUT TYPE=TEXT NAME=contributor STYLE=\"width:95%;\"><BR>";
     echo "Contributor Location:<BR><SELECT NAME=location STYLE=\"width:95%;\"><OPTION VALUE=\"\">-- Any location</OPTION>";
     fill_state_list ();
     echo "</SELECT><P>";
