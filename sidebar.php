@@ -23,7 +23,9 @@
     echo "<INPUT TYPE=RADIO NAME=measures> Elections<BR> <SELECT>";
     fill_elections ();
     echo "</SELECT><BR>";
-    echo "<INPUT TYPE=RADIO NAME=measures> Propositions<BR> <SELECT></SELECT><BR>";
+    echo "<INPUT TYPE=RADIO NAME=measures> Propositions<BR> <SELECT>";
+    fill_propositions ();
+    echo "</SELECT><BR>";
     echo "Support & Oppose<BR> <SELECT></SELECT><BR>";
     echo "<INPUT TYPE=CHECKBOX> Exclude contributions between allied committees<P>";
 
@@ -68,9 +70,17 @@
 
 
   function fill_elections () {
-    $result = my_query ("SELECT Election FROM smry_elections ORDER BY Election DESC");
+    $result = my_query ("SELECT DISTINCT Election FROM smry_propositions ORDER BY Election DESC");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION VALUE={$row["Election"]}>" . date ("M j, Y", strtotime ($row["Election"])) . "</OPTION>";
+    }
+  }
+
+
+  function fill_propositions () {
+    $result = my_query ("SELECT * FROM smry_propositions ORDER BY Target, Election DESC");
+    while ($row = $result->fetch_assoc()) {
+      echo "<OPTION VALUE={$row["Election"]}>{$row["Target"]} (" . date ("M j, Y", strtotime ($row["Election"])) . ")</OPTION>";
     }
   }
 ?>
