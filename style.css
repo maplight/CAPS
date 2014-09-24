@@ -10,11 +10,9 @@ input, select, textarea {
   margin: 2px 2px 2px 2px;
   padding: 0px;
   font: 12px Tahoma, sans-serif;
-  background-color: #CCCCCC;
-  color: #220033;
 }
 
-#candidates_list, #propositions_list {
+#location_list, #candidates_list, #office_list, #election_list, #propositions_list {
   font: 11px Tahoma, sans-serif;
 }
 

@@ -6,26 +6,25 @@
 
     echo "<B>CONTRIBUTOR</B><BR>";
     echo "Contributor name contains:<BR><INPUT TYPE=TEXT NAME=contributor STYLE=\"width:95%;\"><BR>";
-    echo "Contributor Location:<BR><SELECT NAME=location STYLE=\"width:95%;\"><OPTION VALUE=\"\">-- Any location</OPTION>";
+    echo "Contributor Location:<BR><SELECT MULTIPLE NAME=location_list ID=location_list STYLE=\"width:95%;\"><OPTION VALUE=\"ALL\" SELECTED>-- All states</OPTION>";
     fill_state_list ();
     echo "</SELECT><P>";
 
     echo "<B>CANDIDATES</B><BR>";
-    echo "<INPUT TYPE=RADIO NAME=candidates VALUE=0 CHECKED> All candidates<BR>";
-    echo "<INPUT TYPE=RADIO NAME=candidates VALUE=1> Search candidates:<BR><INPUT TYPE=TEXT NAME=search_candidates ID=search_candidates STYLE=\"width:95%;\" onkeyup=\"filter_candidates_list();\"><BR>";
-    echo "<SELECT MULTIPLE NAME=candidates_list ID=candidates_list STYLE=\"width:95%;\">";
+    echo "Search candidates:<BR><INPUT TYPE=TEXT NAME=search_candidates ID=search_candidates STYLE=\"width:95%;\" onkeyup=\"filter_candidates_list();\"><BR>";
+    echo "<SELECT MULTIPLE NAME=candidates_list ID=candidates_list STYLE=\"width:95%;\"><OPTION VALUE=\"ALL\" SELECTED>-- All candidates</OPTION>";
     $js_candidates = fill_candidate_names ();
     echo "</SELECT><BR>";
-    echo "<INPUT TYPE=RADIO NAME=candidates VALUE=2> Office sought<BR><SELECT NAME=office STYLE=\"width:95%;\">";
+    echo "Office sought<BR><SELECT MULTIPLE NAME=office_list ID=office_list STYLE=\"width:95%;\"><OPTION VALUE=\"ALL\" SELECTED>-- All offices</OPTION>";
     fill_offices_sought ();
     echo "</SELECT><P>";
 
     echo "<B>BALLOT MEASURES</B><BR>";
-    echo "<INPUT TYPE=RADIO NAME=measures VALUE=0 CHECKED> Select election<BR><SELECT NAME=elections STYLE=\"width:95%;\">";
+    echo "Select election<BR><SELECT MULTIPLE NAME=elections_list ID=election_list STYLE=\"width:95%;\"><OPTION VALUE=\"ALL\" SELECTED>-- All elections</OPTION>";
     fill_elections ();
     echo "</SELECT><BR>";
-    echo "<INPUT TYPE=RADIO NAME=measures VALUE=1> Search propositions:<BR><INPUT TYPE=TEXT NAME=search_propositions ID=search_propositions STYLE=\"width:95%;\" onkeyup=\"filter_propositions_list();\"><BR>";
-    echo "<SELECT NAME=propositions_list ID=propositions_list STYLE=\"width:95%;\">";
+    echo "Search propositions:<BR><INPUT TYPE=TEXT NAME=search_propositions ID=search_propositions STYLE=\"width:95%;\" onkeyup=\"filter_propositions_list();\"><BR>";
+    echo "<SELECT NAME=propositions_list ID=propositions_list STYLE=\"width:95%;\"><OPTION VALUE=\"ALL\">-- All propositions</OPTION>";
     $js_propositions = fill_propositions ();
     echo "</SELECT><BR>";
     echo "Support & Oppose<BR>";
@@ -37,8 +36,7 @@
     echo "Committee name contains<BR><INPUT TYPE=TEXT NAME=committee STYLE=\"width:95%;\"><P>";
     
     echo "<B>DATE</B><BR>";
-    echo "<INPUT TYPE=RADIO NAME=dates VALUE=0 CHECKED> All dates<BR>";
-    echo "<INPUT TYPE=RADIO NAME=dates VALUE=1> Date range<BR> <INPUT TYPE=TEXT NAME=start_date STYLE=\"width:60px;\"> - <INPUT TYPE=TEXT NAME=end_date STYLE=\"width:60px;\"><P>";
+    echo "Date range<BR> <INPUT TYPE=TEXT NAME=start_date VALUE=\"1/1/1980\" STYLE=\"width:64px;\"> - <INPUT TYPE=TEXT NAME=end_date VALUE=\"" . date ("n/j/Y") . "\" STYLE=\"width:64px;\"><P>";
 
     echo "<B>ELECTION CYCLES</B><BR>";
     fill_election_cycles ();

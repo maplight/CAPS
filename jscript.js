@@ -8,10 +8,18 @@ function filter_select(select_array, filter_value) {
 
 function filter_candidates_list() {
   var options_array = candidates.slice(0);
+  $('#candidates_list').empty();
+
   if ($('#search_candidates').val().toUpperCase() != '') {
     options_array = filter_select(options_array, $('#search_candidates').val().toUpperCase());
+  } else {
+    $('#candidates_list')
+      .append($('<option></option>')
+      .attr('value', 'ALL')
+      .attr('selected', 'SELECTED')
+      .text('-- All candidates')); 
   }
-  $('#candidates_list').empty();
+
   $.each(options_array, function(key, value) {   
     $('#candidates_list')
       .append($('<option></option>')
@@ -23,10 +31,17 @@ function filter_candidates_list() {
 
 function filter_propositions_list() {
   var options_array = propositions.slice(0);
+  $('#propositions_list').empty();
+
   if ($('#search_propositions').val().toUpperCase() != '') {
     options_array = filter_select(options_array, $('#search_propositions').val().toUpperCase());
+  } else {
+    $('#propositions_list')
+      .append($('<option></option>')
+      .attr('value', 'ALL')
+      .text('-- All propositions')); 
   }
-  $('#propositions_list').empty();
+
   $.each(options_array, function(key, value) {   
     $('#propositions_list')
       .append($('<option></option>')
