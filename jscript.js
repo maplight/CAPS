@@ -19,3 +19,18 @@ function filter_candidates_list() {
       .text(value)); 
   });
 }
+
+
+function filter_propositions_list() {
+  var options_array = propositions.slice(0);
+  if ($('#search_propositions').val().toUpperCase() != '') {
+    options_array = filter_select(options_array, $('#search_propositions').val().toUpperCase());
+  }
+  $('#propositions_list').empty();
+  $.each(options_array, function(key, value) {   
+    $('#propositions_list')
+      .append($('<option></option>')
+      .attr('value', value)
+      .text(value)); 
+  });
+}

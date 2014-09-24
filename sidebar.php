@@ -13,7 +13,7 @@
     echo "<B>CANDIDATES</B><BR>";
     echo "<INPUT TYPE=RADIO NAME=candidates VALUE=0 CHECKED> All candidates<BR>";
     echo "<INPUT TYPE=RADIO NAME=candidates VALUE=1> Search candidates:<BR><INPUT TYPE=TEXT NAME=search_candidates ID=search_candidates STYLE=\"width:95%;\" onkeyup=\"filter_candidates_list();\"><BR>";
-    echo "<SELECT NAME=candidates_list ID=candidates_list STYLE=\"width:95%;\">";
+    echo "<SELECT MULTIPLE NAME=candidates_list ID=candidates_list STYLE=\"width:95%;\">";
     $js_candidates = fill_candidate_names ();
     echo "</SELECT><BR>";
     echo "<INPUT TYPE=RADIO NAME=candidates VALUE=2> Office sought<BR><SELECT NAME=office STYLE=\"width:95%;\">";
@@ -24,8 +24,8 @@
     echo "<INPUT TYPE=RADIO NAME=measures VALUE=0 CHECKED> Select election<BR><SELECT NAME=elections STYLE=\"width:95%;\">";
     fill_elections ();
     echo "</SELECT><BR>";
-    echo "<INPUT TYPE=RADIO NAME=measures VALUE=1> Search propositions:<BR><INPUT TYPE=TEXT NAME=search_propositions STYLE=\"width:95%;\"><BR>";
-    echo "<SELECT NAME=propositions STYLE=\"width:95%;\">";
+    echo "<INPUT TYPE=RADIO NAME=measures VALUE=1> Search propositions:<BR><INPUT TYPE=TEXT NAME=search_propositions ID=search_propositions STYLE=\"width:95%;\" onkeyup=\"filter_propositions_list();\"><BR>";
+    echo "<SELECT NAME=propositions_list ID=propositions_list STYLE=\"width:95%;\">";
     $js_propositions = fill_propositions ();
     echo "</SELECT><BR>";
     echo "Support & Oppose<BR>";
@@ -95,7 +95,7 @@
     $result = my_query ("SELECT * FROM smry_propositions ORDER BY Target, Election DESC");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION VALUE={$row["Election"]}>{$row["Target"]} (" . date ("M j, Y", strtotime ($row["Election"])) . ")</OPTION>";
-      $javascript_array .= "\"" . str_replace ("\"", "'", $row["Target"]) . "\",";
+      $javascript_array .= "\"" . str_replace ("\"", "'", $row["Target"]) . " (" . date ("M j, Y", strtotime ($row["Election"])) . ")\",";
     }
     return $javascript_array;
   }
