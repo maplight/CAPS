@@ -16,6 +16,7 @@
   # Connect to mysql database
   require ("connect.php");
   require ("sidebar.php");
+  require ("results.php");
 
   # Set up the page div and inside wrapper
   echo "<DIV ID=page><DIV ID=inside>";
@@ -28,6 +29,11 @@
   # Create the sidebar search form div
   echo "<DIV ID=sidebar>";
   build_sidebar_form ();
+  echo "</DIV>";
+
+  # Create the results div
+  echo "<DIV ID=results>";
+  build_results_table ();
   echo "</DIV>";
 
   # end of page and inside wrapper
