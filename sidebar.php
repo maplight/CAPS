@@ -37,7 +37,7 @@
     echo "Committee name contains<BR><INPUT TYPE=TEXT NAME=committee STYLE=\"width:95%;\"><P>";
     
     echo "<B>DATE</B><BR>";
-    echo "<INPUT TYPE=RADIO NAME=dates VALUE=0 CHECKED> All dates and cycles<BR>";
+    echo "<INPUT TYPE=RADIO NAME=dates VALUE=0 CHECKED> All dates<BR>";
     echo "<INPUT TYPE=RADIO NAME=dates VALUE=1> Date range<BR> <INPUT TYPE=TEXT NAME=start_date STYLE=\"width:60px;\"> - <INPUT TYPE=TEXT NAME=end_date STYLE=\"width:60px;\"><P>";
 
     echo "<B>ELECTION CYCLES</B><BR>";
@@ -102,11 +102,9 @@
 
 
   function fill_election_cycles () {
-    $default_cycle = "CHECKED";
     $result = my_query ("SELECT ElectionCycle FROM smry_cycles ORDER BY ElectionCycle DESC");
     while ($row = $result->fetch_assoc()) {
-      echo "<INPUT TYPE=CHECKBOX {$default_cycle}> {$row["ElectionCycle"]}<BR>";
-      $default_cycle = "";
+      echo "<INPUT TYPE=CHECKBOX CHECKED> {$row["ElectionCycle"]}<BR>";
     }
   }
 ?>
