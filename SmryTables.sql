@@ -1,9 +1,11 @@
+RENAME TABLE caps_contributions TO contributions;
+
 DROP TABLE IF EXISTS smry_candidates;
 CREATE TABLE smry_candidates (
   RecipientCandidateNameNormalized VARCHAR(250) NOT NULL,
   KEY RecipientCandidateNameNormalized(RecipientCandidateNameNormalized(10))
 );
-INSERT INTO smry_candidates SELECT DISTINCT RecipientCandidateNameNormalized FROM pwr_ca_contrib_cand_committees WHERE RecipientCandidateNameNormalized <> '' ORDER BY RecipientCandidateNameNormalized;
+INSERT INTO smry_candidates SELECT DISTINCT RecipientCandidateNameNormalized FROM contributions WHERE RecipientCandidateNameNormalized <> '';
 
 DROP TABLE IF EXISTS smry_states;
 CREATE TABLE smry_states (
@@ -22,21 +24,21 @@ CREATE TABLE smry_offices (
   RecipientCandidateDistrict VARCHAR(50) NOT NULL,
   KEY RecipientCandidateOffice(RecipientCandidateOffice(10))
 );
-INSERT INTO smry_offices SELECT DISTINCT RecipientCandidateOffice, RecipientCandidateDistrict FROM pwr_ca_contrib_cand_committees;
+INSERT INTO smry_offices SELECT DISTINCT RecipientCandidateOffice, RecipientCandidateDistrict FROM contributions WHERE RecipientCandidateOffice <> '';
 
 DROP TABLE IF EXISTS smry_propositions;
 CREATE TABLE smry_propositions (
   Election DATE NOT NULL,
-  Target VARCHAR(100) NOT NULL,
+  Target VARCHAR(250) NOT NULL,
   KEY Election(Election),
   KEY Target(Target(10))
 );
-INSERT INTO smry_propositions SELECT DISTINCT Election, Target FROM pwr_ca_contrib_other_committees;
+INSERT INTO smry_propositions SELECT DISTINCT Election, Target FROM contributions WHERE Target <> '';
 
 DROP TABLE IF EXISTS smry_cycles;
 CREATE TABLE smry_cycles (
   ElectionCycle SMALLINT NOT NULL,
   KEY ElectionCycle(ElectionCycle)
 );
-INSERT INTO smry_cycles SELECT DISTINCT ElectionCycle FROM pwr_ca_contrib_cand_committees WHERE ElectionCycle > 2000 UNION SELECT DISTINCT ElectionCycle FROM pwr_ca_contrib_other_committees WHERE ElectionCycle > 2000;
+INSERT INTO smry_cycles SELECT DISTINCT ElectionCycle FROM contributions WHERE ElectionCycle > 2000;
 
