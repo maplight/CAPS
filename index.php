@@ -126,8 +126,8 @@
     <li class="listInlineLastChild">(916) 653-6814</li>
     </ul>
     <ul>
-    <li><a href="#top">Back to Top</a></li>
-    <li><a href="/">Homepage</a></li>
+    <li><a href="http://registertovote.ca.gov/#top">Back to Top</a></li>
+    <li><a href="http://registertovote.ca.gov/">Homepage</a></li>
     <li class="listInlineLastChild"><a href="//www.sos.ca.gov/free-doc-readers.htm">Free Document Readers</a></li>
     </ul>
 	<!-- // COPYRIGHT -->
