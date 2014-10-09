@@ -21,11 +21,9 @@
 
   # Set up the page div and inside wrapper
   echo "<DIV ID=page><DIV ID=inside>";
-
-  # Display any header here <-- user will set this
-  echo "<DIV ID=header>";
 ?>
 
+<!-- California SOS header page -->
     <div class="frme" id="top">
     <!-- utility navigation -->
     <div id="utl" class="clearfix">
@@ -63,8 +61,6 @@
     </div><!--end of .mainNavCtnr-->
 
 <?php
-  echo "</DIV>";
-
   # Create the sidebar search form div
   echo "<DIV ID=sidebar>";
   build_sidebar_form ();
@@ -74,8 +70,9 @@
   echo "<DIV ID=results>";
   build_results_table ();
   echo "</DIV>";
-
 ?>
+
+<!-- California SOS footer page -->
     <footer id="footer" class="grid-100 grid-parent" lang="en-US">
 	<!-- footer navigation -->
 	<div class="clearfix">
