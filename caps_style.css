@@ -37,3 +37,11 @@ input, select, textarea {
   padding-left: 210px;
   padding-top: 15px;
 }
+
+#search {
+  border: 1px solid #000000;
+  margin: 0px;
+  padding: 3px 8px 3px 8px;
+  font: 14px Tahoma, sans-serif;
+  font-weight: bold;
+}
