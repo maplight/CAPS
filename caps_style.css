@@ -25,31 +25,15 @@ input, select, textarea {
 #page-wrap #inside {
 }
 
-#header {
-  background: #267f23;
-  text-align: center;
-  padding: 2px;
-}
-
 #sidebar {
   border-right: 1px solid #000000;
-  width: 180px;
+  width: 200px;
   float: left;
   padding-left: 5px;
   padding-top: 10px;
 }
 	
 #results {
-  padding-left: 200px;
+  padding-left: 210px;
   padding-top: 15px;
-}
-	
-	
-
-#footer {
-	background: #267f23;
-	text-align: center;
-	padding-top: 20px;
-	padding-bottom: 20px;
-	color: white;
 }
