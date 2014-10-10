@@ -4,8 +4,61 @@
       # No form search yet
       echo "<P>&nbsp;</P><BLOCKQUOTE><B>Search political contributions from 2001 through the present, using the controls on the left.</B></BLOCKQUOTE>";
     } else {
-      # Form search entered
+      parse_search_form ($_POST);
+      # Parse search form resultsForm search entered
+      
       echo "<PRE>"; print_r ($_POST); echo "</PRE>";
     }
+  }
+
+  function parse_search_form ($search_data) {
+
+# contributor
+
+    # build locations query
+    $DonorState = "";
+    if (isset ($search_data["location_list"])) {
+      foreach ($search_data["location_list"] as $state) {
+        if ($state != "ALL") {$DonorState .= "DonorState = '{$state}' OR ";}
+      }
+      $DonorState = substr ($DonorState, 0, -4); # Remove the final OR
+    }
+
+# search_candidates
+
+# candidates_list (array)
+
+# office_list (array)
+
+# elections_list (array)
+
+# search_propositions
+
+# propositions_list
+
+# support
+
+# oppose
+
+# committee 
+
+# start_date
+
+# end_date
+
+    # build cycles query
+    $ElectionCycle = "";
+    if (isset ($search_data["cycles"])) {
+      foreach ($search_data["cycles"] as $cycle) {
+        $ElectionCycle .= "ElectionCycle = $cycle OR ";
+      }
+      $ElectionCycle = substr ($ElectionCycle, 0, -4); # Remove the final OR
+    }
+
+
+echo "location_list: " . $DonorState . "<BR>";
+echo "cycles: " . $ElectionCycle . "<BR>";
+
+
   }
 ?>
