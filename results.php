@@ -106,13 +106,11 @@
     if ($Committee != "") {$Committee = "MATCH (contributions_search.RecipientCommitteeNameNormalized) AGAINST ('" . $Committee . "' IN BOOLEAN MODE)";} 
 
     # build date & cycle query
-    $StartDate = "";
-    $EndDate = "";
+    $DateRange = "";
     $ElectionCycle = "";
     if (! isset ($search_data["all_dates"])) {
       # user is narrowing date / cycle search
-      $StartDate = date ("Y-m-d", strtotime ($search_data["start_date"]));
-      $EndDate = date ("Y-m-d", strtotime ($search_data["end_date"]));
+      $DateRange = "contributions_search.TargetDate >= '" . date ("Y-m-d", strtotime ($search_data["start_date"])) . " AND contributions_search.TargetDate <= '" . date ("Y-m-d", strtotime ($search_data["end_date"])) . "'";
 
       # build cycles query
       if (isset ($search_data["cycles"])) {
@@ -136,8 +134,7 @@ echo "<P>support: " . $Support . "</P>";
 echo "<P>oppose: " . $Oppose . "</P>";
 echo "<P>exclude: " . $Allied . "</P>";
 echo "<P>committee: " . $Committee . "</P>";
-echo "<P>start_date: " . $StartDate . "</P>";
-echo "<P>end_date: " . $EndDate . "</P>";
+echo "<P>date_range: " . $DateRange . "</P>";
 echo "<P>cycles: " . $ElectionCycle . "</P>";
 
   }
