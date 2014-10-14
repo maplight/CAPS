@@ -40,7 +40,9 @@
     echo "Committee name contains<BR><INPUT TYPE=TEXT NAME=committee STYLE=\"width:95%;\"><HR STYLE=\"width:98%;\">";
     
     echo "<B STYLE=\"font-size:1.2em;\">Dates:</B><BR>";
-    echo "Date range<BR> <INPUT TYPE=TEXT NAME=start_date VALUE=\"1/1/1980\" STYLE=\"width:64px;\"> - <INPUT TYPE=TEXT NAME=end_date VALUE=\"" . date ("n/j/Y") . "\" STYLE=\"width:64px;\"><P>";
+    echo "<INPUT NAME=all_dates TYPE=CHECKBOX CHECKED> All dates and election cycles<BR STYLE=\"line-height:190%;\">";
+    echo "<B>Date range</B><BR> <INPUT TYPE=TEXT NAME=start_date VALUE=\"1/1/1980\" STYLE=\"width:64px;\"> - <INPUT TYPE=TEXT NAME=end_date VALUE=\"" . date ("n/j/Y") . "\" STYLE=\"width:64px;\">";
+    echo "<BR STYLE=\"line-height:190%;\">";
 
     echo "<B>Election Cycles:</B><BR>";
     fill_election_cycles ();

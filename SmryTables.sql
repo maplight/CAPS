@@ -12,6 +12,7 @@ INSERT INTO smry_states VALUES ('Alaska','AK',1),('Alabama','AL',1),('Arkansas',
 
 RENAME TABLE caps_contributions_quick TO contributions;
 
+
 DROP TABLE IF EXISTS contributions_search;
 CREATE TABLE contributions_search ENGINE=MYISAM
   SELECT
@@ -21,7 +22,14 @@ CREATE TABLE contributions_search ENGINE=MYISAM
    DonorOrganization,
    DonorState,
    RecipientCandidateNameNormalized,
-   RecipientCandidateOffice
+   RecipientCandidateOffice,
+   Election,
+   Target,
+   Position,
+   AlliedCommittee,
+   RecipientCommitteeNameNormalized,
+   TransactionDate,
+   ElectionCycle
 FROM contributions;
 
 ALTER TABLE contributions_search
@@ -29,7 +37,15 @@ ALTER TABLE contributions_search
   ADD INDEX DonorState(DonorState),
   ADD FULLTEXT RecipientCandidateNameNormalized_fulltext(RecipientCandidateNameNormalized),
   ADD INDEX RecipientCandidateNameNormalized(RecipientCandidateNameNormalized(10)),
-  ADD INDEX RecipientCandidateOffice(RecipientCandidateOffice(10));
+  ADD INDEX RecipientCandidateOffice(RecipientCandidateOffice(10)),
+  ADD INDEX Election(Election),
+  ADD FULLTEXT Target_fulltext(Target),
+  ADD INDEX Target(Target(10)),
+  ADD INDEX `Position`(`Position`(10)),
+  ADD INDEX AlliedCommittee(AlliedCommittee),
+  ADD FULLTEXT RecipientCommitteeNameNormalized(RecipientCommitteeNameNormalized),
+  ADD INDEX TransactionDate(TransactionDate),
+  ADD INDEX ElectionCycle(ElectionCycle);
 
 
 DROP TABLE IF EXISTS smry_candidates;

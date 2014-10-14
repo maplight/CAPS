@@ -33,13 +33,13 @@ function filter_propositions_list() {
   var options_array = propositions.slice(0);
   $('#propositions_list').empty();
 
+  $('#propositions_list')
+    .append($('<option></option>')
+    .attr('value', 'ALL')
+    .text('-- All propositions')); 
+
   if ($('#search_propositions').val().toUpperCase() != '') {
     options_array = filter_select(options_array, $('#search_propositions').val().toUpperCase());
-  } else {
-    $('#propositions_list')
-      .append($('<option></option>')
-      .attr('value', 'ALL')
-      .text('-- All propositions')); 
   }
 
   $.each(options_array, function(key, value) {   

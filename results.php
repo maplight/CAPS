@@ -48,7 +48,7 @@
     $CandidateList = "";
     if (isset ($search_data["candidates_list"])) {
       foreach ($search_data["candidates_list"] as $candidate) {
-        if ($candidate != "ALL") {$CandidateList .= "contributions_search.RecipientCandidateNameNormalized = '{$candidate}' OR ";}
+        if ($candidate != "ALL") {$CandidateList .= "contributions_search.RecipientCandidateNameNormalized = '" . addslashes ($candidate) . "' OR ";}
       }
       $CandidateList = substr ($CandidateList, 0, -4); # Remove the final OR
     }
@@ -57,42 +57,90 @@
     $OfficeList = "";
     if (isset ($search_data["office_list"])) {
       foreach ($search_data["office_list"] as $office) {
-        if ($office != "ALL") {$OfficeList .= "contributions_search.RecipientCandidateOffice = '{$office}' OR ";}
+        if ($office != "ALL") {$OfficeList .= "contributions_search.RecipientCandidateOffice = '" . addslashes ($office) . "' OR ";}
       }
       $OfficeList = substr ($OfficeList, 0, -4); # Remove the final OR
     }
 
-
-# elections_list (array)
-
-# search_propositions
-
-# propositions_list
-
-# support
-
-# oppose
-
-# committee 
-
-# start_date
-
-# end_date
-
-    # build cycles query
-    $ElectionCycle = "";
-    if (isset ($search_data["cycles"])) {
-      foreach ($search_data["cycles"] as $cycle) {
-        $ElectionCycle .= "ElectionCycle = $cycle OR ";
+    # build election list query
+    $ElectionList = "";
+    if (isset ($search_data["elections_list"])) {
+      foreach ($search_data["elections_list"] as $election) {
+        if ($election != "ALL") {$ElectionList .= "contributions_search.Election = '{$election}' OR ";}
       }
-      $ElectionCycle = substr ($ElectionCycle, 0, -4); # Remove the final OR
+      $ElectionList = substr ($ElectionList, 0, -4); # Remove the final OR
     }
+
+    # build proposition search query
+    $PropositionSearch = "";
+    foreach (str_word_count ($search_data["search_propositions"], 1) as $word) {
+      if (strpos ($word, "'") === false) {
+        $PropositionSearch .= "+{$word} ";
+      } else {
+        $PropositionSearch .= "+\"" . addslashes ($word) . "\" ";
+      }
+    }
+    if ($PropositionSearch != "") {$PropositionSearch = "MATCH (contributions_search.Target) AGAINST ('" . $PropositionSearch . "' IN BOOLEAN MODE)";} 
+
+    # build specific proposition query
+    if ($search_data["propositions_list"] != "ALL") {
+      $Proposition = "contributions_search.Target = '" . addslashes ($search_data["propositions_list"]) . "'";
+    } else {
+      $Proposition = "";
+    }
+
+    # build support/oppose query
+    if (isset ($search_data["support"])) {$Support = "contributions_search.Position = 'SUPPORT'";} else {$Support = "";}
+    if (isset ($search_data["oppose"])) {$Oppose = "contributions_search.Position = 'OPPOSE'";} else {$Oppose = "";}
+
+    # exclude allied committees query
+    if (isset ($search_data["exclude"])) {$Allied = "contributions_search.AlliedCommittee = 'N'";} else {$Allied = "";}
+
+    # build committee search query
+    $Committee = "";
+    foreach (str_word_count ($search_data["committee"], 1) as $word) {
+      if (strpos ($word, "'") === false) {
+        $Committee .= "+{$word} ";
+      } else {
+        $Committee .= "+\"" . addslashes ($word) . "\" ";
+      }
+    }
+    if ($Committee != "") {$Committee = "MATCH (contributions_search.RecipientCommitteeNameNormalized) AGAINST ('" . $Committee . "' IN BOOLEAN MODE)";} 
+
+    # build date & cycle query
+    $StartDate = "";
+    $EndDate = "";
+    $ElectionCycle = "";
+    if (! isset ($search_data["all_dates"])) {
+      # user is narrowing date / cycle search
+      $StartDate = date ("Y-m-d", strtotime ($search_data["start_date"]));
+      $EndDate = date ("Y-m-d", strtotime ($search_data["end_date"]));
+
+      # build cycles query
+      if (isset ($search_data["cycles"])) {
+        foreach ($search_data["cycles"] as $cycle) {
+          $ElectionCycle .= "ElectionCycle = $cycle OR ";
+        }
+        $ElectionCycle = substr ($ElectionCycle, 0, -4); # Remove the final OR
+      }
+    }
+
 
 echo "<P>contributor: " . $Donor . "</P>";
 echo "<P>location_list: " . $DonorState . "</P>";
 echo "<P>search_candidates: " . $Candidate . "</P>";
 echo "<P>candidates_list: " . $CandidateList . "</P>";
 echo "<P>office_list: " . $OfficeList . "</P>";
+echo "<P>elections_list: " . $ElectionList . "</P>";
+echo "<P>search_propositions: " . $PropositionSearch . "</P>";
+echo "<P>propositions_list: " . $Proposition . "</P>";
+echo "<P>support: " . $Support . "</P>";
+echo "<P>oppose: " . $Oppose . "</P>";
+echo "<P>exclude: " . $Allied . "</P>";
+echo "<P>committee: " . $Committee . "</P>";
+echo "<P>start_date: " . $StartDate . "</P>";
+echo "<P>end_date: " . $EndDate . "</P>";
+echo "<P>cycles: " . $ElectionCycle . "</P>";
 
   }
 ?>
