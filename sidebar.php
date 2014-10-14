@@ -106,7 +106,9 @@
   function fill_election_cycles () {
     $result = my_query ("SELECT ElectionCycle FROM smry_cycles ORDER BY ElectionCycle DESC");
     while ($row = $result->fetch_assoc()) {
-      echo "<INPUT NAME=cycles[] TYPE=CHECKBOX VALUE=\"{$row["ElectionCycle"]}\" CHECKED> {$row["ElectionCycle"]}&nbsp;&nbsp;&nbsp;&nbsp;";
+      $cycle_start = $row["ElectionCycle"];
+      $cycle_end = $cycle_start + 1;
+      echo "<INPUT NAME=cycles[] TYPE=CHECKBOX VALUE=\"{$row["ElectionCycle"]}\" CHECKED>&nbsp;$cycle_start-$cycle_end &nbsp;&nbsp;&nbsp;";
     }
   }
 ?>
