@@ -64,12 +64,8 @@
       $ElectionCycle = substr ($ElectionCycle, 0, -4); # Remove the final OR
     }
 
-echo "contributor: " . $Donor . "<BR>";
-echo "location_list: " . $DonorState . "<BR>";
-
-
-echo "cycles: " . $ElectionCycle . "<BR>";
-
+echo "<P>contributor: " . $Donor . "</P>";
+echo "<P>location_list: " . $DonorState . "</P>";
 
   }
 ?>
