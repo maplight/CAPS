@@ -6,8 +6,6 @@
     } else {
       parse_search_form ($_POST);
       # Parse search form resultsForm search entered
-      
-      echo "<PRE>"; print_r ($_POST); echo "</PRE>";
     }
   }
 
