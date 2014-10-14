@@ -12,14 +12,23 @@
   }
 
   function parse_search_form ($search_data) {
-
-# contributor
-
+    $Donor = "";
+    if (isset ($search_data["contributor"])) {
+      foreach (str_word_count ($search_data["contributor"], 1) as $word) {
+        if (strpos ($word, "'") === false) {
+          $Donor .= "+{$word} ";
+        } else {
+          $Donor .= "+\"" . addslashes ($word) . "\" ";
+        }
+      }
+    }
+    $Donor = "MATCH (contributions_search.DonorNameNormalized, contributions_search.DonorEmployerNormalized, contributions_search.DonorOrganization) AGAINST ('" . $Donor . "' IN BOOLEAN MODE)"; 
+  
     # build locations query
     $DonorState = "";
     if (isset ($search_data["location_list"])) {
       foreach ($search_data["location_list"] as $state) {
-        if ($state != "ALL") {$DonorState .= "DonorState = '{$state}' OR ";}
+        if ($state != "ALL") {$DonorState .= "contributions_search.DonorState = '{$state}' OR ";}
       }
       $DonorState = substr ($DonorState, 0, -4); # Remove the final OR
     }
@@ -55,8 +64,10 @@
       $ElectionCycle = substr ($ElectionCycle, 0, -4); # Remove the final OR
     }
 
-
+echo "contributor: " . $Donor . "<BR>";
 echo "location_list: " . $DonorState . "<BR>";
+
+
 echo "cycles: " . $ElectionCycle . "<BR>";
 
 

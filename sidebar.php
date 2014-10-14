@@ -94,9 +94,9 @@
 
   function fill_propositions () {
     $javascript_array = "";
-    $result = my_query ("SELECT * FROM smry_propositions ORDER BY Target, Election DESC");
+    $result = my_query ("SELECT DISTINCT Target FROM smry_propositions ORDER BY Election DESC, Target");
     while ($row = $result->fetch_assoc()) {
-      echo "<OPTION VALUE=\"{$row["Target"]}\">{$row["Target"]} (" . date ("M j, Y", strtotime ($row["Election"])) . ")</OPTION>";
+      echo "<OPTION VALUE=\"{$row["Target"]}\">{$row["Target"]}</OPTION>";
       $javascript_array .= "\"" . str_replace ("\"", "'", $row["Target"]) . "\",";
     }
     return $javascript_array;

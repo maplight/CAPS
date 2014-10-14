@@ -18,11 +18,13 @@ CREATE TABLE contributions_search ENGINE=MYISAM
    id,
    DonorNameNormalized,
    DonorEmployerNormalized,
-   DonorOrganization
+   DonorOrganization,
+   DonorState
 FROM contributions;
 
 ALTER TABLE contributions_search
-  ADD FULLTEXT DonorSearch(DonorNameNormalized, DonorEmployerNormalized, DonorOrganization);
+  ADD FULLTEXT DonorSearch(DonorNameNormalized, DonorEmployerNormalized, DonorOrganization),
+  ADD INDEX DonorState(DonorState);
 
 
 DROP TABLE IF EXISTS smry_candidates;
@@ -32,6 +34,7 @@ CREATE TABLE smry_candidates (
 ) ENGINE=MYISAM;
 INSERT INTO smry_candidates SELECT DISTINCT RecipientCandidateNameNormalized FROM contributions WHERE RecipientCandidateNameNormalized <> '';
 
+
 DROP TABLE IF EXISTS smry_offices;
 CREATE TABLE smry_offices (
   RecipientCandidateOffice VARCHAR(50) NOT NULL,
@@ -40,6 +43,7 @@ CREATE TABLE smry_offices (
 ) ENGINE=MYISAM;
 INSERT INTO smry_offices SELECT DISTINCT RecipientCandidateOffice, RecipientCandidateDistrict FROM contributions WHERE RecipientCandidateOffice <> '';
 
+
 DROP TABLE IF EXISTS smry_propositions;
 CREATE TABLE smry_propositions (
   Election DATE NOT NULL,
@@ -47,12 +51,13 @@ CREATE TABLE smry_propositions (
   KEY Election(Election),
   KEY Target(Target(10))
 ) ENGINE=MYISAM;
-INSERT INTO smry_propositions SELECT DISTINCT Election, Target FROM contributions WHERE Target <> '';
+INSERT INTO smry_propositions SELECT DISTINCT Election, Target FROM contributions WHERE Target <> '' AND Election <> '0000-00-00';
+
 
 DROP TABLE IF EXISTS smry_cycles;
 CREATE TABLE smry_cycles (
   ElectionCycle SMALLINT NOT NULL,
   KEY ElectionCycle(ElectionCycle)
 ) ENGINE=MYISAM;
-INSERT INTO smry_cycles SELECT DISTINCT ElectionCycle FROM contributions WHERE ElectionCycle > 2000;
+INSERT INTO smry_cycles SELECT DISTINCT ElectionCycle FROM contributions;
 
