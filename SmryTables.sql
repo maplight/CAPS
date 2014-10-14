@@ -19,12 +19,17 @@ CREATE TABLE contributions_search ENGINE=MYISAM
    DonorNameNormalized,
    DonorEmployerNormalized,
    DonorOrganization,
-   DonorState
+   DonorState,
+   RecipientCandidateNameNormalized,
+   RecipientCandidateOffice
 FROM contributions;
 
 ALTER TABLE contributions_search
   ADD FULLTEXT DonorSearch(DonorNameNormalized, DonorEmployerNormalized, DonorOrganization),
-  ADD INDEX DonorState(DonorState);
+  ADD INDEX DonorState(DonorState),
+  ADD FULLTEXT RecipientCandidateNameNormalized_fulltext(RecipientCandidateNameNormalized),
+  ADD INDEX RecipientCandidateNameNormalized(RecipientCandidateNameNormalized(10)),
+  ADD INDEX RecipientCandidateOffice(RecipientCandidateOffice(10));
 
 
 DROP TABLE IF EXISTS smry_candidates;
