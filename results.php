@@ -115,7 +115,7 @@
       # build cycles query
       if (isset ($search_data["cycles"])) {
         foreach ($search_data["cycles"] as $cycle) {
-          $ElectionCycle .= "ElectionCycle = $cycle OR ";
+          $ElectionCycle .= "contributions_search.ElectionCycle = $cycle OR ";
         }
         $ElectionCycle = substr ($ElectionCycle, 0, -4); # Remove the final OR
       }
