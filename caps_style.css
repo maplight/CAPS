@@ -52,5 +52,6 @@ input, select, textarea {
   border: 1px solid #000000;
   font: 11px Tahoma, sans-serif;
 }
-.results_table tr:nth-child(odd) td {background: #ffffff;}
-.results_table tr:nth-child(even) td {background: #ebebeb;}
+.results_table th {background: #ebebeb;}
+.results_table tr:nth-child(odd) td {background: #ebebeb;}
+.results_table tr:nth-child(even) td {background: #ffffff;}
