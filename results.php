@@ -6,8 +6,10 @@
     } else {
       # Parse search form
       $query = parse_search_form ($_POST);
+      display_data ($query);
     }
   }
+
 
   function parse_search_form ($search_data) {
     $Donor = "";
@@ -178,8 +180,31 @@
     if ($where != "") {$where = "WHERE " . substr ($where, 0, -5);} # remove extra AND
 
     # create query
-    $query = "SELECT * FROM contributions INNER JOIN contributions_search USING(id) {$where} LIMIT 1000";
+    $query = "SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$where}";
 
     return $query;
+  }
+
+
+  function display_data ($query) {
+    echo "<TABLE>";
+    echo "<TR><TH>Recipient Name</TH><TH>Recipient Committee</TH><TH>Office</TH><TH>Contributor Name</TH><TH>Contributor Employer</TH><TH>Contributor Occupation</TH><TH>Contributor Organization</TH><TH>Date</TH><TH>Amount</TH></TR>";
+
+    $result = my_query ($query . " LIMIT 100");
+    while ($row = $result->fetch_assoc()) {
+      echo "<TR>";
+      echo "<TD>{$row["RecipientCandidateNameNormalized"]}</TD>";
+      echo "<TD>{$row["RecipientCommitteeNameNormalized"]}</TD>";
+      echo "<TD>{$row["RecipientCandidateOffice"]}</TD>";
+      echo "<TD>{$row["DonorNameNormalized"]}</TD>";
+      echo "<TD>{$row["DonorEmployerNormalized"]}</TD>";
+      echo "<TD>{$row["DonorEmployerNormalized"]}</TD>";
+      echo "<TD>{$row["DonorOrganization"]}</TD>";
+      echo "<TD>{$row["TransactionDate"]}</TD>";
+      echo "<TD>{$row["TransactionAmount"]}</TD>";
+      echo "</TR>";
+    }
+
+    echo "</TABLE>";
   }
 ?>
