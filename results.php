@@ -110,7 +110,7 @@
     $ElectionCycle = "";
     if (! isset ($search_data["all_dates"])) {
       # user is narrowing date / cycle search
-      $DateRange = "contributions_search.TargetDate >= '" . date ("Y-m-d", strtotime ($search_data["start_date"])) . " AND contributions_search.TargetDate <= '" . date ("Y-m-d", strtotime ($search_data["end_date"])) . "'";
+      $DateRange = "contributions_search.TransactionDate >= '" . date ("Y-m-d", strtotime ($search_data["start_date"])) . "' AND contributions_search.TransactionDate <= '" . date ("Y-m-d", strtotime ($search_data["end_date"])) . "'";
 
       # build cycles query
       if (isset ($search_data["cycles"])) {
@@ -121,34 +121,55 @@
       }
     }
 
-    $where = "";
+    $donor_where = "";
+    $candidate_where = "";
+    $proposition_where = "";
+    $committee_where = "";
+    $date_where = "";
 
-    # Add donor sub queries
-    if ($Donor != "") {$where .= "{$Donor} AND ";}
-    if ($DonorState != "") {$where .= "({$DonorState}) AND ";}
+    # create donor query
+    if ($Donor != "") {$donor_where .= "{$Donor} AND ";}
+    if ($DonorState != "") {$donor_where .= "({$DonorState}) AND ";}
+    if ($donor_where != "") {$donor_where = substr ($donor_where, 0, -5);} # remove extra AND
     
-    # Add candidate sub queries
+    # create candidate query
     if ($CandidateList == "") {
-      if ($Candidate != "") {$where .= "{$Candidate} AND ";}
+      if ($Candidate != "") {$candidatewhere .= "{$Candidate} AND ";}
     } else {
-      $where .= "({$CandidateList}) AND ";
+      $candidate_where .= "({$CandidateList}) AND ";
     }
-    if ($OfficeList != "") {$where .= "({$OfficeList}) AND ";}
+    if ($OfficeList != "") {$candidate_where .= "({$OfficeList}) AND ";}
+    if ($candidate_where != "") {$candidate_where = substr ($candidate_where, 0, -5);} # remove extra AND
+
+    # create proposition query
+    if ($ElectionList != "") {$proposition_where .= "({$ElectionList}) AND ";}
+    if ($Proposition == "") {
+      if ($PropositionSearch != "") {$proposition_where .= "{$PropositionSearch} AND ";}
+    } else {
+      $proposition_where .= "{$Proposition} AND ";
+    }
+    if (($Support != "" && $Oppose == "") || ($Support == "" && $Oppose != "")) {
+      if ($Support != "") {$proposition_where .= "{$Support} AND ";}
+      if ($Oppose != "") {$proposition_where .= "{$Oppose} AND ";}
+    }
+    if ($Allied != "") {$proposition_where .= "{$Allied} AND ";}
+    if ($proposition_where != "") {$proposition_where = substr ($proposition_where, 0, -5);} # remove extra AND
+
+    # create committee query
+    if ($Committee != "") {$committee_where .= "{$Committee} AND ";}
+    if ($committee_where != "") {$committee_where = substr ($committee_where, 0, -5);} # remove extra AND
+
+    # create date query
+    if ($DateRange != "") {$date_where .= "({$DateRange}) AND ";}
+    if ($ElectionCycle != "") {$date_where .= "({$ElectionCycle}) AND ";}
+    if ($date_where != "") {$date_where = substr ($date_where, 0, -5);} # remove extra AND
 
 
-echo "<P>elections_list: " . $ElectionList . "</P>";
-echo "<P>search_propositions: " . $PropositionSearch . "</P>";
-echo "<P>propositions_list: " . $Proposition . "</P>";
-echo "<P>support: " . $Support . "</P>";
-echo "<P>oppose: " . $Oppose . "</P>";
-echo "<P>exclude: " . $Allied . "</P>";
-echo "<P>committee: " . $Committee . "</P>";
-echo "<P>date_range: " . $DateRange . "</P>";
-echo "<P>cycles: " . $ElectionCycle . "</P>";
-
-echo "<P>WHERE: " . $where . "</P>";
+echo "<P>donor where: $donor_where</P>";
+echo "<P>candidate where: $candidate_where</P>";
+echo "<P>proposition where: $proposition_where</P>";
+echo "<P>committee where: $committee_where</P>";
+echo "<P>date where: $date_where</P>";
     
-    $query = "SELECT * FROM contributions INNER JOIN contributions_search USING(id)";
-
   }
 ?>
