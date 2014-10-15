@@ -4,8 +4,8 @@
       # No form search yet
       echo "<P>&nbsp;</P><BLOCKQUOTE><B>Search political contributions from 2001 through the present, using the controls on the left.</B></BLOCKQUOTE>";
     } else {
-      parse_search_form ($_POST);
-      # Parse search form resultsForm search entered
+      # Parse search form
+      $query = parse_search_form ($_POST);
     }
   }
 
@@ -164,12 +164,22 @@
     if ($ElectionCycle != "") {$date_where .= "({$ElectionCycle}) AND ";}
     if ($date_where != "") {$date_where = substr ($date_where, 0, -5);} # remove extra AND
 
+    # generate full query where
+    $where = "";
+    if ($donor_where != "") {$where .= "{$donor_where} AND ";}
+    if ($candidate_where != "" && $proposition_where != "") {
+      $where .= "({$candidate_where} OR {$proposition_where}) AND ";
+    } else {
+      if ($candidate_where != "") {$where .= "{$candidate_where} AND ";}
+      if ($proposition_where != "") {$where .= "{$proposition_where} AND ";}
+    }
+    if ($committee_where != "") {$where .= "{$committee_where} AND ";}
+    if ($date_where != "") {$where .= "{$date_where} AND ";}
+    if ($where != "") {$where = "WHERE " . substr ($where, 0, -5);} # remove extra AND
 
-echo "<P>donor where: $donor_where</P>";
-echo "<P>candidate where: $candidate_where</P>";
-echo "<P>proposition where: $proposition_where</P>";
-echo "<P>committee where: $committee_where</P>";
-echo "<P>date where: $date_where</P>";
-    
+    # create query
+    $query = "SELECT * FROM contributions INNER JOIN contributions_search USING(id) {$where} LIMIT 1000";
+
+    return $query;
   }
 ?>
