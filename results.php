@@ -187,10 +187,16 @@
 
 
   function display_data ($query) {
+    $limit = 25;
+    $page = 0;
+    $sort = "contributions_search.TransactionDate DESC";
+    
     echo "<TABLE>";
     echo "<TR><TH>Recipient Name</TH><TH>Recipient Committee</TH><TH>Office</TH><TH>Contributor Name</TH><TH>Contributor Employer</TH><TH>Contributor Occupation</TH><TH>Contributor Organization</TH><TH>Date</TH><TH>Amount</TH></TR>";
 
-    $result = my_query ($query . " LIMIT 10");
+    $result = my_query ($query . " ORDER BY {$sort} LIMIT " . ($page * $limit) . ",{$limit}");
+    $rows_returned = $result->num_rows;
+
     while ($row = $result->fetch_assoc()) {
       echo "<TR>";
       echo "<TD>{$row["RecipientCandidateNameNormalized"]}</TD>";
@@ -200,8 +206,12 @@
       echo "<TD>{$row["DonorEmployerNormalized"]}</TD>";
       echo "<TD>{$row["DonorEmployerNormalized"]}</TD>";
       echo "<TD>{$row["DonorOrganization"]}</TD>";
-      echo "<TD>{$row["TransactionDate"]}</TD>";
-      echo "<TD>{$row["TransactionAmount"]}</TD>";
+      if (date ("F j, Y", strtotime ($row["TransactionDate"])) == "December 31, 1969") {
+        echo "<TD><I>unknown</I></TD>";
+      } else {
+        echo "<TD>" . str_replace (" ", "&nbsp", date ("F j, Y", strtotime ($row["TransactionDate"]))) . "</TD>";
+      }
+      echo "<TD STYLE=\"text-align:right;\">$" . number_format($row["TransactionAmount"], 2, ".", ",") . "</TD>";
       echo "</TR>";
     }
 
