@@ -190,7 +190,7 @@
     echo "<TABLE>";
     echo "<TR><TH>Recipient Name</TH><TH>Recipient Committee</TH><TH>Office</TH><TH>Contributor Name</TH><TH>Contributor Employer</TH><TH>Contributor Occupation</TH><TH>Contributor Organization</TH><TH>Date</TH><TH>Amount</TH></TR>";
 
-    $result = my_query ($query . " LIMIT 100");
+    $result = my_query ($query . " LIMIT 10");
     while ($row = $result->fetch_assoc()) {
       echo "<TR>";
       echo "<TD>{$row["RecipientCandidateNameNormalized"]}</TD>";
