@@ -141,7 +141,7 @@
       $candidate_where .= "({$CandidateList}) AND ";
     }
     if ($OfficeList != "") {$candidate_where .= "({$OfficeList}) AND ";}
-    if ($candidate_where != "") {$candidate_where = substr ($candidate_where, 0, -5);} # remove extra AND
+    if ($candidate_where != "") {$candidate_where .= "contributions_search.CandidateContribution = 'Y'";}
 
     # create proposition query
     if ($ElectionList != "") {$proposition_where .= "({$ElectionList}) AND ";}
@@ -155,7 +155,7 @@
       if ($Oppose != "") {$proposition_where .= "{$Oppose} AND ";}
     }
     if ($Allied != "") {$proposition_where .= "{$Allied} AND ";}
-    if ($proposition_where != "") {$proposition_where = substr ($proposition_where, 0, -5);} # remove extra AND
+    if ($proposition_where != "") {$proposition_where .= "contributions_search.BallotMeasureContribution = 'Y'";}
 
     # create committee query
     if ($Committee != "") {$committee_where .= "{$Committee} AND ";}
@@ -192,7 +192,7 @@
     $sort = "contributions_search.TransactionDate DESC";
     
     echo "<TABLE>";
-    echo "<TR><TH>Recipient Name</TH><TH>Recipient Committee</TH><TH>Office</TH><TH>Contributor Name</TH><TH>Contributor Employer</TH><TH>Contributor Occupation</TH><TH>Contributor Organization</TH><TH>Date</TH><TH>Amount</TH></TR>";
+    echo "<TR><TH>Recipient Name</TH><TH>Recipient Committee</TH><TH>Target</TH><TH>Position</TH><TH>Office</TH><TH>Contributor Name</TH><TH>Contributor Employer</TH><TH>Contributor Occupation</TH><TH>Contributor Organization</TH><TH>Date</TH><TH>Amount</TH></TR>";
 
     $result = my_query ($query . " ORDER BY {$sort} LIMIT " . ($page * $limit) . ",{$limit}");
     $rows_returned = $result->num_rows;
@@ -201,6 +201,8 @@
       echo "<TR>";
       echo "<TD>{$row["RecipientCandidateNameNormalized"]}</TD>";
       echo "<TD>{$row["RecipientCommitteeNameNormalized"]}</TD>";
+      echo "<TD>{$row["Target"]}</TD>";
+      echo "<TD>{$row["Position"]}</TD>";
       echo "<TD>{$row["RecipientCandidateOffice"]}</TD>";
       echo "<TD>{$row["DonorNameNormalized"]}</TD>";
       echo "<TD>{$row["DonorEmployerNormalized"]}</TD>";
