@@ -121,12 +121,21 @@
       }
     }
 
+    $where = "";
 
-echo "<P>contributor: " . $Donor . "</P>";
-echo "<P>location_list: " . $DonorState . "</P>";
-echo "<P>search_candidates: " . $Candidate . "</P>";
-echo "<P>candidates_list: " . $CandidateList . "</P>";
-echo "<P>office_list: " . $OfficeList . "</P>";
+    # Add donor sub queries
+    if ($Donor != "") {$where .= "{$Donor} AND ";}
+    if ($DonorState != "") {$where .= "({$DonorState}) AND ";}
+    
+    # Add candidate sub queries
+    if ($CandidateList == "") {
+      if ($Candidate != "") {$where .= "{$Candidate} AND ";}
+    } else {
+      $where .= "({$CandidateList}) AND ";
+    }
+    if ($OfficeList != "") {$where .= "({$OfficeList}) AND ";}
+
+
 echo "<P>elections_list: " . $ElectionList . "</P>";
 echo "<P>search_propositions: " . $PropositionSearch . "</P>";
 echo "<P>propositions_list: " . $Proposition . "</P>";
@@ -136,6 +145,10 @@ echo "<P>exclude: " . $Allied . "</P>";
 echo "<P>committee: " . $Committee . "</P>";
 echo "<P>date_range: " . $DateRange . "</P>";
 echo "<P>cycles: " . $ElectionCycle . "</P>";
+
+echo "<P>WHERE: " . $where . "</P>";
+    
+    $query = "SELECT * FROM contributions INNER JOIN contributions_search USING(id)";
 
   }
 ?>
