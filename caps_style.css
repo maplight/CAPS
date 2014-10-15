@@ -27,6 +27,7 @@ input, select, textarea {
 
 #sidebar {
   border-right: 1px solid #000000;
+  background: #ebebeb;
   width: 200px;
   float: left;
   padding-left: 5px;
@@ -45,3 +46,11 @@ input, select, textarea {
   font: 14px Tahoma, sans-serif;
   font-weight: bold;
 }
+
+.results_table {
+  border-collapse: collapse;
+  border: 1px solid #000000;
+  font: 11px Tahoma, sans-serif;
+}
+.results_table tr:nth-child(odd) td {background: #ffffff;}
+.results_table tr:nth-child(even) td {background: #ebebeb;}

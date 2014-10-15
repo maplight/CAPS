@@ -191,7 +191,7 @@
     $page = 0;
     $sort = "contributions_search.TransactionDate DESC";
     
-    echo "<TABLE>";
+    echo "<TABLE CLASS=results_table>";
     echo "<TR><TH>Recipient Name</TH><TH>Recipient Committee</TH><TH>Target</TH><TH>Position</TH><TH>Office</TH><TH>Contributor Name</TH><TH>Contributor Employer</TH><TH>Contributor Occupation</TH><TH>Contributor Organization</TH><TH>Date</TH><TH>Amount</TH></TR>";
 
     $result = my_query ($query . " ORDER BY {$sort} LIMIT " . ($page * $limit) . ",{$limit}");
