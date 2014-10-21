@@ -29,6 +29,7 @@ CREATE TABLE contributions_search ENGINE=MYISAM
    AlliedCommittee,
    RecipientCommitteeNameNormalized,
    TransactionDate,
+   TransactionAmount,
    ElectionCycle,
    CandidateContribution,
    BallotMeasureContribution
