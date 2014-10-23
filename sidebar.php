@@ -110,7 +110,10 @@
     while ($row = $result->fetch_assoc()) {
       $cycle_start = $row["ElectionCycle"];
       $cycle_end = $cycle_start + 1;
-      echo "<INPUT NAME=cycles[] TYPE=CHECKBOX VALUE=\"{$row["ElectionCycle"]}\" CHECKED>&nbsp;$cycle_start-$cycle_end &nbsp;&nbsp;&nbsp;";
+      echo "<div class=\"year-check\">";
+      echo "<input type=\"checkbox\" id=\"y{$cycle_start}\">";
+      echo "<label for=\"y{$cycle_start}\">$cycle_start-$cycle_end</label>";
+      echo "</div>";
     }
   }
 ?>

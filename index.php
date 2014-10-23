@@ -76,16 +76,16 @@
     </nav><!--end of #nav-->
     </div><!--end of .mainNavCtnd-->
     </div><!--end of .mainNavCtnr-->
+<!-- End California SOS header page -->
 
       </div>
-
 
       <!-- two columns of the page -->
       <div id="two-columns">
         <!-- contain sidebar of the page -->
         <div id="sidebar">
           <!-- search form of the page -->
-          <form action="#" class="search-form">
+          <form action="#" method="post" class="search-form">
             <fieldset>
               <legend class="hidden">search-form</legend>
               <h1>Advanced Search</h1>
@@ -136,6 +136,7 @@
                       <input type="radio" id="for3" name="to" tabindex="11">
                       <label for="for3" class="hidden">label</label>
                       <label for="for4" class="hidden">label</label>
+                      <input type="text" id="" value="Search candidates" tabindex="" accesskey="s">
                       <select tabindex="12" id="for4">
 <?php
   $js_candidates = fill_candidate_names ();
@@ -174,6 +175,7 @@
                     </div>
                     <div class="sub-row">
                       <label for="for8" class="hidden">label</label>
+                      <input type="text" id="" value="Search propositions" tabindex="" accesskey="s">
                       <select id="for8" tabindex="20">
 <?php
   $js_propositions = fill_propositions ();
@@ -184,9 +186,8 @@
                       <label for="for9" class="hidden">label</label>
                       <select id="for9" tabindex="21">
                         <option>Both support &amp; oppose</option>
-                        <option>elections 1</option>
-                        <option>elections 2</option>
-                        <option>elections 3</option>
+                        <option>Support</option>
+                        <option>Oppose</option>
                       </select>
                     </div>
                     <div class="check-b-area">
@@ -239,34 +240,9 @@
                     <input type="radio" id="cyc2" name="date">
                     <label for="cyc2">Election cycles</label>
                     <div class="year-row">
-                      <div class="year-check">
-                        <input type="checkbox" id="y3">
-                        <label for="y3">2013-2014</label>
-                      </div>
-                      <div class="year-check">
-                        <input type="checkbox" id="y5">
-                        <label for="y5">2005-2006</label>
-                      </div>
-                      <div class="year-check">
-                        <input type="checkbox" id="y1">
-                        <label for="y1">2011-2012</label>
-                      </div>
-                      <div class="year-check">
-                        <input type="checkbox" id="yy3">
-                        <label for="yy3">2003-2004</label>
-                      </div>
-                      <div class="year-check">
-                        <input type="checkbox" id="y9">
-                        <label for="y9">2009-2010</label>
-                      </div>
-                      <div class="year-check">
-                        <input type="checkbox" id="yy1">
-                        <label for="yy1">2001-2002</label>
-                      </div>
-                      <div class="year-check">
-                        <input type="checkbox" id="y7">
-                        <label for="y7">2007-2008</label>
-                      </div>
+<?php
+  fill_election_cycles ();
+?>
                     </div>
                   </div>
                 </div>
@@ -274,7 +250,15 @@
               <input type="submit" value="Search">
             </fieldset>
           </form>
+<?php
+  echo "<SCRIPT type=text/javascript>";
+  echo "var candidates = [{$js_candidates}\"\"];";
+  echo "var propositions = [{$js_propositions}\"\"];";
+  echo "</SCRIPT>";
+?>
         </div>
+
+
         <!-- contain the main content of the page -->
         <div id="content">
           <h1>Search Results</h1>
