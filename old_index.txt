@@ -1,0 +1,18 @@
+
+<?php
+  # Create the sidebar search form div
+  echo "<DIV ID=sidebar>";
+  build_sidebar_form ();
+  echo "</DIV>";
+
+  # Create the results div
+  echo "<DIV ID=results>";
+  build_results_table ();
+  echo "</DIV>";
+?>
+
+<?php
+  # end of page and inside wrapper
+  echo "</DIV><DIV STYLE=\"clear: both;\"></DIV></DIV>";
+?>
+
