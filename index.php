@@ -111,11 +111,9 @@
                   <label for="contr">Contributor Location</label>
                   <a href="#" class="info" tabindex="6">info</a>
                   <select tabindex="7" id="contr">
-                    <option>All locations</option>
-                    <option> location1</option>
-                    <option> location2</option>
-                    <option> location3</option>
-                    <option> location4</option>
+<?php
+  fill_state_list ();
+?>
                   </select>
                 </div>
               </div>
@@ -138,7 +136,11 @@
                       <input type="radio" id="for3" name="to" tabindex="11">
                       <label for="for3" class="hidden">label</label>
                       <label for="for4" class="hidden">label</label>
-                      <input type="text" id="for4" value="Just these candidates" tabindex="12">
+                      <select tabindex="12" id="for4">
+<?php
+  $js_candidates = fill_candidate_names ();
+?>
+                      </select>
                       <a href="#" class="info" tabindex="13">info</a>
                     </div>
                     <div class="sub-row info">
@@ -146,10 +148,9 @@
                       <label for="for5" class="hidden">label</label>
                       <label for="for6" class="hidden">label</label>
                       <select tabindex="15" id="for6">
-                        <option>Candidates for these offices</option>
-                        <option>Candidates 1</option>
-                        <option>Candidates 2</option>
-                        <option>Candidates 3</option>
+<?php
+  fill_offices_sought ();
+?>
                       </select>
                       <a href="#" class="info" tabindex="16">info</a>
                     </div>
@@ -166,19 +167,17 @@
                     <div class="sub-row">
                       <label for="for7" class="hidden">label</label>
                       <select tabindex="19" id="for7">
-                        <option>All elections</option>
-                        <option>elections 1</option>
-                        <option>elections 2</option>
-                        <option>elections 3</option>
+<?php
+  fill_elections ();
+?>
                       </select>
                     </div>
                     <div class="sub-row">
                       <label for="for8" class="hidden">label</label>
                       <select id="for8" tabindex="20">
-                        <option>All propositions</option>
-                        <option>elections 1</option>
-                        <option>elections 2</option>
-                        <option>elections 3</option>
+<?php
+  $js_propositions = fill_propositions ();
+?>
                       </select>
                     </div>
                     <div class="sub-row">
