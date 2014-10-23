@@ -6,16 +6,16 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>California Secretary of State</title>
-  <link rel="stylesheet" href="/css/normalize.css">
-  <link rel="stylesheet" href="/css/main-max-width.css">
-  <noscript><link href="/css/noJs.css" rel="stylesheet" type="text/css" /></noscript>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main-max-width.css">
+  <noscript><link href="css/noJs.css" rel="stylesheet" type="text/css" /></noscript>
   <!--[if lt IE 9]>
-    <link rel="stylesheet" href="/css/ie-main-max-width.css" media="screen" />
-    <script src="/js/vendor/compatibility.js"></script>
+    <link rel="stylesheet" href="css/ie-main-max-width.css" media="screen" />
+    <script src="js/vendor/compatibility.js"></script>
   <![endif]-->
-  <link rel="stylesheet" type="text/css" href="/css/caps.css" media="all">
-  <script src="/js/vendor/ga-async.js"></script>
-  <script src="/js/jquery.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/caps.css" media="all">
+  <script src="js/vendor/ga-async.js"></script>
+  <script src="js/jquery.js"></script>
   <script src="js/caps.js"></script>
 </head>
 
