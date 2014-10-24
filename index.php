@@ -135,9 +135,10 @@
                     <div class="sub-row info">
                       <input type="radio" id="for3" name="to" tabindex="11">
                       <label for="for3" class="hidden">label</label>
-                      <label for="for4" class="hidden">label</label>
-                      <input type="text" id="" value="Search candidates" tabindex="" accesskey="s">
-                      <select tabindex="12" id="for4">
+                      <label for="candidates_list" class="hidden">label</label>
+                      <label for="search_candidates" class="hidden">label</label>
+                      <input type="text" id="search_candidates" value="Search candidates" tabindex="" accesskey="s" onkeyup="filter_candidates_list();">
+                      <select tabindex="12" id="candidates_list">
 <?php
   $js_candidates = fill_candidate_names ();
 ?>
@@ -253,7 +254,7 @@
 <?php
   echo "<SCRIPT type=text/javascript>";
   echo "var candidates = [{$js_candidates}\"\"];";
-  echo "var propositions = [{$js_propositions}\"\"];";
+#  echo "var propositions = [{$js_propositions}\"\"];";
   echo "</SCRIPT>";
 ?>
         </div>

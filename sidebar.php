@@ -60,6 +60,7 @@
 
 
   function fill_state_list () {
+    echo "<OPTION VALUE=\"ALL\" SELECTED>All states</OPTION>";
     $result = my_query ("SELECT StateName, StateCode FROM smry_states WHERE IsState = 1 ORDER BY StateName");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION VALUE={$row["StateCode"]}>{$row["StateName"]}</OPTION>";

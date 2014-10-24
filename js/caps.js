@@ -12,12 +12,6 @@ function filter_candidates_list() {
 
   if ($('#search_candidates').val().toUpperCase() != '') {
     options_array = filter_select(options_array, $('#search_candidates').val().toUpperCase());
-  } else {
-    $('#candidates_list')
-      .append($('<option></option>')
-      .attr('value', 'ALL')
-      .attr('selected', 'SELECTED')
-      .text('-- All candidates')); 
   }
 
   $.each(options_array, function(key, value) {   
