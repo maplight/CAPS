@@ -29,6 +29,8 @@ echo "$query<P>";
     $Committee = "";
     $DateRange = "";
     $ElectionCycle = "";
+    $CandidateContribution = "";
+    $PropositionContribution = "";
 
 
     #------------------------------------------------------------------------------------------
@@ -52,6 +54,8 @@ echo "$query<P>";
     # Build candidate search query:
     if (isset ($search_data["candidates"])) {
       # Candidates checked
+      $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
+
       switch ($search_data["cand_select"]) {
         case "search":
           # build candidate search query
@@ -80,6 +84,9 @@ echo "$query<P>";
     #------------------------------------------------------------------------------------------
     # Build ballot measure search query:
     if (isset ($search_data["propositions"])) {
+      # Ballot Measures checked
+      $PropositionContribution = "contributions_search.BallotMeasureContribution = 'Y'";
+
       if ($search_data["search_propositions"] != "Search propositions" && $search_data["proposition_list"] == "ALL") {
         # build proposition search query
         foreach (str_word_count ($search_data["search_propositions"], 1) as $word) {
@@ -95,12 +102,12 @@ echo "$query<P>";
           if (substr ($search_data["proposition_list"], 0, 3) == "ALL") {
             # build query for a specific election
             $selected_data = explode ("#", $search_data["proposition_list"]);
-            $Election = $selected_data[1];
+            $Election = "contributions_search.Election = '" . $selected_data[1] . "'";
           } else {
             # build query for a specific proposition
             $selected_data = explode ("#", $search_data["proposition_list"]);
-            $Election = $selected_data[0];
-            $Proposition = $selected_data[1];
+            $Election = "contributions_search.Election = '" . $selected_data[0] . "'";
+            $Proposition = "contributions_search.Target = '" . addslashes ($selected_data[1]) . "'";
           }
         }
       }
@@ -150,11 +157,9 @@ echo "$query<P>";
         break;
     }
 
-echo "$DateRange<BR>$ElectionCycle<P>";
 
-
-
-
+    #------------------------------------------------------------------------------------------
+    # Build sub-query components
     $donor_where = "";
     $candidate_where = "";
     $proposition_where = "";
@@ -163,31 +168,35 @@ echo "$DateRange<BR>$ElectionCycle<P>";
 
     # create donor query
     if ($Donor != "") {$donor_where .= "{$Donor} AND ";}
-    if ($DonorState != "") {$donor_where .= "({$DonorState}) AND ";}
+    if ($DonorState != "") {$donor_where .= "{$DonorState} AND ";}
     if ($donor_where != "") {$donor_where = substr ($donor_where, 0, -5);} # remove extra AND
     
     # create candidate query
     if ($CandidateList == "") {
-      if ($Candidate != "") {$candidatewhere .= "{$Candidate} AND ";}
+      if ($Candidate != "") {$candidate_where .= "{$Candidate} AND ";}
     } else {
-      $candidate_where .= "({$CandidateList}) AND ";
+      $candidate_where .= "{$CandidateList} AND ";
     }
-    if ($OfficeList != "") {$candidate_where .= "({$OfficeList}) AND ";}
-    if ($candidate_where != "") {$candidate_where .= "contributions_search.CandidateContribution = 'Y'";}
+    if ($OfficeList != "") {$candidate_where .= "{$OfficeList} AND ";}
+    if ($CandidateContribution != "") {$candidate_where .= "$CandidateContribution AND ";}
+    if ($candidate_where != "") {$candidate_where = substr ($candidate_where, 0, -5);} # Remove the final AND
 
     # create proposition query
-    if ($ElectionList != "") {$proposition_where .= "({$ElectionList}) AND ";}
     if ($Proposition == "") {
       if ($PropositionSearch != "") {$proposition_where .= "{$PropositionSearch} AND ";}
     } else {
       $proposition_where .= "{$Proposition} AND ";
     }
-    if (($Support != "" && $Oppose == "") || ($Support == "" && $Oppose != "")) {
-      if ($Support != "") {$proposition_where .= "{$Support} AND ";}
-      if ($Oppose != "") {$proposition_where .= "{$Oppose} AND ";}
-    }
+    if ($Election != "") {$proposition_where .= "{$Election} AND ";}
+    if ($Position != "") {$proposition_where .= "{$Position} AND ";}
     if ($Allied != "") {$proposition_where .= "{$Allied} AND ";}
-    if ($proposition_where != "") {$proposition_where .= "contributions_search.BallotMeasureContribution = 'Y'";}
+    if ($PropositionContribution != "") {$proposition_where .= "$PropositionContribution AND ";}
+    if ($proposition_where != "") {$proposition_where = substr ($proposition_where, 0, -5);} # Remove the final AND
+
+echo "$proposition_where<P>";
+
+
+
 
     # create committee query
     if ($Committee != "") {$committee_where .= "{$Committee} AND ";}
