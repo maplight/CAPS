@@ -24,22 +24,23 @@ function filter_candidates_list() {
 
 
 function filter_propositions_list() {
-  var options_array = propositions.slice(0);
   $('#propositions_list').empty();
 
-  $('#propositions_list')
-    .append($('<option></option>')
-    .attr('value', 'ALL')
-    .text('-- All propositions')); 
-
-  if ($('#search_propositions').val().toUpperCase() != '') {
-    options_array = filter_select(options_array, $('#search_propositions').val().toUpperCase());
-  }
-
-  $.each(options_array, function(key, value) {   
-    $('#propositions_list')
-      .append($('<option></option>')
-      .attr('value', value)
-      .text(value)); 
+  $.each(propositions, function(key, value) {
+    if (value.length == 2) {
+      if (value[0].substring(0, 3) == 'ALL') {
+        $('#propositions_list')
+          .append($('<option></option>')
+          .attr('value', value[0])
+          .text(value[1]));
+      } else {
+        if (value[0].indexOf($('#search_propositions').val().toUpperCase()) != -1) {
+          $('#propositions_list')
+            .append($('<option></option>')
+            .attr('value', value[0])
+            .text(value[1]));
+        }
+      }
+    } 
   });
 }
