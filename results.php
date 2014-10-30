@@ -14,12 +14,19 @@ echo "$query<P>";
 
 
   function parse_search_form ($search_data) {
+    #------------------------------------------------------------------------------------------
     # Set empty query holders
     $Donor = "";
     $DonorState = "";
     $Candidate = "";
     $CandidateList = "";
     $OfficeList = "";
+    $PropositionSearch = "";
+    $Election = "";
+    $Proposition = "";
+    $Position = "";
+    $Allied = "";
+
 
     #------------------------------------------------------------------------------------------
     # Build contributor search query:
@@ -70,41 +77,46 @@ echo "$query<P>";
     #------------------------------------------------------------------------------------------
     # Build ballot measure search query:
     if (isset ($search_data["propositions"])) {
-    }
-
-    # build election list query
-    $ElectionList = "";
-    if (isset ($search_data["elections_list"])) {
-      foreach ($search_data["elections_list"] as $election) {
-        if ($election != "ALL") {$ElectionList .= "contributions_search.Election = '{$election}' OR ";}
-      }
-      $ElectionList = substr ($ElectionList, 0, -4); # Remove the final OR
-    }
-
-    # build proposition search query
-    $PropositionSearch = "";
-    foreach (str_word_count ($search_data["search_propositions"], 1) as $word) {
-      if (strpos ($word, "'") === false) {
-        $PropositionSearch .= "+{$word} ";
+      if ($search_data["search_propositions"] != "Search propositions" && $search_data["proposition_list"] == "ALL") {
+        # build proposition search query
+        foreach (str_word_count ($search_data["search_propositions"], 1) as $word) {
+          if (strpos ($word, "'") === false) {
+            $PropositionSearch .= "+{$word} ";
+          } else {
+            $PropositionSearch .= "+\"" . addslashes ($word) . "\" ";
+          }
+        }
+        if ($PropositionSearch != "") {$PropositionSearch = "MATCH (contributions_search.Target) AGAINST ('" . $PropositionSearch . "' IN BOOLEAN MODE)";}
       } else {
-        $PropositionSearch .= "+\"" . addslashes ($word) . "\" ";
+        if ($search_data["proposition_list"] != "ALL") {
+          if (substr ($search_data["proposition_list"], 0, 3) == "ALL") {
+            # build query for a specific election
+            $selected_data = explode ("#", $search_data["proposition_list"]);
+            $Election = $selected_data[1];
+          } else {
+            # build query for a specific proposition
+            $selected_data = explode ("#", $search_data["proposition_list"]);
+            $Election = $selected_data[0];
+            $Proposition = $selected_data[1];
+          }
+        }
       }
+
+      # build support/oppose query
+      if ($search_data["position"] == "S") {$Position = "contributions_search.Position = 'SUPPORT'";}
+      if ($search_data["position"] == "O") {$Position = "contributions_search.Position = 'OPPOSE'";}
+
+      # exclude allied committees query
+      if (isset ($search_data["exclude"])) {$Allied = "contributions_search.AlliedCommittee = 'N'";}
     }
-    if ($PropositionSearch != "") {$PropositionSearch = "MATCH (contributions_search.Target) AGAINST ('" . $PropositionSearch . "' IN BOOLEAN MODE)";} 
 
-    # build specific proposition query
-    if ($search_data["propositions_list"] != "ALL") {
-      $Proposition = "contributions_search.Target = '" . addslashes ($search_data["propositions_list"]) . "'";
-    } else {
-      $Proposition = "";
-    }
 
-    # build support/oppose query
-    if (isset ($search_data["support"])) {$Support = "contributions_search.Position = 'SUPPORT'";} else {$Support = "";}
-    if (isset ($search_data["oppose"])) {$Oppose = "contributions_search.Position = 'OPPOSE'";} else {$Oppose = "";}
+    #------------------------------------------------------------------------------------------
+    # Build committe search query:
 
-    # exclude allied committees query
-    if (isset ($search_data["exclude"])) {$Allied = "contributions_search.AlliedCommittee = 'N'";} else {$Allied = "";}
+
+
+
 
     # build committee search query
     $Committee = "";

@@ -189,10 +189,10 @@
                     </div>
                     <div class="sub-row">
                       <label for="for9" class="hidden">label</label>
-                      <select id="for9" name="support" tabindex="21">
-                        <option value="Both">Both support &amp; oppose</option>
-                        <option value="Support">Support</option>
-                        <option value="Oppose">Oppose</option>
+                      <select id="for9" name="position" tabindex="21">
+                        <option value="B">Both support &amp; oppose</option>
+                        <option value="S">Support</option>
+                        <option value="O">Oppose</option>
                       </select>
                     </div>
                     <div class="check-b-area">
@@ -204,7 +204,7 @@
                   <!-- sub section of search form -->
                   <div class="sub-section last">
                   <div class="check-part">
-                    <input type="checkbox" id="com">
+                    <input type="checkbox" id="com" name="committees">
                     <label for="com">Committees</label>
                     <a href="#" class="info" tabindex="23">info</a>
                   </div>
