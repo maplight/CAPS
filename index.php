@@ -163,7 +163,7 @@
                   <div class="check-part">
                     <input type="checkbox" id="cand1" name="propositions" tabindex="17">
                     <label for="cand1">Ballot Measures</label>
-                    <a href="#" class="info"tabindex="18">info</a>
+                    <a href="#" class="info" tabindex="18">info</a>
                   </div>
                   <div class="holder-b add">
 
@@ -251,6 +251,26 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="form-section">
+                  <h2>Select Fields:</h2>
+                  <div class="frame">
+                    <div class="sub-section">
+                      <div class="check-part">
+                        <input type="checkbox" id="field01" name="fields[]" value="RecipientCandidateNameNormalized" checked><label for="field01">Recipient Name</label><a href="#" class="info" tabindex="">info</a><br>
+                        <input type="checkbox" id="field02" name="fields[]" value="RecipientCommitteeNameNormalized" checked><label for="field02">Recipient Committee</label><a href="#" class="info" tabindex="">info</a><br>
+                        <input type="checkbox" id="field03" name="fields[]" value="RecipientCandidateOffice" checked><label for="field03">Office</label><a href="#" class="info" tabindex="">info</a><br>
+                        <input type="checkbox" id="field04" name="fields[]" value="DonorNameNormalized" checked><label for="field04">Contributor Name</label><a href="#" class="info" tabindex="">info</a><br>
+                        <input type="checkbox" id="field05" name="fields[]" value="DonorEmployerNormalized" checked><label for="field05">Contributor Employer</label><a href="#" class="info" tabindex="">info</a><br>
+                        <input type="checkbox" id="field06" name="fields[]" value="DonorOccupationNormalized" checked><label for="field06">Contributor Occupation</label><a href="#" class="info" tabindex="">info</a><br>
+                        <input type="checkbox" id="field07" name="fields[]" value="DonorOrganization" checked><label for="field07">Contributor Organization</label><a href="#" class="info" tabindex="">info</a><br>
+                        <input type="checkbox" id="field08" name="fields[]" value="TransactionDate" checked><label for="field08">Date</label><a href="#" class="info" tabindex="">info</a><br>
+                        <input type="checkbox" id="field09" name="fields[]" value="TransactionAmount" checked><label for="field09">Amount</label><a href="#" class="info" tabindex="">info</a><br>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
               <input type="submit" value="Search">
             </fieldset>
