@@ -236,9 +236,9 @@
                     <label for="cyc1">Date range</label>
                     <div class="date-range">
                       <label for="for12" class="hidden">label</label>
-                      <input type="text" id="for12" value="mm-dd-yyyy" class="small">
-                      <label for="to" class="to-label">to</label>
-                      <input type="text" value="mm-dd-yyyy" id="to" class="small">
+                      <input type="text" id="for12" name="start_date" value="mm/dd/yyyy" class="small" style="width:70%;">
+                      <label for="to" class="to-label">&nbsp;to</label>
+                      <input type="text" value="mm/dd/yyyy" id="to" name="end_date" class="small" style="width:70%;">
                     </div>
                   </div>
                   <div class="radio-row">

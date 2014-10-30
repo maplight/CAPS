@@ -27,6 +27,8 @@ echo "$query<P>";
     $Position = "";
     $Allied = "";
     $Committee = "";
+    $DateRange = "";
+    $ElectionCycle = "";
 
 
     #------------------------------------------------------------------------------------------
@@ -129,24 +131,29 @@ echo "$query<P>";
     }
 
 
+    #------------------------------------------------------------------------------------------
+    # Build dates / cycles query
+    switch ($search_data["date_select"]) {
+      case "range":
+        # build date range query
+        $DateRange = "contributions_search.TransactionDate >= '" . date ("Y-m-d", strtotime ($search_data["start_date"])) . "' AND contributions_search.TransactionDate <= '" . date ("Y-m-d", strtotime ($search_data["end_date"])) . "'";
+        break;
 
-
-
-    # build date & cycle query
-    $DateRange = "";
-    $ElectionCycle = "";
-    if (! isset ($search_data["all_dates"])) {
-      # user is narrowing date / cycle search
-      $DateRange = "contributions_search.TransactionDate >= '" . date ("Y-m-d", strtotime ($search_data["start_date"])) . "' AND contributions_search.TransactionDate <= '" . date ("Y-m-d", strtotime ($search_data["end_date"])) . "'";
-
-      # build cycles query
-      if (isset ($search_data["cycles"])) {
-        foreach ($search_data["cycles"] as $cycle) {
-          $ElectionCycle .= "contributions_search.ElectionCycle = $cycle OR ";
+      case "cycle":
+        # build election cycle query
+        if (isset ($search_data["cycles"])) {
+          foreach ($search_data["cycles"] as $cycle) {
+            $ElectionCycle .= "contributions_search.ElectionCycle = $cycle OR ";
+          }
+          $ElectionCycle = substr ($ElectionCycle, 0, -4); # Remove the final OR
         }
-        $ElectionCycle = substr ($ElectionCycle, 0, -4); # Remove the final OR
-      }
+        break;
     }
+
+echo "$DateRange<BR>$ElectionCycle<P>";
+
+
+
 
     $donor_where = "";
     $candidate_where = "";

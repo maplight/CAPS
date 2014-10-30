@@ -60,7 +60,7 @@
       $cycle_start = $row["ElectionCycle"];
       $cycle_end = $cycle_start + 1;
       echo "<div class=\"year-check\">";
-      echo "<input type=\"checkbox\" id=\"y{$cycle_start}\">";
+      echo "<input type=\"checkbox\" id=\"y{$cycle_start}\" name=\"cycles[]\" value=\"{$cycle_start}\">";
       echo "<label for=\"y{$cycle_start}\">$cycle_start-$cycle_end</label>";
       echo "</div>";
     }
