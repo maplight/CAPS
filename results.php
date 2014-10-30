@@ -193,11 +193,6 @@ echo "$query<P>";
     if ($PropositionContribution != "") {$proposition_where .= "$PropositionContribution AND ";}
     if ($proposition_where != "") {$proposition_where = substr ($proposition_where, 0, -5);} # Remove the final AND
 
-echo "$proposition_where<P>";
-
-
-
-
     # create committee query
     if ($Committee != "") {$committee_where .= "{$Committee} AND ";}
     if ($committee_where != "") {$committee_where = substr ($committee_where, 0, -5);} # remove extra AND

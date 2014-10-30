@@ -123,7 +123,7 @@
                 <div class="frame">
                   <div class="sub-section">
                   <div class="check-part">
-                    <input type="checkbox" id="cand" name="candidates" tabindex="8" checked>
+                    <input type="checkbox" id="cand" name="candidates" tabindex="8">
                     <label for="cand">Candidates</label>
                     <a href="#" class="info" tabindex="9">info</a>
                   </div>
