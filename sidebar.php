@@ -9,7 +9,8 @@
 
 
   function fill_candidate_names () {
-    $javascript_array = "";
+    echo "<OPTION>Select candidate</OPTION>";
+    $javascript_array = "[\"Select candidate\"],";
     $result = my_query ("SELECT RecipientCandidateNameNormalized FROM smry_candidates ORDER BY RecipientCandidateNameNormalized");
     while ($row = $result->fetch_assoc()) {
       echo "<OPTION>{$row["RecipientCandidateNameNormalized"]}</OPTION>";
@@ -42,8 +43,8 @@
     $result = my_query ("SELECT DISTINCT Election, Target FROM smry_propositions ORDER BY Election DESC, Target");
     while ($row = $result->fetch_assoc()) {
       if ($last_election != $row["Election"]) {
-        echo "<OPTION VALUE=\"ALL#{$row["Election"]}\">" . date ("M j, Y", strtotime ($row["Election"])) . "</OPTION>";
-        $javascript_array .= "[\"ALL#{$row["Election"]}\",\"" . date ("M j, Y", strtotime ($row["Election"])) . "\"],";
+        echo "<OPTION VALUE=\"ALL#{$row["Election"]}\">" . date ("M j, Y", strtotime ($row["Election"])) . " propositions</OPTION>";
+        $javascript_array .= "[\"ALL#{$row["Election"]}\",\"" . date ("M j, Y", strtotime ($row["Election"])) . " propositions\"],";
         $last_election = $row["Election"];
       }
       echo "<OPTION VALUE=\"{$row["Election"]}#" . str_replace ("\"", "\\\"", $row["Target"]) . "\">&nbsp;&nbsp;&nbsp;&nbsp;{$row["Target"]}</OPTION>";

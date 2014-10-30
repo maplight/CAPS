@@ -5,62 +5,71 @@
       echo "<P>&nbsp;</P><BLOCKQUOTE><DIV CLASS=\"title\">Search political contributions from 2001 through the present, using the controls on the left.</DIV></BLOCKQUOTE>";
     } else {
       # Parse search form
-echo "<pre>"; print_r ($_POST); echo "</PRE>";
-#      $query = parse_search_form ($_POST);
+echo "<pre>"; print_r ($_POST); echo "</PRE><P>";
+      $query = parse_search_form ($_POST);
+echo "$query<P>";
 #      display_data ($query);
     }
   }
 
 
   function parse_search_form ($search_data) {
+    # Set empty query holders
     $Donor = "";
-    foreach (str_word_count ($search_data["contributor"], 1) as $word) {
-      if (strpos ($word, "'") === false) {
-        $Donor .= "+{$word} ";
-      } else {
-        $Donor .= "+\"" . addslashes ($word) . "\" ";
-      }
-    }
-    if ($Donor != "") {$Donor = "MATCH (contributions_search.DonorNameNormalized, contributions_search.DonorEmployerNormalized, contributions_search.DonorOrganization) AGAINST ('" . $Donor . "' IN BOOLEAN MODE)";} 
-  
-    # build locations query
     $DonorState = "";
-    if (isset ($search_data["location_list"])) {
-      foreach ($search_data["location_list"] as $state) {
-        if ($state != "ALL") {$DonorState .= "contributions_search.DonorState = '{$state}' OR ";}
-      }
-      $DonorState = substr ($DonorState, 0, -4); # Remove the final OR
-    }
-
-    # build candidate search query
     $Candidate = "";
-    if (! isset ($search_data["candidates_list"])) {
-      foreach (str_word_count ($search_data["search_candidates"], 1) as $word) {
+    $CandidateList = "";
+    $OfficeList = "";
+
+    #------------------------------------------------------------------------------------------
+    # Build contributor search query:
+    if ($search_data["contrib_select"] == "search") {
+      foreach (str_word_count ($search_data["contributor"], 1) as $word) {
         if (strpos ($word, "'") === false) {
-          $Candidate .= "+{$word} ";
+          $Donor .= "+{$word} ";
         } else {
-          $Candidate .= "+\"" . addslashes ($word) . "\" ";
+          $Donor .= "+\"" . addslashes ($word) . "\" ";
         }
       }
+      if ($Donor != "") {$Donor = "MATCH (contributions_search.DonorNameNormalized, contributions_search.DonorEmployerNormalized, contributions_search.DonorOrganization) AGAINST ('" . $Donor . "' IN BOOLEAN MODE)";}
     }
-    if ($Candidate != "") {$Candidate = "MATCH (contributions_search.RecipientCandidateNameNormalized) AGAINST ('" . $Candidate . "' IN BOOLEAN MODE)";} 
+  
+    # build locations query
+    if ($search_data["state_list"] != "ALL") {$DonorState = "contributions_search.DonorState = '{$search_data["state_list"]}'";}
 
-    # build candidate list query
-    $CandidateList = "";
-    if (isset ($search_data["candidates_list"])) {
-      foreach ($search_data["candidates_list"] as $candidate) {
-        if ($candidate != "ALL") {$CandidateList .= "contributions_search.RecipientCandidateNameNormalized = '" . addslashes ($candidate) . "' OR ";}
+
+    #------------------------------------------------------------------------------------------
+    # Build candidate search query:
+    if (isset ($search_data["candidates"])) {
+      # Candidates checked
+      switch ($search_data["cand_select"]) {
+        case "search":
+          # build candidate search query
+          if ($search_data["candidate_list"] == "Select candidate") {
+            foreach (str_word_count ($search_data["search_candidates"], 1) as $word) {
+              if (strpos ($word, "'") === false) {
+                $Candidate .= "+{$word} ";
+              } else {
+                $Candidate .= "+\"" . addslashes ($word) . "\" ";
+              }
+            }
+            if ($Candidate != "") {$Candidate = "MATCH (contributions_search.RecipientCandidateNameNormalized) AGAINST ('" . $Candidate . "' IN BOOLEAN MODE)";}
+          } else {
+            $CandidateList = "contributions_search.RecipientCandidateNameNormalized = '" . addslashes ($search_data["candidate_list"]) . "'";
+          }
+          break;
+   
+        case "office":
+          # build office list query
+          $OfficeList = "contributions_search.RecipientCandidateOffice = '" . addslashes ($search_data["office_list"]) . "'";
+          break;
       }
-      $CandidateList = substr ($CandidateList, 0, -4); # Remove the final OR
     }
 
-    # build office list query
-    $OfficeList = "";
-    if (isset ($search_data["office_list"])) {
-      foreach ($search_data["office_list"] as $office) {
-        if ($office != "ALL") {$OfficeList .= "contributions_search.RecipientCandidateOffice = '" . addslashes ($office) . "' OR ";}
-      }
-      $OfficeList = substr ($OfficeList, 0, -4); # Remove the final OR
+
+    #------------------------------------------------------------------------------------------
+    # Build ballot measure search query:
+    if (isset ($search_data["propositions"])) {
     }
 
     # build election list query

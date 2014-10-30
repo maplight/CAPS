@@ -110,7 +110,7 @@
                 <div class="contry-select">
                   <label for="contr">Contributor Location</label>
                   <a href="#" class="info" tabindex="6">info</a>
-                  <select tabindex="7" id="contr" name="location_list">
+                  <select tabindex="7" id="contr" name="state_list">
 <?php
   fill_state_list ();
 ?>
@@ -138,7 +138,7 @@
                       <label for="candidates_list" class="hidden">label</label>
                       <label for="search_candidates" class="hidden">label</label>
                       <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" tabindex="" accesskey="s" onkeyup="filter_candidates_list();">
-                      <select tabindex="12" id="candidates_list" name="candidate_list">
+                      <select tabindex="12" id="candidate_list" name="candidate_list">
 <?php
   $js_candidates = fill_candidate_names ();
 ?>
@@ -166,14 +166,18 @@
                     <a href="#" class="info"tabindex="18">info</a>
                   </div>
                   <div class="holder-b add">
+
+<!--
                     <div class="sub-row">
                       <label for="for7" class="hidden">label</label>
                       <select tabindex="19" id="for7">
 <?php
-  fill_elections ();
+#  fill_elections ();
 ?>
                       </select>
                     </div>
+-->
+
                     <div class="sub-row">
                       <label for="for8" class="hidden">label</label>
                       <input type="text" id="search_propositions" name="search_propositions" value="Search propositions" tabindex="" accesskey="s" onkeyup="filter_propositions_list();">
