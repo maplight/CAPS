@@ -676,28 +676,28 @@ p { margin: 0 0 1.2em; }
 	content:'';
 }
 /*search result style*/
-.serach-result{
+.search-result{
 	width:100%;
 	overflow: hidden;
 	margin:0 0 11px;
 }
-.serach-result .output{
+.search-result .output{
 	font:15px/20px Arial, Helvetica, sans-serif;
 	color:#333;
 	float: left;
 	margin:0 20px 0 0;
 	word-spacing:1px;
 }
-.serach-result .output p{margin:0;}
-.serach-result .output p strong{ font-weight:bold;}
-.serach-result a.see-more{
+.search-result .output p{margin:0;}
+.search-result .output p strong{ font-weight:bold;}
+.search-result a.see-more{
 	float: left;
 	padding:0;
 	font:bold 15px/20px Arial, Helvetica, sans-serif;
 	color:#124161;
 	position:relative;
 }
-.serach-result a.info{
+.search-result a.info{
 	background:url(../images/sprite01.png) no-repeat 0 -15px;
 	width:15px;
 	height:16px;
@@ -706,19 +706,31 @@ p { margin: 0 0 1.2em; }
 	display: inline-block;
 	vertical-align: middle;
 }
-.serach-result a.info:hover{
+.search-result a.info:hover{
 	background-position:-20px -15px;
 	border-radius:100%;
 }
+
 /*search table style*/
 .table-holder{
-	max-width:780px;
-	overflow: auto;
-}
-.search-table{
-	margin:0 0 24px;
 	border:1px solid #b8b8b8;
+	margin:0 0 24px;
 	max-width:780px;
+          overflow: auto;
+}
+
+.search-table{
+	margin:0 0 0px;
+	border:1px solid #b8b8b8;
+          border-collapse: collapse;
+	max-width:780px;
+}
+.search-table thead{
+	margin:0;
+	background:#ebebeb;
+	text-align:left;
+	font:13px/16px Arial, Helvetica, sans-serif;
+	color:#333;
 }
 .search-table thead tr th .links{
 	position:absolute;
@@ -727,7 +739,6 @@ p { margin: 0 0 1.2em; }
 }
 .search-table thead tr th .links a.upword{
 	position:absolute;
-	text-indent:9999px;
 	top:0;
 	right:0;
 	text-decoration: none;
@@ -739,7 +750,6 @@ p { margin: 0 0 1.2em; }
 }
 .search-table thead tr th .links a.downword{
 	position:absolute;
-	text-indent:9999px;
 	top:7px;
 	right:0;
 	text-decoration: none;
@@ -751,28 +761,14 @@ p { margin: 0 0 1.2em; }
 }
 .search-table thead tr th .links a.upword:hover,
 .search-table thead tr th .links a.downword:hover{ opacity:0.8;}
-.search-table thead{
-	margin:0;
-	background:#ebebeb;
-	width: 100%;
-	text-align:left;
-	font:13px/16px Arial, Helvetica, sans-serif;
-	color:#333;
+.search-table thead tr th{
+	margin: 0;
+	padding:7px 15px 7px 3px;
+	position:relative; 
 }
 .search-table tbody{
 	font:12px/16px Arial, Helvetica, sans-serif;
 	color:#333;
-}
-.search-table thead tr{
-	border:1px solid #b8b8b8;
-	display: block;
-	overflow: hidden;
-
-}
-.search-table thead tr th{
-	margin: 0;
-	padding:7px 15px 7px 3px;
-	position:relative;
 }
 .search-table tbody tr{ min-height:45px;}
 .search-table tbody tr:nth-child(even){ background:#ecedee;}
@@ -781,72 +777,12 @@ p { margin: 0 0 1.2em; }
 	padding:5px 5px 0;
 }
 .search-table tbody tr{
-	border-top:1px solid #b8b8b8;
 	margin:0;
-	display: block;
-	overflow: hidden;
 }
-.search-table .col1{
-	width:11.45%;
-	float: left;
-	min-height:46px;
-	border-right:1px solid #b8b8b8;
+.search-table tbody tr th.bottom{
+	background:#ebebeb;
 }
-.search-table tbody tr:first-child .col2,
-.search-table tbody tr:first-child .col3,
-.search-table tbody tr:first-child .col4,
-.search-table tbody tr:first-child .col5,
-.search-table tbody tr:first-child .col6,
-.search-table tbody tr:first-child .col7,
-.search-table tbody tr:first-child .col8,
-.search-table tbody tr:first-child .col9,
-.search-table tbody tr:first-child .col1{
-	min-height:57px;
-}
-.search-table tbody .col2,
-.search-table tbody .col3,
-.search-table tbody .col4,
-.search-table tbody .col5,
-.search-table tbody .col6,
-.search-table tbody .col7,
-.search-table tbody .col8,
-.search-table tbody .col9,
-.search-table tbody .col1{
-	min-height:45px;
-}
-.search-table tbody .col1{width:11.56%;}
-.search-table .col7,
-.search-table .col5,
-.search-table .col4,
-.search-table .col2{
-	width:11.25%;
-	float: left;
-	min-height:46px;
-	border-right:1px solid #b8b8b8;
-}
-.search-table .col7,
-.search-table .col5,
-.search-table .col4{ width:12%;}
-.search-table .col3{
-	width:9.43%;
-	float: left;
-	min-height:46px;
-	border-right:1px solid #b8b8b8;
-}
-.search-table .col6{
-	width:12.28%;
-	float: left;
-	min-height:46px;
-	border-right:1px solid #b8b8b8;
-}
-.search-table .col9,
-.search-table .col8{
-	width:9.7%;
-	float: left;
-	min-height:46px;
-	border-right:1px solid #b8b8b8;
-}
-.search-table .col9{border:0;}
+
 /*pagination style*/
 ul.pagination{
 	list-style: none;

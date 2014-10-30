@@ -6,7 +6,7 @@
     } else {
       # Parse search form
       $query = parse_search_form ($_POST);
-      display_data ($query);
+      display_data ($query, $_POST["fields"]);
     }
   }
 
@@ -220,7 +220,7 @@
   }
 
 
-  function display_data ($query) {
+  function display_data ($query, $fields) {
     $limit = 10;
     $page = 0;
     $sort = "contributions_search.TransactionDate DESC";
@@ -268,7 +268,7 @@
     echo "</div>";
     echo "</div>";
     echo "</div>";
-    echo "<div class=\"serach-result\">";
+    echo "<div class=\"search-result\">";
     echo "<div class=\"output\">";
     echo "<p>Showing <strong>1</strong> to <strong>###</strong> of <strong>###</strong> rows </p>";
     echo "</div>";
@@ -279,83 +279,60 @@
     echo "<table title=\"search table\" summary=\"search table\" class=\"search-table\">";
     echo "<thead>";
     echo "<tr>";
-    echo "<th class=\"col1\">Recipient Name";
-    echo "<div class=\"links\">";
-    echo "<a href=\"#\" class=\"upword\">upword</a>";
-    echo "<a href=\"#\" class=\"downword\">downword</a>";
-    echo "</div>";
-    echo "</th>";
-    echo "<th class=\"col2\">Recipient Committee";
-    echo "<div class=\"links\">";
-    echo "<a href=\"#\" class=\"upword\">upword</a>";
-    echo "<div class=\"links\">";
-    echo "<a href=\"#\" class=\"upword\">upword</a>";
-    echo "<a href=\"#\" class=\"downword\">downword</a>";
-    echo "</div>";
-    echo "</th>";
-    echo "<th class=\"col3\">Office";
-    echo "<div class=\"links\">";
-    echo "<a href=\"#\" class=\"upword\">upword</a>";
-    echo "<a href=\"#\" class=\"downword\">downword</a>";
-    echo "</div>";
-    echo "</th>";
-    echo "<th class=\"col4\">Contributor Name";
-    echo "<div class=\"links\">";
-    echo "<a href=\"#\" class=\"upword\">upword</a>";
-    echo "<a href=\"#\" class=\"downword\">downword</a>";
-    echo "</div>";
-    echo "</th>";
-    echo "<th class=\"col5\">Contributor Employer";
-    echo "<div class=\"links\">";
-    echo "<a href=\"#\" class=\"upword\">upword</a>";
-    echo "<a href=\"#\" class=\"downword\">downword</a>";
-    echo "</div>";
-    echo "</th>";
-    echo "<th class=\"col6\">Contributor Occupation";
-    echo "<div class=\"links\">";
-    echo "<a href=\"#\" class=\"upword\">upword</a>";
-    echo "<a href=\"#\" class=\"downword\">downword</a>";
-    echo "</div>";
-    echo "</th>";
-    echo "<th class=\"col7\">Contributor Organization";
-    echo "<div class=\"links\">";
-    echo "<a href=\"#\" class=\"upword\">upword</a>";
-    echo "<a href=\"#\" class=\"downword\">downword</a>";
-    echo "</div>";
-    echo "</th>";
-    echo "<th class=\"col8\">Date";
-    echo "<div class=\"links\">";
-    echo "<a href=\"#\" class=\"upword\">upword</a>";
-    echo "<a href=\"#\" class=\"downword\">downword</a>";
-    echo "</div>";
-    echo "</th>";
-    echo "<th class=\"col9\">Amount";
-    echo "<div class=\"links\">";
-    echo "<a href=\"#\" class=\"upword\">upword</a>";
-    echo "<a href=\"#\" class=\"downword\">downword</a>";
-    echo "</div>";
-    echo "</th>";
+
+    foreach ($fields as $field) {
+      $field_data = explode ("|", $field);
+      echo "<th>{$field_data[1]}";
+      echo "<div class=\"links\">";
+      echo "<a href=\"#\" class=\"upword\"> </a>";
+      echo "<a href=\"#\" class=\"downword\"> </a>";
+      echo "</div>";
+      echo "</th>";
+    }
     echo "</tr>";
     echo "</thead>";
     echo "<tbody>";
 
     while ($row = $result->fetch_assoc()) {
       echo "<tr>";
-      echo "<td class=\"col1\">{$row["RecipientCandidateNameNormalized"]}</td>";
-      echo "<td class=\"col2\">{$row["RecipientCommitteeNameNormalized"]}</td>";
-      echo "<td class=\"col3\">{$row["RecipientCandidateOffice"]}</td>";
-      echo "<td class=\"col4\">{$row["DonorNameNormalized"]}</td>";
-      echo "<td class=\"col5\">{$row["DonorEmployerNormalized"]}</td>";
-      echo "<td class=\"col6\">{$row["DonorOccupationNormalized"]}</td>";
-      echo "<td class=\"col7\">{$row["DonorOrganization"]}</td>";
-      if (date ("F j, Y", strtotime ($row["TransactionDate"])) == "December 31, 1969") {
-        echo "<td class=\"col8\"><I>unknown</I></td>";
-      } else {
-        echo "<td class=\"col8\">" . date ("M j, Y", strtotime ($row["TransactionDate"])) . "</td>";
+      foreach ($fields as $field) {
+        $field_data = explode ("|", $field);
+        switch ($field_data[0]) {
+          case "TransactionDate":
+            if (date ("F j, Y", strtotime ($row[$field_data[0]])) == "December 31, 1969") {
+              echo "<td><I>unknown</I></td>";
+            } else {
+              echo "<td>" . date ("M j, Y", strtotime ($row[$field_data[0]])) . "</td>";
+            }
+            break;
+
+          case "Election":
+            if (date ("F j, Y", strtotime ($row[$field_data[0]])) == "December 31, 1969") {
+              echo "<td><I>unknown</I></td>";
+            } else {
+              echo "<td>" . date ("M j, Y", strtotime ($row[$field_data[0]])) . "</td>";
+            }
+            break;
+
+          case "TransactionAmount":
+            echo "<td style=\"text-align:right\">$" . number_format($row[$field_data[0]], 2, ".", ",") . "</td>";
+            break;
+
+          default: 
+            echo "<td>{$row[$field_data[0]]}</td>";
+            break;
+        }
       }
-      echo "<td class=\"col9\">$" . number_format($row["TransactionAmount"], 2, ".", ",") . "</td>";
       echo "</tr>";
     }
+
+    echo "<tr>";
+    foreach ($fields as $field) {
+      $field_data = explode ("|", $field);
+      echo "<th class=\"bottom\">{$field_data[1]}";
+      echo "</th>";
+    }
+    echo "</tr>";
 
     echo "</tbody>";
     echo "</table>";
