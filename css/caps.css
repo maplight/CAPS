@@ -713,7 +713,7 @@ p { margin: 0 0 1.2em; }
 /*search table style*/
 .table-holder{
 	max-width:780px;
-	overflow: hidden;
+	overflow: auto;
 }
 .search-table{
 	margin:0 0 24px;
