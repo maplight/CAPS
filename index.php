@@ -217,7 +217,7 @@
                       <input type="radio" name="comm_select" value="search" id="for10">
                       <label for="for10" class="hidden">label</label>
                       <label for="for11" class="hidden">label</label>
-                      <input type="text" value="Just these committees" id="for11">
+                      <input type="text" value="Just these committees" id="for11" name="committee_search">
                     </div>
                   </div>
                 </div>

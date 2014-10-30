@@ -26,6 +26,7 @@ echo "$query<P>";
     $Proposition = "";
     $Position = "";
     $Allied = "";
+    $Committee = "";
 
 
     #------------------------------------------------------------------------------------------
@@ -113,21 +114,23 @@ echo "$query<P>";
 
     #------------------------------------------------------------------------------------------
     # Build committe search query:
-
-
-
-
-
-    # build committee search query
-    $Committee = "";
-    foreach (str_word_count ($search_data["committee"], 1) as $word) {
-      if (strpos ($word, "'") === false) {
-        $Committee .= "+{$word} ";
-      } else {
-        $Committee .= "+\"" . addslashes ($word) . "\" ";
-      }
+    if (isset ($search_data["committees"])) {
+      # build committee search query
+      if ($search_data["comm_select"] != "all") {
+        foreach (str_word_count ($search_data["committee_search"], 1) as $word) {
+          if (strpos ($word, "'") === false) {
+            $Committee .= "+{$word} ";
+          } else {
+            $Committee .= "+\"" . addslashes ($word) . "\" ";
+          }
+        }
+        if ($Committee != "") {$Committee = "MATCH (contributions_search.RecipientCommitteeNameNormalized) AGAINST ('" . $Committee . "' IN BOOLEAN MODE)";}
+      } 
     }
-    if ($Committee != "") {$Committee = "MATCH (contributions_search.RecipientCommitteeNameNormalized) AGAINST ('" . $Committee . "' IN BOOLEAN MODE)";} 
+
+
+
+
 
     # build date & cycle query
     $DateRange = "";
