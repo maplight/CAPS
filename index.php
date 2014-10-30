@@ -85,7 +85,7 @@
         <!-- contain sidebar of the page -->
         <div id="sidebar">
           <!-- search form of the page -->
-          <form action="#" method="post" class="search-form">
+          <form action="" method="post" class="search-form">
             <fieldset>
               <legend class="hidden">search-form</legend>
               <h1>Advanced Search</h1>
@@ -96,21 +96,21 @@
                 <h2>Contributions From:</h2>
                 <div class="radio-holder">
                   <div class="row info">
-                    <input type="radio" id="all" name="all" tabindex="2">
+                    <input type="radio" id="all" name="contrib_select" value="all" tabindex="2" checked>
                     <label for="all">All contributors</label>
                     <a href="#" class="info" tabindex="3">info</a>
                   </div>
                   <div class="row">
-                    <input type="radio" name="all" tabindex="4" id="for1">
+                    <input type="radio" name="contrib_select" value="search" tabindex="4" id="for1">
                     <label for="for1" class="hidden">label</label>
                     <label for="for2" class="hidden">label</label>
-                    <input type="text" id="for2" value="Just these contributors" tabindex="5" accesskey="s">
+                    <input type="text" id="for2" name="contributor" value="Just these contributors" tabindex="5" accesskey="s">
                   </div>
                 </div>
                 <div class="contry-select">
                   <label for="contr">Contributor Location</label>
                   <a href="#" class="info" tabindex="6">info</a>
-                  <select tabindex="7" id="contr">
+                  <select tabindex="7" id="contr" name="location_list">
 <?php
   fill_state_list ();
 ?>
@@ -123,22 +123,22 @@
                 <div class="frame">
                   <div class="sub-section">
                   <div class="check-part">
-                    <input type="checkbox" id="cand" tabindex="8">
+                    <input type="checkbox" id="cand" name="candidates" tabindex="8" checked>
                     <label for="cand">Candidates</label>
                     <a href="#" class="info" tabindex="9">info</a>
                   </div>
                   <div class="holder-b">
                     <div class="sub-row">
-                      <input type="radio" id="all1" name="to" tabindex="10">
+                      <input type="radio" id="all1" name="cand_select" value="all" tabindex="10" checked>
                       <label for="all1">All candidates</label>
                     </div>
                     <div class="sub-row info">
-                      <input type="radio" id="for3" name="to" tabindex="11">
+                      <input type="radio" id="for3" name="cand_select" value="search" tabindex="11">
                       <label for="for3" class="hidden">label</label>
                       <label for="candidates_list" class="hidden">label</label>
                       <label for="search_candidates" class="hidden">label</label>
-                      <input type="text" id="search_candidates" value="Search candidates" tabindex="" accesskey="s" onkeyup="filter_candidates_list();">
-                      <select tabindex="12" id="candidates_list">
+                      <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" tabindex="" accesskey="s" onkeyup="filter_candidates_list();">
+                      <select tabindex="12" id="candidates_list" name="candidate_list">
 <?php
   $js_candidates = fill_candidate_names ();
 ?>
@@ -146,10 +146,10 @@
                       <a href="#" class="info" tabindex="13">info</a>
                     </div>
                     <div class="sub-row info">
-                      <input type="radio" name="to" tabindex="14" id="for5">
+                      <input type="radio" name="cand_select" value="office" tabindex="14" id="for5">
                       <label for="for5" class="hidden">label</label>
                       <label for="for6" class="hidden">label</label>
-                      <select tabindex="15" id="for6">
+                      <select tabindex="15" id="for6" name="office_list">
 <?php
   fill_offices_sought ();
 ?>
@@ -161,7 +161,7 @@
                   <!--sub section of search form -->
                   <div class="sub-section">
                   <div class="check-part">
-                    <input type="checkbox" id="cand1" tabindex="17">
+                    <input type="checkbox" id="cand1" name="propositions" tabindex="17">
                     <label for="cand1">Ballot Measures</label>
                     <a href="#" class="info"tabindex="18">info</a>
                   </div>
@@ -176,8 +176,8 @@
                     </div>
                     <div class="sub-row">
                       <label for="for8" class="hidden">label</label>
-                      <input type="text" id="search_propositions" value="Search propositions" tabindex="" accesskey="s" onkeyup="filter_propositions_list();">
-                      <select id="propositions_list" tabindex="20">
+                      <input type="text" id="search_propositions" name="search_propositions" value="Search propositions" tabindex="" accesskey="s" onkeyup="filter_propositions_list();">
+                      <select id="propositions_list" name="proposition_list" tabindex="20">
 <?php
   $js_propositions = fill_propositions ();
 ?>
@@ -185,14 +185,14 @@
                     </div>
                     <div class="sub-row">
                       <label for="for9" class="hidden">label</label>
-                      <select id="for9" tabindex="21">
-                        <option>Both support &amp; oppose</option>
-                        <option>Support</option>
-                        <option>Oppose</option>
+                      <select id="for9" name="support" tabindex="21">
+                        <option value="Both">Both support &amp; oppose</option>
+                        <option value="Support">Support</option>
+                        <option value="Oppose">Oppose</option>
                       </select>
                     </div>
                     <div class="check-b-area">
-                      <input type="checkbox" id="alli" tabindex="22">
+                      <input type="checkbox" id="alli" name="exclude" tabindex="22">
                       <label for="alli">Exclude contnbutions between allied committees</label>
                     </div>
                   </div>
@@ -206,11 +206,11 @@
                   </div>
                   <div class="holder-b add">
                     <div class="sub-row">
-                      <input type="radio" id="allc" name="comm">
+                      <input type="radio" id="allc" name="comm_select" value="all" checked>
                       <label for="allc">All committees</label>
                     </div>
                     <div class="sub-row">
-                      <input type="radio" name="comm" id="for10">
+                      <input type="radio" name="comm_select" value="search" id="for10">
                       <label for="for10" class="hidden">label</label>
                       <label for="for11" class="hidden">label</label>
                       <input type="text" value="Just these committees" id="for11">
@@ -224,11 +224,11 @@
                   <h2>Dates:</h2>
                   <a href="#" class="info">info</a>
                   <div class="radio-row">
-                    <input type="radio" id="cyc" name="date">
+                    <input type="radio" id="cyc" name="date_select" value="all" checked>
                     <label for="cyc">All dates and election cycles</label>
                   </div>
                   <div class="radio-row">
-                    <input type="radio" id="cyc1" name="date">
+                    <input type="radio" id="cyc1" name="date_select" value="range">
                     <label for="cyc1">Date range</label>
                     <div class="date-range">
                       <label for="for12" class="hidden">label</label>
@@ -238,7 +238,7 @@
                     </div>
                   </div>
                   <div class="radio-row">
-                    <input type="radio" id="cyc2" name="date">
+                    <input type="radio" id="cyc2" name="date_select" value="cycle">
                     <label for="cyc2">Election cycles</label>
                     <div class="year-row">
 <?php
@@ -262,6 +262,9 @@
 
         <!-- contain the main content of the page -->
         <div id="content">
+<?php
+  build_results_table ();
+?>
         </div>
       </div>
       <!-- footer of the page -->
