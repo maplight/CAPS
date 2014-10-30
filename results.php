@@ -5,10 +5,8 @@
       echo "<P>&nbsp;</P><BLOCKQUOTE><DIV CLASS=\"title\">Search political contributions from 2001 through the present, using the controls on the left.</DIV></BLOCKQUOTE>";
     } else {
       # Parse search form
-echo "<pre>"; print_r ($_POST); echo "</PRE><P>";
       $query = parse_search_form ($_POST);
-echo "$query<P>";
-#      display_data ($query);
+      display_data ($query);
     }
   }
 
