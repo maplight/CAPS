@@ -351,7 +351,7 @@
       if (date ("F j, Y", strtotime ($row["TransactionDate"])) == "December 31, 1969") {
         echo "<td class=\"col8\"><I>unknown</I></td>";
       } else {
-        echo "<td class=\"col8\">" . str_replace (" ", "&nbsp", date ("F j, Y", strtotime ($row["TransactionDate"]))) . "</td>";
+        echo "<td class=\"col8\">" . date ("M j, Y", strtotime ($row["TransactionDate"])) . "</td>";
       }
       echo "<td class=\"col9\">$" . number_format($row["TransactionAmount"], 2, ".", ",") . "</td>";
       echo "</tr>";
