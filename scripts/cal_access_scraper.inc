@@ -738,7 +738,8 @@
                         case 1: $election = trim ($tabledata->plaintext); break;
                         case 2:
                             if ($office != "OFFICE") {
-                              $election_info = mysql_fetch_object (my_query ("SELECT election_id, date, description FROM cal_access_elections WHERE IF(office = 'ALL', CONCAT(YEAR(date), IF(election_type = 'G', ' GENERAL', ' PRIMARY'), ' ELECTION'), '') = '$election';"));
+                              $result = my_query ("SELECT election_id, date, description FROM cal_access_elections WHERE IF(office = 'ALL', CONCAT(YEAR(date), IF(election_type = 'G', ' GENERAL', ' PRIMARY'), ' ELECTION'), '') = '$election';");
+                              $election_info = $result->fetch_object;
                                if (! $election_info) {
                                  $election_data = parse_election_data ($office . " " . $election);
                                } else {
