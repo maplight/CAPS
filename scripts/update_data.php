@@ -76,7 +76,7 @@
       }
 
       if ($removal_word_found) {
-        $query = "UPDATE grp_ftp_disclosure_candidate_name
+        $query = "UPDATE filing_amends
                             SET gender = '',
                             first_name = '',
                             middle_name = '',
@@ -87,7 +87,7 @@
                             display_name = ''
                           WHERE filing_id = '{$row["filing_id"]}' AND amend_id = '{$row["amend_id"]}'";
       } else {
-        $query = "UPDATE grp_ftp_disclosure_candidate_name
+        $query = "UPDATE filing_amends
                             SET gender = '$gender',
                             first_name = '" . addslashes ($first_name) . "',
                             middle_name = '" . addslashes ($middle_name) . "',
