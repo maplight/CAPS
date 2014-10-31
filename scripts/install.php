@@ -8,6 +8,9 @@
   # Create empty ftp tables (used to store the data from ftp)
   process_sql_file ("install_ftp_tables.sql");
 
+  # Create tables used to process the data
+  process_sql_file ("install_processing_tables.sql");
+
   # Create populated tables (name parse tables and state name table)
   process_sql_file ("install_populated.sql");
 
@@ -47,6 +50,9 @@
     $filer_id = $row["filer_id"];
     get_committee_information ($session, $filer_id, 1);
   }
+
+  # get the ftp data
+  exec ("php get_ftp_data.php > /dev/null &");
     
 
 #===============================================================================================
