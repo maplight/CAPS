@@ -52,7 +52,7 @@
   }
 
   # Process an update
-  exec ("php update_data.php > /dev/null &");
+  system ("php update_data.php");
     
 
 #===============================================================================================

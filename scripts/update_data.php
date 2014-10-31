@@ -2,10 +2,10 @@
   require ("../connect.php");
 
   # Update the most recent cal_access session
-  exec ("php cal_access_data_scraper.php > /dev/null &");
+  system ("php cal_access_data_scraper.php");
 
   # Get the ftp data
-  exec ("php get_ftp_data.php > /dev/null &");
+  system ("php get_ftp_data.php");
 
   # Process data for contributions table - stage 1
   process_sql_file ("process_stage_1.sql");
