@@ -66,15 +66,16 @@
   } else {
     # Process good data
     for ($i = 0; $i < count ($good_tables); $i++) {
-
-echo str_replace ('\\', '/', getcwd ()) . "/{$good_files[$i]}\n";
-
       my_query ("TRUNCATE TABLE $good_tables[$i]");
       my_query ("LOAD DATA LOCAL INFILE '" . str_replace ('\\', '/', getcwd ()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
-      unlink ($good_files[$i]);
+
+echo "{$my_conn->error}\n";      
+echo ("LOAD DATA LOCAL INFILE '" . str_replace ('\\', '/', getcwd ()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES\n");
+
+#      unlink ($good_files[$i]);
     }
   }
 
   # remove all downloaded files
-  exec ("rm -rf files/*");
+#  exec ("rm -rf files/*");
 ?>
