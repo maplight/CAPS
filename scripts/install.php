@@ -51,8 +51,8 @@
     get_committee_information ($session, $filer_id, 1);
   }
 
-  # get the ftp data
-  exec ("php get_ftp_data.php > /dev/null &");
+  # Process an update
+  exec ("php update_data.php > /dev/null &");
     
 
 #===============================================================================================

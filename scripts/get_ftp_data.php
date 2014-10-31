@@ -13,8 +13,8 @@
   # get a list of all the ftp_* tables in the database
   $db_tables = array ();  
   $result = my_query ("SHOW TABLES");
-  while ($row = $result->fetch_assoc()) {
-    if (substr ($row["Tables_in_ca_search"], 0, 4) == "ftp_") {$db_tables[] = $row["Tables_in_ca_search"];}
+  while ($row = $result->fetch_array()) {
+    if (substr ($row[0], 0, 4) == "ftp_") {$db_tables[] = $row[0];}
   }
 
   # download the file and unzip it
