@@ -203,7 +203,7 @@ p { margin: 0 0 1.2em; }
 .search-form .form-section{
 	display: block;
 	overflow: hidden;
-	margin:0 0 22px;
+	margin:0 0 10px;
 	padding:16px 0 0;
 	border-top:1px solid #b7b7b7;
 }
@@ -214,10 +214,12 @@ p { margin: 0 0 1.2em; }
 	margin:0 0 12px;
 	font:bold 21px/25px Arial, Helvetica, sans-serif;
 	color:#124161;
+          border:0px;
 }
 .search-form .form-section.info h2.caps{
 	max-width:200px;
 	float: left;
+          border:0px;
 }
 .search-form .form-section.info{
 	position:relative;
@@ -296,11 +298,15 @@ p { margin: 0 0 1.2em; }
 	margin:0 0 2px 0;
 	max-width:200px;
 }
-.form-section .contry-select select{
-	width:175px;
-	color:#898989;
-	font:12px/18px Arial, Helvetica, sans-serif;
+.form-section .contry-select select.caps{
+	width:191px;
+	height:24px;
 	border:0;
+	margin:0 0 0 17px;
+	padding:0 5px;
+	font:15px/21px Arial, Helvetica, sans-serif;
+	color:#898989;
+	float: left; 
 	border-radius:0;
 }
 .filter-form input[type="submit"]:hover,
@@ -424,15 +430,15 @@ p { margin: 0 0 1.2em; }
 	padding:5px 0 4px 25px;
 	overflow: hidden;
 }
-.form-section .radio-row .date-range input[type="text"]{
-	width:100px;
+.form-section .radio-row .date-range input[type="text"].caps{
+	width:90px;
 	height:23px;
 	border:2px solid #ccc;
 	margin:0 0 0 0;
 	padding:0 5px;
 	font:15px/21px Arial, Helvetica, sans-serif;
 	color:#898989;
-	float: left;
+/*	float: left; */
 	-webkit-appearance:none;
 	border-radius:0;
 }
@@ -455,7 +461,7 @@ p { margin: 0 0 1.2em; }
 }
 .form-section .radio-row .year-check label.caps{
 	float: left;
-	max-width:78px;
+  	max-width:78px; 
 }
 /* content style*/
 #content{
@@ -496,6 +502,7 @@ p { margin: 0 0 1.2em; }
 	font:bold 29px/33px Arial, Helvetica, sans-serif;
 	color:#222;
 	margin:0 0 1px;
+          border:0px;
 }
 #content .contributions-area .output{
 	font:italic 15px/22px Arial, Helvetica, sans-serif;
@@ -906,11 +913,12 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 		font-size:13px;
 		line-height: 16px;
 	}
-	.form-section .radio-row .year-check input[type="checkbox"]{ margin:3px 0 10px;}
+	.form-section .radio-row .year-check input[type="checkbox"]{ margin:3px 0 10px; }
 	.filter-block .filter-form{ width:68%;}
 	.search-form .form-section h2.caps{
 		font-size:17px;
 		line-height: 20px;
+                    border:0px;
 	}
 	.form-section .radio-holder .row input[type="text"]{ width:80%;}
 	.table-holder{

@@ -297,8 +297,8 @@
       echo "<tr>";
       foreach ($fields as $field) {
         $field_data = explode ("|", $field);
-        switch ($field_data[0]) {
-          case "TransactionDate":
+        switch ($field_data[2]) {
+          case "Date":
             if (date ("F j, Y", strtotime ($row[$field_data[0]])) == "December 31, 1969") {
               echo "<td><I>unknown</I></td>";
             } else {
@@ -306,15 +306,7 @@
             }
             break;
 
-          case "Election":
-            if (date ("F j, Y", strtotime ($row[$field_data[0]])) == "December 31, 1969") {
-              echo "<td><I>unknown</I></td>";
-            } else {
-              echo "<td>" . date ("M j, Y", strtotime ($row[$field_data[0]])) . "</td>";
-            }
-            break;
-
-          case "TransactionAmount":
+          case "Currency":
             echo "<td style=\"text-align:right\">$" . number_format($row[$field_data[0]], 2, ".", ",") . "</td>";
             break;
 

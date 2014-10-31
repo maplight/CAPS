@@ -125,17 +125,22 @@
                     <label for="for2" class="hidden">label</label>
                     <input type="text" id="for2" name="contributor" value="Just these contributors" tabindex="5" accesskey="s">
                   </div>
-                </div>
-                <div class="contry-select">
-                  <label for="contr" class="caps">Contributor Location</label>
-                  <a href="#" class="info" tabindex="6">info</a>
-                  <select tabindex="7" id="contr" name="state_list">
+
+                  <div class="row">
+                    <div class="contry-select">
+                      <label for="contr" class="caps">Contributor Location</label>
+                      <a href="#" class="info" tabindex="6">info</a>
+                      <select tabindex="7" id="contr" name="state_list" class="caps">
 <?php
   fill_state_list ();
 ?>
-                  </select>
+                      </select>
+                    </div>
+                  </div>
+
                 </div>
               </div>
+
               <!-- section of search form -->
               <div class="form-section middel">
                 <h2 class="caps">Contributions To:</h2>
@@ -254,10 +259,10 @@
                     <input type="radio" id="cyc1" name="date_select" value="range">
                     <label for="cyc1" class="caps">Date range</label>
                     <div class="date-range">
+                      <input type="text" id="for12" name="start_date" value="mm/dd/yyyy" class="caps"> to 
                       <label for="for12" class="hidden">label</label>
-                      <input type="text" id="for12" name="start_date" value="mm/dd/yyyy" class="small">
-                      <label for="to" class="to-label">to</label>
-                      <input type="text" value="mm/dd/yyyy" id="to" name="end_date" class="small">
+                      <input type="text" value="mm/dd/yyyy" id="to" name="end_date" class="caps">
+                      <label for="to" class="hidden">label</label>
                     </div>
                   </div>
                   <div class="radio-row">
@@ -279,7 +284,7 @@
 <?php 
   $field_count = 0;
   foreach ($select_fields as $field_data) {
-    echo "<input type=\"checkbox\" id=\"field{$field_count}\" name=\"fields[]\" value=\"{$field_data[0]}|{$field_data[1]}\" {$field_data[2]}>";
+    echo "<input type=\"checkbox\" id=\"field{$field_count}\" name=\"fields[]\" value=\"{$field_data[0]}|{$field_data[1]}|{$field_data[3]}\" {$field_data[2]}>";
     echo "<label for=\"field{$field_count}\" class=\"caps\">{$field_data[1]}</label><a href=\"#\" class=\"info\" tabindex=\"\">info</a><br>";
     $field_count++;
   }
