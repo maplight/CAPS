@@ -14,6 +14,7 @@
   $db_tables = array ();  
   $result = my_query ("SHOW TABLES");
   while ($row = $result->fetch_array()) {
+echo "{$row[0]}\n";
     if (substr ($row[0], 0, 4) == "ftp_") {$db_tables[] = $row[0];}
   }
 

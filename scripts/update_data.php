@@ -34,18 +34,18 @@
 
     $words_to_remove = array ();
     $result = my_query ("SELECT * FROM california_data_names_to_remove");
-    while ($row = mysql_fetch_array ($result)) {$words_to_remove[] = $row["removal_word"];}
+    while ($row = $result->fetch_assoc()) {$words_to_remove[] = $row["removal_word"];}
 
-    $result = my_query ("SELECT * FROM grp_ftp_disclosure_candidate_name");
-    while ($row = mysql_fetch_array ($result)) {
-      if ($row["name"] == "") {
+    $result = my_query ("SELECT * FROM filing_amends");
+    while ($row = $result->fetch_assoc()) {
+      if ($row["candidate_name"] == "") {
         if (substr ($row["cand_namf"], -1) == "-") {
           $name = $row["cand_namt"] . " " . $row["cand_namf"] . $row["cand_naml"] . " " . $row["cand_nams"];
         } else {
           $name = $row["cand_namt"] . " " . $row["cand_namf"] . " " . $row["cand_naml"] . " " . $row["cand_nams"];
         }
       } else {
-        $name = $row["name"];
+        $name = $row["candidate_name"];
       }
 
       $name = trim (str_replace (array ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"), "", $name));
