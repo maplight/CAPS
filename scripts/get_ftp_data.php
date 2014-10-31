@@ -29,9 +29,6 @@
     while ($row = $result->fetch_assoc()) {$table_fields[] = $row["Field"];}
 
     $tab_file = $data_directory . "/" . strtoupper (substr ($db_table, 4)) . "_CD.TSV";
-
-echo "{$tab_file}\n";
-
     if (file_exists ($tab_file)) {
       # get array of file field names
       $df = fopen ($tab_file, "r"); $file_header = fgetcsv ($df, 0, "\t", "\"");
@@ -69,6 +66,9 @@ echo "{$tab_file}\n";
   } else {
     # Process good data
     for ($i = 0; $i < count ($good_tables); $i++) {
+
+echo str_replace ('\\', '/', getcwd ()) . "/$good_files[$i] . "\n";
+
       my_query ("TRUNCATE TABLE $good_tables[$i]");
       my_query ("LOAD DATA LOCAL INFILE '" . str_replace ('\\', '/', getcwd ()) . "/$good_files[$i]' INTO TABLE $good_tables[$i] FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
       unlink ($good_files[$i]);

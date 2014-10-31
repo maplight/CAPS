@@ -33,7 +33,7 @@
     require_once ("name_parser.inc");
 
     $words_to_remove = array ();
-    $result = my_query ("SELECT * FROM california_data_names_to_remove");
+    $result = my_query ("SELECT * FROM names_to_remove");
     while ($row = $result->fetch_assoc()) {$words_to_remove[] = $row["removal_word"];}
 
     $result = my_query ("SELECT * FROM filing_amends");

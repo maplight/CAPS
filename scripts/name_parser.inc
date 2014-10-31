@@ -1,6 +1,4 @@
 <?php
-# IF name only has 2 parts or less, don't worry about suffix or prefix.
-
   function parse_name ($name) {
     $name = clean_names ($name);
     $name = split_names ($name);
@@ -46,14 +44,14 @@
     if (count ($name_split) > 2) {
       for ($i = 0; $i < count ($name_split); $i++) {
         $tmp_name = trim (strtoupper (str_replace (".", "", $name_split[$i])));
-#====>>>
-        $row = mysql_fetch_array (my_query ("SELECT COUNT(*) AS count FROM maplight_data.mpdb_nparser_titles WHERE Title = '" . str_replace ("'", "", $tmp_name) . "'"));
+        $result = my_query ("SELECT COUNT(*) AS count FROM nparser_titles WHERE Title = '" . str_replace ("'", "", $tmp_name) . "'");
+        $row = $result->fetch_assoc();
         if ($row["count"] != 0) {
           $prefix = $prefix . " " . $name_split[$i];
           $unset[] = $i;
        } else {
-#====>>>
-          $row = mysql_fetch_array (my_query ("SELECT COUNT(*) AS count FROM maplight_data.mpdb_nparser_suffixes WHERE Suffix = '" . str_replace ("'", "", $tmp_name) . "'"));
+          $result = my_query ("SELECT COUNT(*) AS count FROM nparser_suffixes WHERE Suffix = '" . str_replace ("'", "", $tmp_name) . "'");
+          $row = $result->fetch_assoc();
           if ($row["count"] != 0) {
             $suffix = $name_split[$i] . " " . $suffix;
             $unset[] = $i;
@@ -83,8 +81,8 @@
       $last_name = $name_split[$end_name];
       for ($i = $end_name; $i >= 0; $i--) {
         $tmp_name = trim (strtoupper (str_replace (".", "", $name_split[$i])));
-#====>>>
-        $row = mysql_fetch_array (my_query ("SELECT COUNT(*) AS count FROM maplight_data.mpdb_nparser_surname_prefixes WHERE SurnamePrefix = '" . str_replace ("'", "", $tmp_name) . "'"));
+        $result = my_query ("SELECT COUNT(*) AS count FROM nparser_surname_prefixes WHERE SurnamePrefix = '" . str_replace ("'", "", $tmp_name) . "'");
+        $row = $result->fetch_assoc();
         if ($row["count"] != 0) {
           $last_name = $name_split[$i] . " " . $last_name; $end_name = $i - 1;
         } else {
@@ -94,17 +92,17 @@
       if ($end_name > 0) {for ($i = 1; $i < $end_name; $i++) {$middle_name .= $name_split[$i] . " ";}}
     }
 
-#====>>>
-    $row = mysql_fetch_array (my_query ("SELECT Gender, Rank FROM maplight_data.mpdb_nparser_names WHERE Name = '" . str_replace ("'", "", $first_name) . "'"));
+    $result = my_query ("SELECT Gender, Rank FROM nparser_names WHERE Name = '" . str_replace ("'", "", $first_name) . "'");
+    $row = $result->fetch_assoc();
     $gender = $row["Gender"]; $name_rank = $row["Rank"];
     if ($gender == "") {
-#====>>>
-      $row = mysql_fetch_array (my_query ("SELECT Gender FROM maplight_data.mpdb_nparser_names WHERE Name = '" . str_replace ("'", "", $middle_name) . "'"));
+      $result = my_query ("SELECT Gender FROM nparser_names WHERE Name = '" . str_replace ("'", "", $middle_name) . "'");
+      $row = $result->fetch_assoc();
       $gender = $row["Gender"];
     }
 
-#====>>>
-    $row = mysql_fetch_array (my_query ("SELECT Rank FROM maplight_data.mpdb_nparser_surnames WHERE Surname = REPLACE('" . str_replace ("'", "", $last_name) . "', ' ', '')"));
+    $result = my_query ("SELECT Rank FROM nparser_surnames WHERE Surname = REPLACE('" . str_replace ("'", "", $last_name) . "', ' ', '')");
+    $row = $result->fetch_assoc();
     $surname_rank = $row["Rank"];
 
     $names = array ();

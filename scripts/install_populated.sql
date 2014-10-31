@@ -13,3 +13,10 @@ CREATE TABLE `names_to_remove` (
 );
 
 INSERT INTO `names_to_remove` VALUES ('-'),('.'),('ACT'),('ADDRESS'),('AIRPORT'),('ASSEMBLY'),('ASSENBLY'),('AUTOMOBILE'),('BBQ'),('CALIFORNIA'),('CAMPAIGN'),('CITY'),('COMMITTEE'),('COUNCIL'),('COUNTY'),('ELECT'),('FOR'),('FRIENDS'),('FUND'),('GOV'),('GOVERNOR'),('INITIATIVE'),('MEASURE'),('MEMBERSHIP'),('N/A'),('NA'),('NO'),('OF'),('PAC'),('POLITICAL'),('PROPOSITION'),('RE-ELECT'),('SCHOOL'),('SENATE'),('STATE'),('THE'),('UNION'),('YES');
+
+
+mpdb_nparser_titles
+mpdb_nparser_suffixes
+mpdb_nparser_surname_prefixes
+mpdb_nparser_names
+mpdb_nparser_surnames
