@@ -5,12 +5,10 @@ CREATE TABLE `cal_access_candidates` (
   `id` bigint(20) NOT NULL,
   `link` varchar(250) NOT NULL,
   `party` varchar(100) NOT NULL,
-  `candidate_data` tinyint(4) NOT NULL,
   PRIMARY KEY (`session`,`id`),
   KEY `session` (`session`),
   KEY `name` (`name`(10)),
   KEY `id` (`id`),
-  KEY `candidate_data` (`candidate_data`),
   KEY `party` (`party`(10))
 );
 
@@ -101,112 +99,6 @@ CREATE TABLE `cal_access_committees` (
   KEY `last_date` (`last_date`)
 );
 
-DROP TABLE IF EXISTS `cal_access_committees_contributions_made`;
-CREATE TABLE `cal_access_committees_contributions_made` (
-  `session` smallint(6) NOT NULL,
-  `filer_id` bigint(20) NOT NULL,
-  `date` date NOT NULL,
-  `recipient` varchar(200) NOT NULL,
-  `contest` varchar(200) NOT NULL,
-  `position` varchar(20) NOT NULL,
-  `payment_type` varchar(100) NOT NULL,
-  `amount` double DEFAULT NULL,
-  KEY `session` (`session`),
-  KEY `filer_id` (`filer_id`),
-  KEY `date` (`date`),
-  KEY `recipient` (`recipient`(10)),
-  KEY `payment_type` (`payment_type`(10))
-);
-
-DROP TABLE IF EXISTS `cal_access_committees_contributions_received`;
-CREATE TABLE `cal_access_committees_contributions_received` (
-  `session` smallint(6) NOT NULL,
-  `filer_id` bigint(20) NOT NULL,
-  `contributor_name` varchar(250) NOT NULL,
-  `payment_type` varchar(100) NOT NULL,
-  `city` varchar(100) NOT NULL,
-  `state` char(2) NOT NULL,
-  `zip` varchar(10) NOT NULL,
-  `id_number` varchar(250) NOT NULL,
-  `employer` varchar(100) NOT NULL,
-  `occupation` varchar(100) NOT NULL,
-  `amount` double DEFAULT NULL,
-  `transaction_date` date NOT NULL,
-  `filed_date` date NOT NULL,
-  `transaction_number` varchar(30) NOT NULL,
-  KEY `session` (`session`),
-  KEY `filer_id` (`filer_id`),
-  KEY `contributor_name` (`contributor_name`(10)),
-  KEY `payment_type` (`payment_type`(10)),
-  KEY `transaction_date` (`transaction_date`),
-  KEY `filed_date` (`filed_date`)
-);
-
-DROP TABLE IF EXISTS `cal_access_committees_expenditures_made`;
-CREATE TABLE `cal_access_committees_expenditures_made` (
-  `session` smallint(6) NOT NULL,
-  `filer_id` bigint(20) NOT NULL,
-  `date` date NOT NULL,
-  `payee` varchar(200) NOT NULL,
-  `expenditure_code` varchar(100) NOT NULL,
-  `description` varchar(200) NOT NULL,
-  `amount` double DEFAULT NULL
-);
-
-DROP TABLE IF EXISTS `cal_access_committees_late_contributions_made`;
-CREATE TABLE `cal_access_committees_late_contributions_made` (
-  `session` smallint(6) NOT NULL,
-  `filer_id` bigint(20) NOT NULL,
-  `contributor_name` varchar(250) NOT NULL,
-  `city` varchar(100) NOT NULL,
-  `state_zip` varchar(20) NOT NULL,
-  `id_number` varchar(250) NOT NULL,
-  `employer` varchar(100) NOT NULL,
-  `occupation` varchar(100) NOT NULL,
-  `amount` double DEFAULT NULL,
-  `transaction_type` varchar(100) NOT NULL,
-  `type` varchar(100) NOT NULL,
-  `transaction_date` date NOT NULL,
-  `filed_date` date NOT NULL,
-  `transaction_number` varchar(30) NOT NULL
-);
-
-DROP TABLE IF EXISTS `cal_access_committees_late_contributions_received`;
-CREATE TABLE `cal_access_committees_late_contributions_received` (
-  `session` smallint(6) NOT NULL,
-  `filer_id` bigint(20) NOT NULL,
-  `contributor_name` varchar(250) NOT NULL,
-  `city` varchar(100) NOT NULL,
-  `state_zip` varchar(20) NOT NULL,
-  `id_number` varchar(250) NOT NULL,
-  `employer` varchar(100) NOT NULL,
-  `occupation` varchar(100) NOT NULL,
-  `amount` double DEFAULT NULL,
-  `transaction_type` varchar(100) NOT NULL,
-  `type` varchar(100) NOT NULL,
-  `transaction_date` date NOT NULL,
-  `filed_date` date NOT NULL,
-  `transaction_number` varchar(30) NOT NULL
-);
-
-DROP TABLE IF EXISTS `cal_access_committees_late_expenditures_made`;
-CREATE TABLE `cal_access_committees_late_expenditures_made` (
-  `session` smallint(6) NOT NULL,
-  `filer_id` bigint(20) NOT NULL,
-  `contributor_name` varchar(250) NOT NULL,
-  `city` varchar(100) NOT NULL,
-  `state_zip` varchar(20) NOT NULL,
-  `id_number` varchar(250) NOT NULL,
-  `employer` varchar(100) NOT NULL,
-  `occupation` varchar(100) NOT NULL,
-  `amount` double DEFAULT NULL,
-  `transaction_type` varchar(100) NOT NULL,
-  `type` varchar(100) NOT NULL,
-  `transaction_date` date NOT NULL,
-  `filed_date` date NOT NULL,
-  `transaction_number` varchar(30) NOT NULL
-);
-
 DROP TABLE IF EXISTS `cal_access_committees_names`;
 CREATE TABLE `cal_access_committees_names` (
   `session` smallint(6) NOT NULL,
@@ -239,12 +131,10 @@ CREATE TABLE `cal_access_propositions` (
   `election_date` date NOT NULL,
   `name` varchar(250) NOT NULL,
   `link` varchar(250) NOT NULL,
-  `propositions_committees` tinyint(4) NOT NULL,
   KEY `session` (`session`),
   KEY `proposition_id` (`proposition_id`),
   KEY `election_date` (`election_date`),
-  KEY `name` (`name`(10)),
-  KEY `propositions_committees` (`propositions_committees`)
+  KEY `name` (`name`(10))
 );
 
 DROP TABLE IF EXISTS `cal_access_propositions_committees`;
