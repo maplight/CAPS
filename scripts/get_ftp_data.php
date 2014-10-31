@@ -14,7 +14,6 @@
   $db_tables = array ();  
   $result = my_query ("SHOW TABLES");
   while ($row = $result->fetch_array()) {
-echo "{$row[0]}\n";
     if (substr ($row[0], 0, 4) == "ftp_") {$db_tables[] = $row[0];}
   }
 
@@ -30,6 +29,9 @@ echo "{$row[0]}\n";
     while ($row = $result->fetch_assoc()) {$table_fields[] = $row["Field"];}
 
     $tab_file = $data_directory . "/" . strtoupper (substr ($db_table, 4)) . "_CD.TSV";
+
+echo "{$tab_file}\n";
+
     if (file_exists ($tab_file)) {
       # get array of file field names
       $df = fopen ($tab_file, "r"); $file_header = fgetcsv ($df, 0, "\t", "\"");
