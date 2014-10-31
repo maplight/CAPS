@@ -1,5 +1,6 @@
 <?php
   $my_conn = new mysqli ("localhost", "caps", "caps-dev14", "ca_search");
+  mysqli_options ($my_conn, MYSQLI_OPT_LOCAL_INFILE, true);
 
 
 #===============================================================================================
