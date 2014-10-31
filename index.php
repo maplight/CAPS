@@ -29,6 +29,25 @@
     require ("connect.php");
     require ("sidebar.php");
     require ("results.php");
+
+    # Field selection list
+    # Selected field elements:
+    #   Database Field Name
+    #   Table Header Name
+    #   Default as checked ("checked", or "")
+    #   Data type ("Integer", "Currency", "Date", "") 
+    $select_fields = array (array ("RecipientCandidateNameNormalized", "Recipient Name", "checked", ""),
+                            array ("RecipientCommitteeNameNormalized", "Recipient Committee", "checked", ""),
+                            array ("Target", "Proposition", "", ""),
+                            array ("Election", "Election", "", "Date"),
+                            array ("Position", "Position", "", ""),
+                            array ("RecipientCandidateOffice", "Office", "checked", ""),
+                            array ("DonorNameNormalized", "Contributor Name", "checked", ""),
+                            array ("DonorEmployerNormalized", "Contributor Employer", "checked", ""),
+                            array ("DonorOccupationNormalized", "Contributor Occupation", "checked", ""),
+                            array ("DonorOrganization", "Contributor Organization", "checked", ""),
+                            array ("TransactionDate", "Date", "checked", "Date"),
+                            array ("TransactionAmount", "Amount", "checked", "Currency"));
   ?>
 
   <!-- main container of all the page elements -->
@@ -88,16 +107,16 @@
           <form action="" method="post" class="search-form">
             <fieldset>
               <legend class="hidden">search-form</legend>
-              <h1>Advanced Search</h1>
+              <h1 class="caps">Advanced Search</h1>
               <input type="submit" value="Search" tabindex="1">
               <div class="holder-form">
                 <!-- section of search form -->
                 <div class="form-section">
-                <h2>Contributions From:</h2>
+                <h2 class="caps">Contributions From:</h2>
                 <div class="radio-holder">
                   <div class="row info">
                     <input type="radio" id="all" name="contrib_select" value="all" tabindex="2" checked>
-                    <label for="all">All contributors</label>
+                    <label for="all" class="caps">All contributors</label>
                     <a href="#" class="info" tabindex="3">info</a>
                   </div>
                   <div class="row">
@@ -108,7 +127,7 @@
                   </div>
                 </div>
                 <div class="contry-select">
-                  <label for="contr">Contributor Location</label>
+                  <label for="contr" class="caps">Contributor Location</label>
                   <a href="#" class="info" tabindex="6">info</a>
                   <select tabindex="7" id="contr" name="state_list">
 <?php
@@ -119,18 +138,18 @@
               </div>
               <!-- section of search form -->
               <div class="form-section middel">
-                <h2>Contributions To:</h2>
+                <h2 class="caps">Contributions To:</h2>
                 <div class="frame">
                   <div class="sub-section">
                   <div class="check-part">
                     <input type="checkbox" id="cand" name="candidates" tabindex="8">
-                    <label for="cand">Candidates</label>
+                    <label for="cand" class="caps">Candidates</label>
                     <a href="#" class="info" tabindex="9">info</a>
                   </div>
                   <div class="holder-b">
                     <div class="sub-row">
                       <input type="radio" id="all1" name="cand_select" value="all" tabindex="10" checked>
-                      <label for="all1">All candidates</label>
+                      <label for="all1" class="caps">All candidates</label>
                     </div>
                     <div class="sub-row info">
                       <input type="radio" id="for3" name="cand_select" value="search" tabindex="11">
@@ -162,7 +181,7 @@
                   <div class="sub-section">
                   <div class="check-part">
                     <input type="checkbox" id="cand1" name="propositions" tabindex="17">
-                    <label for="cand1">Ballot Measures</label>
+                    <label for="cand1" class="caps">Ballot Measures</label>
                     <a href="#" class="info" tabindex="18">info</a>
                   </div>
                   <div class="holder-b add">
@@ -197,7 +216,7 @@
                     </div>
                     <div class="check-b-area">
                       <input type="checkbox" id="alli" name="exclude" tabindex="22">
-                      <label for="alli">Exclude contnbutions between allied committees</label>
+                      <label for="alli" class="caps">Exclude contnbutions between allied committees</label>
                     </div>
                   </div>
                 </div>
@@ -205,13 +224,13 @@
                   <div class="sub-section last">
                   <div class="check-part">
                     <input type="checkbox" id="com" name="committees">
-                    <label for="com">Committees</label>
+                    <label for="com" class="caps">Committees</label>
                     <a href="#" class="info" tabindex="23">info</a>
                   </div>
                   <div class="holder-b add">
                     <div class="sub-row">
                       <input type="radio" id="allc" name="comm_select" value="all" checked>
-                      <label for="allc">All committees</label>
+                      <label for="allc" class="caps">All committees</label>
                     </div>
                     <div class="sub-row">
                       <input type="radio" name="comm_select" value="search" id="for10">
@@ -225,15 +244,15 @@
               </div>
                 <!-- section of search form -->
                 <div class="form-section info">
-                  <h2>Dates:</h2>
+                  <h2 class="caps">Dates:</h2>
                   <a href="#" class="info">info</a>
                   <div class="radio-row">
                     <input type="radio" id="cyc" name="date_select" value="all" checked>
-                    <label for="cyc">All dates and election cycles</label>
+                    <label for="cyc" class="caps">All dates and election cycles</label>
                   </div>
                   <div class="radio-row">
                     <input type="radio" id="cyc1" name="date_select" value="range">
-                    <label for="cyc1">Date range</label>
+                    <label for="cyc1" class="caps">Date range</label>
                     <div class="date-range">
                       <label for="for12" class="hidden">label</label>
                       <input type="text" id="for12" name="start_date" value="mm/dd/yyyy" class="small">
@@ -243,7 +262,7 @@
                   </div>
                   <div class="radio-row">
                     <input type="radio" id="cyc2" name="date_select" value="cycle">
-                    <label for="cyc2">Election cycles</label>
+                    <label for="cyc2" class="caps">Election cycles</label>
                     <div class="year-row">
 <?php
   fill_election_cycles ();
@@ -253,22 +272,18 @@
                 </div>
 
                 <div class="form-section">
-                  <h2>Select Fields:</h2>
+                  <h2 class="caps">Select Fields:</h2>
                   <div class="frame">
                     <div class="sub-section">
                       <div class="check-part">
-                        <input type="checkbox" id="field01" name="fields[]" value="RecipientCandidateNameNormalized|Recipient Name" checked><label for="field01">Recipient Name</label><a href="#" class="info" tabindex="">info</a><br>
-                        <input type="checkbox" id="field02" name="fields[]" value="RecipientCommitteeNameNormalized|Recipient Committee" checked><label for="field02">Recipient Committee</label><a href="#" class="info" tabindex="">info</a><br>
-                        <input type="checkbox" id="field03" name="fields[]" value="Target|Proposition"><label for="field03">Proposition</label><a href="#" class="info" tabindex="">info</a><br>
-                        <input type="checkbox" id="field04" name="fields[]" value="Election|Election"><label for="field04">Election</label><a href="#" class="info" tabindex="">info</a><br>
-                        <input type="checkbox" id="field05" name="fields[]" value="Position|Position"><label for="field05">Position</label><a href="#" class="info" tabindex="">info</a><br>
-                        <input type="checkbox" id="field06" name="fields[]" value="RecipientCandidateOffice|Office" checked><label for="field06">Office</label><a href="#" class="info" tabindex="">info</a><br>
-                        <input type="checkbox" id="field07" name="fields[]" value="DonorNameNormalized|Contributor Name" checked><label for="field07">Contributor Name</label><a href="#" class="info" tabindex="">info</a><br>
-                        <input type="checkbox" id="field08" name="fields[]" value="DonorEmployerNormalized|Contributor Employer" checked><label for="field08">Contributor Employer</label><a href="#" class="info" tabindex="">info</a><br>
-                        <input type="checkbox" id="field09" name="fields[]" value="DonorOccupationNormalized|Contributor Occupation" checked><label for="field09">Contributor Occupation</label><a href="#" class="info" tabindex="">info</a><br>
-                        <input type="checkbox" id="field10" name="fields[]" value="DonorOrganization|Contributor Organization" checked><label for="field10">Contributor Organization</label><a href="#" class="info" tabindex="">info</a><br>
-                        <input type="checkbox" id="field11" name="fields[]" value="TransactionDate|Date" checked><label for="field11">Date</label><a href="#" class="info" tabindex="">info</a><br>
-                        <input type="checkbox" id="field12" name="fields[]" value="TransactionAmount|Amount" checked><label for="field12">Amount</label><a href="#" class="info" tabindex="">info</a><br>
+<?php 
+  $field_count = 0;
+  foreach ($select_fields as $field_data) {
+    echo "<input type=\"checkbox\" id=\"field{$field_count}\" name=\"fields[]\" value=\"{$field_data[0]}|{$field_data[1]}\" {$field_data[2]}>";
+    echo "<label for=\"field{$field_count}\" class=\"caps\">{$field_data[1]}</label><a href=\"#\" class=\"info\" tabindex=\"\">info</a><br>";
+    $field_count++;
+  }
+?>
                       </div>
                     </div>
                   </div>

@@ -185,7 +185,7 @@ p { margin: 0 0 1.2em; }
 	padding:19px 20px 15px 27px;
 	overflow: hidden;
 }
-.search-form h1{
+.search-form h1.caps{
 	font: bold 29px/40px Arial, Helvetica, sans-serif;
 	color:#222;
 	margin:0 0 15px;
@@ -209,12 +209,13 @@ p { margin: 0 0 1.2em; }
 }
 .search-form .form-section.middel{ margin:0 0 5px;}
 .search-form .holder-form .form-section:first-child{ border:0;}
-.search-form .form-section h2{
+.search-form .form-section h2.caps{
+	background:#e6ecf0;
 	margin:0 0 12px;
 	font:bold 21px/25px Arial, Helvetica, sans-serif;
 	color:#124161;
 }
-.search-form .form-section.info h2{
+.search-form .form-section.info h2.caps{
 	max-width:200px;
 	float: left;
 }
@@ -248,7 +249,7 @@ p { margin: 0 0 1.2em; }
 	float: left;
 	margin:3px 2px 0 0;
 }
-.form-section .radio-holder .row label{
+.form-section .radio-holder .row label.caps{
 	font:600 15px/18px Arial, Helvetica, sans-serif;
 	color:#000;
 	float: left;
@@ -289,7 +290,7 @@ p { margin: 0 0 1.2em; }
 	margin:0 0 0 27px;
 	position:relative;
 }
-.form-section .contry-select label{
+.form-section .contry-select label.caps{
 	font:600 15px/18px Arial, Helvetica, sans-serif;
 	color:#000;
 	margin:0 0 2px 0;
@@ -330,7 +331,7 @@ p { margin: 0 0 1.2em; }
 	margin:2px 6px 0 0;
 	border-radius:0;
 }
-.form-section .sub-section .check-part label{
+.form-section .sub-section .check-part label.caps{
 	font:600 15px/18px Arial, Helvetica, sans-serif;
 	color:#000;
 	float: left;
@@ -350,7 +351,7 @@ p { margin: 0 0 1.2em; }
 	float: left;
 	margin:2px 8px 0 0;
 }
-.sub-section .holder-b .sub-row label{
+.sub-section .holder-b .sub-row label.caps{
 	float: left;
 	font:15px/18px Arial, Helvetica, sans-serif;
 	color:#333;
@@ -387,8 +388,8 @@ p { margin: 0 0 1.2em; }
 	margin:2px 8px 0 0;
 	border-radius:0;
 }
-.sub-section .holder-b.add .sub-row label,
-.check-b-area label{
+.sub-section .holder-b.add .sub-row label.caps,
+.check-b-area label.caps{
 	color:#898989;
 	font:14px/18px Arial, Helvetica, sans-serif;
 	float: left;
@@ -410,7 +411,7 @@ p { margin: 0 0 1.2em; }
 	float: left;
 	margin:3px 8px 0 0;
 }
-.form-section .radio-row label{
+.form-section .radio-row label.caps{
 	font:15px/20px Arial, Helvetica, sans-serif;
 	max-width:225px;
 	float: left;
@@ -435,7 +436,7 @@ p { margin: 0 0 1.2em; }
 	-webkit-appearance:none;
 	border-radius:0;
 }
-.form-section .radio-row .date-range label{
+.form-section .radio-row .date-range label.caps{
 	font:15px/22px Arial, Helvetica, sans-serif;
 	width:10px;
 	margin:0 8px;
@@ -452,7 +453,7 @@ p { margin: 0 0 1.2em; }
 	margin:3px 2px 10px 0;
 	border-radius:0;
 }
-.form-section .radio-row .year-check label{
+.form-section .radio-row .year-check label.caps{
 	float: left;
 	max-width:78px;
 }
@@ -491,7 +492,7 @@ p { margin: 0 0 1.2em; }
 	margin:0 0 14px;
 	border-bottom:1px solid #b7b7b7;
 }
-#content .contributions-area h2{
+#content .contributions-area h2.caps{
 	font:bold 29px/33px Arial, Helvetica, sans-serif;
 	color:#222;
 	margin:0 0 1px;
@@ -552,7 +553,7 @@ p { margin: 0 0 1.2em; }
 	background-position:-20px -15px;
 	border-radius:100%;
 }
-.filter-form label{
+.filter-form label.caps{
 	float: left;
 	max-width:34px;
 	margin:0 8px 0 0;
@@ -871,7 +872,7 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 ---------------------------------------------------------*/
 @media only screen and (max-width:1195px){
 	.search-form{ padding:10px 7px;}
-	.form-section .radio-row .year-check label{ max-width:78px;}
+	.form-section .radio-row .year-check label.caps{ max-width:78px;}
 	#content{
 		width:72.5%;
 		padding:75px 10px 75px 0;
@@ -897,7 +898,7 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 	}
 }
 @media only screen and (max-width:1023px){
-	.search-form h1{
+	.search-form h1.caps{
 		font-size:20px;
 		line-height: 23px;
 	}
@@ -907,7 +908,7 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 	}
 	.form-section .radio-row .year-check input[type="checkbox"]{ margin:3px 0 10px;}
 	.filter-block .filter-form{ width:68%;}
-	.search-form .form-section h2{
+	.search-form .form-section h2.caps{
 		font-size:17px;
 		line-height: 20px;
 	}
@@ -928,7 +929,7 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 	.notes{ padding:0 60px;}
 	.filter-block{ padding:5px;}
 	.filter-form select,
-	.filter-form label{ margin:0 5px 0 0;}
+	.filter-form label.caps{ margin:0 5px 0 0;}
 	.filter-form input[type="text"]{
 		width:130px;
 		margin:0 2px;
@@ -943,12 +944,12 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 	.sub-section .holder-b .sub-row select,
 	.sub-section .holder-b .sub-row input[type="text"]{ width:75%;}
 	.sub-section .holder-b.add .sub-row select{ width:88%;}
-	.sub-section .holder-b.add .sub-row label, .check-b-area label{ max-width:150px;}
-	.form-section .radio-row label{ max-width:155px;}
+	.sub-section .holder-b.add .sub-row label.caps, .check-b-area label.caps{ max-width:150px;}
+	.form-section .radio-row label.caps{ max-width:155px;}
 	.form-section .radio-row .date-range input[type="text"]{ width:88%;}
 	.form-section .radio-row .year-row{ padding:5px 0 0;}
 	.form-section .radio-row .year-check{ margin:0 0 0 10px;}
-	.form-section .radio-row .year-check label{
+	.form-section .radio-row .year-check label.caps{
 		font-size:11px;
 		line-height: 20px;
 		margin:1px 0 0 4px;
@@ -982,14 +983,14 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 	.form-section .radio-holder .row input[type="radio"]{ margin:3px 5px 0 0;}
 	.form-section .sub-section{ margin:0 0 17px 3px;}
 	.sub-section .holder-b{ margin:0 0 0 23px;}
-	.sub-section .holder-b.add .sub-row label, .check-b-area label{
+	.sub-section .holder-b.add .sub-row label.caps, .check-b-area label.caps{
 		max-width:inherit;
 		width:80%;
 	}
 	.sub-section .holder-b .sub-row{ padding:0 0 10px;}
 	.form-section .radio-row .date-range input[type="text"]{ width:43%;}
 	.form-section .radio-row label.to-label{float: left;}
-	.form-section .radio-row .year-check label{
+	.form-section .radio-row .year-check label.caps{
 		font-size:15px;
 		line-height: 18px;
 	}
@@ -1017,7 +1018,7 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 	}
 	.filter-form select{ width:60px;}
 	.filter-block{ padding:15px;}
-	.filter-form select, .filter-form label{ margin:0 10px 10px;}
+	.filter-form select, .filter-form label.caps{ margin:0 10px 10px;}
 	.filter-form input[type="text"]{ width:60%;}
 	.filter-block .filter-form{
 		padding:0;
