@@ -6,6 +6,7 @@
   process_sql_file ("install_cal_access.sql");
 
   # Create empty ftp tables (used to store the data from ftp)
+  process_sql_file ("install_ftp_tables.sql");
 
   # Create populated tables (name parse tables and state name table)
   process_sql_file ("install_populated.sql");
