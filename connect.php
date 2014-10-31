@@ -1,5 +1,5 @@
 <?php
-  $my_conn = new mysqli ("localhost", "caps", "caps-dev14", "CAPS");
+  $my_conn = new mysqli ("localhost", "caps", "caps-dev14", "ca_search");
 
 
 #===============================================================================================
