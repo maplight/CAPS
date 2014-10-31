@@ -162,7 +162,7 @@
                       <label for="candidates_list" class="hidden">label</label>
                       <label for="search_candidates" class="hidden">label</label>
                       <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" tabindex="" accesskey="s" onkeyup="filter_candidates_list();">
-                      <select tabindex="12" id="candidate_list" name="candidate_list">
+                      <select tabindex="12" id="candidate_list" name="candidate_list" class="caps">
 <?php
   $js_candidates = fill_candidate_names ();
 ?>
@@ -173,7 +173,7 @@
                       <input type="radio" name="cand_select" value="office" tabindex="14" id="for5">
                       <label for="for5" class="hidden">label</label>
                       <label for="for6" class="hidden">label</label>
-                      <select tabindex="15" id="for6" name="office_list">
+                      <select tabindex="15" id="for6" name="office_list" class="caps_nomargin">
 <?php
   fill_offices_sought ();
 ?>
@@ -182,6 +182,7 @@
                     </div>
                   </div>
                 </div>
+
                   <!--sub section of search form -->
                   <div class="sub-section">
                   <div class="check-part">

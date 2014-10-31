@@ -214,6 +214,7 @@ p { margin: 0 0 1.2em; }
 	margin:0 0 12px;
 	font:bold 21px/25px Arial, Helvetica, sans-serif;
 	color:#124161;
+	background:#ebebeb;
           border:0px;
 }
 .search-form .form-section.info h2.caps{
@@ -301,7 +302,7 @@ p { margin: 0 0 1.2em; }
 .form-section .contry-select select.caps{
 	width:191px;
 	height:24px;
-	border:0;
+	border:2px solid #ccc;
 	margin:0 0 0 17px;
 	padding:0 5px;
 	font:15px/21px Arial, Helvetica, sans-serif;
@@ -317,9 +318,9 @@ p { margin: 0 0 1.2em; }
 .form-section .sub-section{
 	display: block;
 	overflow: hidden;
-	margin:0 0 17px 3px;
-	padding:20px 0 0;
-	border-top:1px solid #fff;
+	margin:0 0 10px;
+	padding:16px 0 0;
+	border-top:1px solid #b7b7b7;
 }
 .form-section .sub-section.last{ margin:0;}
 .form-section .frame .sub-section:first-child{
@@ -375,11 +376,25 @@ p { margin: 0 0 1.2em; }
 	-webkit-appearance:none;
 	border-radius:0;
 }
-.sub-section .holder-b .sub-row select{
-	width:195px;
-	font:14px/18px Arial, Helvetica, sans-serif;
-	border:0;
+.sub-section .holder-b .sub-row select.caps{
+	width:190px;
+	height:24px;
+	border:2px solid #ccc;
+	margin:3px 0 0 21px;
+	padding:0 5px;
+	font:15px/21px Arial, Helvetica, sans-serif;
 	color:#898989;
+          float:left;
+	border-radius:0;
+}
+.sub-section .holder-b .sub-row select.caps_nomargin{
+	width:175px;
+	height:24px;
+	border:2px solid #ccc;
+	padding:0 5px;
+	font:15px/21px Arial, Helvetica, sans-serif;
+	color:#898989;
+          float:left;
 	border-radius:0;
 }
 .sub-section .holder-b.add .sub-row select{
