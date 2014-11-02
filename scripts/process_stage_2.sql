@@ -507,7 +507,7 @@ where b.candidate_id is not null
 
 -- add candidate office labels
 update 
-  maplight_research.contributions_full a
+  contributions_full a
   left join california_data_office_codes b on a.RecipientCandidateOfficeCode = b.office_cd
 set a.RecipientCandidateOffice = case
   when ifnull(b.description,'') <> '' and a.RecipientCandidateOfficeCode <> 'OTH' then b.description
