@@ -62,13 +62,3 @@ CREATE TABLE smry_states (
 ) ENGINE=MYISAM;
 INSERT INTO smry_states VALUES ('Alaska','AK',1),('Alabama','AL',1),('Arkansas','AR',1),('Arizona','AZ',1),('California','CA',1),('Colorado','CO',1),('Connecticut','CT',1),('Delaware','DE',1),('Florida','FL',1),('Georgia','GA',1),('Hawaii','HI',1),('Iowa','IA',1),('Idaho','ID',1),('Illinois','IL',1),('Indiana','IN',1),('Kansas','KS',1),('Kentucky','KY',1),('Louisiana','LA',1),('Massachusetts','MA',1),('Maryland','MD',1),('Maine','ME',1),('Michigan','MI',1),('Minnesota','MN',1),('Missouri','MO',1),('Mississippi','MS',1),('Montana','MT',1),('North Carolina','NC',1),('North Dakota','ND',1),('Nebraska','NE',1),('New Hampshire','NH',1),('New Jersey','NJ',1),('New Mexico','NM',1),('Nevada','NV',1),('New York','NY',1),('Ohio','OH',1),('Oklahoma','OK',1),('Oregon','OR',1),('Pennsylvania','PA',1),('Rhode Island','RI',1),('South Carolina','SC',1),('South Dakota','SD',1),('Tennessee','TN',1),('Texas','TX',1),('Utah','UT',1),('Virginia','VA',1),('Vermont','VT',1),('Washington','WA',1),('Wisconsin','WI',1),('West Virginia','WV',1),('Wyoming','WY',1),('Armed Forces Pacific','AP',0),('American Samoa','AS',0),('District of Columbia','DC',0),('Guam','GU',0),('Northern Mariana','MP',0),('Virgin Islands','VI',0),('Puerto Rico','PR',0),('Foreign Countries','ZZ',0),('Federal Level','US',0);
 
-DROP TABLE IF EXISTS `california_data_office_codes`;
-CREATE TABLE `california_data_office_codes` (
-  `office_code_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `office_cd` char(3) NOT NULL,
-  `description` varchar(200) NOT NULL,
-  PRIMARY KEY (`office_code_id`),
-  KEY `office_cd` (`office_cd`)
-);
-INSERT INTO `california_data_office_codes` VALUES (1,'GOV','Governor'),(2,'LTG','Lieutenant Governor'),(3,'SOS','Secretary of State'),(4,'CON','State Controller'),(5,'ATT','Attorney General'),(6,'TRE','State Treasurer'),(7,'INS','Insurance Commissioner'),(8,'SUP','Superintendent of Public Instruction'),(9,'SPM','Supreme Court Justice'),(10,'SEN','State Senate'),(11,'ASM','State Assembly'),(12,'BOE','Board of Equalization'),(13,'PER','Public Employees Retirement System'),(14,'APP','State Appellate Court Justice'),(15,'ASR','Assessor'),(16,'BED','Board of Education'),(17,'BSU','Board of Supervisors'),(18,'CAT','City Attorney'),(19,'CCB','Community College Board'),(20,'CCM','City Council Member'),(21,'COU','County Counsel'),(22,'CSU','County Supervisor'),(23,'CTR','Local Controller'),(24,'DAT','District Attorney'),(25,'MAY','Mayor'),(26,'PDR','Public Defender'),(27,'PLN','Planning Commissioner'),(28,'SHC','Sheriff-Coroner'),(29,'SCJ','Superior Court Judge'),(30,'TRS','Local Treasurer'),(31,'OTH','Other');
-

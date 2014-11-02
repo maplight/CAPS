@@ -97,8 +97,8 @@
       </div> <!-- end id=header -->
 
       <div id="two-columns">
+        <form action="" method="get" class="search-form">
         <div id="sidebar">
-          <form action="" method="get" class="search-form">
             <fieldset>
               <legend class="hidden">search-form</legend>
               <h1 class="caps">Advanced Search</h1>
@@ -108,15 +108,27 @@
                   <h2 class="caps">Contributions From:</h2>
                   <div class="radio-holder">
                     <div class="row info">
-                      <input type="radio" id="all" name="contrib_select" value="all" tabindex="2" checked>
+<?php
+  $checked = "";
+  if (isset ($_GET["contrib_select"])) {if ($_GET["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for these radio buttons  
+  echo "<input type=\"radio\" id=\"all\" name=\"contrib_select\" value=\"all\" tabindex=\"2\" {$checked}>";
+?>
                       <label for="all" class="caps">All contributors</label>
                       <a href="#" class="info" tabindex="3">info</a>
                     </div> <!-- end class=row info -->
                     <div class="row">
-                      <input type="radio" name="contrib_select" value="search" tabindex="4" id="for1">
+<?php
+  $checked = "";
+  if (isset ($_GET["contrib_select"])) {if ($_GET["contrib_select"] == "search") {$checked = "checked";}}  
+  echo "<input type=\"radio\" name=\"contrib_select\" value=\"search\" tabindex=\"4\" id=\"for1\" {$checked}>";
+?>
                       <label for="for1" class="hidden">label</label>
                       <label for="for2" class="hidden">label</label>
-                      <input type="text" id="for2" name="contributor" value="Just these contributors" tabindex="5" accesskey="s">
+<?php
+  $text = "Just these contributor";
+  if (isset ($_GET["contributor"])) {$text = $_GET["contributor"];}
+  echo "<input type=\"text\" id=\"for2\" name=\"contributor\" value=\"{$text}\" tabindex=\"5\" accesskey=\"s\">";
+?>
                     </div> <!-- end class=row -->
                   </div> <!-- end class=radio-holder -->
                   <div class="contry-select">
@@ -124,7 +136,9 @@
                     <a href="#" class="info" tabindex="6">info</a>
                     <select tabindex="7" id="contr" name="state_list" class="caps">
 <?php
-  fill_state_list ();
+  $selected = "ALL";
+  if (isset ($_GET["state_list"])) {$selected = $_GET["state_list"];}
+  fill_state_list ($selected);
 ?>
                     </select>
                   </div> <!-- end class=contry-select -->
@@ -287,7 +301,7 @@
               </div>
               <input type="submit" value="Search">
             </fieldset>
-          </form>
+
 <?php
   echo "<SCRIPT type=text/javascript>";
   echo "var candidates = [{$js_candidates}\"\"];\n";
@@ -303,6 +317,7 @@
   build_results_table ();
 ?>
         </div>
+        </form>
       </div>
       <!-- footer of the page -->
       <div id="footer">

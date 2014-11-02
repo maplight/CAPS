@@ -246,11 +246,11 @@
         echo "</div>";
         echo "</div>";
         echo "<div class=\"filter-block\">";
-        echo "<form action=\"\" class=\"filter-form\">";
+        echo "<div class=\"filter-form\">";
         echo "<fieldset>";
         echo "<legend class=\"hidden\">filter-form</legend>";
         echo "<label for=\"show\">Show</label>";
-        echo "<select id=\"show\">";
+        echo "<select id=\"show\" name=\"return_rows\">";
         echo "<option>10</option>";
         echo "<option>25</option>";
         echo "<option>50</option>";
@@ -258,12 +258,11 @@
         echo "</select>";
         echo "<label for=\"row\">rows</label>";
         echo "<div class=\"holder\">";
-        echo "<input type=\"text\" value=\"Filter by Keyword\" id=\"row\" accesskey=\"f\">";
-        echo "<input type=\"submit\" value=\"Filter\">";
+        echo "<input type=\"submit\" value=\"Update\">";
         echo "<a href=\"#\" class=\"info\">info</a>";
         echo "</div>";
         echo "</fieldset>";
-        echo "</form>";
+        echo "</div>";
         echo "<div class=\"download-area\">";
         echo "<a href=\"#\" class=\"download\">Download CSV</a>";
         echo "<div class=\"download-info\">";

@@ -1,9 +1,9 @@
 <?php
-  function fill_state_list () {
-    echo "<OPTION VALUE=\"ALL\" SELECTED>All states</OPTION>";
+  function fill_state_list ($selected) {
+    if ($selected == "ALL") {echo "<OPTION VALUE=\"ALL\" SELECTED>All states</OPTION>";} else {echo "<OPTION VALUE=\"ALL\">All states</OPTION>";}
     $result = my_query ("SELECT StateName, StateCode FROM smry_states WHERE IsState = 1 ORDER BY StateName");
     while ($row = $result->fetch_assoc()) {
-      echo "<OPTION VALUE={$row["StateCode"]}>{$row["StateName"]}</OPTION>";
+      if ($row["StateCode"] == $selected) {echo "<OPTION VALUE={$row["StateCode"]} SELECTED>{$row["StateName"]}</OPTION>";} else {echo "<OPTION VALUE={$row["StateCode"]}>{$row["StateName"]}</OPTION>";}
     }
   }
 
