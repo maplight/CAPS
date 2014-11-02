@@ -141,7 +141,7 @@
     switch ($search_data["date_select"]) {
       case "range":
         # build date range query
-        $DateRange = "contributions_search.TransactionStartDate >= '" . date ("Y-m-d", strtotime ($search_data["start_date"])) . "' AND contributions_search.TransactionEndDate <= '" . date ("Y-m-d", strtotime ($search_data["end_date"])) . "'";
+        $DateRange = "contributions_search.TransactionDateStart >= '" . date ("Y-m-d", strtotime ($search_data["start_date"])) . "' AND contributions_search.TransactionDateEnd <= '" . date ("Y-m-d", strtotime ($search_data["end_date"])) . "'";
         break;
 
       case "cycle":
@@ -223,7 +223,7 @@
   function display_data ($query, $fields) {
     $limit = 10;
     $page = 0;
-    $sort = "contributions_search.TransactionDate DESC";
+    $sort = "contributions_search.TransactionDateEnd DESC";
 
     $result = my_query ($query . " ORDER BY {$sort} LIMIT " . ($page * $limit) . ",{$limit}");
     $rows_returned = $result->num_rows;
