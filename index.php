@@ -213,7 +213,11 @@
                   <!--sub section of search form -->
                   <div class="sub-section">
                   <div class="check-part">
-                    <input type="checkbox" id="cand1" name="propositions" tabindex="17">
+<?php
+  $checked = "";
+  if (isset ($_POST["propositions"])) {if ($_POST["propositions"] == "on") {$checked = "checked";}}  
+  echo "<input type=\"checkbox\" id=\"cand1\" name=\"propositions\" tabindex=\"17\" {$checked}>";
+?>
                     <label for="cand1" class="caps">Ballot Measures</label>
                     <a href="#" class="info" tabindex="18">info</a>
                   </div>
@@ -232,10 +236,17 @@
 
                     <div class="sub-row">
                       <label for="for8" class="hidden">label</label>
-                      <input type="text" id="search_propositions" name="search_propositions" value="Search propositions" tabindex="" accesskey="s" onkeyup="filter_propositions_list();">
+<?php
+  $text = "Search propositions";
+  if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
+  echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" tabindex=\"\" accesskey=\"s\" onkeyup=\"filter_propositions_list();\">";
+?>
+
                       <select id="propositions_list" name="proposition_list" tabindex="20">
 <?php
-  $js_propositions = fill_propositions ();
+  $selected = "";
+  if (isset ($_POST["proposition_list"])) {$selected = $_POST["proposition_list"];}
+  $js_propositions = fill_propositions ($selected);
 ?>
                       </select>
                     </div>
@@ -243,12 +254,18 @@
                       <label for="for9" class="hidden">label</label>
                       <select id="for9" name="position" tabindex="21">
                         <option value="B">Both support &amp; oppose</option>
-                        <option value="S">Support</option>
-                        <option value="O">Oppose</option>
+<?php
+  if ($_POST["position"] == "S") {echo "<option value=\"S\" SELECTED>Support</option>";} else {echo "<option value=\"S\">Support</option>";}
+  if ($_POST["position"] == "O") {echo "<option value=\"O\" SELECTED>Oppose</option>";} else {echo "<option value=\"O\">Oppose</option>";}
+?>
                       </select>
                     </div>
                     <div class="check-b-area">
-                      <input type="checkbox" id="alli" name="exclude" tabindex="22">
+<?php
+  $checked = "";
+  if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}}  
+  echo "<input type=\"checkbox\" id=\"alli\" name=\"exclude\" tabindex=\"22\" {$checked}>";
+?>
                       <label for="alli" class="caps">Exclude contnbutions between allied committees</label>
                     </div>
                   </div>
