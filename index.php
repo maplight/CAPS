@@ -241,7 +241,6 @@
   if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
   echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" tabindex=\"\" accesskey=\"s\" onkeyup=\"filter_propositions_list();\">";
 ?>
-
                       <select id="propositions_list" name="proposition_list" tabindex="20">
 <?php
   $selected = "";
@@ -273,20 +272,36 @@
                   <!-- sub section of search form -->
                   <div class="sub-section last">
                   <div class="check-part">
-                    <input type="checkbox" id="com" name="committees">
+<?php
+  $checked = "";
+  if (isset ($_POST["committees"])) {if ($_POST["committees"] == "on") {$checked = "checked";}}  
+  echo "<input type=\"checkbox\" id=\"com\" name=\"committees\" {$checked}>";
+?>
                     <label for="com" class="caps">Committees</label>
                     <a href="#" class="info" tabindex="23">info</a>
                   </div>
                   <div class="holder-b add">
                     <div class="sub-row">
-                      <input type="radio" id="allc" name="comm_select" value="all" checked>
+<?php
+  $checked = "";
+  if (isset ($_POST["comm_select"])) {if ($_POST["comm_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
+  echo "<input type=\"radio\" id=\"allc\" name=\"comm_select\" value=\"all\" {$checked}>";
+?>
                       <label for="allc" class="caps">All committees</label>
                     </div>
                     <div class="sub-row">
-                      <input type="radio" name="comm_select" value="search" id="for10">
+<?php
+  $checked = "";
+  if (isset ($_POST["comm_select"])) {if ($_POST["comm_select"] == "search") {$checked = "checked";}}  
+  echo "<input type=\"radio\" name=\"comm_select\" value=\"search\" id=\"for10\" {$checked}>";
+?>
                       <label for="for10" class="hidden">label</label>
                       <label for="for11" class="hidden">label</label>
-                      <input type="text" value="Just these committees" id="for11" name="committee_search">
+<?php
+  $text = "Just these committees";
+  if (isset ($_POST["committee_search"])) {$text = $_POST["committee_search"];}
+  echo "<input type=\"text\" value=\"{$text}\" id=\"for11\" name=\"committee_search\">";
+?>
                     </div>
                   </div>
                 </div>
