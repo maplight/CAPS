@@ -110,7 +110,7 @@
                     <div class="row info">
 <?php
   $checked = "";
-  if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for these radio buttons  
+  if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button
   echo "<input type=\"radio\" id=\"all\" name=\"contrib_select\" value=\"all\" tabindex=\"2\" {$checked}>";
 ?>
                       <label for="all" class="caps">All contributors</label>
@@ -136,7 +136,7 @@
                     <a href="#" class="info" tabindex="6">info</a>
                     <select tabindex="7" id="contr" name="state_list" class="caps">
 <?php
-  $selected = "ALL";
+  $selected = "";
   if (isset ($_POST["state_list"])) {$selected = $_POST["state_list"];}
   fill_state_list ($selected);
 ?>
@@ -150,35 +150,59 @@
                 <div class="frame">
                   <div class="sub-section">
                   <div class="check-part">
-                    <input type="checkbox" id="cand" name="candidates" tabindex="8">
+<?php
+  $checked = "";
+  if (isset ($_POST["candidates"])) {if ($_POST["candidates"] == "on") {$checked = "checked";}}  
+  echo "<input type=\"checkbox\" id=\"cand\" name=\"candidates\" tabindex=\"8\" {$checked}>";
+?>
                     <label for="cand" class="caps">Candidates</label>
                     <a href="#" class="info" tabindex="9">info</a>
                   </div>
                   <div class="holder-b">
                     <div class="sub-row">
-                      <input type="radio" id="all1" name="cand_select" value="all" tabindex="10" checked>
+<?php
+  $checked = "";
+  if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
+  echo "<input type=\"radio\" id=\"all\" name=\"cand_select\" value=\"all\" tabindex=\"10\" {$checked}>";
+?>
                       <label for="all1" class="caps">All candidates</label>
                     </div>
                     <div class="sub-row info">
-                      <input type="radio" id="for3" name="cand_select" value="search" tabindex="11">
+<?php
+  $checked = "";
+  if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "search") {$checked = "checked";}}  
+  echo "<input type=\"radio\" id=\"for3\" name=\"cand_select\" value=\"search\" tabindex=\"11\" {$checked}>";
+?>
                       <label for="for3" class="hidden">label</label>
                       <label for="candidates_list" class="hidden">label</label>
                       <label for="search_candidates" class="hidden">label</label>
-                      <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" tabindex="" accesskey="s" onkeyup="filter_candidates_list();">
+<?php
+  $text = "Search candidates";
+  if (isset ($_POST["search_candidates"])) {$text = $_POST["search_candidates"];}
+  echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" tabindex=\"\" accesskey=\"s\" onkeyup=\"filter_candidates_list();\">";
+?>
                       <select tabindex="12" id="candidate_list" name="candidate_list" class="caps">
 <?php
-  $js_candidates = fill_candidate_names ();
+  $selected = "";
+  if (isset ($_POST["candidate_list"])) {$selected = $_POST["candidate_list"];}
+  $js_candidates = fill_candidate_names ($selected);
 ?>
                       </select>
                       <a href="#" class="info" tabindex="13">info</a>
                     </div>
                     <div class="sub-row info">
-                      <input type="radio" name="cand_select" value="office" tabindex="14" id="for5">
+<?php
+  $checked = "";
+  if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "office") {$checked = "checked";}}  
+  echo "<input type=\"radio\" id=\"for5\" name=\"cand_select\" value=\"office\" tabindex=\"14\" {$checked}>";
+?>
                       <label for="for5" class="hidden">label</label>
                       <label for="for6" class="hidden">label</label>
                       <select tabindex="15" id="for6" name="office_list" class="caps_nomargin">
 <?php
-  fill_offices_sought ();
+  $selected = "";
+  if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
+  fill_offices_sought ($selected);
 ?>
                       </select>
                       <a href="#" class="info" tabindex="16">info</a>

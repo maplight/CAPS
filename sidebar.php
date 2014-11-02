@@ -1,6 +1,6 @@
 <?php
   function fill_state_list ($selected) {
-    if ($selected == "ALL") {echo "<OPTION VALUE=\"ALL\" SELECTED>All states</OPTION>";} else {echo "<OPTION VALUE=\"ALL\">All states</OPTION>";}
+    echo "<OPTION VALUE=\"ALL\">All states</OPTION>";
     $result = my_query ("SELECT StateName, StateCode FROM smry_states WHERE IsState = 1 ORDER BY StateName");
     while ($row = $result->fetch_assoc()) {
       if ($row["StateCode"] == $selected) {echo "<OPTION VALUE={$row["StateCode"]} SELECTED>{$row["StateName"]}</OPTION>";} else {echo "<OPTION VALUE={$row["StateCode"]}>{$row["StateName"]}</OPTION>";}
@@ -8,22 +8,22 @@
   }
 
 
-  function fill_candidate_names () {
+  function fill_candidate_names ($selected) {
     echo "<OPTION>Select candidate</OPTION>";
     $javascript_array = "[\"Select candidate\"],";
     $result = my_query ("SELECT RecipientCandidateNameNormalized FROM smry_candidates ORDER BY RecipientCandidateNameNormalized");
     while ($row = $result->fetch_assoc()) {
-      echo "<OPTION>{$row["RecipientCandidateNameNormalized"]}</OPTION>";
+      if ($row["RecipientCandidateNameNormalized"] == $selected) {echo "<OPTION SELECTED>{$row["RecipientCandidateNameNormalized"]}</OPTION>";} else {echo "<OPTION>{$row["RecipientCandidateNameNormalized"]}</OPTION>";}
       $javascript_array .= "\"" . str_replace ("\"", "", $row["RecipientCandidateNameNormalized"]) . "\",";
     }
     return $javascript_array;
   }
 
 
-  function fill_offices_sought () {
+  function fill_offices_sought ($selected) {
     $result = my_query ("SELECT DISTINCT RecipientCandidateOffice FROM smry_offices ORDER BY RecipientCandidateOffice");
     while ($row = $result->fetch_assoc()) {
-      echo "<OPTION>{$row["RecipientCandidateOffice"]}</OPTION>";
+      if ($row["RecipientCandidateOffice"] == $selected) {echo "<OPTION SELECTED>{$row["RecipientCandidateOffice"]}</OPTION>";} else {echo "<OPTION>{$row["RecipientCandidateOffice"]}</OPTION>";}
     }
   }
 
