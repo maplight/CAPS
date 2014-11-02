@@ -468,14 +468,15 @@ p { margin: 0 0 1.2em; }
 	float: left;
 	margin:0 0 0 10px;
 }
-.form-section .radio-row .year-check input[type="checkbox"]{
+.form-section .radio-row .year-check input[type="checkbox"].caps{
 	float: left;
 	margin:3px 2px 10px 0;
 	border-radius:0;
 }
 .form-section .radio-row .year-check label.caps{
 	float: left;
-  	max-width:78px; 
+          white-space:nowrap;
+  	max-width:78px;
 }
 /* content style*/
 #content{

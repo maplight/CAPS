@@ -54,14 +54,14 @@
   }
 
 
-  function fill_election_cycles () {
+  function fill_election_cycles ($cycles) {
     $result = my_query ("SELECT ElectionCycle FROM smry_cycles ORDER BY ElectionCycle DESC");
     while ($row = $result->fetch_assoc()) {
       $cycle_start = $row["ElectionCycle"];
       $cycle_end = $cycle_start + 1;
       echo "<div class=\"year-check\">";
-      echo "<input type=\"checkbox\" id=\"y{$cycle_start}\" name=\"cycles[]\" value=\"{$cycle_start}\">";
-      echo "<label for=\"y{$cycle_start}\">$cycle_start-$cycle_end</label>";
+      if (in_array ($cycle_start, $cycles)) {echo "<input type=\"checkbox\" id=\"y{$cycle_start}\" name=\"cycles[]\" value=\"{$cycle_start}\" class=\"caps\" CHECKED>";} else {echo "<input type=\"checkbox\" id=\"y{$cycle_start}\" name=\"cycles[]\" value=\"{$cycle_start}\" class=\"caps\">";}
+      echo "<label for=\"y{$cycle_start}\" class=\"caps\">$cycle_start-$cycle_end</label>";
       echo "</div>";
     }
   }

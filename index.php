@@ -336,17 +336,22 @@
 <?php
   $text = "mm/dd/yyyy";
   if (isset ($_POST["end_date"])) {$text = $_POST["end_date"];}
-  echo "<input type=\"text\" value=\"mm/dd/yyyy\" id=\"to\" name=\"{$text}\" class=\"caps\">";
+  echo "<input type=\"text\" value=\"{$text}\" id=\"to\" name=\"end_date\" class=\"caps\">";
 ?>
                       <label for="to" class="hidden">label</label>
                     </div>
                   </div>
                   <div class="radio-row">
-                    <input type="radio" id="cyc2" name="date_select" value="cycle">
+<?php
+  $checked = "";
+  if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "cycle") {$checked = "checked";}}  
+  echo "<input type=\"radio\" id=\"cyc2\" name=\"date_select\" value=\"cycle\" {$checked}>";
+?>
                     <label for="cyc2" class="caps">Election cycles</label>
                     <div class="year-row">
 <?php
-  fill_election_cycles ();
+  if (isset ($_POST["cycles"])) {$cycles = $_POST["cycles"];} else {$cycles = array ("");}
+  fill_election_cycles ($cycles);
 ?>
                     </div>
                   </div>
