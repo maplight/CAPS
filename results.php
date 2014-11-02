@@ -218,7 +218,7 @@
 
 
   function display_data ($where, $fields) {
-    $limit = 10;
+    if (isset ($_POST["return_rows"])) {$limit = $_POST["return_rows"];} else {$limit = 10;}
     $page = 0;
     $sort = "contributions_search.TransactionDateEnd DESC";
 
@@ -251,10 +251,10 @@
         echo "<legend class=\"hidden\">filter-form</legend>";
         echo "<label for=\"show\">Show</label>";
         echo "<select id=\"show\" name=\"return_rows\">";
-        echo "<option>10</option>";
-        echo "<option>25</option>";
-        echo "<option>50</option>";
-        echo "<option>100</option>";
+        if ($limit == 10) {echo "<option selected>10</option>";} else {echo "<option>10</option>";}
+        if ($limit == 25) {echo "<option selected>25</option>";} else {echo "<option>25</option>";}
+        if ($limit == 50) {echo "<option selected>50</option>";} else {echo "<option>50</option>";}
+        if ($limit == 100) {echo "<option selected>100</option>";} else {echo "<option>100</option>";}
         echo "</select>";
         echo "<label for=\"row\">rows</label>";
         echo "<div class=\"holder\">";
@@ -323,13 +323,13 @@
           echo "</tr>";
         }
 
-        echo "<tr>";
-        foreach ($fields as $field) {
-          $field_data = explode ("|", $field);
-          echo "<th class=\"bottom\">{$field_data[1]}";
-          echo "</th>";
-        }
-        echo "</tr>";
+#        echo "<tr>";
+#        foreach ($fields as $field) {
+#          $field_data = explode ("|", $field);
+#          echo "<th class=\"bottom\">{$field_data[1]}";
+#          echo "</th>";
+#        }
+#        echo "</tr>";
 
         echo "</tbody>";
         echo "</table>";
