@@ -266,7 +266,7 @@
                   </div>
                 </div>
 
-                <div class="form-section">
+                <div class="form-section hidden">
                   <h2 class="caps">Select Fields:</h2>
                   <div class="frame">
                     <div class="sub-section">

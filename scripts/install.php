@@ -14,6 +14,7 @@
   # Create populated tables (name parse tables and state name table)
   process_sql_file ("install_populated.sql");
 
+  # Make the files directory if it doesn't exist
 
   # Populate all cal_access sessions
   get_elections_list ();
