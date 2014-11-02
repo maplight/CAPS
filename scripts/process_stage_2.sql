@@ -117,7 +117,7 @@ select
   , str_to_date(left(contributions.rcpt_date,locate(' ',contributions.rcpt_date)-1),'%m/%d/%Y') as TransactionDateEnd
   , contributions.amount as TransactionAmount
   , str_to_date(ftp_filer_filings.filing_date,'%m/%d/%Y %h:%i:%s %p') as FiledDate
-  , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
+  , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
   , if(isnull(filing_amends.filing_id),'N','Y') as HasCandidateName
   , ifnull(filing_amends.display_name,'') as RecipientCandidateNameNormalized
   , ftp_cvr_campaign_disclosure.office_cd as RecipientCandidateOfficeCode
