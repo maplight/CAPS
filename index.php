@@ -312,16 +312,32 @@
                   <h2 class="caps">Dates:</h2>
                   <a href="#" class="info">info</a>
                   <div class="radio-row">
-                    <input type="radio" id="cyc" name="date_select" value="all" checked>
+<?php
+  $checked = "";
+  if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
+  echo "<input type=\"radio\" id=\"cyc\" name=\"date_select\" value=\"all\" {$checked}>";
+?>
                     <label for="cyc" class="caps">All dates and election cycles</label>
                   </div>
                   <div class="radio-row">
-                    <input type="radio" id="cyc1" name="date_select" value="range">
+<?php
+  $checked = "";
+  if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "range") {$checked = "checked";}}  
+  echo "<input type=\"radio\" id=\"cyc1\" name=\"date_select\" value=\"range\" {$checked}>"
+?>
                     <label for="cyc1" class="caps">Date range</label>
                     <div class="date-range">
-                      <input type="text" id="for12" name="start_date" value="mm/dd/yyyy" class="caps"> to 
+<?php
+  $text = "mm/dd/yyyy";
+  if (isset ($_POST["start_date"])) {$text = $_POST["start_date"];}
+  echo "<input type=\"text\" id=\"for12\" name=\"start_date\" value=\"{$text}\" class=\"caps\"> to"; 
+?>
                       <label for="for12" class="hidden">label</label>
-                      <input type="text" value="mm/dd/yyyy" id="to" name="end_date" class="caps">
+<?php
+  $text = "mm/dd/yyyy";
+  if (isset ($_POST["end_date"])) {$text = $_POST["end_date"];}
+  echo "<input type=\"text\" value=\"mm/dd/yyyy\" id=\"to\" name=\"{$text}\" class=\"caps\">";
+?>
                       <label for="to" class="hidden">label</label>
                     </div>
                   </div>
