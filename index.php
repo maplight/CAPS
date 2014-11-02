@@ -97,7 +97,7 @@
       </div> <!-- end id=header -->
 
       <div id="two-columns">
-        <form action="" method="get" class="search-form">
+        <form action="" method="post" class="search-form">
         <div id="sidebar">
             <fieldset>
               <legend class="hidden">search-form</legend>
@@ -110,7 +110,7 @@
                     <div class="row info">
 <?php
   $checked = "";
-  if (isset ($_GET["contrib_select"])) {if ($_GET["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for these radio buttons  
+  if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for these radio buttons  
   echo "<input type=\"radio\" id=\"all\" name=\"contrib_select\" value=\"all\" tabindex=\"2\" {$checked}>";
 ?>
                       <label for="all" class="caps">All contributors</label>
@@ -119,14 +119,14 @@
                     <div class="row">
 <?php
   $checked = "";
-  if (isset ($_GET["contrib_select"])) {if ($_GET["contrib_select"] == "search") {$checked = "checked";}}  
+  if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
   echo "<input type=\"radio\" name=\"contrib_select\" value=\"search\" tabindex=\"4\" id=\"for1\" {$checked}>";
 ?>
                       <label for="for1" class="hidden">label</label>
                       <label for="for2" class="hidden">label</label>
 <?php
   $text = "Just these contributor";
-  if (isset ($_GET["contributor"])) {$text = $_GET["contributor"];}
+  if (isset ($_POST["contributor"])) {$text = $_POST["contributor"];}
   echo "<input type=\"text\" id=\"for2\" name=\"contributor\" value=\"{$text}\" tabindex=\"5\" accesskey=\"s\">";
 ?>
                     </div> <!-- end class=row -->
@@ -137,7 +137,7 @@
                     <select tabindex="7" id="contr" name="state_list" class="caps">
 <?php
   $selected = "ALL";
-  if (isset ($_GET["state_list"])) {$selected = $_GET["state_list"];}
+  if (isset ($_POST["state_list"])) {$selected = $_POST["state_list"];}
   fill_state_list ($selected);
 ?>
                     </select>

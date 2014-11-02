@@ -1,12 +1,12 @@
 <?php
   function build_results_table () {
-    if (! isset ($_GET["contributor"])) {
+    if (! isset ($_POST["contributor"])) {
       # No form search yet
       echo "<P>&nbsp;</P><BLOCKQUOTE><DIV CLASS=\"title\">Search political contributions from 2001 through the present, using the controls on the left.</DIV></BLOCKQUOTE>";
     } else {
       # Parse search form
-      $where = parse_search_form ($_GET);
-      display_data ($where, $_GET["fields"]);
+      $where = parse_search_form ($_POST);
+      display_data ($where, $_POST["fields"]);
     }
   }
 
