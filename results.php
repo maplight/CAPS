@@ -204,7 +204,7 @@
     $where = "";
     if ($donor_where != "") {$where .= "{$donor_where} AND ";}
     if ($candidate_where != "" && $proposition_where != "") {
-      $where .= "({$candidate_where} OR {$proposition_where}) AND ";
+      $where .= "({$candidate_where}) AND ({$proposition_where}) AND ";
     } else {
       if ($candidate_where != "") {$where .= "{$candidate_where} AND ";}
       if ($proposition_where != "") {$where .= "{$proposition_where} AND ";}
