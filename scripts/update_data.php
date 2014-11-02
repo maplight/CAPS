@@ -14,10 +14,10 @@
   clean_candidate_names ();
 
   # Process data for contributions table - stage 2
-#  process_sql_file ("process_stage_2.sql");
+  process_sql_file ("process_stage_2.sql");
 
   # Process data for contributions table - stage 3
-#  process_sql_file ("process_stage_3.sql");
+  process_sql_file ("process_stage_3.sql");
     
 
 #===============================================================================================
