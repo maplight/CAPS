@@ -16,14 +16,15 @@ html {
 *:before,
 *:after { box-sizing: inherit; }
 body {
-	margin: 0px;
-          padding: 0px;
+	margin: 0;
 	color: #333;
 	font:15px/22px Arial, Helvetica, sans-serif;
+	overflow-y: scroll;
 	-webkit-text-size-adjust: 100%;
 	-ms-text-size-adjust: none;
 	min-width: 320px;
 	height: 100%;
+	background: #444 url(../images/bg-body.png) no-repeat 50% 0;
 }
 article,
 aside,
@@ -121,7 +122,7 @@ p { margin: 0 0 1.2em; }
 ---------------------------------------------------------*/
 /*wrapper style*/
 #wrapper{
-	width: 100%; 
+	width: 100%;
 	position:relative;
 	overflow: hidden;
 }
@@ -184,7 +185,7 @@ p { margin: 0 0 1.2em; }
 	padding:19px 20px 15px 27px;
 	overflow: hidden;
 }
-.search-form h1.caps{
+.search-form h1{
 	font: bold 29px/40px Arial, Helvetica, sans-serif;
 	color:#222;
 	margin:0 0 15px;
@@ -202,24 +203,20 @@ p { margin: 0 0 1.2em; }
 .search-form .form-section{
 	display: block;
 	overflow: hidden;
-	margin:0 0 10px;
+	margin:0 0 22px;
 	padding:16px 0 0;
 	border-top:1px solid #b7b7b7;
 }
 .search-form .form-section.middel{ margin:0 0 5px;}
 .search-form .holder-form .form-section:first-child{ border:0;}
-.search-form .form-section h2.caps{
-	background:#e6ecf0;
+.search-form .form-section h2{
 	margin:0 0 12px;
 	font:bold 21px/25px Arial, Helvetica, sans-serif;
 	color:#124161;
-	background:#ebebeb;
-          border:0px;
 }
-.search-form .form-section.info h2.caps{
+.search-form .form-section.info h2{
 	max-width:200px;
 	float: left;
-          border:0px;
 }
 .search-form .form-section.info{
 	position:relative;
@@ -251,7 +248,7 @@ p { margin: 0 0 1.2em; }
 	float: left;
 	margin:3px 2px 0 0;
 }
-.form-section .radio-holder .row label.caps{
+.form-section .radio-holder .row label{
 	font:600 15px/18px Arial, Helvetica, sans-serif;
 	color:#000;
 	float: left;
@@ -292,21 +289,17 @@ p { margin: 0 0 1.2em; }
 	margin:0 0 0 27px;
 	position:relative;
 }
-.form-section .contry-select label.caps{
-	font:15px/18px Arial, Helvetica, sans-serif;
+.form-section .contry-select label{
+	font:600 15px/18px Arial, Helvetica, sans-serif;
 	color:#000;
 	margin:0 0 2px 0;
 	max-width:200px;
 }
-.form-section .contry-select select.caps{
-	width:191px;
-	height:24px;
-	border:2px solid #ccc;
-	margin:0 0 0 17px;
-	padding:0 5px;
-	font:15px/21px Arial, Helvetica, sans-serif;
+.form-section .contry-select select{
+	width:175px;
 	color:#898989;
-	float: left; 
+	font:12px/18px Arial, Helvetica, sans-serif;
+	border:0;
 	border-radius:0;
 }
 .filter-form input[type="submit"]:hover,
@@ -317,9 +310,9 @@ p { margin: 0 0 1.2em; }
 .form-section .sub-section{
 	display: block;
 	overflow: hidden;
-	margin:0 0 10px;
-	padding:16px 0 0;
-	border-top:1px solid #b7b7b7;
+	margin:0 0 17px 3px;
+	padding:20px 0 0;
+	border-top:1px solid #fff;
 }
 .form-section .sub-section.last{ margin:0;}
 .form-section .frame .sub-section:first-child{
@@ -337,7 +330,7 @@ p { margin: 0 0 1.2em; }
 	margin:2px 6px 0 0;
 	border-radius:0;
 }
-.form-section .sub-section .check-part label.caps{
+.form-section .sub-section .check-part label{
 	font:600 15px/18px Arial, Helvetica, sans-serif;
 	color:#000;
 	float: left;
@@ -357,7 +350,7 @@ p { margin: 0 0 1.2em; }
 	float: left;
 	margin:2px 8px 0 0;
 }
-.sub-section .holder-b .sub-row label.caps{
+.sub-section .holder-b .sub-row label{
 	float: left;
 	font:15px/18px Arial, Helvetica, sans-serif;
 	color:#333;
@@ -375,25 +368,11 @@ p { margin: 0 0 1.2em; }
 	-webkit-appearance:none;
 	border-radius:0;
 }
-.sub-section .holder-b .sub-row select.caps{
-	width:190px;
-	height:24px;
-	border:2px solid #ccc;
-	margin:3px 0 0 21px;
-	padding:0 5px;
-	font:15px/21px Arial, Helvetica, sans-serif;
+.sub-section .holder-b .sub-row select{
+	width:195px;
+	font:14px/18px Arial, Helvetica, sans-serif;
+	border:0;
 	color:#898989;
-          float:left;
-	border-radius:0;
-}
-.sub-section .holder-b .sub-row select.caps_nomargin{
-	width:175px;
-	height:24px;
-	border:2px solid #ccc;
-	padding:0 5px;
-	font:15px/21px Arial, Helvetica, sans-serif;
-	color:#898989;
-          float:left;
 	border-radius:0;
 }
 .sub-section .holder-b.add .sub-row select{
@@ -408,8 +387,8 @@ p { margin: 0 0 1.2em; }
 	margin:2px 8px 0 0;
 	border-radius:0;
 }
-.sub-section .holder-b.add .sub-row label.caps,
-.check-b-area label.caps{
+.sub-section .holder-b.add .sub-row label,
+.check-b-area label{
 	color:#898989;
 	font:14px/18px Arial, Helvetica, sans-serif;
 	float: left;
@@ -431,7 +410,7 @@ p { margin: 0 0 1.2em; }
 	float: left;
 	margin:3px 8px 0 0;
 }
-.form-section .radio-row label.caps{
+.form-section .radio-row label{
 	font:15px/20px Arial, Helvetica, sans-serif;
 	max-width:225px;
 	float: left;
@@ -444,19 +423,19 @@ p { margin: 0 0 1.2em; }
 	padding:5px 0 4px 25px;
 	overflow: hidden;
 }
-.form-section .radio-row .date-range input[type="text"].caps{
-	width:90px;
+.form-section .radio-row .date-range input[type="text"]{
+	width:100px;
 	height:23px;
 	border:2px solid #ccc;
 	margin:0 0 0 0;
 	padding:0 5px;
 	font:15px/21px Arial, Helvetica, sans-serif;
 	color:#898989;
-/*	float: left; */
+	float: left;
 	-webkit-appearance:none;
 	border-radius:0;
 }
-.form-section .radio-row .date-range label.caps{
+.form-section .radio-row .date-range label{
 	font:15px/22px Arial, Helvetica, sans-serif;
 	width:10px;
 	margin:0 8px;
@@ -473,9 +452,9 @@ p { margin: 0 0 1.2em; }
 	margin:3px 2px 10px 0;
 	border-radius:0;
 }
-.form-section .radio-row .year-check label.caps{
+.form-section .radio-row .year-check label{
 	float: left;
-  	max-width:78px; 
+	max-width:78px;
 }
 /* content style*/
 #content{
@@ -512,11 +491,10 @@ p { margin: 0 0 1.2em; }
 	margin:0 0 14px;
 	border-bottom:1px solid #b7b7b7;
 }
-#content .contributions-area h2.caps{
+#content .contributions-area h2{
 	font:bold 29px/33px Arial, Helvetica, sans-serif;
 	color:#222;
 	margin:0 0 1px;
-          border:0px;
 }
 #content .contributions-area .output{
 	font:italic 15px/22px Arial, Helvetica, sans-serif;
@@ -574,7 +552,7 @@ p { margin: 0 0 1.2em; }
 	background-position:-20px -15px;
 	border-radius:100%;
 }
-.filter-form label.caps{
+.filter-form label{
 	float: left;
 	max-width:34px;
 	margin:0 8px 0 0;
@@ -698,28 +676,28 @@ p { margin: 0 0 1.2em; }
 	content:'';
 }
 /*search result style*/
-.search-result{
+.serach-result{
 	width:100%;
 	overflow: hidden;
 	margin:0 0 11px;
 }
-.search-result .output{
+.serach-result .output{
 	font:15px/20px Arial, Helvetica, sans-serif;
 	color:#333;
 	float: left;
 	margin:0 20px 0 0;
 	word-spacing:1px;
 }
-.search-result .output p{margin:0;}
-.search-result .output p strong{ font-weight:bold;}
-.search-result a.see-more{
+.serach-result .output p{margin:0;}
+.serach-result .output p strong{ font-weight:bold;}
+.serach-result a.see-more{
 	float: left;
 	padding:0;
 	font:bold 15px/20px Arial, Helvetica, sans-serif;
 	color:#124161;
 	position:relative;
 }
-.search-result a.info{
+.serach-result a.info{
 	background:url(../images/sprite01.png) no-repeat 0 -15px;
 	width:15px;
 	height:16px;
@@ -728,31 +706,19 @@ p { margin: 0 0 1.2em; }
 	display: inline-block;
 	vertical-align: middle;
 }
-.search-result a.info:hover{
+.serach-result a.info:hover{
 	background-position:-20px -15px;
 	border-radius:100%;
 }
-
 /*search table style*/
 .table-holder{
-	border:1px solid #b8b8b8;
-	margin:0 0 24px;
 	max-width:780px;
-          overflow: auto;
+	overflow: hidden;
 }
-
 .search-table{
-	margin:0 0 0px;
+	margin:0 0 24px;
 	border:1px solid #b8b8b8;
-          border-collapse: collapse;
 	max-width:780px;
-}
-.search-table thead{
-	margin:0;
-	background:#ebebeb;
-	text-align:left;
-	font:13px/16px Arial, Helvetica, sans-serif;
-	color:#333;
 }
 .search-table thead tr th .links{
 	position:absolute;
@@ -761,6 +727,7 @@ p { margin: 0 0 1.2em; }
 }
 .search-table thead tr th .links a.upword{
 	position:absolute;
+	text-indent:9999px;
 	top:0;
 	right:0;
 	text-decoration: none;
@@ -772,6 +739,7 @@ p { margin: 0 0 1.2em; }
 }
 .search-table thead tr th .links a.downword{
 	position:absolute;
+	text-indent:9999px;
 	top:7px;
 	right:0;
 	text-decoration: none;
@@ -783,14 +751,28 @@ p { margin: 0 0 1.2em; }
 }
 .search-table thead tr th .links a.upword:hover,
 .search-table thead tr th .links a.downword:hover{ opacity:0.8;}
-.search-table thead tr th{
-	margin: 0;
-	padding:7px 15px 7px 3px;
-	position:relative; 
+.search-table thead{
+	margin:0;
+	background:#ebebeb;
+	width: 100%;
+	text-align:left;
+	font:13px/16px Arial, Helvetica, sans-serif;
+	color:#333;
 }
 .search-table tbody{
 	font:12px/16px Arial, Helvetica, sans-serif;
 	color:#333;
+}
+.search-table thead tr{
+	border:1px solid #b8b8b8;
+	display: block;
+	overflow: hidden;
+
+}
+.search-table thead tr th{
+	margin: 0;
+	padding:7px 15px 7px 3px;
+	position:relative;
 }
 .search-table tbody tr{ min-height:45px;}
 .search-table tbody tr:nth-child(even){ background:#ecedee;}
@@ -799,12 +781,72 @@ p { margin: 0 0 1.2em; }
 	padding:5px 5px 0;
 }
 .search-table tbody tr{
+	border-top:1px solid #b8b8b8;
 	margin:0;
+	display: block;
+	overflow: hidden;
 }
-.search-table tbody tr th.bottom{
-	background:#ebebeb;
+.search-table .col1{
+	width:11.45%;
+	float: left;
+	min-height:46px;
+	border-right:1px solid #b8b8b8;
 }
-
+.search-table tbody tr:first-child .col2,
+.search-table tbody tr:first-child .col3,
+.search-table tbody tr:first-child .col4,
+.search-table tbody tr:first-child .col5,
+.search-table tbody tr:first-child .col6,
+.search-table tbody tr:first-child .col7,
+.search-table tbody tr:first-child .col8,
+.search-table tbody tr:first-child .col9,
+.search-table tbody tr:first-child .col1{
+	min-height:57px;
+}
+.search-table tbody .col2,
+.search-table tbody .col3,
+.search-table tbody .col4,
+.search-table tbody .col5,
+.search-table tbody .col6,
+.search-table tbody .col7,
+.search-table tbody .col8,
+.search-table tbody .col9,
+.search-table tbody .col1{
+	min-height:45px;
+}
+.search-table tbody .col1{width:11.56%;}
+.search-table .col7,
+.search-table .col5,
+.search-table .col4,
+.search-table .col2{
+	width:11.25%;
+	float: left;
+	min-height:46px;
+	border-right:1px solid #b8b8b8;
+}
+.search-table .col7,
+.search-table .col5,
+.search-table .col4{ width:12%;}
+.search-table .col3{
+	width:9.43%;
+	float: left;
+	min-height:46px;
+	border-right:1px solid #b8b8b8;
+}
+.search-table .col6{
+	width:12.28%;
+	float: left;
+	min-height:46px;
+	border-right:1px solid #b8b8b8;
+}
+.search-table .col9,
+.search-table .col8{
+	width:9.7%;
+	float: left;
+	min-height:46px;
+	border-right:1px solid #b8b8b8;
+}
+.search-table .col9{border:0;}
 /*pagination style*/
 ul.pagination{
 	list-style: none;
@@ -893,7 +935,7 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 ---------------------------------------------------------*/
 @media only screen and (max-width:1195px){
 	.search-form{ padding:10px 7px;}
-	.form-section .radio-row .year-check label.caps{ max-width:78px;}
+	.form-section .radio-row .year-check label{ max-width:78px;}
 	#content{
 		width:72.5%;
 		padding:75px 10px 75px 0;
@@ -919,7 +961,7 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 	}
 }
 @media only screen and (max-width:1023px){
-	.search-form h1.caps{
+	.search-form h1{
 		font-size:20px;
 		line-height: 23px;
 	}
@@ -927,12 +969,11 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 		font-size:13px;
 		line-height: 16px;
 	}
-	.form-section .radio-row .year-check input[type="checkbox"]{ margin:3px 0 10px; }
+	.form-section .radio-row .year-check input[type="checkbox"]{ margin:3px 0 10px;}
 	.filter-block .filter-form{ width:68%;}
-	.search-form .form-section h2.caps{
+	.search-form .form-section h2{
 		font-size:17px;
 		line-height: 20px;
-                    border:0px;
 	}
 	.form-section .radio-holder .row input[type="text"]{ width:80%;}
 	.table-holder{
@@ -951,7 +992,7 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 	.notes{ padding:0 60px;}
 	.filter-block{ padding:5px;}
 	.filter-form select,
-	.filter-form label.caps{ margin:0 5px 0 0;}
+	.filter-form label{ margin:0 5px 0 0;}
 	.filter-form input[type="text"]{
 		width:130px;
 		margin:0 2px;
@@ -966,12 +1007,12 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 	.sub-section .holder-b .sub-row select,
 	.sub-section .holder-b .sub-row input[type="text"]{ width:75%;}
 	.sub-section .holder-b.add .sub-row select{ width:88%;}
-	.sub-section .holder-b.add .sub-row label.caps, .check-b-area label.caps{ max-width:150px;}
-	.form-section .radio-row label.caps{ max-width:155px;}
+	.sub-section .holder-b.add .sub-row label, .check-b-area label{ max-width:150px;}
+	.form-section .radio-row label{ max-width:155px;}
 	.form-section .radio-row .date-range input[type="text"]{ width:88%;}
 	.form-section .radio-row .year-row{ padding:5px 0 0;}
 	.form-section .radio-row .year-check{ margin:0 0 0 10px;}
-	.form-section .radio-row .year-check label.caps{
+	.form-section .radio-row .year-check label{
 		font-size:11px;
 		line-height: 20px;
 		margin:1px 0 0 4px;
@@ -1005,14 +1046,14 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 	.form-section .radio-holder .row input[type="radio"]{ margin:3px 5px 0 0;}
 	.form-section .sub-section{ margin:0 0 17px 3px;}
 	.sub-section .holder-b{ margin:0 0 0 23px;}
-	.sub-section .holder-b.add .sub-row label.caps, .check-b-area label.caps{
+	.sub-section .holder-b.add .sub-row label, .check-b-area label{
 		max-width:inherit;
 		width:80%;
 	}
 	.sub-section .holder-b .sub-row{ padding:0 0 10px;}
 	.form-section .radio-row .date-range input[type="text"]{ width:43%;}
 	.form-section .radio-row label.to-label{float: left;}
-	.form-section .radio-row .year-check label.caps{
+	.form-section .radio-row .year-check label{
 		font-size:15px;
 		line-height: 18px;
 	}
@@ -1040,7 +1081,7 @@ ul.pagination li.next a:hover:before{ background-position:-27px -32px;}
 	}
 	.filter-form select{ width:60px;}
 	.filter-block{ padding:15px;}
-	.filter-form select, .filter-form label.caps{ margin:0 10px 10px;}
+	.filter-form select, .filter-form label{ margin:0 10px 10px;}
 	.filter-form input[type="text"]{ width:60%;}
 	.filter-block .filter-form{
 		padding:0;

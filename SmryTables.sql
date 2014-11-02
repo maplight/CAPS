@@ -1,20 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 DROP TABLE IF EXISTS contributions_search;
 CREATE TABLE contributions_search ENGINE=MYISAM
   SELECT
@@ -69,7 +52,7 @@ CREATE TABLE smry_offices (
   RecipientCandidateDistrict VARCHAR(50) NOT NULL,
   KEY RecipientCandidateOffice(RecipientCandidateOffice(10))
 ) ENGINE=MYISAM;
-INSERT INTO smry_offices SELECT DISTINCT RecipientCandidateOffice, RecipientCandidateDistrict FROM contributions WHERE RecipientCandidateOffice <> '';
+INSERT INTO smry_offices SELECT DISTINCT RecipientCandidateOffice, RecipientCandidateDistrict FROM contributions WHERE RecipientCandidateOffice <> '' AND CandidateContribution = 'Y';
 
 
 DROP TABLE IF EXISTS smry_propositions;
@@ -79,7 +62,7 @@ CREATE TABLE smry_propositions (
   KEY Election(Election),
   KEY Target(Target(10))
 ) ENGINE=MYISAM;
-INSERT INTO smry_propositions SELECT DISTINCT Election, Target FROM contributions WHERE Target <> '' AND Election <> '0000-00-00';
+INSERT INTO smry_propositions SELECT DISTINCT Election, Target FROM contributions WHERE Target <> '' AND Election <> '0000-00-00' AND BallotMeasureContribution = 'Y';
 
 
 DROP TABLE IF EXISTS smry_cycles;

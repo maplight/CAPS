@@ -20,7 +20,7 @@
 </head>
 
 <body>
-  <?php
+<?php
     # Cal-Access Power Search Project
     # MapLight
     # Mike Krejci
@@ -48,14 +48,10 @@
                             array ("DonorOrganization", "Contributor Organization", "checked", ""),
                             array ("TransactionDate", "Date", "checked", "Date"),
                             array ("TransactionAmount", "Amount", "checked", "Currency"));
-  ?>
+?>
 
-  <!-- main container of all the page elements -->
   <div id="wrapper">
-    <!-- container of the page -->
     <div id="container">
-
-      <!-- header of the page -->
       <div id="header" a>
 
 
@@ -97,49 +93,42 @@
     </div><!--end of .mainNavCtnr-->
 <!-- End California SOS header page -->
 
-      </div>
 
-      <!-- two columns of the page -->
+      </div> <!-- end id=header -->
+
       <div id="two-columns">
-        <!-- contain sidebar of the page -->
         <div id="sidebar">
-          <!-- search form of the page -->
           <form action="" method="post" class="search-form">
             <fieldset>
               <legend class="hidden">search-form</legend>
               <h1 class="caps">Advanced Search</h1>
               <input type="submit" value="Search" tabindex="1">
               <div class="holder-form">
-                <!-- section of search form -->
                 <div class="form-section">
-                <h2 class="caps">Contributions From:</h2>
-                <div class="radio-holder">
-                  <div class="row info">
-                    <input type="radio" id="all" name="contrib_select" value="all" tabindex="2" checked>
-                    <label for="all" class="caps">All contributors</label>
-                    <a href="#" class="info" tabindex="3">info</a>
-                  </div>
-                  <div class="row">
-                    <input type="radio" name="contrib_select" value="search" tabindex="4" id="for1">
-                    <label for="for1" class="hidden">label</label>
-                    <label for="for2" class="hidden">label</label>
-                    <input type="text" id="for2" name="contributor" value="Just these contributors" tabindex="5" accesskey="s">
-                  </div>
-
-                  <div class="row">
-                    <div class="contry-select">
-                      <label for="contr" class="caps">Contributor Location</label>
-                      <a href="#" class="info" tabindex="6">info</a>
-                      <select tabindex="7" id="contr" name="state_list" class="caps">
+                  <h2 class="caps">Contributions From:</h2>
+                  <div class="radio-holder">
+                    <div class="row info">
+                      <input type="radio" id="all" name="contrib_select" value="all" tabindex="2" checked>
+                      <label for="all" class="caps">All contributors</label>
+                      <a href="#" class="info" tabindex="3">info</a>
+                    </div> <!-- end class=row info -->
+                    <div class="row">
+                      <input type="radio" name="contrib_select" value="search" tabindex="4" id="for1">
+                      <label for="for1" class="hidden">label</label>
+                      <label for="for2" class="hidden">label</label>
+                      <input type="text" id="for2" name="contributor" value="Just these contributors" tabindex="5" accesskey="s">
+                    </div> <!-- end class=row -->
+                  </div> <!-- end class=radio-holder -->
+                  <div class="contry-select">
+                    <label for="contr" class="caps">Contributor Location</label>
+                    <a href="#" class="info" tabindex="6">info</a>
+                    <select tabindex="7" id="contr" name="state_list" class="caps">
 <?php
   fill_state_list ();
 ?>
-                      </select>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
+                    </select>
+                  </div> <!-- end class=contry-select -->
+                </div> <!-- end class=form-section -->
 
               <!-- section of search form -->
               <div class="form-section middel">
