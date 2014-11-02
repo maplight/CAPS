@@ -46,7 +46,7 @@
                             array ("DonorEmployerNormalized", "Contributor Employer", "checked", ""),
                             array ("DonorOccupationNormalized", "Contributor Occupation", "checked", ""),
                             array ("DonorOrganization", "Contributor Organization", "checked", ""),
-                            array ("TransactionDate", "Date", "checked", "Date"),
+                            array ("TransactionEndDate", "Date", "checked", "Date"),
                             array ("TransactionAmount", "Amount", "checked", "Currency"));
 ?>
 
