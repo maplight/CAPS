@@ -98,7 +98,7 @@
 
       <div id="two-columns">
         <div id="sidebar">
-          <form action="" method="post" class="search-form">
+          <form action="" method="get" class="search-form">
             <fieldset>
               <legend class="hidden">search-form</legend>
               <h1 class="caps">Advanced Search</h1>

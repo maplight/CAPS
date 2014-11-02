@@ -1,12 +1,12 @@
 <?php
   function build_results_table () {
-    if (! isset ($_POST["contributor"])) {
+    if (! isset ($_GET["contributor"])) {
       # No form search yet
       echo "<P>&nbsp;</P><BLOCKQUOTE><DIV CLASS=\"title\">Search political contributions from 2001 through the present, using the controls on the left.</DIV></BLOCKQUOTE>";
     } else {
       # Parse search form
-      $query = parse_search_form ($_POST);
-      display_data ($query, $_POST["fields"]);
+      $where = parse_search_form ($_GET);
+      display_data ($where, $_GET["fields"]);
     }
   }
 
@@ -213,135 +213,143 @@
     if ($date_where != "") {$where .= "{$date_where} AND ";}
     if ($where != "") {$where = "WHERE " . substr ($where, 0, -5);} # remove extra AND
 
-    # create query
-    $query = "SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$where}";
-
-    return $query;
+    return $where;
   }
 
 
-  function display_data ($query, $fields) {
+  function display_data ($where, $fields) {
     $limit = 10;
     $page = 0;
     $sort = "contributions_search.TransactionDateEnd DESC";
 
-    $result = my_query ($query . " ORDER BY {$sort} LIMIT " . ($page * $limit) . ",{$limit}");
-    $rows_returned = $result->num_rows;
+    if ($where == "") {
+      echo "You have not entered any search data, please select a criteria on the side.";
+    } else {
+      $result = my_query ("SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM contributions_search {$where}");
+      $totals_row = $result->fetch_assoc();
 
-    echo "<h1>Search Results</h1>";
-    echo "<div class=\"info-block\">";
-    echo "<div class=\"search-info\">";
-    echo "<div class=\"title\"><strong>\$999,999,999</strong> in ### contributions <a href=\"#\" class=\"info\">info</a></div>";
-    echo "<em>from election cycles xxxx through xxxx</em>";
-    echo "</div>";
-    echo "<div class=\"contributions-area\">";
-    echo "<h2>Contributions</h2>";
-    echo "<div class=\"output\">Showing all contributions of $100 or more <a href=\"#\" class=\"info\">info</a></div>";
-    echo "</div>";
-    echo "</div>";
-    echo "<div class=\"filter-block\">";
-    echo "<form action=\"\" class=\"filter-form\">";
-    echo "<fieldset>";
-    echo "<legend class=\"hidden\">filter-form</legend>";
-    echo "<label for=\"show\">Show</label>";
-    echo "<select id=\"show\">";
-    echo "<option>10</option>";
-    echo "<option>25</option>";
-    echo "<option>50</option>";
-    echo "<option>100</option>";
-    echo "</select>";
-    echo "<label for=\"row\">rows</label>";
-    echo "<div class=\"holder\">";
-    echo "<input type=\"text\" value=\"Filter by Keyword\" id=\"row\" accesskey=\"f\">";
-    echo "<input type=\"submit\" value=\"Filter\">";
-    echo "<a href=\"#\" class=\"info\">info</a>";
-    echo "</div>";
-    echo "</fieldset>";
-    echo "</form>";
-    echo "<div class=\"download-area\">";
-    echo "<a href=\"#\" class=\"download\">Download CSV</a>";
-    echo "<div class=\"download-info\">";
-    echo "<a href=\"#\" class=\"info-link\">opener</a>";
-    echo "<div class=\"info-slide\">";
-    echo "<p>Download your search results as a CSV file</p>";
-    echo "</div>";
-    echo "</div>";
-    echo "</div>";
-    echo "</div>";
-    echo "<div class=\"search-result\">";
-    echo "<div class=\"output\">";
-    echo "<p>Showing <strong>1</strong> to <strong>###</strong> of <strong>###</strong> rows </p>";
-    echo "</div>";
-    echo "<a href=\"#\" class=\"see-more\">Show more fields</a>";
-    echo "<a href=\"#\" class=\"info\">info</a>";
-    echo "</div>";
-    echo "<div class=\"table-holder\">";
-    echo "<table title=\"search table\" summary=\"search table\" class=\"search-table\">";
-    echo "<thead>";
-    echo "<tr>";
+      if ($totals_row["records"] == 0) {
+        echo "Your search did not return any records.";
+      } else {
+        $result = my_query ("SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$where} ORDER BY {$sort} LIMIT " . ($page * $limit) . ",{$limit}");
+        $rows_returned = $result->num_rows;
 
-    foreach ($fields as $field) {
-      $field_data = explode ("|", $field);
-      echo "<th>{$field_data[1]}";
-      echo "<div class=\"links\">";
-      echo "<a href=\"#\" class=\"upword\"> </a>";
-      echo "<a href=\"#\" class=\"downword\"> </a>";
-      echo "</div>";
-      echo "</th>";
-    }
-    echo "</tr>";
-    echo "</thead>";
-    echo "<tbody>";
+        echo "<h1>Search Results</h1>";
+        echo "<div class=\"info-block\">";
+        echo "<div class=\"search-info\">";
+        echo "<div class=\"title\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions <a href=\"#\" class=\"info\">info</a></div>";
+        echo "<em>from election cycles xxxx through xxxx</em>";
+        echo "</div>";
+        echo "<div class=\"contributions-area\">";
+        echo "<h2>Contributions</h2>";
+        echo "<div class=\"output\">Showing all contributions of $100 or more <a href=\"#\" class=\"info\">info</a></div>";
+        echo "</div>";
+        echo "</div>";
+        echo "<div class=\"filter-block\">";
+        echo "<form action=\"\" class=\"filter-form\">";
+        echo "<fieldset>";
+        echo "<legend class=\"hidden\">filter-form</legend>";
+        echo "<label for=\"show\">Show</label>";
+        echo "<select id=\"show\">";
+        echo "<option>10</option>";
+        echo "<option>25</option>";
+        echo "<option>50</option>";
+        echo "<option>100</option>";
+        echo "</select>";
+        echo "<label for=\"row\">rows</label>";
+        echo "<div class=\"holder\">";
+        echo "<input type=\"text\" value=\"Filter by Keyword\" id=\"row\" accesskey=\"f\">";
+        echo "<input type=\"submit\" value=\"Filter\">";
+        echo "<a href=\"#\" class=\"info\">info</a>";
+        echo "</div>";
+        echo "</fieldset>";
+        echo "</form>";
+        echo "<div class=\"download-area\">";
+        echo "<a href=\"#\" class=\"download\">Download CSV</a>";
+        echo "<div class=\"download-info\">";
+        echo "<a href=\"#\" class=\"info-link\">opener</a>";
+        echo "<div class=\"info-slide\">";
+        echo "<p>Download your search results as a CSV file</p>";
+        echo "</div>";
+        echo "</div>";
+        echo "</div>";
+        echo "</div>";
+        echo "<div class=\"search-result\">";
+        echo "<div class=\"output\">";
+        echo "<p>Showing <strong>1</strong> to <strong>###</strong> of <strong>###</strong> rows </p>";
+        echo "</div>";
+        echo "<a href=\"#\" class=\"see-more\">Show more fields</a>";
+        echo "<a href=\"#\" class=\"info\">info</a>";
+        echo "</div>";
+        echo "<div class=\"table-holder\">";
+        echo "<table title=\"search table\" summary=\"search table\" class=\"search-table\">";
+        echo "<thead>";
+        echo "<tr>";
 
-    while ($row = $result->fetch_assoc()) {
-      echo "<tr>";
-      foreach ($fields as $field) {
-        $field_data = explode ("|", $field);
-        switch ($field_data[2]) {
-          case "Date":
-            if (date ("F j, Y", strtotime ($row[$field_data[0]])) == "December 31, 1969") {
-              echo "<td><I>unknown</I></td>";
-            } else {
-              echo "<td>" . date ("M j, Y", strtotime ($row[$field_data[0]])) . "</td>";
-            }
-            break;
-
-          case "Currency":
-            echo "<td style=\"text-align:right\">$" . number_format($row[$field_data[0]], 2, ".", ",") . "</td>";
-            break;
-
-          default: 
-            echo "<td>{$row[$field_data[0]]}</td>";
-            break;
+        foreach ($fields as $field) {
+          $field_data = explode ("|", $field);
+          echo "<th>{$field_data[1]}";
+          echo "<div class=\"links\">";
+          echo "<a href=\"#\" class=\"upword\"> </a>";
+          echo "<a href=\"#\" class=\"downword\"> </a>";
+          echo "</div>";
+          echo "</th>";
         }
+        echo "</tr>";
+        echo "</thead>";
+        echo "<tbody>";
+
+        while ($row = $result->fetch_assoc()) {
+          echo "<tr>";
+          foreach ($fields as $field) {
+            $field_data = explode ("|", $field);
+            switch ($field_data[2]) {
+              case "Date":
+                if (date ("F j, Y", strtotime ($row[$field_data[0]])) == "December 31, 1969") {
+                  echo "<td><I>unknown</I></td>";
+                } else {
+                  echo "<td>" . date ("M j, Y", strtotime ($row[$field_data[0]])) . "</td>";
+                }
+                break;
+
+              case "Currency":
+                echo "<td style=\"text-align:right\">$" . number_format($row[$field_data[0]], 2, ".", ",") . "</td>";
+                break;
+
+              default: 
+                echo "<td>{$row[$field_data[0]]}</td>";
+                break;
+            }
+          }
+          echo "</tr>";
+        }
+
+        echo "<tr>";
+        foreach ($fields as $field) {
+          $field_data = explode ("|", $field);
+          echo "<th class=\"bottom\">{$field_data[1]}";
+          echo "</th>";
+        }
+        echo "</tr>";
+
+        echo "</tbody>";
+        echo "</table>";
+        echo "</div>";
+        echo "<ul class=\"pagination\">";
+        echo "<li class=\"prev\"><a href=\"#\" >previous</a></li>";
+        echo "<li><a href=\"#\">1</a></li>";
+        echo "<li><a href=\"#\">2</a></li>";
+        echo "<li><a href=\"#\">3</a></li>";
+        echo "<li><a href=\"#\">4</a></li>";
+        echo "<li><a href=\"#\">5</a></li>";
+        echo "<li><a href=\"#\">6</a></li>";
+        echo "<li>...</li>";
+        echo "<li><a href=\"#\">8</a></li>";
+        echo "<li class=\"next\"><a href=\"#\">Next</a></li>";
+        echo "</ul>";
+        echo "<div class=\"notes\"><p>To view the entire set of search results, <a href=\"#\">download the CSV</a> file.  Contributions data is current as of [today's date].</p>";
+        echo "</div>";
       }
-      echo "</tr>";
     }
-
-    echo "<tr>";
-    foreach ($fields as $field) {
-      $field_data = explode ("|", $field);
-      echo "<th class=\"bottom\">{$field_data[1]}";
-      echo "</th>";
-    }
-    echo "</tr>";
-
-    echo "</tbody>";
-    echo "</table>";
-    echo "</div>";
-    echo "<ul class=\"pagination\">";
-    echo "<li class=\"prev\"><a href=\"#\" >previous</a></li>";
-    echo "<li><a href=\"#\">1</a></li>";
-    echo "<li><a href=\"#\">2</a></li>";
-    echo "<li><a href=\"#\">3</a></li>";
-    echo "<li><a href=\"#\">4</a></li>";
-    echo "<li><a href=\"#\">5</a></li>";
-    echo "<li><a href=\"#\">6</a></li>";
-    echo "<li>...</li>";
-    echo "<li><a href=\"#\">8</a></li>";
-    echo "<li class=\"next\"><a href=\"#\">Next</a></li>";
-    echo "</ul>";
-    echo "<div class=\"notes\"><p>To view the entire set of search results, <a href=\"#\">download the CSV</a> file.  Contributions data is current as of [today's date].</p>";
-    echo "</div>";
   }
 ?>
