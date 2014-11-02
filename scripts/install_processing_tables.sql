@@ -106,7 +106,8 @@ create table contributions_full (
   , MemoRefNo varchar(25) not null default ''
   , TransactionDateStart date not null
   , TransactionDateEnd date not null
-  , TransactionAmount double not null
+  , TransactionAmount double not null default 0
+  , LoanPreExistingBalance double not null default 0
   , FiledDate datetime default null
   , RecipientCommitteeID bigint(20) default null
   , RecipientCommitteeEntity varchar(5) default null
@@ -153,6 +154,7 @@ create table contributions_full (
   , StateOffice enum('Y','N') default 'N'
   , LocalOffice enum('Y','N') default 'N'
   , ForgivenLoan enum('Y','N') default 'N'
+  , NoNewLoanAmount enum('Y','N') default 'N'
   , LateContributionCoveredByRegularFiling enum('Y','N') default 'N'
   , BadElectionCycle enum('Y','N') default 'N'
   , CandidateContribution enum('Y','N') default 'N'
@@ -194,4 +196,50 @@ create table contributions (
   , id bigint(20) not null
   , primary key (id)
 );
+
+/*  The values in this table come from:
+    http://www.sos.ca.gov/prd/cal-access/
+    Cal-Access Documentation --> CalFormat --> cal_format_201.pdf --> page 12 (Office Codes)
+*/
+drop table if exists california_data_office_codes;
+create table california_data_office_codes (
+    office_code_id bigint(20) not null primary key auto_increment
+  , office_cd char(3) not null
+  , description varchar(200) not null
+  , region varchar(50) not null
+  , key office_cd (office_cd)
+);
+insert california_data_office_codes (office_cd, description, region)
+select 'GOV', 'Governor', 'Statewide' union
+select 'LTG', 'Lieutenant Governor', 'Statewide' union
+select 'SOS', 'Secretary of State', 'Statewide' union
+select 'CON', 'State Controller', 'Statewide' union
+select 'ATT', 'Attorney General', 'Statewide' union
+select 'TRE', 'State Treasurer', 'Statewide' union
+select 'INS', 'Insurance Commissioner', 'Statewide' union
+select 'SUP', 'Superintendent of Public Instruction', 'Statewide' union
+select 'SPM', 'Supreme Court Justice', 'Statewide' union
+select 'SEN', 'State Senate', 'State District' union
+select 'ASM', 'State Assembly', 'State District' union
+select 'BOE', 'Board of Equalization', 'State District' union
+select 'PER', 'Public Employees Retirement System', 'State District' union
+select 'APP', 'State Appellate Court Justice', 'State District' union
+select 'ASR', 'Assessor', 'City/County/Local' union
+select 'BED', 'Board of Education', 'City/County/Local' union
+select 'BSU', 'Board of Supervisors', 'City/County/Local' union
+select 'CAT', 'City Attorney', 'City/County/Local' union
+select 'CCB', 'Community College Board', 'City/County/Local' union
+select 'CCM', 'City Council Member', 'City/County/Local' union
+select 'COU', 'County Counsel', 'City/County/Local' union
+select 'CSU', 'County Supervisor', 'City/County/Local' union
+select 'CTR', 'Local Controller', 'City/County/Local' union
+select 'DAT', 'District Attorney', 'City/County/Local' union
+select 'MAY', 'Mayor', 'City/County/Local' union
+select 'PDR', 'Public Defender', 'City/County/Local' union
+select 'PLN', 'Planning Commissioner', 'City/County/Local' union
+select 'SHC', 'Sheriff-Coroner', 'City/County/Local' union
+select 'SCJ', 'Superior Court Judge', 'City/County/Local' union
+select 'TRS', 'Local Treasurer', 'City/County/Local' union
+select 'OTH', 'Other', 'Miscellaneous/Other'
+;
 

@@ -12,34 +12,34 @@ select filer_id
         end
     ,'%m/%d/%Y'
     )) 'max_rpt_end'
-from ftp_filer_filings 
+from california_data.ftp_filer_filings 
 group by filer_id
 ;
 
 truncate table table_filing_ids;
 insert table_filing_ids (OriginTable, filing_id, amend_id)
 select 'rcpt', filing_id, max(amend_id) 
-from ftp_rcpt 
+from california_data.ftp_rcpt 
 group by filing_id
 ;
 insert table_filing_ids (OriginTable, filing_id, amend_id)
 select 'loan', filing_id, max(amend_id) 
-from ftp_loan 
+from california_data.ftp_loan 
 group by filing_id
 ;
 insert table_filing_ids (OriginTable, filing_id, amend_id)
 select 's497', filing_id, max(amend_id) 
-from ftp_s497 
+from california_data.ftp_s497 
 group by filing_id
 ;
 insert table_filing_ids (OriginTable, filing_id, amend_id)
 select 'smry', filing_id, max(amend_id) as amend_id_to_use
-from ftp_smry
+from california_data.ftp_smry
 group by filing_id
 ;
 insert table_filing_ids (OriginTable, filing_id, amend_id)
 select 'cvr', filing_id, max(amend_id) as amend_id_to_use
-from ftp_cvr_campaign_disclosure
+from california_data.ftp_cvr_campaign_disclosure
 group by filing_id
 ;
 
@@ -65,14 +65,15 @@ from table_filing_ids
 group by filing_id
 ;
 
+-- FILER_XREF: This table maps legacy filer identification numbers to the systems filer identification numbers. -from CalAccessTablesWeb.pdf
 truncate table disclosure_filer_ids;
-insert into disclosure_filer_ids
+insert disclosure_filer_ids (disclosure_filer_id, filer_id)
 select
     ftp_cvr_campaign_disclosure.filer_id as disclosure_filer_id
   , max(ifnull(ftp_filer_xref.filer_id, ftp_cvr_campaign_disclosure.filer_id)) as filer_id
 from 
-  ftp_cvr_campaign_disclosure
-  left join ftp_filer_xref 
+  california_data.ftp_cvr_campaign_disclosure
+  left join california_data.ftp_filer_xref 
     on ftp_cvr_campaign_disclosure.filer_id = ftp_filer_xref.xref_id 
     and ftp_filer_xref.xref_id <> 0
 group by ftp_cvr_campaign_disclosure.filer_id
@@ -84,13 +85,13 @@ select
     id
   , count(distinct name) 'number_of_names'
   , max(session)
-from cal_access_candidates
+from california_data.cal_access_candidates
 group by id
 ;
 
 update 
   candidate_ids a
-  join cal_access_candidates b on a.candidate_id = b.id and a.last_session = b.session
+  join california_data.cal_access_candidates b on a.candidate_id = b.id and a.last_session = b.session
 set a.candidate_name = b.name
 ;
 
@@ -98,7 +99,7 @@ update
   filer_ids a
   join (
     select filer_id, max(id) 'id'
-    from cal_access_candidates_committees
+    from california_data.cal_access_candidates_committees
     group by filer_id
     ) b using (filer_id)
 set a.candidate_id = b.id
@@ -131,9 +132,9 @@ select
   , filer_ids.candidate_id
   , ifnull(filer_ids.candidate_name,'')
 from 
-  ftp_cvr_campaign_disclosure
+  california_data.ftp_cvr_campaign_disclosure
   join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
-  left join ftp_filer_filings 
+  left join california_data.ftp_filer_filings 
     on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
     and ftp_cvr_campaign_disclosure.filing_id = ftp_filer_filings.filing_id
     and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id

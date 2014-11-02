@@ -16,17 +16,17 @@ select
       ) as positions
   , max(str_to_date(ftp_filer_filings.filing_date, '%m/%d/%Y %h:%i:%s %p')) as last_filing
 from 
-  ftp_cvr_campaign_disclosure
+  california_data.ftp_cvr_campaign_disclosure
   inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
-  inner join ftp_filer_filings 
+  inner join california_data.ftp_filer_filings 
     on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
     and ftp_cvr_campaign_disclosure.filing_id = ftp_filer_filings.filing_id
     and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
     and ftp_cvr_campaign_disclosure.amend_id = ftp_filer_filings.filing_sequence
-  inner join cal_access_propositions_committees 
+  inner join california_data.cal_access_propositions_committees 
     on ftp_cvr_campaign_disclosure.filer_id = cal_access_propositions_committees.filer_id
     and ftp_filer_filings.session_id = cal_access_propositions_committees.session
-  inner join cal_access_propositions 
+  inner join california_data.cal_access_propositions 
     on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
     and cal_access_propositions.session = cal_access_propositions_committees.session
   inner join filing_ids 
@@ -139,15 +139,15 @@ select
   , ftp_cvr_campaign_disclosure.entity_cd as RecipientCommitteeEntity
   , 'rcpt' as OriginTable
 from 
-  ftp_rcpt as contributions
+  california_data.ftp_rcpt as contributions
   inner join filing_ids -- include only the most recent filing
     on contributions.filing_id = filing_ids.filing_id
     and contributions.amend_id = filing_ids.amend_id_to_use
-  inner join ftp_cvr_campaign_disclosure 
+  inner join california_data.ftp_cvr_campaign_disclosure 
     on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id
     and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
   inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
-  inner join ftp_filer_filings 
+  inner join california_data.ftp_filer_filings 
     on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
     and contributions.filing_id = ftp_filer_filings.filing_id
     and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
@@ -155,10 +155,10 @@ from
   left join filing_amends 
     on contributions.filing_id = filing_amends.filing_id 
     and contributions.amend_id = filing_amends.amend_id
-  left join cal_access_propositions_committees
+  left join california_data.cal_access_propositions_committees
     on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id
     and ftp_filer_filings.session_id = cal_access_propositions_committees.session
-  left join cal_access_propositions
+  left join california_data.cal_access_propositions
     on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
     and cal_access_propositions.session = cal_access_propositions_committees.session
   left join prop_filer_sessions
@@ -184,6 +184,7 @@ insert into contributions_full_temp (
   , TransactionDateStart
   , TransactionDateEnd
   , TransactionAmount
+  , LoanPreExistingBalance
   , FiledDate
   , RecipientCommitteeNameNormalized
   , HasCandidateName
@@ -223,6 +224,7 @@ select
   , str_to_date(left(contributions.loan_date1,locate(' ',contributions.loan_date1)-1),'%m/%d/%Y') as TransactionDateStart
   , str_to_date(left(contributions.loan_date1,locate(' ',contributions.loan_date1)-1),'%m/%d/%Y') as TransactionDateEnd
   , contributions.loan_amt1 as TransactionAmount
+  , contributions.loan_amt4 as LoanPreExistingBalance
   , str_to_date(ftp_filer_filings.filing_date,'%m/%d/%Y %h:%i:%s %p') as FiledDate
   , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
   , if(isnull(filing_amends.filing_id),'N','Y') as HasCandidateName
@@ -246,15 +248,15 @@ select
   , ftp_cvr_campaign_disclosure.entity_cd as RecipientCommitteeEntity
   , 'loan' as OriginTable
 from 
-  ftp_loan as contributions
+  california_data.ftp_loan as contributions
   inner join filing_ids -- include only the most recent filing 
     on contributions.filing_id = filing_ids.filing_id 
     and contributions.amend_id = filing_ids.amend_id_to_use
-  inner join ftp_cvr_campaign_disclosure 
+  inner join california_data.ftp_cvr_campaign_disclosure 
     on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id 
     and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
   inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
-  inner join ftp_filer_filings 
+  inner join california_data.ftp_filer_filings 
     on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id 
     and contributions.filing_id = ftp_filer_filings.filing_id 
     and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id 
@@ -262,10 +264,10 @@ from
   left join filing_amends 
     on contributions.filing_id = filing_amends.filing_id 
     and contributions.amend_id = filing_amends.amend_id
-  left join cal_access_propositions_committees 
+  left join california_data.cal_access_propositions_committees 
     on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id 
     and ftp_filer_filings.session_id = cal_access_propositions_committees.session
-  left join cal_access_propositions 
+  left join california_data.cal_access_propositions 
     on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id 
     and cal_access_propositions.session = cal_access_propositions_committees.session
   left join prop_filer_sessions 
@@ -365,15 +367,15 @@ select
       , 'Y'
       ) as LateContributionCoveredByRegularFiling
 FROM 
-  ftp_s497 as contributions
+  california_data.ftp_s497 as contributions
   inner join filing_ids -- include only the most recent filing
     on contributions.filing_id = filing_ids.filing_id 
     and contributions.amend_id = filing_ids.amend_id_to_use
-  inner join ftp_cvr_campaign_disclosure 
+  inner join california_data.ftp_cvr_campaign_disclosure 
     on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id 
     and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
   inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
-  inner join ftp_filer_filings 
+  inner join california_data.ftp_filer_filings 
     on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id 
     and contributions.filing_id = ftp_filer_filings.filing_id 
     and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id 
@@ -381,10 +383,10 @@ FROM
   left join filing_amends
     on contributions.filing_id = filing_amends.filing_id 
     and contributions.amend_id = filing_amends.amend_id
-  left join cal_access_propositions_committees 
+  left join california_data.cal_access_propositions_committees 
     on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id 
     and ftp_filer_filings.session_id = cal_access_propositions_committees.session
-  left join cal_access_propositions 
+  left join california_data.cal_access_propositions 
     on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
     and cal_access_propositions.session = cal_access_propositions_committees.session
   left join prop_filer_sessions
@@ -454,16 +456,16 @@ select
   , ftp_cvr_campaign_disclosure.entity_cd as RecipientCommitteeEntity
   , 'Y' as Unitemized
   , 'smry' as OriginTable
-from 
-  ftp_smry as contributions
+from
+  california_data.ftp_smry as contributions
   inner join filing_ids -- include only the most recent filing
     on contributions.filing_id = filing_ids.filing_id 
     and contributions.amend_id = filing_ids.amend_id_to_use
-  inner join ftp_cvr_campaign_disclosure
+  inner join california_data.ftp_cvr_campaign_disclosure
     on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id 
     and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
   inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
-  inner join ftp_filer_filings
+  inner join california_data.ftp_filer_filings
     on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id 
     and contributions.filing_id = ftp_filer_filings.filing_id 
     and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id 
@@ -471,10 +473,10 @@ from
   left join filing_amends
     on contributions.filing_id = filing_amends.filing_id 
     and contributions.amend_id = filing_amends.amend_id
-  left join cal_access_propositions_committees
+  left join california_data.cal_access_propositions_committees
     on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id 
     and ftp_filer_filings.session_id = cal_access_propositions_committees.session
-  left join cal_access_propositions
+  left join california_data.cal_access_propositions
     on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
     and cal_access_propositions.session = cal_access_propositions_committees.session
   left join prop_filer_sessions
@@ -502,6 +504,20 @@ set a.RecipientCandidateID = b.candidate_id
 where b.candidate_id is not null
 ;
 */
+
+-- add candidate office labels
+update 
+  maplight_research.contributions_full a
+  left join california_data_office_codes b on a.RecipientCandidateOfficeCode = b.office_cd
+set a.RecipientCandidateOffice = case
+  when ifnull(b.description,'') <> '' and a.RecipientCandidateOfficeCode <> 'OTH' then b.description
+  when ifnull(b.description,'') <> '' and a.RecipientCandidateOfficeCode = 'OTH' and ifnull(a.RecipientCandidateOfficeCustom,'') <> '' then a.RecipientCandidateOfficeCustom
+  when ifnull(b.description,'') <> '' and a.RecipientCandidateOfficeCode = 'OTH' and ifnull(a.RecipientCandidateOfficeCustom,'') =  '' then b.description
+  when ifnull(b.description,'') =  '' and ifnull(a.RecipientCandidateOfficeCustom,'') <> '' then a.RecipientCandidateOfficeCustom
+  when ifnull(b.description,'') =  '' and ifnull(a.RecipientCandidateOfficeCustom,'') =  '' and ifnull(a.RecipientCandidateOfficeCode,'') <> '' then a.RecipientCandidateOfficeCode
+  else 'N/A'
+  end
+;
 
 -- set labels and others
 update contributions_full_temp
@@ -537,7 +553,7 @@ set
 -- stardardize custom offices
 update 
   contributions_full_temp a
-  left join california_data_office_codes b on a.RecipientCandidateOfficeCode = b.office_cd
+  left join california_data.california_data_office_codes b on a.RecipientCandidateOfficeCode = b.office_cd
 set a.RecipientCandidateOffice = case
   when a.RecipientCandidateOfficeOriginal like '%office held%' then 'Other'
   when a.RecipientCandidateOfficeOriginal like '%Govern_r%' and a.RecipientCandidateOfficeOriginal not like '%Lieuten_nt%' then 'Governor' 
@@ -808,7 +824,7 @@ where
 -- flag forgiven loans
 update 
   contributions_full_temp a
-  join ftp_text_memo b
+  join california_data.ftp_text_memo b
     on a.FilingID = b.filing_id
     and a.AmendID = b.amend_id
     and a.Schedule = b.form_type
@@ -823,12 +839,22 @@ where
     )
 ;
 
+-- flag loans with $0 amount (and an outstanding balance > $0 at the beginning of this period)
+update contributions_full_temp
+set NoNewLoanAmount = 'Y'
+where
+    OriginTable = 'loan' 
+    and Form = 'F460' 
+    and Schedule = 'B1'
+    and TransactionAmount = 0
+    and LoanPreExistingBalance > 0
+;  
+
 -- flag candidate contributions
 update contributions_full_temp
 set CandidateContribution = 'Y'
 where
   IncludedSchedule = 'Y'
-  and ForgivenLoan = 'N'
   and HasCandidateName = 'Y'
   and HasProposition = 'N'
   and CandidateControlledCommittee = 'Y'
@@ -842,7 +868,6 @@ update contributions_full_temp
 set BallotMeasureContribution = 'Y'
 where 
   IncludedSchedule = 'Y'
-  and ForgivenLoan = 'N'
   and HasProposition = 'Y'
 ;
 
@@ -938,9 +963,11 @@ from contributions_full
 where
   IncludedSchedule = 'Y'
   and ForgivenLoan = 'N'
+  and NoNewLoanAmount = 'N'
   and BadElectionCycle = 'N'
   and LateContributionCoveredByRegularFiling = 'N'
   and (StateOffice = 'Y' or LocalOffice = 'N')
+  and not (Unitemized = 'Y' and TransactionAmount = 0)
 ;
 
 drop table if exists contributions;
