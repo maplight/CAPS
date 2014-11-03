@@ -5,9 +5,6 @@
       echo "<P>&nbsp;</P><BLOCKQUOTE><DIV CLASS=\"title\">Search political contributions from 2001 through the present, using the controls on the left.</DIV></BLOCKQUOTE>";
     } else {
       # Parse search form
-
-echo "<PRE>"; print_r ($_POST); echo "</PRE>";
-
       $where = parse_search_form ($_POST);
       display_data ($where, $_POST["fields"]);
     }
@@ -250,7 +247,7 @@ echo "<PRE>"; print_r ($_POST); echo "</PRE>";
         # Determine rows being displayed
         $first_row = $page * $limit + 1;
         $last_row = $first_row + $limit - 1;
-        if ($first_row > $total_rows["records"]) {$first_row = 1;}
+        if ($first_row > $totals_row["records"]) {$first_row = 1;}
         if ($last_row > $totals_row["records"]) {$last_row = $totals_row["records"];}
 
 
