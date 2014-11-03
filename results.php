@@ -232,6 +232,7 @@
         if (isset ($_POST["page"])) {$page = $_POST["page"] - 1;} else {$page = 0;}
         $first_row = $page * $limit + 1;
         $last_row = $first_row + $limit - 1;
+        if ($first_row > $total_rows["records"]) {$first_row = 1; $page = 0;}
         if ($last_row > $totals_row["records"]) {$last_row = $totals_row["records"];}
 
         $sort = "contributions_search.TransactionDateEnd DESC";
