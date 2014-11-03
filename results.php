@@ -6,7 +6,7 @@
     } else {
       # Parse search form
       $where = parse_search_form ($_POST);
-      display_data ($where, $_POST["fields"]);
+      display_data ($where);
     }
   }
 
@@ -217,7 +217,7 @@
   }
 
 
-  function display_data ($where, $fields) {
+  function display_data ($where) {
     if ($where == "") {
       echo "You have not entered any search data, please select a criteria on the side.";
     } else {
@@ -250,8 +250,45 @@
         if ($first_row > $totals_row["records"]) {$first_row = 1;}
         if ($last_row > $totals_row["records"]) {$last_row = $totals_row["records"];}
 
-
         $sort = "contributions_search.TransactionDateEnd DESC";
+
+        $fields = array ("RecipientCandidateNameNormalized|Recipient Name|",
+                         "RecipientCommitteeNameNormalized|Recipient Committee|",
+                         "RecipientCandidateOffice|Office|",
+                         "DonorNameNormalized|Contributor Name|",
+                         "DonorEmployerNormalized|Contributor Employer|",
+                         "DonorOccupationNormalized|Contributor Occupation|",
+                         "DonorOrganization|Contributor Organization|",
+                         "DonorState|Contributor State|",
+                         "TransactionDateEnd|Date|Date",
+                         "TransactionAmount|Amount|Currency");
+        if (isset ($_POST["fields"])) {
+          if ($_POST["fields"] == "Show more fields") {
+            $fields = array ("TransactionType|Transaction Type|",
+                             "ElectionCycle|Cyle|",
+                             "Election|Election|Date",
+                             "TransactionDateStart|Start Date|Date",
+                             "TransactionDateEnd|End Date|Date",
+                             "TransactionAmount|Amount|Currency",
+                             "RecipientCommitteeNameNormalized|Recipient Committee|",
+                             "RecipientCandidateNameNormalized|Recipient Name|",
+                             "RecipientCandidateOffice|Office|",
+                             "RecipientCandidateDistrict|District|",
+                             "Target|Ballot Measure|",
+                             "Position|Ballot Measure Support|",
+                             "DonorNameNormalized|Contributor Name|",
+                             "DonorCity|Contributor City|",
+                             "DonorState|Contributor State|",
+                             "DonorZipCode|Contributor ZipCode|",
+                             "DonorEmployerNormalized|Contributor Employer|",
+                             "DonorOccupationNormalized|Contributor Occupation|",
+                             "DonorOrganization|Contributor Occupation|",
+                             "Unitemized|Unitemized Contribution|",
+                             "AlliedCommittee|Allied Committee|",
+                             "CandidateContribution|Candidate Contribution|",
+                             "BallotMeasureContribution|Ballot Measure Contribution|");
+          }
+        }
 
         $result = my_query ("SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$where} ORDER BY {$sort} LIMIT " . ($page * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;
@@ -297,7 +334,11 @@
         echo "<div class=\"output\">";
         echo "<p>Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($totals_row["records"], 0, ".", ",") . "</strong> rows </p>";
         echo "</div>";
-        echo "<a href=\"#\" class=\"see-more\">Show more fields</a>";
+        if ($_POST["fields"] == "Show more fields") {
+          echo "<input type=\"submit\" name=\"fields\" value=\"Show less fields\">";
+        } else {
+          echo "<input type=\"submit\" name=\"fields\" value=\"Show more fields\">";
+        }
         echo "<a href=\"#\" class=\"info\">info</a>";
         echo "</div>";
         echo "<div class=\"table-holder\">";
@@ -307,12 +348,7 @@
 
         foreach ($fields as $field) {
           $field_data = explode ("|", $field);
-          echo "<th>{$field_data[1]}";
-          echo "<div class=\"links\">";
-          echo "<a href=\"#\" class=\"upword\"> </a>";
-          echo "<a href=\"#\" class=\"downword\"> </a>";
-          echo "</div>";
-          echo "</th>";
+          echo "<th>{$field_data[1]}</th>";
         }
         echo "</tr>";
         echo "</thead>";
@@ -342,14 +378,6 @@
           }
           echo "</tr>";
         }
-
-#        echo "<tr>";
-#        foreach ($fields as $field) {
-#          $field_data = explode ("|", $field);
-#          echo "<th class=\"bottom\">{$field_data[1]}";
-#          echo "</th>";
-#        }
-#        echo "</tr>";
 
         echo "</tbody>";
         echo "</table>";

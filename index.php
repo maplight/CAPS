@@ -29,25 +29,6 @@
     require ("connect.php");
     require ("sidebar.php");
     require ("results.php");
-
-    # Field selection list
-    # Selected field elements:
-    #   Database Field Name
-    #   Table Header Name
-    #   Default as checked ("checked", or "")
-    #   Data type ("Integer", "Currency", "Date", "") 
-    $select_fields = array (array ("RecipientCandidateNameNormalized", "Recipient Name", "checked", ""),
-                            array ("RecipientCommitteeNameNormalized", "Recipient Committee", "checked", ""),
-                            array ("Target", "Proposition", "", ""),
-                            array ("Election", "Election", "", "Date"),
-                            array ("Position", "Position", "", ""),
-                            array ("RecipientCandidateOffice", "Office", "checked", ""),
-                            array ("DonorNameNormalized", "Contributor Name", "checked", ""),
-                            array ("DonorEmployerNormalized", "Contributor Employer", "checked", ""),
-                            array ("DonorOccupationNormalized", "Contributor Occupation", "checked", ""),
-                            array ("DonorOrganization", "Contributor Organization", "checked", ""),
-                            array ("TransactionDateEnd", "Date", "checked", "Date"),
-                            array ("TransactionAmount", "Amount", "checked", "Currency"));
 ?>
 
   <div id="wrapper">
@@ -221,18 +202,6 @@
                     <a href="#" class="info" tabindex="18">info</a>
                   </div>
                   <div class="holder-b add">
-
-<!--
-                    <div class="sub-row">
-                      <label for="for7" class="hidden">label</label>
-                      <select tabindex="19" id="for7">
-<?php
-#  fill_elections ();
-?>
-                      </select>
-                    </div>
--->
-
                     <div class="sub-row">
                       <label for="for8" class="hidden">label</label>
 <?php
@@ -355,26 +324,7 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="form-section hidden">
-                  <h2 class="caps">Select Fields:</h2>
-                  <div class="frame">
-                    <div class="sub-section">
-                      <div class="check-part">
-<?php 
-  $field_count = 0;
-  foreach ($select_fields as $field_data) {
-    echo "<input type=\"checkbox\" id=\"field{$field_count}\" name=\"fields[]\" value=\"{$field_data[0]}|{$field_data[1]}|{$field_data[3]}\" {$field_data[2]}>";
-    echo "<label for=\"field{$field_count}\" class=\"caps\">{$field_data[1]}</label><a href=\"#\" class=\"info\" tabindex=\"\">info</a><br>";
-    $field_count++;
-  }
-?>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
+               </div>
               <input type="submit" value="Search">
             </fieldset>
 

@@ -28,14 +28,6 @@
   }
 
 
-  function fill_elections () {
-    $result = my_query ("SELECT DISTINCT Election FROM smry_propositions ORDER BY Election DESC");
-    while ($row = $result->fetch_assoc()) {
-      echo "<OPTION VALUE={$row["Election"]}>" . date ("M j, Y", strtotime ($row["Election"])) . "</OPTION>";
-    }
-  }
-
-
   function fill_propositions ($selected) {
     echo "<OPTION VALUE=\"ALL\">All propositions</OPTION>";
     $javascript_array = "[\"ALL\",\"All propositions\"],";
