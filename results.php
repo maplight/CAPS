@@ -218,10 +218,6 @@
 
 
   function display_data ($where, $fields) {
-    if (isset ($_POST["return_rows"])) {$limit = $_POST["return_rows"];} else {$limit = 10;}
-    $page = 0;
-    $sort = "contributions_search.TransactionDateEnd DESC";
-
     if ($where == "") {
       echo "You have not entered any search data, please select a criteria on the side.";
     } else {
@@ -231,6 +227,15 @@
       if ($totals_row["records"] == 0) {
         echo "Your search did not return any records.";
       } else {
+        if (isset ($_POST["return_rows"])) {$limit = $_POST["return_rows"];} else {$limit = 10;}
+        $total_pages = intval (($totals_row["records"] - 1) / $limit) + 1;
+        if (isset ($_POST["page"])) {$page = $_POST["page"] - 1;} else {$page = 0;}
+        $first_row = $page * $limit + 1;
+        $last_row = $first_row + $limit - 1;
+        if ($last_row > $totals_row["records"]) {$last_row = $totals_row["records"];}
+
+        $sort = "contributions_search.TransactionDateEnd DESC";
+
         $result = my_query ("SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$where} ORDER BY {$sort} LIMIT " . ($page * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;
 
@@ -275,7 +280,7 @@
         echo "</div>";
         echo "<div class=\"search-result\">";
         echo "<div class=\"output\">";
-        echo "<p>Showing <strong>1</strong> to <strong>###</strong> of <strong>###</strong> rows </p>";
+        echo "<p>Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($totals_row["records"], 0, ".", ",") . "</strong> rows </p>";
         echo "</div>";
         echo "<a href=\"#\" class=\"see-more\">Show more fields</a>";
         echo "<a href=\"#\" class=\"info\">info</a>";
@@ -334,18 +339,13 @@
         echo "</tbody>";
         echo "</table>";
         echo "</div>";
-        echo "<ul class=\"pagination\">";
-        echo "<li class=\"prev\"><a href=\"#\" >previous</a></li>";
-        echo "<li><a href=\"#\">1</a></li>";
-        echo "<li><a href=\"#\">2</a></li>";
-        echo "<li><a href=\"#\">3</a></li>";
-        echo "<li><a href=\"#\">4</a></li>";
-        echo "<li><a href=\"#\">5</a></li>";
-        echo "<li><a href=\"#\">6</a></li>";
-        echo "<li>...</li>";
-        echo "<li><a href=\"#\">8</a></li>";
-        echo "<li class=\"next\"><a href=\"#\">Next</a></li>";
-        echo "</ul>";
+        echo "<select name=\"page\">";
+        for ($page_select = 1; $page_select <= $total_pages; $page_select++) {
+          if ($page_select == $page + 1) {echo "<option selected>{$page_select}</option>";} else {echo "<option>{$page_select}</option>";}
+          if ($page_select == 25) {break;}
+        }
+        echo "</select>&nbsp;&nbsp;&nbsp;&nbsp;";
+        echo "<input type=\"submit\" value=\"Select page\">";
         echo "<div class=\"notes\"><p>To view the entire set of search results, <a href=\"#\">download the CSV</a> file.  Contributions data is current as of [today's date].</p>";
         echo "</div>";
       }

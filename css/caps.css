@@ -818,14 +818,20 @@ ul.pagination li{
 	display: inline-block;
 	vertical-align: middle;
 	margin:0 12px;
-	font:600 18px/22px Arial, Helvetica, sans-serif;
+	font:18px/22px Arial, Helvetica, sans-serif;
 	color:#124161;
 }
-ul.pagination li a{
-	text-decoration: none;
+ul.pagination li input[type="submit"].caps{
+          background-color: Transparent;
+          background-repeat:no-repeat;
+          border: none;
+          cursor:pointer;
+          overflow: hidden;
+          outline:none;
+          
 }
-ul.pagination li.prev{ margin:0 17px 0 0;}
-ul.pagination li.next{ margin:0 0 0 22px;}
+ul.pagination li.prev{ margin:0 8px 0 0;}
+ul.pagination li.next{ margin:0 0 0 8px;}
 ul.pagination li.next a,
 ul.pagination li.prev a{
 	background:#e6ecf0;
