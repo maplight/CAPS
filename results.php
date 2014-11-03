@@ -251,6 +251,9 @@
         if ($last_row > $totals_row["records"]) {$last_row = $totals_row["records"];}
 
         $sort = "contributions_search.TransactionDateEnd DESC";
+        if (isset ($_POST["sort"])) {
+          $sort = $_POST["sort"];
+        }
 
         $fields = array ("RecipientCandidateNameNormalized|Recipient Name|",
                          "RecipientCommitteeNameNormalized|Recipient Committee|",
@@ -313,7 +316,18 @@
         if ($limit == 50) {echo "<option selected>50</option>";} else {echo "<option>50</option>";}
         if ($limit == 100) {echo "<option selected>100</option>";} else {echo "<option>100</option>";}
         echo "</select>";
-        echo "<label for=\"row\">rows</label>";
+        echo "<label for=\"show\">rows</label>&nbsp;&nbsp;";
+        echo "<select id=\"sort\" name=\"sort\" class=\"sort\">";
+        echo "<option value=\"contributions_search.TransactionDateEnd DESC\">Date Descending</option>";
+        echo "<option value=\"contributions_search.TransactionDateEnd\">Date Ascending</option>";
+        echo "<option value=\"contributions_search.TransactionAmount DESC\">Amount Descending</option>";
+        echo "<option value=\"contributions_search.TransactionAmount\">Amount Ascending</option>";
+        echo "<option value=\"contributions_search.RecipientCandidateNameNormalized DESC\">Recipient Name Descending</option>";
+        echo "<option value=\"contributions_search.RecipientCandidateNameNormalized\">Recipient Name Ascending</option>";
+        echo "<option value=\"contributions_search.DonorName DESC\">Donor Name Descending</option>";
+        echo "<option value=\"contributions_search.DonorName\">Donor Name Ascending</option>";
+        echo "</select>";
+        echo "<label for=\"sort\">sort</label>";
         echo "<div class=\"holder\">";
         echo "<input type=\"submit\" value=\"Update\">";
         echo "<a href=\"#\" class=\"info\">info</a>";

@@ -583,8 +583,18 @@ p { margin: 0 0 1.2em; }
 	color:#333;
 }
 .filter-form select{
-	width:45px;
+          width:45px;
 	height:22px;
+	font:14px/22px Arial, Helvetica, sans-serif;
+	color:#333;
+	float: left;
+	margin:0 7px 0 0;
+	border-radius:0;
+	border:0;
+}
+.filter-form select.sort{
+          width:120px;
+          height:22px;
 	font:14px/22px Arial, Helvetica, sans-serif;
 	color:#333;
 	float: left;
