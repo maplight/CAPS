@@ -90,8 +90,8 @@ INSERT INTO smry_cycles_temp SELECT DISTINCT ElectionCycle FROM contributions_te
 UPDATE contributions_search_temp INNER JOIN smry_candidates_temp USING (RecipientCandidateNameNormalized) SET contributions_search_temp.RecipientCandidateNameID = smry_candidates_temp.RecipientCandidateNameID;
 UPDATE contributions_search_temp INNER JOIN smry_offices_temp USING (RecipientCandidateOffice) SET contributions_search_temp.RecipientCandidateOfficeID = smry_offices_temp.RecipientCandidateOfficeID;
 UPDATE contributions_search_temp INNER JOIN smry_propositions_temp ON (contributions_search_temp.Election = smry_propositions_temp.Election AND contributions_search_temp.Target = smry_propositions_temp.Target) SET contributions_search_temp.TargetID = smry_propositions_temp.TargetID;
-UPDATE contributions_search_temp SET PositionID = 1 WHERE Postion = 'SUPPORT'; 
-UPDATE contributions_search_temp SET PositionID = 2 WHERE Postion = 'OPPOSE'; 
+UPDATE contributions_search_temp SET PositionID = 1 WHERE Position = 'SUPPORT'; 
+UPDATE contributions_search_temp SET PositionID = 2 WHERE Position = 'OPPOSE'; 
 
 
 DROP TABLE IF EXISTS smry_cycles;
