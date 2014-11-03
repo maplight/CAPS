@@ -1,15 +1,26 @@
+body{
+  padding:8px;
+}
+
 #wrapper{
   width:100%; 
   background:#fff;
   position:relative;
   overflow:hidden;
-  padding:2px;
+}
+
+#caps_header{
+  display:block;
+  position:relative;
+  z-index:100;
+  box-shadow:0px 8px 8px #a5a4a2;
 }
 
 #container{
   font:15px/22px Arial, Helvetica, sans-serif;
   -webkit-text-size-adjust:100%;
   -ms-text-size-adjust:none;
+  z-index:10;
 }
 
 #two-columns{
@@ -19,9 +30,9 @@
 
 #sidebar{
   float:left;
-  padding:12px 4px 12px 4px;
+  padding:12px 6px 12px 6px;
   background:#ebebeb;
-  width:300px;
+  width:275px;
   position:relative;
   overflow:hidden;
 }
@@ -31,7 +42,20 @@
   overflow:hidden;
 }
 
-.caps_hi{
+.caps_title1{
   font:bold 29px/40px Arial, Helvetica, sans-serif;
   color:#222;
+  margin:0 0 15px;
 }
+
+.caps_search_btn1{
+  background:#e6ecf0;
+  min-width:100px;
+  min-height:35px;
+  border:2px solid #124161;
+  font:bold 17px/20px Arial, Helvetica, sans-serif;
+  color:#124161;
+  margin:0 0 9px;
+  padding:0;
+}
+

@@ -31,6 +31,7 @@
     require ("results.php");
 ?>
 
+<div id="caps_header">
 <!-- California SOS header page -->
     <div class="frme" id="top">
     <!-- utility navigation -->
@@ -68,17 +69,15 @@
     </div><!--end of .mainNavCtnd-->
     </div><!--end of .mainNavCtnr-->
 <!-- End California SOS header page -->
-
+</div> <!-- caps_header -->
 
 <div id="wrapper">
   <div id="container">
     <div id="columns">
       <form method="post">
         <div id="sidebar">
-          <fieldset>
-            <h1 class="caps_h1">Advanced Search</h1>
-
-          </fieldset>
+          <h1 class="caps_title1">Advanced Search</h1>
+          <input type="submit" value="Search" class="caps_search_btn1">
         </div> <!-- #sidebar -->
 
         <div id="content">
