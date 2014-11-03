@@ -242,7 +242,7 @@
         }
 
         # Reset the page to 0 if you selected a smaller set then is currently displayed
-        if ($page > $total_pages) {$page = 0;}
+        if ($page >= $total_pages) {$page = 0;}
 
         # Determine rows being displayed
         $first_row = $page * $limit + 1;
