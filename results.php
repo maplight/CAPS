@@ -354,7 +354,7 @@
         echo "<p>Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($totals_row["records"], 0, ".", ",") . "</strong> rows </p>";
         echo "</div>";
         $field_msg = "Show more fields";
-        if (isset ($_POST["fields"])) {if ($_POST["fields"] == "Show more fields") {$field_msg = "Show less fields";}} 
+        if (isset ($_POST["fields"])) {if ($_POST["fields"] == "Show more fields") {$field_msg = "Show fewer fields";}} 
         echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\">";
         echo "<a href=\"#\" class=\"info\">info</a>";
         echo "</div>";
