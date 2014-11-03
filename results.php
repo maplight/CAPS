@@ -359,7 +359,7 @@
         echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
         if ($total_pages > 1) {
           if ($page > 0) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Previous\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";}
-          if ($page < $total_pages) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Next\">";}
+          if ($page < ($total_pages - 1)) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Next\">";}
         }
         echo "<div class=\"notes\"><p>To view the entire set of search results, <a href=\"#\">download the CSV</a> file.  Contributions data is current as of [today's date].</p>";
         echo "</div>";
