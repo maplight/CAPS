@@ -260,11 +260,9 @@
         echo "<div class=\"info-block\">";
         echo "<div class=\"search-info\">";
         echo "<div class=\"title\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions <a href=\"#\" class=\"info\">info</a></div>";
-        echo "<em>from election cycles xxxx through xxxx</em>";
         echo "</div>";
         echo "<div class=\"contributions-area\">";
         echo "<h2>Contributions</h2>";
-        echo "<div class=\"output\">Showing all contributions of $100 or more <a href=\"#\" class=\"info\">info</a></div>";
         echo "</div>";
         echo "</div>";
         echo "<div class=\"filter-block\">";
