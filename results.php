@@ -293,6 +293,15 @@
           }
         }
 
+        $sort_fields = array ("contributions_search.TransactionDateEnd DESC|Date Descending",
+                              "contributions_search.TransactionDateEnd|Date Ascending",
+                              "contributions_search.TransactionAmount DESC|Amount Descending",
+                              "contributions_search.TransactionAmount|Amount Ascending",
+                              "contributions_search.RecipientCandidateNameNormalized DESC|Recipient Name Descending",
+                              "contributions_search.RecipientCandidateNameNormalized|Recipient Name Ascending",
+                              "contributions_search.DonorNameNormalized DESC|Donor Name Descending",
+                              "contributions_search.DonorNameNormalized|Donor Name Ascending");
+
         $result = my_query ("SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$where} ORDER BY {$sort} LIMIT " . ($page * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;
 
@@ -318,14 +327,10 @@
         echo "</select>";
         echo "<label for=\"show\">rows</label>&nbsp;&nbsp;";
         echo "<select id=\"sort\" name=\"sort\" class=\"sort\">";
-        echo "<option value=\"contributions_search.TransactionDateEnd DESC\">Date Descending</option>";
-        echo "<option value=\"contributions_search.TransactionDateEnd\">Date Ascending</option>";
-        echo "<option value=\"contributions_search.TransactionAmount DESC\">Amount Descending</option>";
-        echo "<option value=\"contributions_search.TransactionAmount\">Amount Ascending</option>";
-        echo "<option value=\"contributions_search.RecipientCandidateNameNormalized DESC\">Recipient Name Descending</option>";
-        echo "<option value=\"contributions_search.RecipientCandidateNameNormalized\">Recipient Name Ascending</option>";
-        echo "<option value=\"contributions_search.DonorName DESC\">Donor Name Descending</option>";
-        echo "<option value=\"contributions_search.DonorName\">Donor Name Ascending</option>";
+        foreach ($sort_fields as $sort_item) {
+          $item_data = explode ("|", $sort_item); 
+          if ($sort == $item_data[0]) {echo "<option value=\"{$item_data[0]}\" SELECTED>{$item_data[1]}</option>";} else {echo "<option value=\"{$item_data[0]}\">{$item_data[1]}</option>";}
+        }
         echo "</select>";
         echo "<label for=\"sort\">sort</label>";
         echo "<div class=\"holder\">";
@@ -348,11 +353,9 @@
         echo "<div class=\"output\">";
         echo "<p>Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($totals_row["records"], 0, ".", ",") . "</strong> rows </p>";
         echo "</div>";
-        if ($_POST["fields"] == "Show more fields") {
-          echo "<input type=\"submit\" name=\"fields\" value=\"Show less fields\">";
-        } else {
-          echo "<input type=\"submit\" name=\"fields\" value=\"Show more fields\">";
-        }
+        $field_msg = "Show more fields";
+        if (isset ($_POST["fields"])) {if ($_POST["fields"] == "Show more fields") {$field_msg = "Show less fields";}} 
+        echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\">";
         echo "<a href=\"#\" class=\"info\">info</a>";
         echo "</div>";
         echo "<div class=\"table-holder\">";
