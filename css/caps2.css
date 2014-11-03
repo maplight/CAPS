@@ -1,0 +1,37 @@
+#wrapper{
+  width:100%; 
+  background:#fff;
+  position:relative;
+  overflow:hidden;
+  padding:2px;
+}
+
+#container{
+  font:15px/22px Arial, Helvetica, sans-serif;
+  -webkit-text-size-adjust:100%;
+  -ms-text-size-adjust:none;
+}
+
+#two-columns{
+  margin:0;
+  overflow: hidden;
+}
+
+#sidebar{
+  float:left;
+  padding:12px 4px 12px 4px;
+  background:#ebebeb;
+  width:300px;
+  position:relative;
+  overflow:hidden;
+}
+
+#content{
+  float:left;
+  overflow:hidden;
+}
+
+.caps_hi{
+  font:bold 29px/40px Arial, Helvetica, sans-serif;
+  color:#222;
+}
