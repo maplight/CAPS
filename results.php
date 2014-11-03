@@ -340,13 +340,15 @@
         echo "</tbody>";
         echo "</table>";
         echo "</div>";
-        echo "<select name=\"page\">";
-        for ($page_select = 1; $page_select <= $total_pages; $page_select++) {
-          if ($page_select == $page + 1) {echo "<option selected>{$page_select}</option>";} else {echo "<option>{$page_select}</option>";}
-          if ($page_select == 25) {break;}
+        if ($total_pages > 1) {
+          echo "<select name=\"page\">";
+          for ($page_select = 1; $page_select <= $total_pages; $page_select++) {
+            if ($page_select == $page + 1) {echo "<option selected>{$page_select}</option>";} else {echo "<option>{$page_select}</option>";}
+            if ($page_select == 25) {break;}
+          }
+          echo "</select>&nbsp;&nbsp;&nbsp;&nbsp;";
+          echo "<input type=\"submit\" value=\"Select page\">";
         }
-        echo "</select>&nbsp;&nbsp;&nbsp;&nbsp;";
-        echo "<input type=\"submit\" value=\"Select page\">";
         echo "<div class=\"notes\"><p>To view the entire set of search results, <a href=\"#\">download the CSV</a> file.  Contributions data is current as of [today's date].</p>";
         echo "</div>";
       }
