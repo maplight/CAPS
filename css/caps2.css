@@ -17,7 +17,7 @@ body{
 }
 
 #container{
-  font:15px/22px Arial, Helvetica, sans-serif;
+  font:15px Arial, Helvetica, sans-serif;
   -webkit-text-size-adjust:100%;
   -ms-text-size-adjust:none;
   z-index:10;
@@ -48,14 +48,42 @@ body{
   margin:0 0 15px;
 }
 
+.caps_header1{
+  background:#e6ecf0;
+  margin:8px 0 8px;
+  font:bold 21px Arial, Helvetica, sans-serif;
+  color:#124161;
+  background:#ebebeb;
+  border:0px;
+}
+
 .caps_search_btn1{
   background:#e6ecf0;
-  min-width:100px;
-  min-height:35px;
   border:2px solid #124161;
-  font:bold 17px/20px Arial, Helvetica, sans-serif;
+  font:bold 17px Arial, Helvetica, sans-serif;
   color:#124161;
   margin:0 0 9px;
   padding:0;
+}
+
+.caps_radio1{
+  float:left;
+  margin-left:12px
+}
+
+.caps_label1{
+  float:left;
+  margin-left:4px;
+  font:bold 15px Arial, Helvetica, sans-serif;
+  color:#000;
+}
+
+.info{
+  position:relative;
+  margin-right:4px;
+  background:url(../images/sprite01.png) no-repeat 0 -15px;
+  float:right;
+  width:15px;
+  height:16px;
 }
 

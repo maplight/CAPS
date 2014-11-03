@@ -78,6 +78,16 @@
         <div id="sidebar">
           <h1 class="caps_title1">Advanced Search</h1>
           <input type="submit" value="Search" class="caps_search_btn1">
+          <h2 class="caps_header1">Contributions From:</h2>
+<?php
+  $checked = "";
+  if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button
+  echo "<input type=\"radio\" id=\"all_contribs\" name=\"contrib_select\" value=\"all\" class=\"caps_radio1\" {$checked}>";
+?>
+          <label for="all_contribs" class="caps_label1">All contributors</label>
+          <a href="#" class="info"></a>
+
+
         </div> <!-- #sidebar -->
 
         <div id="content">
