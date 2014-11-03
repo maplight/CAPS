@@ -5,6 +5,9 @@
       echo "<P>&nbsp;</P><BLOCKQUOTE><DIV CLASS=\"title\">Search political contributions from 2001 through the present, using the controls on the left.</DIV></BLOCKQUOTE>";
     } else {
       # Parse search form
+
+echo "<PRE>"; print_r ($_POST); echo "</PRE>";
+
       $where = parse_search_form ($_POST);
       display_data ($where, $_POST["fields"]);
     }
@@ -227,13 +230,29 @@
       if ($totals_row["records"] == 0) {
         echo "Your search did not return any records.";
       } else {
+        # Calculate total pages based on display rows
         if (isset ($_POST["return_rows"])) {$limit = $_POST["return_rows"];} else {$limit = 10;}
         $total_pages = intval (($totals_row["records"] - 1) / $limit) + 1;
-        if (isset ($_POST["page"])) {$page = $_POST["page"] - 1;} else {$page = 0;}
+ 
+        # Get page # to display
+        if (isset ($_POST["page"])) {$page = $_POST["page"];} else {$page = 0;}
+        if (isset ($_POST["page_button"])) {
+          switch ($_POST["page_button"]) {
+            case "Next": $page++; break;
+            case "Previous": $page--; break;
+            default: $page = $_POST["page_button"]; break;
+          }
+        }
+
+        # Reset the page to 0 if you selected a smaller set then is currently displayed
+        if ($page > $total_pages) {$page = 0;}
+
+        # Determine rows being displayed
         $first_row = $page * $limit + 1;
         $last_row = $first_row + $limit - 1;
-        if ($first_row > $total_rows["records"]) {$first_row = 1; $page = 0;}
+        if ($first_row > $total_rows["records"]) {$first_row = 1;}
         if ($last_row > $totals_row["records"]) {$last_row = $totals_row["records"];}
+
 
         $sort = "contributions_search.TransactionDateEnd DESC";
 
@@ -340,14 +359,10 @@
         echo "</tbody>";
         echo "</table>";
         echo "</div>";
+        echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
         if ($total_pages > 1) {
-          echo "<select name=\"page\">";
-          for ($page_select = 1; $page_select <= $total_pages; $page_select++) {
-            if ($page_select == $page + 1) {echo "<option selected>{$page_select}</option>";} else {echo "<option>{$page_select}</option>";}
-            if ($page_select == 25) {break;}
-          }
-          echo "</select>&nbsp;&nbsp;&nbsp;&nbsp;";
-          echo "<input type=\"submit\" value=\"Select page\">";
+          if ($page > 0) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Previous\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";}
+          if ($page < $total_pages) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Next\">";}
         }
         echo "<div class=\"notes\"><p>To view the entire set of search results, <a href=\"#\">download the CSV</a> file.  Contributions data is current as of [today's date].</p>";
         echo "</div>";
