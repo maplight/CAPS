@@ -23,7 +23,7 @@ CREATE TABLE contributions_search_temp ENGINE=MYISAM
    0 AS RecipientCandidateOfficeID,
    0 AS TargetID,
    0 AS PositionID
-FROM contributions_temp
+FROM contributions_temp;
 
 ALTER TABLE contributions_search_temp
   ADD FULLTEXT DonorSearch(DonorNameNormalized, DonorEmployerNormalized, DonorOrganization),
