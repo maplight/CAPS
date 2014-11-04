@@ -77,7 +77,7 @@
       <form method="post">
         <div id="sidebar">
           <h1 class="caps_title1">Advanced Search</h1>
-          <input type="submit" value="Search" class="caps_search_btn1">
+          <input type="submit" value="Search" id="caps_search_btn">
 
 <!-- Contributions From -->
           <h2 class="caps_header1">Contributions From:</h2>
@@ -211,7 +211,7 @@
   echo "<input type=\"radio\" id=\"search_comms\" name=\"comm_select\" value=\"search\" class=\"caps_radio2\" {$checked}>";
   $text = "Just these committees";
   if (isset ($_POST["committee_search"])) {$text = $_POST["committee_search"];}
-  echo "<input type=\"text\" id=\"committee_search\" name=\"committee_search\" value=\"{$text}\" class=\"caps_text1\">";
+  echo "<input type=\"text\" id=\"committee_search\" name=\"committee_search\" value=\"{$text}\" class=\"caps_text5\">";
 ?>
           <hr class="caps_hr1">
 
@@ -247,7 +247,7 @@
   fill_election_cycles ($cycles);
 ?>
           </div> <!-- cycles_box -->
-          <input type="submit" value="Search" class="caps_search_btn1">
+          <input type="submit" value="Search" id="caps_search_btn">
 
 <?php
   # Data for javascript to filter select boxes
@@ -259,7 +259,9 @@
         </div> <!-- #sidebar -->
 
         <div id="content">
-
+<?php
+  build_results_table ();
+?>
         </div> <!-- #content -->
       </form>
     </div> <!-- # columns -->

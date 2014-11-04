@@ -2,7 +2,7 @@
   function build_results_table () {
     if (! isset ($_POST["contributor"])) {
       # No form search yet
-      echo "<P>&nbsp;</P><BLOCKQUOTE><DIV CLASS=\"title\">Search political contributions from 2001 through the present, using the controls on the left.</DIV></BLOCKQUOTE>";
+      echo "<DIV CLASS=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</DIV>";
     } else {
       # Parse search form
       $where = parse_search_form ($_POST);
@@ -305,107 +305,96 @@
         $result = my_query ("SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$where} ORDER BY {$sort} LIMIT " . ($page * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;
 
-        echo "<h1>Search Results</h1>";
-        echo "<div class=\"info-block\">";
-        echo "<div class=\"search-info\">";
-        echo "<div class=\"title\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions <a href=\"#\" class=\"info\">info</a></div>";
-        echo "</div>";
-        echo "<div class=\"contributions-area\">";
-        echo "<h2>Contributions</h2>";
-        echo "</div>";
-        echo "</div>";
-        echo "<div class=\"filter-block\">";
-        echo "<div class=\"filter-form\">";
-        echo "<fieldset>";
-        echo "<legend class=\"hidden\">filter-form</legend>";
-        echo "<label for=\"show\">Show</label>";
-        echo "<select id=\"show\" name=\"return_rows\">";
+        echo "<div id=\"results\">";
+        echo "<h1 class=\"caps_title3\">Search Results</h1>";
+        echo "<hr class=\"caps_hr1\">";
+        echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions";
+        echo "<a href=\"#\" class=\"info\"></a></div>";
+        echo "<h2 class=\"caps_title4\">Contributions</h2>";
+        echo "<hr class=\"caps_hr1\">";
+
+        echo "<div id=\"filter_box\">";
+        echo "Show";
+        echo "<select id=\"show\" name=\"return_rows\" class=\"content_select1\">";
         if ($limit == 10) {echo "<option selected>10</option>";} else {echo "<option>10</option>";}
         if ($limit == 25) {echo "<option selected>25</option>";} else {echo "<option>25</option>";}
         if ($limit == 50) {echo "<option selected>50</option>";} else {echo "<option>50</option>";}
         if ($limit == 100) {echo "<option selected>100</option>";} else {echo "<option>100</option>";}
         echo "</select>";
-        echo "<label for=\"show\">rows</label>&nbsp;&nbsp;";
-        echo "<select id=\"sort\" name=\"sort\" class=\"sort\">";
+        echo "rows&nbsp;&nbsp;&nbsp;&nbsp;Sort by";
+        echo "<select id=\"sort\" name=\"sort\" class=\"content_select1\">";
         foreach ($sort_fields as $sort_item) {
           $item_data = explode ("|", $sort_item); 
           if ($sort == $item_data[0]) {echo "<option value=\"{$item_data[0]}\" SELECTED>{$item_data[1]}</option>";} else {echo "<option value=\"{$item_data[0]}\">{$item_data[1]}</option>";}
         }
         echo "</select>";
-        echo "<label for=\"sort\">sort</label>";
-        echo "<div class=\"holder\">";
-        echo "<input type=\"submit\" value=\"Update\">";
-        echo "<a href=\"#\" class=\"info\">info</a>";
-        echo "</div>";
-        echo "</fieldset>";
-        echo "</div>";
-        echo "<div class=\"download-area\">";
-        echo "<a href=\"#\" class=\"download\">Download CSV</a>";
-        echo "<div class=\"download-info\">";
-        echo "<a href=\"#\" class=\"info-link\">opener</a>";
-        echo "<div class=\"info-slide\">";
-        echo "<p>Download your search results as a CSV file</p>";
-        echo "</div>";
-        echo "</div>";
-        echo "</div>";
-        echo "</div>";
-        echo "<div class=\"search-result\">";
-        echo "<div class=\"output\">";
-        echo "<p>Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($totals_row["records"], 0, ".", ",") . "</strong> rows </p>";
-        echo "</div>";
-        $field_msg = "Show more fields";
-        if (isset ($_POST["fields"])) {if ($_POST["fields"] == "Show more fields") {$field_msg = "Show fewer fields";}} 
-        echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\">";
-        echo "<a href=\"#\" class=\"info\">info</a>";
-        echo "</div>";
-        echo "<div class=\"table-holder\">";
-        echo "<table title=\"search table\" summary=\"search table\" class=\"search-table\">";
-        echo "<thead>";
-        echo "<tr>";
+        echo "<input type=\"submit\" value=\"Update\" id=\"caps_update_btn\">";
+        echo "<div id=\"download_box\">";
+        echo "<a href=\"#\" class=\"download_csv\">Download CSV</a>&nbsp;&nbsp;";
+        echo "<a href=\"#\" class=\"download_info\"></a>";
+        echo "</div> <!-- download_box -->";
+        echo "</div> <!-- filter_box -->";
 
-        foreach ($fields as $field) {
-          $field_data = explode ("|", $field);
-          echo "<th>{$field_data[1]}</th>";
-        }
-        echo "</tr>";
-        echo "</thead>";
-        echo "<tbody>";
 
-        while ($row = $result->fetch_assoc()) {
-          echo "<tr>";
-          foreach ($fields as $field) {
-            $field_data = explode ("|", $field);
-            switch ($field_data[2]) {
-              case "Date":
-                if (date ("F j, Y", strtotime ($row[$field_data[0]])) == "December 31, 1969") {
-                  echo "<td><I>unknown</I></td>";
-                } else {
-                  echo "<td>" . date ("M j, Y", strtotime ($row[$field_data[0]])) . "</td>";
-                }
-                break;
+#        echo "<div class=\"search-result\">";
+#        echo "<div class=\"output\">";
+#        echo "<p>Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($totals_row["records"], 0, ".", ",") . "</strong> rows </p>";
+#        echo "</div>";
+#        $field_msg = "Show more fields";
+#        if (isset ($_POST["fields"])) {if ($_POST["fields"] == "Show more fields") {$field_msg = "Show fewer fields";}} 
+#        echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\">";
+#        echo "<a href=\"#\" class=\"info\">info</a>";
+#        echo "</div>";
+#        echo "<div class=\"table-holder\">";
+#        echo "<table title=\"search table\" summary=\"search table\" class=\"search-table\">";
+#        echo "<thead>";
+#        echo "<tr>";
 
-              case "Currency":
-                echo "<td style=\"text-align:right\">$" . number_format($row[$field_data[0]], 2, ".", ",") . "</td>";
-                break;
+#        foreach ($fields as $field) {
+#          $field_data = explode ("|", $field);
+#          echo "<th>{$field_data[1]}</th>";
+#        }
+#        echo "</tr>";
+#        echo "</thead>";
+#        echo "<tbody>";
 
-              default: 
-                echo "<td>{$row[$field_data[0]]}</td>";
-                break;
-            }
-          }
-          echo "</tr>";
-        }
+#        while ($row = $result->fetch_assoc()) {
+#          echo "<tr>";
+#          foreach ($fields as $field) {
+#            $field_data = explode ("|", $field);
+#            switch ($field_data[2]) {
+#              case "Date":
+#                if (date ("F j, Y", strtotime ($row[$field_data[0]])) == "December 31, 1969") {
+#                  echo "<td><I>unknown</I></td>";
+#                } else {
+#                  echo "<td>" . date ("M j, Y", strtotime ($row[$field_data[0]])) . "</td>";
+#                }
+#                break;
 
-        echo "</tbody>";
-        echo "</table>";
-        echo "</div>";
-        echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
-        if ($total_pages > 1) {
-          if ($page > 0) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Previous\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";}
-          if ($page < ($total_pages - 1)) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Next\">";}
-        }
-        echo "<div class=\"notes\"><p>To view the entire set of search results, <a href=\"#\">download the CSV</a> file.  Contributions data is current as of [today's date].</p>";
-        echo "</div>";
+#              case "Currency":
+#                echo "<td style=\"text-align:right\">$" . number_format($row[$field_data[0]], 2, ".", ",") . "</td>";
+#                break;
+
+#              default: 
+#                echo "<td>{$row[$field_data[0]]}</td>";
+#                break;
+#            }
+#          }
+#          echo "</tr>";
+#        }
+
+#        echo "</tbody>";
+#        echo "</table>";
+#        echo "</div>";
+#        echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
+#        if ($total_pages > 1) {
+#          if ($page > 0) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Previous\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";}
+#          if ($page < ($total_pages - 1)) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Next\">";}
+#        }
+#        echo "<div class=\"notes\"><p>To view the entire set of search results, <a href=\"#\">download the CSV</a> file.  Contributions data is current as of [today's date].</p>";
+#        echo "</div>";
+
+        echo "</div> <!-- results ->";
       }
     }
   }
