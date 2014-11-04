@@ -31,11 +31,7 @@
     require ("results.php");
 ?>
 
-  <div id="wrapper">
-    <div id="container">
-      <div id="header" a>
-
-
+<div id="caps_header">
 <!-- California SOS header page -->
     <div class="frme" id="top">
     <!-- utility navigation -->
@@ -73,280 +69,205 @@
     </div><!--end of .mainNavCtnd-->
     </div><!--end of .mainNavCtnr-->
 <!-- End California SOS header page -->
+</div> <!-- caps_header -->
 
-      </div> <!-- end id=header -->
-
-      <div id="two-columns">
-        <form action="" method="post" class="search-form">
+<div id="wrapper">
+  <div id="container">
+    <div id="columns">
+      <form method="post">
         <div id="sidebar">
-            <fieldset>
-              <legend class="hidden">search-form</legend>
-              <h1 class="caps">Advanced Search</h1>
-              <input type="submit" value="Search" tabindex="1">
-              <div class="holder-form">
-                <div class="form-section">
-                  <h2 class="caps">Contributions From:</h2>
-                  <div class="radio-holder">
-                    <div class="row info">
+          <h1 class="caps_title1">Advanced Search</h1>
+          <input type="submit" value="Search" id="caps_search_btn">
+
+<!-- Contributions From -->
+          <h2 class="caps_header1">Contributions From:</h2>
 <?php
   $checked = "";
   if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button
-  echo "<input type=\"radio\" id=\"all\" name=\"contrib_select\" value=\"all\" tabindex=\"2\" {$checked}>";
+  echo "<input type=\"radio\" id=\"all_contribs\" name=\"contrib_select\" value=\"all\" class=\"caps_radio1\" {$checked}>";
 ?>
-                      <label for="all" class="caps">All contributors</label>
-                      <a href="#" class="info" tabindex="3">info</a>
-                    </div> <!-- end class=row info -->
-                    <div class="row">
+          <label for="all_contribs" class="caps_label1">All contributors</label>
+          <a href="#" class="info"></a>
 <?php
   $checked = "";
   if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
-  echo "<input type=\"radio\" name=\"contrib_select\" value=\"search\" tabindex=\"4\" id=\"for1\" {$checked}>";
-?>
-                      <label for="for1" class="hidden">label</label>
-                      <label for="for2" class="hidden">label</label>
-<?php
+  echo "<input type=\"radio\" id=\"select_contribs\" name=\"contrib_select\" value=\"search\" class=\"caps_radio1\" {$checked}>";
   $text = "Just these contributor";
   if (isset ($_POST["contributor"])) {$text = $_POST["contributor"];}
-  echo "<input type=\"text\" id=\"for2\" name=\"contributor\" value=\"{$text}\" tabindex=\"5\" accesskey=\"s\">";
+  echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" class=\"caps_text1\">";
 ?>
-                    </div> <!-- end class=row -->
-                  </div> <!-- end class=radio-holder -->
-                  <div class="contry-select">
-                    <label for="contr" class="caps">Contributor Location</label>
-                    <a href="#" class="info" tabindex="6">info</a>
-                    <select tabindex="7" id="contr" name="state_list" class="caps">
+          <label for="select_location" class="caps_label2">Contributor Location</label>
+          <a href="#" class="info"></a>
+          <select id="select_location" name="state_list" class="caps_select1">
 <?php
   $selected = "";
   if (isset ($_POST["state_list"])) {$selected = $_POST["state_list"];}
   fill_state_list ($selected);
 ?>
-                    </select>
-                  </div> <!-- end class=contry-select -->
-                </div> <!-- end class=form-section -->
+          </select>
+          <hr class="caps_hr1">
 
-              <!-- section of search form -->
-              <div class="form-section middel">
-                <h2 class="caps">Contributions To:</h2>
-                <div class="frame">
-                  <div class="sub-section">
-                  <div class="check-part">
+<!-- Contributions To -->
+          <h2 class="caps_header1">Contributions To:</h2>
+
+<!-- Contributions To Candidates -->
 <?php
   $checked = "";
   if (isset ($_POST["candidates"])) {if ($_POST["candidates"] == "on") {$checked = "checked";}}  
-  echo "<input type=\"checkbox\" id=\"cand\" name=\"candidates\" tabindex=\"8\" {$checked}>";
+  echo "<input type=\"checkbox\" id=\"contrib_to\" name=\"candidates\" class=\"caps_radio1\" {$checked}>";
 ?>
-                    <label for="cand" class="caps">Candidates</label>
-                    <a href="#" class="info" tabindex="9">info</a>
-                  </div>
-                  <div class="holder-b">
-                    <div class="sub-row">
+          <label for="contrib_to" class="caps_label1">Candidates</label>
+          <a href="#" class="info"></a>
 <?php
   $checked = "";
   if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
-  echo "<input type=\"radio\" id=\"all\" name=\"cand_select\" value=\"all\" tabindex=\"10\" {$checked}>";
+  echo "<input type=\"radio\" id=\"all_cands\" name=\"cand_select\" value=\"all\" class=\"caps_radio2\" {$checked}>";
 ?>
-                      <label for="all1" class="caps">All candidates</label>
-                    </div>
-                    <div class="sub-row info">
+          <label for="all_cands" class="caps_label1">All candidates</label>
 <?php
   $checked = "";
   if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "search") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"for3\" name=\"cand_select\" value=\"search\" tabindex=\"11\" {$checked}>";
-?>
-                      <label for="for3" class="hidden">label</label>
-                      <label for="candidates_list" class="hidden">label</label>
-                      <label for="search_candidates" class="hidden">label</label>
-<?php
+  echo "<input type=\"radio\" id=\"search_cands\" name=\"cand_select\" value=\"search\" class=\"caps_radio3\" {$checked}>";
   $text = "Search candidates";
   if (isset ($_POST["search_candidates"])) {$text = $_POST["search_candidates"];}
-  echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" tabindex=\"\" accesskey=\"s\" onkeyup=\"filter_candidates_list();\">";
+  echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"filter_candidates_list();\">";
 ?>
-                      <select tabindex="12" id="candidate_list" name="candidate_list" class="caps">
+          <select id="candidate_list" name="candidate_list" class="caps_select2">
 <?php
   $selected = "";
   if (isset ($_POST["candidate_list"])) {$selected = $_POST["candidate_list"];}
   $js_candidates = fill_candidate_names ($selected);
 ?>
-                      </select>
-                      <a href="#" class="info" tabindex="13">info</a>
-                    </div>
-                    <div class="sub-row info">
+          </select>
+          <a href="#" class="info"></a>
 <?php
   $checked = "";
   if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "office") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"for5\" name=\"cand_select\" value=\"office\" tabindex=\"14\" {$checked}>";
+  echo "<input type=\"radio\" id=\"select_cands\" name=\"cand_select\" value=\"office\" class=\"caps_radio3\" {$checked}>";
 ?>
-                      <label for="for5" class="hidden">label</label>
-                      <label for="for6" class="hidden">label</label>
-                      <select tabindex="15" id="for6" name="office_list" class="caps_nomargin">
+          <select id="office_list" name="office_list" class="caps_select3">
 <?php
   $selected = "";
   if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
   fill_offices_sought ($selected);
 ?>
-                      </select>
-                      <a href="#" class="info" tabindex="16">info</a>
-                    </div>
-                  </div>
-                </div>
+          </select>
+          <a href="#" class="info"></a>
+          <hr class="caps_hr1">
 
-                  <!--sub section of search form -->
-                  <div class="sub-section">
-                  <div class="check-part">
+<!-- Contributions To Ballot Measures -->
 <?php
   $checked = "";
   if (isset ($_POST["propositions"])) {if ($_POST["propositions"] == "on") {$checked = "checked";}}  
-  echo "<input type=\"checkbox\" id=\"cand1\" name=\"propositions\" tabindex=\"17\" {$checked}>";
+  echo "<input type=\"checkbox\" id=\"props_to\" name=\"propositions\" class=\"caps_radio1\" {$checked}>";
 ?>
-                    <label for="cand1" class="caps">Ballot Measures</label>
-                    <a href="#" class="info" tabindex="18">info</a>
-                  </div>
-                  <div class="holder-b add">
-                    <div class="sub-row">
-                      <label for="for8" class="hidden">label</label>
+          <label for="props_to" class="caps_label1">Ballot Measures</label>
+          <a href="#" class="info"></a>
 <?php
   $text = "Search propositions";
   if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
-  echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" tabindex=\"\" accesskey=\"s\" onkeyup=\"filter_propositions_list();\">";
+  echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" class=\"caps_text2\" onkeyup=\"filter_propositions_list();\">";
 ?>
-                      <select id="propositions_list" name="proposition_list" tabindex="20">
+          <select id="propositions_list" name="proposition_list" class="caps_select4">
 <?php
   $selected = "";
   if (isset ($_POST["proposition_list"])) {$selected = $_POST["proposition_list"];}
   $js_propositions = fill_propositions ($selected);
 ?>
-                      </select>
-                    </div>
-                    <div class="sub-row">
-                      <label for="for9" class="hidden">label</label>
-                      <select id="for9" name="position" tabindex="21">
-                        <option value="B">Both support &amp; oppose</option>
+          </select>
+          <select id="position" name="position" class="caps_select4">
+          <option value="B">Both support &amp; oppose</option>
 <?php
   if ($_POST["position"] == "S") {echo "<option value=\"S\" SELECTED>Support</option>";} else {echo "<option value=\"S\">Support</option>";}
   if ($_POST["position"] == "O") {echo "<option value=\"O\" SELECTED>Oppose</option>";} else {echo "<option value=\"O\">Oppose</option>";}
 ?>
-                      </select>
-                    </div>
-                    <div class="check-b-area">
+          </select>
 <?php
   $checked = "";
   if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}}  
-  echo "<input type=\"checkbox\" id=\"alli\" name=\"exclude\" tabindex=\"22\" {$checked}>";
+  echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" class=\"caps_radio4\" {$checked}>";
 ?>
-                      <label for="alli" class="caps">Exclude contnbutions between allied committees</label>
-                    </div>
-                  </div>
-                </div>
-                  <!-- sub section of search form -->
-                  <div class="sub-section last">
-                  <div class="check-part">
+          <label for="exclude" class="caps_label3">Exclude contributions between allied committees</label>
+          <hr class="caps_hr1">
+
+<!-- Contributions To Committees -->
 <?php
   $checked = "";
   if (isset ($_POST["committees"])) {if ($_POST["committees"] == "on") {$checked = "checked";}}  
-  echo "<input type=\"checkbox\" id=\"com\" name=\"committees\" {$checked}>";
+  echo "<input type=\"checkbox\" id=\"comms_to\" name=\"committees\" class=\"caps_radio1\" {$checked}>";
 ?>
-                    <label for="com" class="caps">Committees</label>
-                    <a href="#" class="info" tabindex="23">info</a>
-                  </div>
-                  <div class="holder-b add">
-                    <div class="sub-row">
+          <label for="comms_to" class="caps_label1">Committees</label>
+          <a href="#" class="info"></a>
 <?php
   $checked = "";
   if (isset ($_POST["comm_select"])) {if ($_POST["comm_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
-  echo "<input type=\"radio\" id=\"allc\" name=\"comm_select\" value=\"all\" {$checked}>";
+  echo "<input type=\"radio\" id=\"all_comms\" name=\"comm_select\" value=\"all\" class=\"caps_radio2\" {$checked}>";
 ?>
-                      <label for="allc" class="caps">All committees</label>
-                    </div>
-                    <div class="sub-row">
+          <label for="all_comms" class="caps_label1">All committees</label>
+
 <?php
   $checked = "";
   if (isset ($_POST["comm_select"])) {if ($_POST["comm_select"] == "search") {$checked = "checked";}}  
-  echo "<input type=\"radio\" name=\"comm_select\" value=\"search\" id=\"for10\" {$checked}>";
-?>
-                      <label for="for10" class="hidden">label</label>
-                      <label for="for11" class="hidden">label</label>
-<?php
+  echo "<input type=\"radio\" id=\"search_comms\" name=\"comm_select\" value=\"search\" class=\"caps_radio2\" {$checked}>";
   $text = "Just these committees";
   if (isset ($_POST["committee_search"])) {$text = $_POST["committee_search"];}
-  echo "<input type=\"text\" value=\"{$text}\" id=\"for11\" name=\"committee_search\">";
+  echo "<input type=\"text\" id=\"committee_search\" name=\"committee_search\" value=\"{$text}\" class=\"caps_text5\">";
 ?>
-                    </div>
-                  </div>
-                </div>
-                </div>
-              </div>
-                <!-- section of search form -->
-                <div class="form-section info">
-                  <h2 class="caps">Dates:</h2>
-                  <a href="#" class="info">info</a>
-                  <div class="radio-row">
+          <hr class="caps_hr1">
+
+<!-- Dates -->
+          <h2 class="caps_header1">Dates:<a href="#" class="info"></a></h2>
 <?php
   $checked = "";
   if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
-  echo "<input type=\"radio\" id=\"cyc\" name=\"date_select\" value=\"all\" {$checked}>";
+  echo "<input type=\"radio\" id=\"all_dates\" name=\"date_select\" value=\"all\" class=\"caps_radio1\" {$checked}>";
 ?>
-                    <label for="cyc" class="caps">All dates and election cycles</label>
-                  </div>
-                  <div class="radio-row">
+          <label for="all_dates" class="caps_label1">All dates and election cycles</label>
 <?php
   $checked = "";
   if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "range") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"cyc1\" name=\"date_select\" value=\"range\" {$checked}>"
+  echo "<input type=\"radio\" id=\"range_dates\" name=\"date_select\" value=\"range\" class=\"caps_radio5\" {$checked}>"
 ?>
-                    <label for="cyc1" class="caps">Date range</label>
-                    <div class="date-range">
+          <label for="range_dates" class="caps_label4">Date range</label>
 <?php
   $text = "mm/dd/yyyy";
   if (isset ($_POST["start_date"])) {$text = $_POST["start_date"];}
-  echo "<input type=\"text\" id=\"for12\" name=\"start_date\" value=\"{$text}\" class=\"caps\"> to"; 
-?>
-                      <label for="for12" class="hidden">label</label>
-<?php
-  $text = "mm/dd/yyyy";
+  echo "<input type=\"text\" id=\"start_date\" name=\"start_date\" value=\"{$text}\" class=\"caps_text3\">";
+  echo "<label for=\"start_date\" class=\"caps_label5\">to</label>";
   if (isset ($_POST["end_date"])) {$text = $_POST["end_date"];}
-  echo "<input type=\"text\" value=\"{$text}\" id=\"to\" name=\"end_date\" class=\"caps\">";
-?>
-                      <label for="to" class="hidden">label</label>
-                    </div>
-                  </div>
-                  <div class="radio-row">
-<?php
+  echo "<input type=\"text\" name=\"end_date\" value=\"{$text}\" class=\"caps_text4\">";
   $checked = "";
   if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "cycle") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"cyc2\" name=\"date_select\" value=\"cycle\" {$checked}>";
+  echo "<input type=\"radio\" id=\"cycle_dates\" name=\"date_select\" value=\"cycle\" class=\"caps_radio5\" {$checked}>";
 ?>
-                    <label for="cyc2" class="caps">Election cycles</label>
-                    <div class="year-row">
+          <label for="cycle_dates" class="caps_label4">Election cycles</label>
+          <div id="cycles_box">
 <?php
   if (isset ($_POST["cycles"])) {$cycles = $_POST["cycles"];} else {$cycles = array ("");}
   fill_election_cycles ($cycles);
 ?>
-                    </div>
-                  </div>
-                </div>
-               </div>
-              <input type="submit" value="Search">
-            </fieldset>
+          </div> <!-- cycles_box -->
+          <input type="submit" value="Search" id="caps_search_btn">
 
 <?php
+  # Data for javascript to filter select boxes
   echo "<SCRIPT type=text/javascript>";
   echo "var candidates = [{$js_candidates}\"\"];\n";
   echo "var propositions = [{$js_propositions}\"\"];\n";
   echo "</SCRIPT>";
 ?>
-        </div>
+        </div> <!-- #sidebar -->
 
-
-        <!-- contain the main content of the page -->
         <div id="content">
 <?php
   build_results_table ();
 ?>
-        </div>
-        </form>
-      </div>
-      <!-- footer of the page -->
-      <div id="footer">
+        </div> <!-- #content -->
+      </form>
+    </div> <!-- # columns -->
+  </div> <!-- #containter -->
+</div> <!-- #wrapper-->
+
 
 <!-- California SOS footer page -->
     <footer id="footer" class="grid-100 grid-parent" lang="en-US">
@@ -406,12 +327,6 @@
 	<!-- // COPYRIGHT -->
     </div>
     </footer>
-
-      </div>
-    </div>
-    <div class="skip"><a href="#header">back to top</a></div>
-  </div>
-
 
 </body>
 </html>

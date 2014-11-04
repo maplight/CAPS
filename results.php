@@ -335,64 +335,60 @@
         echo "</div> <!-- download_box -->";
         echo "</div> <!-- filter_box -->";
 
+        echo "Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($totals_row["records"], 0, ".", ",") . "</strong> rows ";
+        $field_msg = "Show more fields";
+        if (isset ($_POST["fields"])) {if ($_POST["fields"] == "Show more fields") {$field_msg = "Show fewer fields";}} 
+        echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\" id=\"caps_field_btn\">";
+        echo "<a href=\"#\" class=\"info\"></a>";
 
-#        echo "<div class=\"search-result\">";
-#        echo "<div class=\"output\">";
-#        echo "<p>Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($totals_row["records"], 0, ".", ",") . "</strong> rows </p>";
-#        echo "</div>";
-#        $field_msg = "Show more fields";
-#        if (isset ($_POST["fields"])) {if ($_POST["fields"] == "Show more fields") {$field_msg = "Show fewer fields";}} 
-#        echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\">";
-#        echo "<a href=\"#\" class=\"info\">info</a>";
-#        echo "</div>";
-#        echo "<div class=\"table-holder\">";
-#        echo "<table title=\"search table\" summary=\"search table\" class=\"search-table\">";
-#        echo "<thead>";
-#        echo "<tr>";
+        echo "<div id=\"table_box\">";
+        echo "<table title=\"search table\" summary=\"search table\" class=\"search-table\">";
+        echo "<thead>";
+        echo "<tr>";
 
-#        foreach ($fields as $field) {
-#          $field_data = explode ("|", $field);
-#          echo "<th>{$field_data[1]}</th>";
-#        }
-#        echo "</tr>";
-#        echo "</thead>";
-#        echo "<tbody>";
+        foreach ($fields as $field) {
+          $field_data = explode ("|", $field);
+          echo "<th>{$field_data[1]}</th>";
+        }
+        echo "</tr>";
+        echo "</thead>";
+        echo "<tbody>";
 
-#        while ($row = $result->fetch_assoc()) {
-#          echo "<tr>";
-#          foreach ($fields as $field) {
-#            $field_data = explode ("|", $field);
-#            switch ($field_data[2]) {
-#              case "Date":
-#                if (date ("F j, Y", strtotime ($row[$field_data[0]])) == "December 31, 1969") {
-#                  echo "<td><I>unknown</I></td>";
-#                } else {
-#                  echo "<td>" . date ("M j, Y", strtotime ($row[$field_data[0]])) . "</td>";
-#                }
-#                break;
+        while ($row = $result->fetch_assoc()) {
+          echo "<tr>";
+          foreach ($fields as $field) {
+            $field_data = explode ("|", $field);
+            switch ($field_data[2]) {
+              case "Date":
+                if (date ("F j, Y", strtotime ($row[$field_data[0]])) == "December 31, 1969") {
+                  echo "<td><I>unknown</I></td>";
+                } else {
+                  echo "<td>" . date ("M j, Y", strtotime ($row[$field_data[0]])) . "</td>";
+                }
+                break;
 
-#              case "Currency":
-#                echo "<td style=\"text-align:right\">$" . number_format($row[$field_data[0]], 2, ".", ",") . "</td>";
-#                break;
+              case "Currency":
+                echo "<td style=\"text-align:right\">$" . number_format($row[$field_data[0]], 2, ".", ",") . "</td>";
+                break;
 
-#              default: 
-#                echo "<td>{$row[$field_data[0]]}</td>";
-#                break;
-#            }
-#          }
-#          echo "</tr>";
-#        }
+              default: 
+                echo "<td>{$row[$field_data[0]]}</td>";
+                break;
+            }
+          }
+          echo "</tr>";
+        }
 
-#        echo "</tbody>";
-#        echo "</table>";
-#        echo "</div>";
-#        echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
-#        if ($total_pages > 1) {
-#          if ($page > 0) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Previous\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";}
-#          if ($page < ($total_pages - 1)) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Next\">";}
-#        }
-#        echo "<div class=\"notes\"><p>To view the entire set of search results, <a href=\"#\">download the CSV</a> file.  Contributions data is current as of [today's date].</p>";
-#        echo "</div>";
+        echo "</tbody>";
+        echo "</table>";
+        echo "</div> <!-- table_box -->";
+
+        echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
+        if ($total_pages > 1) {
+          if ($page > 0) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Previous\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";}
+          if ($page < ($total_pages - 1)) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Next\">";}
+        }
+        echo "<div class=\"notes\"><p>To view the entire set of search results, <a href=\"#\">download the CSV</a> file.  Contributions data is current as of [today's date].</p></div>";
 
         echo "</div> <!-- results ->";
       }
