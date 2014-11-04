@@ -396,7 +396,7 @@ FROM
 -- where ftp_filer_filings.session_id = 2013
 ;
 
--- unitemized
+-- unitemized monetary and non-monetary
 insert into contributions_full_temp (
     Form
   , RecipientCommitteeType
@@ -483,10 +483,129 @@ from
     on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
 where
-  contributions.form_type = 'A' 
+  contributions.form_type in ('A','C') 
   and contributions.line_item = 2
 ;
 
+-- calculations for unitemized loans
+update 
+  filing_ids a
+  join (
+    select FilingID, AmendID, Target, sum(TransactionAmount) 'Amount'
+    from contributions_full_temp
+    where 
+      Form = 'F460' 
+      and Schedule = 'B1'
+    group by FilingID, AmendID, Target
+    ) b 
+      on a.filing_id = b.FilingID
+      and a.amend_id_to_use = b.AmendID
+set a.loan_total_from_itemized = b.Amount
+;
+update 
+  filing_ids a
+  join ftp_smry b 
+    on a.filing_id = b.filing_id
+    and a.amend_id_to_use = b.amend_id
+set a.loan_total_from_summary = b.amount_a
+where
+  b.form_type = 'B1'
+  and b.line_item = '1'
+;
+
+-- unitemized loans
+insert into contributions_full_temp (
+    Form
+  , RecipientCommitteeType
+  , Schedule
+  , ElectionCycle
+  , ElectionCvr
+  , ElectionProp
+  , PrimaryGeneralIndicator
+  , FilingID
+  , AmendID
+  , LineItem
+  , TransactionDateStart
+  , TransactionDateEnd
+  , TransactionAmount
+  , FiledDate
+  , RecipientCommitteeNameNormalized
+  , HasCandidateName
+  , RecipientCandidateNameNormalized
+  , RecipientCandidateOfficeCode
+  , RecipientCandidateOfficeCustom
+  , RecipientCandidateDistrict
+  , HasProposition
+  , Target
+  , `Position`
+  , DonorNameNormalized
+  , RecipientCommitteeID
+  , RecipientCommitteeEntity
+  , Unitemized
+  , OriginTable
+  )
+select
+    ftp_cvr_campaign_disclosure.form_type as Form
+  , ftp_cvr_campaign_disclosure.cmtte_type as RecipientCommitteeType
+  , contributions.form_type as Schedule
+  , ftp_filer_filings.session_id as ElectionCycle
+  , str_to_date(left(ftp_cvr_campaign_disclosure.elect_date,locate(' ',ftp_cvr_campaign_disclosure.elect_date)-1), '%m/%d/%Y') as ElectionCvr
+  , cal_access_propositions.election_date as ElectionProp
+  , '0' as PrimaryGeneralIndicator
+  , contributions.filing_id as FilingID
+  , contributions.amend_id as AmendID
+  , contributions.line_item as LineItem
+  , str_to_date(left(ftp_filer_filings.rpt_start,locate(' ',ftp_filer_filings.rpt_start)-1),'%m/%d/%Y') as TransactionDateStart
+  , str_to_date(left(ftp_filer_filings.rpt_end,locate(' ',ftp_filer_filings.rpt_end)-1),'%m/%d/%Y') as TransactionDateEnd
+  , round(ifnull(filing_ids.loan_total_from_summary,0) - ifnull(filing_ids.loan_total_from_itemized,0),2) as TransactionAmount
+  , str_to_date(ftp_filer_filings.filing_date,'%m/%d/%Y %h:%i:%s %p') as FiledDate
+  , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
+  , if(isnull(filing_amends.filing_id),'N','Y') as HasCandidateName
+  , ifnull(filing_amends.display_name,'') as RecipientCandidateNameNormalized
+  , ftp_cvr_campaign_disclosure.office_cd as RecipientCandidateOfficeCode
+  , ftp_cvr_campaign_disclosure.offic_dscr as RecipientCandidateOfficeCustom
+  , ftp_cvr_campaign_disclosure.dist_no as RecipientCandidateDistrict
+  , if(isnull(cal_access_propositions_committees.filer_id),'N','Y') as HasProposition
+  , ifnull(cal_access_propositions.name,'') as Target
+  , ifnull(cal_access_propositions_committees.`position`,'') as `Position`
+  , 'Unitemized Loans' as DonorNameNormalized
+  , ftp_filer_filings.filer_id as RecipientCommitteeID
+  , ftp_cvr_campaign_disclosure.entity_cd as RecipientCommitteeEntity
+  , 'Y' as Unitemized
+  , 'smry' as OriginTable
+from
+  ftp_smry as contributions
+  inner join filing_ids -- include only the most recent filing
+    on contributions.filing_id = filing_ids.filing_id 
+    and contributions.amend_id = filing_ids.amend_id_to_use
+  inner join ftp_cvr_campaign_disclosure
+    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id 
+    and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
+  inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
+  inner join ftp_filer_filings
+    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id 
+    and contributions.filing_id = ftp_filer_filings.filing_id 
+    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id 
+    and contributions.amend_id = ftp_filer_filings.filing_sequence
+  left join filing_amends
+    on contributions.filing_id = filing_amends.filing_id 
+    and contributions.amend_id = filing_amends.amend_id
+  left join cal_access_propositions_committees
+    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id 
+    and ftp_filer_filings.session_id = cal_access_propositions_committees.session
+  left join cal_access_propositions
+    on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
+    and cal_access_propositions.session = cal_access_propositions_committees.session
+  left join prop_filer_sessions
+    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
+    and ftp_filer_filings.session_id = prop_filer_sessions.session_id
+where
+  contributions.form_type = 'B1' 
+  and contributions.line_item = 1
+  and round(ifnull(filing_ids.loan_total_from_summary,0)) - round(ifnull(filing_ids.loan_total_from_itemized,0)) > 0
+  and ifnull(filing_ids.loan_total_from_summary,0) <> 0
+;
+  
 -- flag bad election cycles
 update contributions_full_temp
 set BadElectionCycle = 'Y'
@@ -817,7 +936,7 @@ where
   and not (
     OriginTable = 'smry' 
     and Form = 'F460'
-    and Schedule = 'A' 
+    and Schedule in ('A','B1','C') 
     )
 ;
 
@@ -970,8 +1089,8 @@ where
   and not (Unitemized = 'Y' and TransactionAmount = 0)
 ;
 
-drop table if exists contributions;
-rename table contributions_temp to contributions;
+-- drop table if exists contributions;
+-- rename table contributions_temp to contributions;
 
 
 

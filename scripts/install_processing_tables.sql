@@ -19,6 +19,8 @@ create table filing_ids (
   , s497_amend_id int(11) null
   , smry_amend_id int(11) null
   , cvr_amend_id int(11) null
+  , loan_total_from_itemized double null
+  , loan_total_from_summary double null
 );
 
 drop table if exists filer_ids;
