@@ -302,7 +302,7 @@
                               "contributions_search.DonorNameNormalized DESC|Donor Name Descending",
                               "contributions_search.DonorNameNormalized|Donor Name Ascending");
 
-        $result = my_query ("SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$where} ORDER BY {$sort} LIMIT " . ($page * $limit) . ",{$limit}");
+        $result = my_query ("SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$where} ORDER BY {$sort} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;
 
         echo "<div id=\"results\">";
