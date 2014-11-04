@@ -383,12 +383,25 @@
         echo "</table>";
         echo "</div> <!-- table_box -->";
 
+        echo "<center>";
         echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
         if ($total_pages > 1) {
-          if ($page > 0) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Previous\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";}
-          if ($page < ($total_pages - 1)) {echo "<INPUT TYPE=\"submit\" NAME=\"page_button\" VALUE=\"Next\">";}
+          if ($page > 0) {echo "<input type=\"submit\" name=\"page_button\" value=\"Previous\" id=\"caps_previous_btn\">";}
+          if ($total_pages > 2) {
+            for ($page_btn = 1; $page_btn <= $total_pages; $page_btn++) {
+              if ($page == $page_btn) {
+                echo "<input type=\"submit\" name=\"page_button\" value=\"{$page_btn}\" id=\"caps_current_page_btn\">";
+              } else {
+                echo "<input type=\"submit\" name=\"page_button\" value=\"{$page_btn}\" id=\"caps_page_btn\">";
+              }
+              if ($page_btn == 10) {break;}
+            }
+          }
+          if ($page < ($total_pages - 1)) {echo "<input type=\"submit\" name=\"page_button\" value=\"Next\" id=\"caps_next_btn\">";}
         }
-        echo "<div class=\"notes\"><p>To view the entire set of search results, <a href=\"#\">download the CSV</a> file.  Contributions data is current as of [today's date].</p></div>";
+        echo "</center>";
+
+        echo "<p><div class=\"notes\"><p>To view the entire set of search results, <a href=\"#\">download the CSV</a> file.  Contributions data is current as of [today's date].</p></div>";
 
         echo "</div> <!-- results ->";
       }

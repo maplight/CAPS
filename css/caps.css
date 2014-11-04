@@ -92,6 +92,64 @@ body{
   background:#124161;
 }
 
+#caps_previous_btn{
+  width:140px;
+  background:#e6ecf0;
+  color:#124161;
+  border:2px solid #124161;
+  font:bold 17px Arial, Helvetica, sans-serif;
+  margin:0 20px 0 0;
+  padding:10px 15px 10px 15px;
+}
+
+#caps_previous_btn:hover{
+  color:#fff;
+  background:#124161;
+}
+
+#caps_next_btn{
+  width:140px;
+  background:#e6ecf0;
+  color:#124161;
+  border:2px solid #124161;
+  font:bold 17px Arial, Helvetica, sans-serif;
+  margin:0 0 0 20px;
+  padding:10px 15px 10px 15px;
+}
+
+#caps_next_btn:hover{
+  color:#fff;
+  background:#124161;
+}
+
+#caps_current_page_btn{
+  background:#fff;
+  color:#124161;
+  border:0;
+  font:bold 26px Arial, Helvetica, sans-serif;
+  margin:0 8px 0 8px;
+  padding:2px;
+}
+
+#caps_current_page_btn:hover{
+  color:#fff;
+  background:#124161;
+}
+
+#caps_page_btn{
+  background:#fff;
+  color:#124161;
+  border:0;
+  font:bold 16px Arial, Helvetica, sans-serif;
+  margin:0 8px 0 8px;
+  padding:2px;
+}
+
+#caps_page_btn:hover{
+  color:#fff;
+  background:#124161;
+}
+
 #cycles_box{
   clear:both;
   float:left;
@@ -117,7 +175,7 @@ body{
 
 #table_box{
   margin-top:8px;
-  margin-bottom:8px;
+  margin-bottom:15px;
   overflow:auto;
   border:2px solid #ccc;
 }
