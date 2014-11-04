@@ -78,6 +78,7 @@
         <div id="sidebar">
           <h1 class="caps_title1">Advanced Search</h1>
           <input type="submit" value="Search" class="caps_search_btn1">
+
           <h2 class="caps_header1">Contributions From:</h2>
 <?php
   $checked = "";
@@ -86,6 +87,26 @@
 ?>
           <label for="all_contribs" class="caps_label1">All contributors</label>
           <a href="#" class="info"></a>
+<?php
+  $checked = "";
+  if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
+  echo "<input type=\"radio\" id=\"select_contribs\" name=\"contrib_select\" value=\"search\" class=\"caps_radio1\" {$checked}>";
+  $text = "Just these contributor";
+  if (isset ($_POST["contributor"])) {$text = $_POST["contributor"];}
+  echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" CLASS=\"caps_text1\">";
+?>
+          <label for="select_location" class="caps_label2">Contributor Location</label>
+          <a href="#" class="info"></a>
+          <select id="select_location" name="state_list" class="caps_select1">
+<?php
+  $selected = "";
+  if (isset ($_POST["state_list"])) {$selected = $_POST["state_list"];}
+  fill_state_list ($selected);
+?>
+          </select>
+          <hr class="caps_hr1">
+
+
 
 
         </div> <!-- #sidebar -->

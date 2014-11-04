@@ -21,6 +21,7 @@ body{
   -webkit-text-size-adjust:100%;
   -ms-text-size-adjust:none;
   z-index:10;
+  margin:0 auto;
 }
 
 #two-columns{
@@ -50,7 +51,7 @@ body{
 
 .caps_header1{
   background:#e6ecf0;
-  margin:8px 0 8px;
+  margin:8px 0 12px;
   font:bold 21px Arial, Helvetica, sans-serif;
   color:#124161;
   background:#ebebeb;
@@ -67,15 +68,60 @@ body{
 }
 
 .caps_radio1{
+  clear:both;
   float:left;
-  margin-left:12px
+  margin-left:4px;
+  margin-bottom:18px;
+  vertical-align:middle;
 }
 
 .caps_label1{
-  float:left;
   margin-left:4px;
   font:bold 15px Arial, Helvetica, sans-serif;
   color:#000;
+}
+
+.caps_label2{
+  clear:both;
+  float:left;
+  margin-left:20px;
+  font:bold 15px Arial, Helvetica, sans-serif;
+  color:#000;
+}
+
+.caps_text1{
+  width:200px;
+  float:left;
+  margin-left:4px;
+  padding:0px;
+  border:2px solid #ccc;
+  font:15px Arial, Helvetica, sans-serif;
+  color:#898989;
+  -webkit-appearance:none;
+  border-radius:0;
+}
+
+.caps_select1{
+  clear:both;
+  float:left;
+  width:220px;
+  margin-left:20px;
+  padding:0px;
+  border:2px solid #ccc;
+  font:15px Arial, Helvetica, sans-serif;
+  color:#898989;
+  -webkit-appearance:none;
+  border-radius:0;
+}
+
+.caps_hr1{
+  clear:both;
+  float:left;
+  width:100%;
+  padding:0;
+  background-color:#b7b7b7;
+  height:2px;
+  border-width:0;
 }
 
 .info{
@@ -87,3 +133,18 @@ body{
   height:16px;
 }
 
+
+@media only screen and (max-width:700px){
+  #sidebar{
+    width:100%;
+    padding:12px 6px 12px 6px;
+    margin:0 auto 20px;
+    float:none;
+  }
+
+  #content{
+    width:100%;
+    margin:0 auto;
+    float:none;
+  }
+}
