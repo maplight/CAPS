@@ -110,7 +110,7 @@
 <?php
   $checked = "";
   if (isset ($_POST["candidates"])) {if ($_POST["candidates"] == "on") {$checked = "checked";}}  
-  echo "<input type=\"checkbox\" id=\"contrib_to\" name=\"candidates\" {$checked} class=\"caps_radio1\">";
+  echo "<input type=\"checkbox\" id=\"contrib_to\" name=\"candidates\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="contrib_to" class="caps_label1">Candidates</label>
           <a href="#" class="info"></a>
@@ -149,6 +149,39 @@
 ?>
           </select>
           <a href="#" class="info"></a>
+          <hr class="caps_hr1">
+<?php
+  $checked = "";
+  if (isset ($_POST["propositions"])) {if ($_POST["propositions"] == "on") {$checked = "checked";}}  
+  echo "<input type=\"checkbox\" id=\"props_to\" name=\"propositions\" class=\"caps_radio1\" {$checked}>";
+?>
+          <label for="props_to" class="caps_label1">Ballot Measures</label>
+          <a href="#" class="info"></a>
+<?php
+  $text = "Search propositions";
+  if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
+  echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" class=\"caps_text2\" onkeyup=\"filter_propositions_list();\">";
+?>
+          <select id="propositions_list" name="proposition_list" class="caps_select4">
+<?php
+  $selected = "";
+  if (isset ($_POST["proposition_list"])) {$selected = $_POST["proposition_list"];}
+  $js_propositions = fill_propositions ($selected);
+?>
+          </select>
+          <select id="position" name="position" class="caps_select4">
+          <option value="B">Both support &amp; oppose</option>
+<?php
+  if ($_POST["position"] == "S") {echo "<option value=\"S\" SELECTED>Support</option>";} else {echo "<option value=\"S\">Support</option>";}
+  if ($_POST["position"] == "O") {echo "<option value=\"O\" SELECTED>Oppose</option>";} else {echo "<option value=\"O\">Oppose</option>";}
+?>
+          </select>
+<?php
+  $checked = "";
+  if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}}  
+  echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" class=\"caps_radio4\" {$checked}>";
+?>
+          <label for="exclude" class="caps_label3">Exclude contnbutions between allied committees</label>
           <hr class="caps_hr1">
 
 
