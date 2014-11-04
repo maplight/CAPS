@@ -245,7 +245,7 @@
         if ($page >= $total_pages) {$page = 1;}
 
         # Determine rows being displayed
-        $first_row = $page * $limit + 1;
+        $first_row = ($page - 1) * $limit + 1;
         $last_row = $first_row + $limit - 1;
         if ($first_row > $totals_row["records"]) {$first_row = 1;}
         if ($last_row > $totals_row["records"]) {$last_row = $totals_row["records"];}
