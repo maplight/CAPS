@@ -187,7 +187,7 @@
   if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}}  
   echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" class=\"caps_radio4\" {$checked}>";
 ?>
-          <label for="exclude" class="caps_label3">Exclude contnbutions between allied committees</label>
+          <label for="exclude" class="caps_label3">Exclude contributions between allied committees</label>
           <hr class="caps_hr1">
 
 <!-- Contributions To Committees -->
@@ -214,6 +214,55 @@
   echo "<input type=\"text\" id=\"committee_search\" name=\"committee_search\" value=\"{$text}\" class=\"caps_text1\">";
 ?>
           <hr class="caps_hr1">
+
+<!-- Dates -->
+          <h2 class="caps_header1">Dates:<a href="#" class="info"></a></h2>
+<?php
+  $checked = "";
+  if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
+  echo "<input type=\"radio\" id=\"all_dates\" name=\"date_select\" value=\"all\" class=\"caps_radio1\" {$checked}>";
+?>
+          <label for="all_dates" class="caps_label1">All dates and election cycles</label>
+<?php
+  $checked = "";
+  if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "range") {$checked = "checked";}}  
+  echo "<input type=\"radio\" id=\"range_dates\" name=\"date_select\" value=\"range\" class=\"caps_radio5\" {$checked}>"
+?>
+          <label for="range_dates" class="caps_label4">Date range</label>
+<?php
+  $text = "mm/dd/yyyy";
+  if (isset ($_POST["start_date"])) {$text = $_POST["start_date"];}
+  echo "<input type=\"text\" id=\"start_date\" name=\"start_date\" value=\"{$text}\" class=\"caps_text3\">";
+  echo "<label for=\"start_date\" class=\"caps_label5\">to</label>";
+  if (isset ($_POST["end_date"])) {$text = $_POST["end_date"];}
+  echo "<input type=\"text\" name=\"end_date\" value=\"{$text}\" class=\"caps_text4\">";
+?>
+
+
+<?php
+  $checked = "";
+  if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "cycle") {$checked = "checked";}}  
+  echo "<input type=\"radio\" id=\"cyc2\" name=\"date_select\" value=\"cycle\" {$checked}>";
+?>
+                    <label for="cyc2" class="caps">Election cycles</label>
+                    <div class="year-row">
+<?php
+  if (isset ($_POST["cycles"])) {$cycles = $_POST["cycles"];} else {$cycles = array ("");}
+  fill_election_cycles ($cycles);
+?>
+                    </div>
+                  </div>
+                </div>
+               </div>
+              <input type="submit" value="Search">
+            </fieldset>
+
+<?php
+  echo "<SCRIPT type=text/javascript>";
+  echo "var candidates = [{$js_candidates}\"\"];\n";
+  echo "var propositions = [{$js_propositions}\"\"];\n";
+  echo "</SCRIPT>";
+?>
 
 
         </div> <!-- #sidebar -->

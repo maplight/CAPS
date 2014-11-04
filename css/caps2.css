@@ -95,6 +95,13 @@ body{
   margin-bottom:18px;
 }
 
+.caps_radio5{
+  clear:both;
+  float:left;
+  margin-left:4px;
+  margin-bottom:4px;
+}
+
 .caps_label1{
   margin-left:4px;
   margin-bottom:16px;
@@ -119,6 +126,21 @@ body{
   color:#000;
 }
 
+.caps_label4{
+  margin-left:4px;
+  margin-bottom:4px;
+  font:bold 15px Arial, Helvetica, sans-serif;
+  color:#000;
+}
+
+.caps_label5{
+  margin-left:8px;
+  margin-bottom:16px;
+  padding:0px;
+  font:15px Arial, Helvetica, sans-serif;
+  color:#000;
+}
+
 .caps_text1{
   float:left;
   width:190px;
@@ -136,6 +158,33 @@ body{
   float:left;
   width:196px;
   margin-left:22px;
+  padding:0px;
+  border:2px solid #ccc;
+  font:15px Arial, Helvetica, sans-serif;
+  color:#898989;
+  -webkit-appearance:none;
+  border-radius:0;
+}
+
+.caps_text3{
+  clear:both;
+  float:left;
+  width:80px;
+  margin-left:22px;
+  margin-bottom:16px;
+  padding:0px;
+  border:2px solid #ccc;
+  font:15px Arial, Helvetica, sans-serif;
+  color:#898989;
+  -webkit-appearance:none;
+  border-radius:0;
+}
+
+.caps_text4{
+  float:left;
+  width:80px;
+  margin-left:8px;
+  margin-bottom:16px;
   padding:0px;
   border:2px solid #ccc;
   font:15px Arial, Helvetica, sans-serif;
@@ -208,10 +257,10 @@ body{
 }
 
 .info{
+  float:right;
   position:relative;
   margin-right:4px;
   background:url(../images/sprite01.png) no-repeat 0 -15px;
-  float:right;
   width:15px;
   height:16px;
 }
