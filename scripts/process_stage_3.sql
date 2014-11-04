@@ -1,5 +1,3 @@
-RENAME TABLE contributions TO contributions_temp;
-
 DROP TABLE IF EXISTS contributions_search_temp;
 CREATE TABLE contributions_search_temp ENGINE=MYISAM
   SELECT
