@@ -152,7 +152,6 @@
           <hr class="caps_hr1">
 
 
-
         </div> <!-- #sidebar -->
 
         <div id="content">
