@@ -232,7 +232,7 @@
         $total_pages = intval (($totals_row["records"] - 1) / $limit) + 1;
  
         # Get page # to display
-        if (isset ($_POST["page"])) {$page = $_POST["page"];} else {$page = 0;}
+        if (isset ($_POST["page"])) {$page = $_POST["page"];} else {$page = 1;}
         if (isset ($_POST["page_button"])) {
           switch ($_POST["page_button"]) {
             case "Next": $page++; break;
@@ -242,7 +242,7 @@
         }
 
         # Reset the page to 0 if you selected a smaller set then is currently displayed
-        if ($page >= $total_pages) {$page = 0;}
+        if ($page >= $total_pages) {$page = 1;}
 
         # Determine rows being displayed
         $first_row = $page * $limit + 1;
@@ -383,12 +383,13 @@
         echo "</table>";
         echo "</div> <!-- table_box -->";
 
+        # Pagination section
         echo "<center>";
         echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
         if ($total_pages > 1) {
-          if ($page > 0) {echo "<input type=\"submit\" name=\"page_button\" value=\"Previous\" id=\"caps_previous_btn\">";}
-          if ($total_pages > 2) {
-            for ($page_btn = 1; $page_btn <= $total_pages; $page_btn++) {
+          if ($page > 1) {echo "<input type=\"submit\" name=\"page_button\" value=\"Previous\" id=\"caps_previous_btn\">";}
+          if ($total_pages > 3) {
+            for ($page_btn = 1; $page_btn < $total_pages; $page_btn++) {
               if ($page == $page_btn) {
                 echo "<input type=\"submit\" name=\"page_button\" value=\"{$page_btn}\" id=\"caps_current_page_btn\">";
               } else {
