@@ -72,7 +72,20 @@ body{
   float:left;
   margin-left:4px;
   margin-bottom:18px;
-  vertical-align:middle;
+}
+
+.caps_radio2{
+  clear:both;
+  float:left;
+  margin-left:18px;
+  margin-bottom:18px;
+}
+
+.caps_radio3{
+  clear:both;
+  float:left;
+  margin-left:18px;
+  margin-bottom:4px;
 }
 
 .caps_label1{
@@ -90,8 +103,8 @@ body{
 }
 
 .caps_text1{
-  width:200px;
   float:left;
+  width:200px;
   margin-left:4px;
   padding:0px;
   border:2px solid #ccc;
@@ -106,6 +119,32 @@ body{
   float:left;
   width:220px;
   margin-left:20px;
+  padding:0px;
+  border:2px solid #ccc;
+  font:15px Arial, Helvetica, sans-serif;
+  color:#898989;
+  -webkit-appearance:none;
+  border-radius:0;
+}
+
+.caps_select2{
+  clear:both;
+  float:left;
+  width:200px;
+  margin-left:34px;
+  margin-bottom:18px;
+  padding:0px;
+  border:2px solid #ccc;
+  font:15px Arial, Helvetica, sans-serif;
+  color:#898989;
+  -webkit-appearance:none;
+  border-radius:0;
+}
+
+.caps_select3{
+  float:left;
+  width:200px;
+  margin-left:4px;
   padding:0px;
   border:2px solid #ccc;
   font:15px Arial, Helvetica, sans-serif;

@@ -93,7 +93,7 @@
   echo "<input type=\"radio\" id=\"select_contribs\" name=\"contrib_select\" value=\"search\" class=\"caps_radio1\" {$checked}>";
   $text = "Just these contributor";
   if (isset ($_POST["contributor"])) {$text = $_POST["contributor"];}
-  echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" CLASS=\"caps_text1\">";
+  echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" class=\"caps_text1\">";
 ?>
           <label for="select_location" class="caps_label2">Contributor Location</label>
           <a href="#" class="info"></a>
@@ -106,6 +106,50 @@
           </select>
           <hr class="caps_hr1">
 
+          <h2 class="caps_header1">Contributions To:</h2>
+<?php
+  $checked = "";
+  if (isset ($_POST["candidates"])) {if ($_POST["candidates"] == "on") {$checked = "checked";}}  
+  echo "<input type=\"checkbox\" id=\"contrib_to\" name=\"candidates\" {$checked} class=\"caps_radio1\">";
+?>
+          <label for="contrib_to" class="caps_label1">Candidates</label>
+          <a href="#" class="info"></a>
+<?php
+  $checked = "";
+  if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
+  echo "<input type=\"radio\" id=\"all_cands\" name=\"cand_select\" value=\"all\" class=\"caps_radio2\" {$checked}>";
+?>
+          <label for="all_cands" class="caps_label1">All candidates</label>
+<?php
+  $checked = "";
+  if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "search") {$checked = "checked";}}  
+  echo "<input type=\"radio\" id=\"search_cands\" name=\"cand_select\" value=\"search\" class=\"caps_radio3\" {$checked}>";
+  $text = "Search candidates";
+  if (isset ($_POST["search_candidates"])) {$text = $_POST["search_candidates"];}
+  echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"filter_candidates_list();\">";
+?>
+          <select id="candidate_list" name="candidate_list" class="caps_select2">
+<?php
+  $selected = "";
+  if (isset ($_POST["candidate_list"])) {$selected = $_POST["candidate_list"];}
+  $js_candidates = fill_candidate_names ($selected);
+?>
+          </select>
+          <a href="#" class="info"></a>
+<?php
+  $checked = "";
+  if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "office") {$checked = "checked";}}  
+  echo "<input type=\"radio\" id=\"select_cands\" name=\"cand_select\" value=\"office\" class=\"caps_radio3\" {$checked}>";
+?>
+          <select id="office_list" name="office_list" class="caps_select3">
+<?php
+  $selected = "";
+  if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
+  fill_offices_sought ($selected);
+?>
+          </select>
+          <a href="#" class="info"></a>
+          <hr class="caps_hr1">
 
 
 
