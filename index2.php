@@ -236,35 +236,26 @@
   echo "<label for=\"start_date\" class=\"caps_label5\">to</label>";
   if (isset ($_POST["end_date"])) {$text = $_POST["end_date"];}
   echo "<input type=\"text\" name=\"end_date\" value=\"{$text}\" class=\"caps_text4\">";
-?>
-
-
-<?php
   $checked = "";
   if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "cycle") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"cyc2\" name=\"date_select\" value=\"cycle\" {$checked}>";
+  echo "<input type=\"radio\" id=\"cycle_dates\" name=\"date_select\" value=\"cycle\" class=\"caps_radio5\" {$checked}>";
 ?>
-                    <label for="cyc2" class="caps">Election cycles</label>
-                    <div class="year-row">
+          <label for="cycle_dates" class="caps_label4">Election cycles</label>
+          <div id="cycles_box">
 <?php
   if (isset ($_POST["cycles"])) {$cycles = $_POST["cycles"];} else {$cycles = array ("");}
   fill_election_cycles ($cycles);
 ?>
-                    </div>
-                  </div>
-                </div>
-               </div>
-              <input type="submit" value="Search">
-            </fieldset>
+          </div> <!-- cycles_box -->
+          <input type="submit" value="Search" class="caps_search_btn1">
 
 <?php
+  # Data for javascript to filter select boxes
   echo "<SCRIPT type=text/javascript>";
   echo "var candidates = [{$js_candidates}\"\"];\n";
   echo "var propositions = [{$js_propositions}\"\"];\n";
   echo "</SCRIPT>";
 ?>
-
-
         </div> <!-- #sidebar -->
 
         <div id="content">

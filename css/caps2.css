@@ -43,6 +43,16 @@ body{
   overflow:hidden;
 }
 
+#cycles_box{
+  clear:both;
+  float:left;
+  width:220px;
+  margin-left:0px;
+  margin-bottom:20px;
+  padding:4px;
+  overflow:hidden;
+}
+
 .caps_title1{
   font:bold 29px/40px Arial, Helvetica, sans-serif;
   color:#222;
@@ -59,6 +69,7 @@ body{
 }
 
 .caps_search_btn1{
+  float:left;
   background:#e6ecf0;
   border:2px solid #124161;
   font:bold 17px Arial, Helvetica, sans-serif;
@@ -102,6 +113,12 @@ body{
   margin-bottom:4px;
 }
 
+.caps_radio6{
+  float:left;
+  margin-left:18px;
+  margin-bottom:8px;
+}
+
 .caps_label1{
   margin-left:4px;
   margin-bottom:16px;
@@ -136,6 +153,14 @@ body{
 .caps_label5{
   margin-left:8px;
   margin-bottom:16px;
+  padding:0px;
+  font:15px Arial, Helvetica, sans-serif;
+  color:#000;
+}
+
+.caps_label6{
+  margin-left:4px;
+  margin-bottom:8px;
   padding:0px;
   font:15px Arial, Helvetica, sans-serif;
   color:#000;
