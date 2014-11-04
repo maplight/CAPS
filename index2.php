@@ -79,6 +79,7 @@
           <h1 class="caps_title1">Advanced Search</h1>
           <input type="submit" value="Search" class="caps_search_btn1">
 
+<!-- Contributions From -->
           <h2 class="caps_header1">Contributions From:</h2>
 <?php
   $checked = "";
@@ -106,7 +107,10 @@
           </select>
           <hr class="caps_hr1">
 
+<!-- Contributions To -->
           <h2 class="caps_header1">Contributions To:</h2>
+
+<!-- Contributions To Candidates -->
 <?php
   $checked = "";
   if (isset ($_POST["candidates"])) {if ($_POST["candidates"] == "on") {$checked = "checked";}}  
@@ -150,6 +154,8 @@
           </select>
           <a href="#" class="info"></a>
           <hr class="caps_hr1">
+
+<!-- Contributions To Ballot Measures -->
 <?php
   $checked = "";
   if (isset ($_POST["propositions"])) {if ($_POST["propositions"] == "on") {$checked = "checked";}}  
@@ -182,6 +188,31 @@
   echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" class=\"caps_radio4\" {$checked}>";
 ?>
           <label for="exclude" class="caps_label3">Exclude contnbutions between allied committees</label>
+          <hr class="caps_hr1">
+
+<!-- Contributions To Committees -->
+<?php
+  $checked = "";
+  if (isset ($_POST["committees"])) {if ($_POST["committees"] == "on") {$checked = "checked";}}  
+  echo "<input type=\"checkbox\" id=\"comms_to\" name=\"committees\" class=\"caps_radio1\" {$checked}>";
+?>
+          <label for="comms_to" class="caps_label1">Committees</label>
+          <a href="#" class="info"></a>
+<?php
+  $checked = "";
+  if (isset ($_POST["comm_select"])) {if ($_POST["comm_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
+  echo "<input type=\"radio\" id=\"all_comms\" name=\"comm_select\" value=\"all\" class=\"caps_radio2\" {$checked}>";
+?>
+          <label for="all_comms" class="caps_label1">All committees</label>
+
+<?php
+  $checked = "";
+  if (isset ($_POST["comm_select"])) {if ($_POST["comm_select"] == "search") {$checked = "checked";}}  
+  echo "<input type=\"radio\" id=\"search_comms\" name=\"comm_select\" value=\"search\" class=\"caps_radio2\" {$checked}>";
+  $text = "Just these committees";
+  if (isset ($_POST["committee_search"])) {$text = $_POST["committee_search"];}
+  echo "<input type=\"text\" id=\"committee_search\" name=\"committee_search\" value=\"{$text}\" class=\"caps_text1\">";
+?>
           <hr class="caps_hr1">
 
 
