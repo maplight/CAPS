@@ -1,7 +1,7 @@
 <?php
   function fill_state_list ($selected) {
     echo "<OPTION VALUE=\"ALL\">All states</OPTION>";
-    $result = my_query ("SELECT StateName, StateCode FROM smry_states WHERE IsState = 1 ORDER BY StateName");
+    $result = my_query ("SELECT StateName, StateCode FROM smry_states WHERE InDropdown = 1 ORDER BY StateName");
     while ($row = $result->fetch_assoc()) {
       if ($row["StateCode"] == $selected) {echo "<OPTION VALUE={$row["StateCode"]} SELECTED>{$row["StateName"]}</OPTION>";} else {echo "<OPTION VALUE={$row["StateCode"]}>{$row["StateName"]}</OPTION>";}
     }
