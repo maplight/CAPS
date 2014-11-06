@@ -34,14 +34,15 @@
     #------------------------------------------------------------------------------------------
     # Build contributor search query:
     if ($search_data["contrib_select"] == "search") {
-      foreach (str_word_count ($search_data["contributor"], 1) as $word) {
-        if (strpos ($word, "'") === false) {
-          $Donor .= "+{$word} ";
-        } else {
-          $Donor .= "+\"" . addslashes ($word) . "\" ";
-        }
+      $word_str;
+      foreach (explode (" ", $search_data["contributor"]) as $word) {
+        $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+        $word_str .= "+\"{$word}\" ";
       }
-      if ($Donor != "") {$Donor = "MATCH (contributions_search.DonorNameNormalized, contributions_search.DonorEmployerNormalized, contributions_search.DonorOrganization) AGAINST ('" . $Donor . "' IN BOOLEAN MODE)";}
+      $Donor .= "(MATCH (smry_donor_names.DonorNameWords) AGAINST ($word LIKE \"% " . addslashes ($word) . " %\" OR ";
+        $Donor .= "smry_donor_employer.DonorEmployerWords LIKE \"% " . addslashes ($word) . " %\" OR ";
+        $Donor .= "smry_donor_organization.DonorOrganizationWords LIKE \"% " . addslashes ($word) . " %\") AND ";
+      if ($Donor != "") {$Donor = "(" . substr ($Donor, 0, -5) . ")";}
     }
   
     # build locations query
@@ -58,14 +59,11 @@
         case "search":
           # build candidate search query
           if ($search_data["candidate_list"] == "Select candidate") {
-            foreach (str_word_count ($search_data["search_candidates"], 1) as $word) {
-              if (strpos ($word, "'") === false) {
-                $Candidate .= "+{$word} ";
-              } else {
-                $Candidate .= "+\"" . addslashes ($word) . "\" ";
-              }
+            foreach (explode (" ", $search_data["search_candidates"]) as $word) {
+              $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+              $Candidate .= "smry_candidates.CandidateWords LIKE \"% " . addslashes ($word) . " %\" AND ";
             }
-            if ($Candidate != "") {$Candidate = "MATCH (contributions_search.RecipientCandidateNameNormalized) AGAINST ('" . $Candidate . "' IN BOOLEAN MODE)";}
+            if ($Candidate != "") {$Candidate = "(" . substr ($Candidate, 0, -5) . ")";}
           } else {
             $CandidateList = "contributions_search.RecipientCandidateNameNormalized = '" . addslashes ($search_data["candidate_list"]) . "'";
           }
@@ -87,14 +85,11 @@
 
       if ($search_data["search_propositions"] != "Search propositions" && $search_data["proposition_list"] == "ALL") {
         # build proposition search query
-        foreach (str_word_count ($search_data["search_propositions"], 1) as $word) {
-          if (strpos ($word, "'") === false) {
-            $PropositionSearch .= "+{$word} ";
-          } else {
-            $PropositionSearch .= "+\"" . addslashes ($word) . "\" ";
-          }
+        foreach (explode (" ", $search_data["search_propositions"]) as $word) {
+          $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+          $PropositionSearch .= "smry_propositions.PropositionWords LIKE \"% " . addslashes ($word) . " %\" AND ";
         }
-        if ($PropositionSearch != "") {$PropositionSearch = "MATCH (contributions_search.Target) AGAINST ('" . $PropositionSearch . "' IN BOOLEAN MODE)";}
+        if ($PropositionSearch != "") {$PropositionSearch = "(" . substr ($PropositionSearch, 0, -5) . ")";}
       } else {
         if ($search_data["proposition_list"] != "ALL") {
           if (substr ($search_data["proposition_list"], 0, 3) == "ALL") {
@@ -111,8 +106,8 @@
       }
 
       # build support/oppose query
-      if ($search_data["position"] == "S") {$Position = "contributions_search.Position = 'SUPPORT'";}
-      if ($search_data["position"] == "O") {$Position = "contributions_search.Position = 'OPPOSE'";}
+      if ($search_data["position"] == "S") {$Position = "contributions_search.PositionID = 1";}
+      if ($search_data["position"] == "O") {$Position = "contributions_search.PositionID = 2";}
 
       # exclude allied committees query
       if (isset ($search_data["exclude"])) {$Allied = "contributions_search.AlliedCommittee = 'N'";}
@@ -124,14 +119,11 @@
     if (isset ($search_data["committees"])) {
       # build committee search query
       if ($search_data["comm_select"] != "all") {
-        foreach (str_word_count ($search_data["committee_search"], 1) as $word) {
-          if (strpos ($word, "'") === false) {
-            $Committee .= "+{$word} ";
-          } else {
-            $Committee .= "+\"" . addslashes ($word) . "\" ";
-          }
+        foreach (explode (" ", $search_data["committee_search"]) as $word) {
+          $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+          $Committee .= "smry_committees.CommitteeWords LIKE \"% " . addslashes ($word) . " %\" AND ";
         }
-        if ($Committee != "") {$Committee = "MATCH (contributions_search.RecipientCommitteeNameNormalized) AGAINST ('" . $Committee . "' IN BOOLEAN MODE)";}
+        if ($Committee != "") {$Committee = "(" . substr ($Committee, 0, -5) . ")";}
       } 
     }
 
@@ -221,7 +213,17 @@
     if ($where == "") {
       echo "You have not entered any search data, please select a criteria on the side.";
     } else {
-      $result = my_query ("SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM contributions_search {$where}");
+      $search_join = "LEFT JOIN smry_donor_names USING (DonorNameID)
+                      LEFT JOIN smry_donor_employer USING (DonorEmployerID)
+                      LEFT JOIN smry_donor_organization USING (DonorOrganizationID)
+                      LEFT JOIN smry_candidates USING (RecipientCandidateNameID)
+                      LEFT JOIN smry_offices USING (RecipientCandidateOfficeID)
+                      LEFT JOIN smry_committees USING (RecipientCommitteeID)
+                      LEFT JOIN smry_propositions USING (PropositionID)";
+
+echo "SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM contributions_search {$search_join} {$where}";
+
+      $result = my_query ("SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM contributions_search {$search_join} {$where}");
       $totals_row = $result->fetch_assoc();
 
       if ($totals_row["records"] == 0) {
@@ -302,7 +304,7 @@
                               "contributions_search.DonorNameNormalized DESC|Donor Name Descending",
                               "contributions_search.DonorNameNormalized|Donor Name Ascending");
 
-        $result = my_query ("SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$where} ORDER BY {$sort} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
+        $result = my_query ("SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$search_join} {$where} ORDER BY {$sort} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;
 
         echo "<div id=\"results\">";

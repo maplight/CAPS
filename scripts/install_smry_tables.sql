@@ -40,7 +40,7 @@ CREATE TABLE smry_donor_names (
   DonorNameNormalized VARCHAR(200) NOT NULL,
   DonorNameWords VARCHAR(200) NOT NULL,
   KEY DonorNameNormalized(DonorNameNormalized(10)),
-  KEY DonorNameWords(DonorNameWords(10))
+  FULLTEXT DonorNameWords(DonorNameWords)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS smry_donor_employer;
@@ -49,7 +49,7 @@ CREATE TABLE smry_donor_employer (
   DonorEmployerNormalized VARCHAR(200) NOT NULL,
   DonorEmployerWords VARCHAR(200) NOT NULL,
   KEY DonorEmployerNormalized(DonorEmployerNormalized(10)),
-  KEY DonorEmployerWords(DonorEmployerWords(10))
+  FULLTEXT DonorEmployerWords(DonorEmployerWords)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS smry_donor_organization;
@@ -58,8 +58,10 @@ CREATE TABLE smry_donor_organization (
   DonorOrganization VARCHAR(200) NOT NULL,
   DonorOrganizationWords VARCHAR(200) NOT NULL,
   KEY DonorOrganization(DonorOrganization(10)),
-  KEY DonorOrganizationWords(DonorOrganizationWords(10))
+  FULLTEXT DonorOrganizationWords(DonorOrganizationWords)
 ) ENGINE=MyISAM;
+
+
 
 DROP TABLE IF EXISTS smry_candidates;
 CREATE TABLE smry_candidates (
