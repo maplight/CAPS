@@ -10,5 +10,5 @@
     global $my_conn;
     $ret = $my_conn->query ($query);
     return $ret;
-  }  
+  }
 ?>

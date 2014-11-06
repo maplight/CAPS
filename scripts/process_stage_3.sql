@@ -1,112 +1,94 @@
+DROP TABLE IF EXISTS smry_donor_names_temp;
+CREATE TABLE smry_donor_names_temp LIKE smry_donor_names;
+INSERT INTO smry_donor_names_temp (DonorNameNormalized) SELECT DISTINCT DonorNameNormalized FROM contributions_temp WHERE DonorNameNormalized <> '';
+
+DROP TABLE IF EXISTS smry_donor_employer_temp;
+CREATE TABLE smry_donor_employer_temp LIKE smry_donor_employer;
+INSERT INTO smry_donor_employer_temp (DonorEmployerNormalized) SELECT DISTINCT DonorEmployerNormalized FROM contributions_temp WHERE DonorEmployerNormalized <> '';
+
+DROP TABLE IF EXISTS smry_donor_organization_temp;
+CREATE TABLE smry_donor_organization_temp LIKE smry_donor_organization;
+INSERT INTO smry_donor_organization_temp (DonorOrganization) SELECT DISTINCT DonorOrganization FROM contributions_temp WHERE DonorOrganization <> '';
+
+DROP TABLE IF EXISTS smry_candidates_temp;
+CREATE TABLE smry_candidates_temp LIKE smry_candidates;
+INSERT INTO smry_candidates_temp (RecipientCandidateNameNormalized) SELECT DISTINCT RecipientCandidateNameNormalized FROM contributions_temp WHERE RecipientCandidateNameNormalized <> '' AND CandidateContribution = 'Y';
+
+DROP TABLE IF EXISTS smry_offices_temp;
+CREATE TABLE smry_offices_temp LIKE smry_offices;
+INSERT INTO smry_offices_temp (RecipientCandidateOffice) SELECT DISTINCT RecipientCandidateOffice FROM contributions_temp WHERE RecipientCandidateOffice <> '' AND CandidateContribution = 'Y';
+
+DROP TABLE IF EXISTS smry_committees_temp;
+CREATE TABLE smry_committees_temp LIKE smry_committees;
+INSERT INTO smry_committees_temp (RecipientCommitteeNameNormalized) SELECT DISTINCT RecipientCommitteeNameNormalized FROM contributions_temp WHERE RecipientCommitteeNameNormalized <> '';
+
+DROP TABLE IF EXISTS smry_cycles_temp;
+CREATE TABLE smry_cycles_temp LIKE smry_cycles;
+INSERT INTO smry_cycles_temp SELECT DISTINCT ElectionCycle FROM contributions_temp;
+
+DROP TABLE IF EXISTS smry_propositions_temp;
+CREATE TABLE smry_propositions_temp LIKE smry_propositions;
+INSERT INTO smry_propositions_temp (Election, Target) SELECT DISTINCT election_date, name FROM cal_access_propositions;
+
+
 DROP TABLE IF EXISTS contributions_search_temp;
-CREATE TABLE contributions_search_temp ENGINE=MYISAM
+CREATE TABLE contributions_search_temp LIKE contributions_search;
+INSERT INTO contributions_search_temp
   SELECT
    id,
-   DonorNameNormalized,
-   DonorEmployerNormalized,
-   DonorOrganization,
    DonorState,
-   RecipientCandidateNameNormalized,
-   RecipientCandidateOffice,
-   Election,
-   Target,
-   Position,
    AlliedCommittee,
-   RecipientCommitteeNameNormalized,
    TransactionDateStart,
    TransactionDateEnd,
    TransactionAmount,
    ElectionCycle,
    CandidateContribution,
    BallotMeasureContribution,
-   0 AS RecipientCandidateNameID,
-   0 AS RecipientCandidateOfficeID,
-   0 AS TargetID,
-   0 AS PositionID
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   CASE Position
+     WHEN 'SUPPORT' THEN 1
+     WHEN 'OPPOSE' THEN 2
+     ELSE 0
+   END
 FROM contributions_temp;
 
-ALTER TABLE contributions_search_temp
-  ADD FULLTEXT DonorSearch(DonorNameNormalized, DonorEmployerNormalized, DonorOrganization),
-  ADD INDEX DonorState(DonorState),
-  ADD FULLTEXT RecipientCandidateNameNormalized_fulltext(RecipientCandidateNameNormalized),
-  ADD INDEX RecipientCandidateNameNormalized(RecipientCandidateNameNormalized(10)),
-  ADD INDEX RecipientCandidateOffice(RecipientCandidateOffice(10)),
-  ADD INDEX Election(Election),
-  ADD FULLTEXT Target_fulltext(Target),
-  ADD INDEX Target(Target(10)),
-  ADD INDEX `Position`(`Position`(10)),
-  ADD INDEX AlliedCommittee(AlliedCommittee),
-  ADD FULLTEXT RecipientCommitteeNameNormalized(RecipientCommitteeNameNormalized),
-  ADD INDEX TransactionDateStart(TransactionDateStart),
-  ADD INDEX TransactionDateEnd(TransactionDateEnd),
-  ADD INDEX ElectionCycle(ElectionCycle),
-  ADD INDEX CandidateContribution(CandidateContribution),
-  ADD INDEX BallotMeasureContribution(BallotMeasureContribution),
-  ADD INDEX RecipientCandidateNameID(RecipientCandidateNameID),
-  ADD INDEX RecipientCandidateOfficeID(RecipientCandidateOfficeID),
-  ADD INDEX TargetID(TargetID),
-  ADD INDEX PositionID(PositionID);
+UPDATE contributions_temp
+  JOIN contributions_search_temp USING (id)
+  JOIN smry_propositions_temp ON (contributions_temp.Election = smry_propositions_temp.Election AND contributions_temp.Target = smry_propositions_temp.Target)
+  SET contributions_search_temp.PropositionID = smry_propositions_temp.PropositionID;
 
+UPDATE contributions_temp
+  JOIN contributions_search_temp USING (id)
+  JOIN smry_committees_temp USING (RecipientCommitteeNameNormalized) 
+  SET contributions_search_temp.RecipientCommitteeID = smry_committees_temp.RecipientCommitteeID;
 
-DROP TABLE IF EXISTS smry_candidates_temp;
-CREATE TABLE smry_candidates_temp (
-  RecipientCandidateNameID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  RecipientCandidateNameNormalized VARCHAR(250) NOT NULL,
-  KEY RecipientCandidateNameNormalized(RecipientCandidateNameNormalized(10))
-) ENGINE=MYISAM;
-INSERT INTO smry_candidates_temp (RecipientCandidateNameNormalized) SELECT DISTINCT RecipientCandidateNameNormalized FROM contributions_temp WHERE RecipientCandidateNameNormalized <> '' AND CandidateContribution = 'Y';
+UPDATE contributions_temp
+  JOIN contributions_search_temp USING (id)
+  JOIN smry_offices_temp USING (RecipientCandidateOffice)
+  SET contributions_search_temp.RecipientCandidateOfficeID = smry_offices_temp.RecipientCandidateOfficeID;
 
+UPDATE contributions_temp
+  JOIN contributions_search_temp USING (id)
+  JOIN smry_candidates_temp USING (RecipientCandidateNameNormalized)
+  SET contributions_search_temp.RecipientCandidateNameID = smry_candidates_temp.RecipientCandidateNameID;
 
-DROP TABLE IF EXISTS smry_offices_temp;
-CREATE TABLE smry_offices_temp (
-  RecipientCandidateOfficeID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  RecipientCandidateOffice VARCHAR(50) NOT NULL,
-  KEY RecipientCandidateOffice(RecipientCandidateOffice(10))
-) ENGINE=MYISAM;
-INSERT INTO smry_offices_temp (RecipientCandidateOffice) SELECT DISTINCT RecipientCandidateOffice FROM contributions_temp WHERE RecipientCandidateOffice <> '' AND CandidateContribution = 'Y';
+UPDATE contributions_temp
+  JOIN contributions_search_temp USING (id)
+  JOIN smry_donor_organization_temp USING (DonorOrganization)
+  SET contributions_search_temp.DonorOrganizationID = smry_donor_organization_temp.DonorOrganizationID;
 
+UPDATE contributions_temp
+  JOIN contributions_search_temp USING (id)
+  JOIN smry_donor_employer_temp USING (DonorEmployerNormalized)
+  SET contributions_search_temp.DonorEmployerID = smry_donor_employer_temp.DonorEmployerID;
 
-DROP TABLE IF EXISTS smry_propositions_temp;
-CREATE TABLE smry_propositions_temp (
-  TargetID INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  Election DATE NOT NULL,
-  Target VARCHAR(250) NOT NULL,
-  KEY Election(Election),
-  KEY Target(Target(10))
-) ENGINE=MYISAM;
-INSERT INTO smry_propositions_temp (Election, Target) SELECT DISTINCT Election, Target FROM contributions_temp WHERE Target <> '' AND Election <> '0000-00-00' AND BallotMeasureContribution = 'Y';
-
-
-DROP TABLE IF EXISTS smry_cycles_temp;
-CREATE TABLE smry_cycles_temp (
-  ElectionCycle SMALLINT NOT NULL,
-  KEY ElectionCycle(ElectionCycle)
-) ENGINE=MYISAM;
-INSERT INTO smry_cycles_temp SELECT DISTINCT ElectionCycle FROM contributions_temp;
-
-
-UPDATE contributions_search_temp INNER JOIN smry_candidates_temp USING (RecipientCandidateNameNormalized) SET contributions_search_temp.RecipientCandidateNameID = smry_candidates_temp.RecipientCandidateNameID;
-UPDATE contributions_search_temp INNER JOIN smry_offices_temp USING (RecipientCandidateOffice) SET contributions_search_temp.RecipientCandidateOfficeID = smry_offices_temp.RecipientCandidateOfficeID;
-UPDATE contributions_search_temp INNER JOIN smry_propositions_temp ON (contributions_search_temp.Election = smry_propositions_temp.Election AND contributions_search_temp.Target = smry_propositions_temp.Target) SET contributions_search_temp.TargetID = smry_propositions_temp.TargetID;
-UPDATE contributions_search_temp SET PositionID = 1 WHERE Position = 'SUPPORT'; 
-UPDATE contributions_search_temp SET PositionID = 2 WHERE Position = 'OPPOSE'; 
-
-
-DROP TABLE IF EXISTS smry_cycles;
-RENAME TABLE smry_cycles_temp TO smry_cycles;
-
-DROP TABLE IF EXISTS smry_propositions;
-RENAME TABLE smry_propositions_temp TO smry_propositions;
-
-DROP TABLE IF EXISTS smry_offices;
-RENAME TABLE smry_offices_temp TO smry_offices;
-
-DROP TABLE IF EXISTS smry_candidates;
-RENAME TABLE smry_candidates_temp TO smry_candidates;
-
-DROP TABLE IF EXISTS contributions_search;
-RENAME TABLE contributions_search_temp TO contributions_search; 
-
-DROP TABLE IF EXISTS contributions;
-RENAME TABLE contributions_temp TO contributions;
-
+UPDATE contributions_temp
+  JOIN contributions_search_temp USING (id)
+  JOIN smry_donor_names_temp USING (DonorNameNormalized)
+  SET contributions_search_temp.DonorNameID = smry_donor_names_temp.DonorNameID;

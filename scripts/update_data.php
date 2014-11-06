@@ -18,6 +18,11 @@
 
   # Process data for contributions table - stage 3
   process_sql_file ("process_stage_3.sql");
+
+  generate_search_words (); 
+
+  # Process data for contributions table - stage 4
+  process_sql_file ("process_stage_4.sql");
     
 
 #===============================================================================================
@@ -101,4 +106,73 @@
       my_query ($query);
     }
   }
+
+
+  function generate_search_words () {
+    $query = "SELECT * FROM smry_donor_names_temp";
+    $result = my_query ($query);
+    while ($row = $result->fetch_assoc()) {
+      $word_str = " ";
+      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["DonorNameNormalized"]);
+      $words = explode (" ", $word_data);
+      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
+      my_query ("UPDATE smry_donor_names_temp SET DonorNameWords = '{$word_str}' WHERE DonorNameID = {$row["DonorNameID"]}");
+    }
+    $result->close();
+
+    $query = "SELECT * FROM smry_donor_employer_temp";
+    $result = my_query ($query);
+    while ($row = $result->fetch_assoc()) {
+      $word_str = " ";
+      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["DonorEmployerNormalized"]);
+      $words = explode (" ", $word_data);
+      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
+      my_query ("UPDATE smry_donor_employer_temp SET DonorEmployerWords = '{$word_str}' WHERE DonorEmployerID = {$row["DonorEmployerID"]}");
+    }
+    $result->close();
+
+    $query = "SELECT * FROM smry_donor_organization_temp";
+    $result = my_query ($query);
+    while ($row = $result->fetch_assoc()) {
+      $word_str = " ";
+      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["DonorOrganization"]);
+      $words = explode (" ", $word_data);
+      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
+      my_query ("UPDATE smry_donor_organization_temp SET DonorOrganizationWords = '{$word_str}' WHERE DonorOrganizationID = {$row["DonorOrganizationID"]}");
+    }
+    $result->close();
+
+    $query = "SELECT * FROM smry_candidates_temp";
+    $result = my_query ($query);
+    while ($row = $result->fetch_assoc()) {
+      $word_str = " ";
+      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["RecipientCandidateNameNormalized"]);
+      $words = explode (" ", $word_data);
+      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
+      my_query ("UPDATE smry_candidates_temp SET CandidateWords = '{$word_str}' WHERE RecipientCandidateNameID = {$row["RecipientCandidateNameID"]}");
+    }
+    $result->close();
+
+    $query = "SELECT * FROM smry_committees_temp";
+    $result = my_query ($query);
+    while ($row = $result->fetch_assoc()) {
+      $word_str = " ";
+      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["RecipientCommitteeNameNormalized"]);
+      $words = explode (" ", $word_data);
+      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
+      my_query ("UPDATE smry_committees_temp SET CommitteeWords = '{$word_str}' WHERE RecipientCommitteeID = {$row["RecipientCommitteeID"]}");
+    }
+    $result->close();
+
+    $query = "SELECT * FROM smry_propositions_temp";
+    $result = my_query ($query);
+    while ($row = $result->fetch_assoc()) {
+      $word_str = " ";
+      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["Target"]);
+      $words = explode (" ", $word_data);
+      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
+      my_query ("UPDATE smry_propositions_temp SET PropositionWords = '{$word_str}' WHERE PropositionID = {$row["PropositionID"]}");
+    }
+    $result->close();
+  } 
 ?>
