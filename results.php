@@ -83,11 +83,17 @@
 
       if ($search_data["search_propositions"] != "Search propositions" && $search_data["proposition_list"] == "ALL") {
         # build proposition search query
+        $word_str = "";
         foreach (explode (" ", $search_data["search_propositions"]) as $word) {
           $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-          $PropositionSearch .= "smry_propositions.PropositionWords LIKE \"% " . addslashes ($word) . " %\" AND ";
+          $word_str .= "+{$word} ";
         }
-        if ($PropositionSearch != "") {$PropositionSearch = "(" . substr ($PropositionSearch, 0, -5) . ")";}
+        $PropositionSearch .= "MATCH (smry_propositions.PropositionWords) AGAINST ('{$word_str}' IN BOOLEAN MODE)";
+#        foreach (explode (" ", $search_data["search_propositions"]) as $word) {
+#          $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+#          $PropositionSearch .= "smry_propositions.PropositionWords LIKE \"% " . addslashes ($word) . " %\" AND ";
+#        }
+#        if ($PropositionSearch != "") {$PropositionSearch = "(" . substr ($PropositionSearch, 0, -5) . ")";}
       } else {
         if ($search_data["proposition_list"] != "ALL") {
           if (substr ($search_data["proposition_list"], 0, 3) == "ALL") {
@@ -116,12 +122,18 @@
     # Build committe search query:
     if (isset ($search_data["committees"])) {
       # build committee search query
-      if ($search_data["comm_select"] != "all") {
-        foreach (explode (" ", $search_data["committee_search"]) as $word) {
-          $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-          $Committee .= "smry_committees.CommitteeWords LIKE \"% " . addslashes ($word) . " %\" AND ";
-        }
-        if ($Committee != "") {$Committee = "(" . substr ($Committee, 0, -5) . ")";}
+      $word_str = "";
+      foreach (explode (" ", $search_data["committee_search"]) as $word) {
+        $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+        $word_str .= "+{$word} ";
+      }
+      $Committee .= "MATCH (smry_committees.CommitteeWords) AGAINST ('{$word_str}' IN BOOLEAN MODE)";
+#      if ($search_data["comm_select"] != "all") {
+#        foreach (explode (" ", $search_data["committee_search"]) as $word) {
+#          $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+#          $Committee .= "smry_committees.CommitteeWords LIKE \"% " . addslashes ($word) . " %\" AND ";
+#        }
+#        if ($Committee != "") {$Committee = "(" . substr ($Committee, 0, -5) . ")";}
       } 
     }
 
