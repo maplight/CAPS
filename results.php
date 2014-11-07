@@ -236,7 +236,7 @@
         }
 
         # Reset the page to 0 if you selected a smaller set then is currently displayed
-        if ($page >= $total_pages) {$page = 1;}
+        if ($page > $total_pages) {$page = 1;}
 
         # Determine rows being displayed
         $first_row = ($page - 1) * $limit + 1;
@@ -383,7 +383,7 @@
         if ($total_pages > 1) {
           if ($page > 1) {echo "<input type=\"submit\" name=\"page_button\" value=\"Previous\" id=\"caps_previous_btn\">";}
           if ($total_pages >= 3) {
-            for ($page_btn = 1; $page_btn < $total_pages; $page_btn++) {
+            for ($page_btn = 1; $page_btn <= $total_pages; $page_btn++) {
               if ($page == $page_btn) {
                 echo "<input type=\"submit\" name=\"page_button\" value=\"{$page_btn}\" id=\"caps_current_page_btn\">";
               } else {
@@ -392,7 +392,7 @@
               if ($page_btn == 10) {break;}
             }
           }
-          if ($page < ($total_pages - 1)) {echo "<input type=\"submit\" name=\"page_button\" value=\"Next\" id=\"caps_next_btn\">";}
+          if ($page < $total_pages) {echo "<input type=\"submit\" name=\"page_button\" value=\"Next\" id=\"caps_next_btn\">";}
         }
         echo "</center>";
 
