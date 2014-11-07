@@ -316,8 +316,8 @@
                               "contributions.RecipientCandidateNameNormalized DESC|Recipient Name Descending",
                               "contributions.RecipientCandidateOffice, contributions.RecipientCandidateDistrict|Recipient Office Ascending",
                               "contributions.RecipientCandidateOffice DESC, contributions.RecipientCandidateDistrict DESC|Recipient Office Descending",
-                              "contributions.RecipientCandidateNameNormalized|Recipient Committee Ascending",
-                              "contributions.RecipientCandidateNameNormalized DESC|Recipient Committee Descending");
+                              "contributions.RecipientCommitteeNameNormalized|Recipient Committee Ascending",
+                              "contributions.RecipientCommitteeNameNormalized DESC|Recipient Committee Descending");
 
         $result = my_query ("SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$search_join} {$where} ORDER BY {$sort} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;
