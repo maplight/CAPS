@@ -1,15 +1,3 @@
-DROP TABLE IF EXISTS smry_donor_names_temp;
-CREATE TABLE smry_donor_names_temp LIKE smry_donor_names;
-INSERT INTO smry_donor_names_temp (DonorNameNormalized) SELECT DISTINCT DonorNameNormalized FROM contributions_temp WHERE DonorNameNormalized <> '';
-
-DROP TABLE IF EXISTS smry_donor_employer_temp;
-CREATE TABLE smry_donor_employer_temp LIKE smry_donor_employer;
-INSERT INTO smry_donor_employer_temp (DonorEmployerNormalized) SELECT DISTINCT DonorEmployerNormalized FROM contributions_temp WHERE DonorEmployerNormalized <> '';
-
-DROP TABLE IF EXISTS smry_donor_organization_temp;
-CREATE TABLE smry_donor_organization_temp LIKE smry_donor_organization;
-INSERT INTO smry_donor_organization_temp (DonorOrganization) SELECT DISTINCT DonorOrganization FROM contributions_temp WHERE DonorOrganization <> '';
-
 DROP TABLE IF EXISTS smry_candidates_temp;
 CREATE TABLE smry_candidates_temp LIKE smry_candidates;
 INSERT INTO smry_candidates_temp (RecipientCandidateNameNormalized) SELECT DISTINCT RecipientCandidateNameNormalized FROM contributions_temp WHERE RecipientCandidateNameNormalized <> '' AND CandidateContribution = 'Y';
@@ -30,7 +18,6 @@ DROP TABLE IF EXISTS smry_propositions_temp;
 CREATE TABLE smry_propositions_temp LIKE smry_propositions;
 INSERT INTO smry_propositions_temp (Election, Target) SELECT DISTINCT election_date, name FROM cal_access_propositions;
 
-
 DROP TABLE IF EXISTS contributions_search_temp;
 CREATE TABLE contributions_search_temp LIKE contributions_search;
 INSERT INTO contributions_search_temp
@@ -48,14 +35,12 @@ INSERT INTO contributions_search_temp
    0,
    0,
    0,
-   0,
-   0,
-   0,
    CASE Position
      WHEN 'SUPPORT' THEN 1
      WHEN 'OPPOSE' THEN 2
      ELSE 0
-   END
+   END,
+   ''
 FROM contributions_temp;
 
 UPDATE contributions_temp
@@ -78,17 +63,3 @@ UPDATE contributions_temp
   JOIN smry_candidates_temp USING (RecipientCandidateNameNormalized)
   SET contributions_search_temp.RecipientCandidateNameID = smry_candidates_temp.RecipientCandidateNameID;
 
-UPDATE contributions_temp
-  JOIN contributions_search_temp USING (id)
-  JOIN smry_donor_organization_temp USING (DonorOrganization)
-  SET contributions_search_temp.DonorOrganizationID = smry_donor_organization_temp.DonorOrganizationID;
-
-UPDATE contributions_temp
-  JOIN contributions_search_temp USING (id)
-  JOIN smry_donor_employer_temp USING (DonorEmployerNormalized)
-  SET contributions_search_temp.DonorEmployerID = smry_donor_employer_temp.DonorEmployerID;
-
-UPDATE contributions_temp
-  JOIN contributions_search_temp USING (id)
-  JOIN smry_donor_names_temp USING (DonorNameNormalized)
-  SET contributions_search_temp.DonorNameID = smry_donor_names_temp.DonorNameID;

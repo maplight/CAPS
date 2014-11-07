@@ -109,36 +109,14 @@
 
 
   function generate_search_words () {
-    $query = "SELECT * FROM smry_donor_names_temp";
+    $query = "SELECT id, DonorNameNormalized, DonorEmployerNormalized, DonorOrganization FROM contributions_temp";
     $result = my_query ($query);
     while ($row = $result->fetch_assoc()) {
       $word_str = " ";
-      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["DonorNameNormalized"]);
+      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["DonorNameNormalized"] . " " . $row["DonorEmployerNormalized"] . " " . $row["DonorOrganization"]);
       $words = explode (" ", $word_data);
       foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
-      my_query ("UPDATE smry_donor_names_temp SET DonorNameWords = '{$word_str}' WHERE DonorNameID = {$row["DonorNameID"]}");
-    }
-    $result->close();
-
-    $query = "SELECT * FROM smry_donor_employer_temp";
-    $result = my_query ($query);
-    while ($row = $result->fetch_assoc()) {
-      $word_str = " ";
-      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["DonorEmployerNormalized"]);
-      $words = explode (" ", $word_data);
-      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
-      my_query ("UPDATE smry_donor_employer_temp SET DonorEmployerWords = '{$word_str}' WHERE DonorEmployerID = {$row["DonorEmployerID"]}");
-    }
-    $result->close();
-
-    $query = "SELECT * FROM smry_donor_organization_temp";
-    $result = my_query ($query);
-    while ($row = $result->fetch_assoc()) {
-      $word_str = " ";
-      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["DonorOrganization"]);
-      $words = explode (" ", $word_data);
-      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
-      my_query ("UPDATE smry_donor_organization_temp SET DonorOrganizationWords = '{$word_str}' WHERE DonorOrganizationID = {$row["DonorOrganizationID"]}");
+      my_query ("UPDATE contributions_search_temp SET DonorWords = '{$word_str}' WHERE id = {$row["id"]}");
     }
     $result->close();
 

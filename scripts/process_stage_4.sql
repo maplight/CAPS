@@ -7,15 +7,6 @@ RENAME TABLE smry_committees_temp TO smry_committees;
 DROP TABLE IF EXISTS smry_cycles;
 RENAME TABLE smry_cycles_temp TO smry_cycles;
 
-DROP TABLE IF EXISTS smry_donor_employer;
-RENAME TABLE smry_donor_employer_temp TO smry_donor_employer;
-
-DROP TABLE IF EXISTS smry_donor_names;
-RENAME TABLE smry_donor_names_temp TO smry_donor_names;
-
-DROP TABLE IF EXISTS smry_donor_organization;
-RENAME TABLE smry_donor_organization_temp TO smry_donor_organization;
-
 DROP TABLE IF EXISTS smry_offices;
 RENAME TABLE smry_offices_temp TO smry_offices;
 
