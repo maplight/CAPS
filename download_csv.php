@@ -2,7 +2,7 @@
   require ("connect.php");
   $where = stripslashes ($my_conn->real_escape_string ($_GET["w"]));
 
-  $filename = "data" . date ("Y-m-d-H-i") . ".csv";
+  $filename = "data-" . date ("Y-m-d-H-i") . ".csv";
 
   $search_join = "";
   if (strpos ($where, "smry_candidates") !== false) {$search_join .= "INNER JOIN smry_candidates USING (RecipientCandidateNameID) ";}
