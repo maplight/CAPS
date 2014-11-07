@@ -382,7 +382,7 @@
         echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
         if ($total_pages > 1) {
           if ($page > 1) {echo "<input type=\"submit\" name=\"page_button\" value=\"Previous\" id=\"caps_previous_btn\">";}
-          if ($total_pages > 3) {
+          if ($total_pages >= 3) {
             for ($page_btn = 1; $page_btn < $total_pages; $page_btn++) {
               if ($page == $page_btn) {
                 echo "<input type=\"submit\" name=\"page_button\" value=\"{$page_btn}\" id=\"caps_current_page_btn\">";
