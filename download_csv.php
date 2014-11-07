@@ -28,7 +28,7 @@
                    "contributions.DonorZipCode|Contributor ZipCode",
                    "contributions.DonorEmployerNormalized|Contributor Employer",
                    "contributions.DonorOccupationNormalized|Contributor Occupation",
-                   "contributions.DonorOrganization|Contributor Occupation");
+                   "contributions.DonorOrganization|Contributor Organization");
 
   $select_fields = "";
   $header_line = "";
