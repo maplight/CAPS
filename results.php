@@ -121,14 +121,14 @@
     #------------------------------------------------------------------------------------------
     # Build committe search query:
     if (isset ($search_data["committees"])) {
-      # build committee search query
-      $word_str = "";
-      foreach (explode (" ", $search_data["committee_search"]) as $word) {
-        $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-        $word_str .= "+{$word} ";
-      }
-      $Committee .= "MATCH (smry_committees.CommitteeWords) AGAINST ('{$word_str}' IN BOOLEAN MODE)";
-#      if ($search_data["comm_select"] != "all") {
+      if ($search_data["comm_select"] != "all") {
+        # build committee search query
+        $word_str = "";
+        foreach (explode (" ", $search_data["committee_search"]) as $word) {
+          $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+          $word_str .= "+{$word} ";
+        }
+        $Committee .= "MATCH (smry_committees.CommitteeWords) AGAINST ('{$word_str}' IN BOOLEAN MODE)";
 #        foreach (explode (" ", $search_data["committee_search"]) as $word) {
 #          $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
 #          $Committee .= "smry_committees.CommitteeWords LIKE \"% " . addslashes ($word) . " %\" AND ";
