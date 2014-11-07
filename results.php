@@ -302,14 +302,22 @@
           }
         }
 
-        $sort_fields = array ("contributions_search.TransactionDateEnd DESC|Date Descending",
-                              "contributions_search.TransactionDateEnd|Date Ascending",
+        $sort_fields = array ("contributions_search.TransactionAmount|Amount Ascending",
                               "contributions_search.TransactionAmount DESC|Amount Descending",
-                              "contributions_search.TransactionAmount|Amount Ascending",
-                              "contributions_search.RecipientCandidateNameNormalized DESC|Recipient Name Descending",
-                              "contributions_search.RecipientCandidateNameNormalized|Recipient Name Ascending",
-                              "contributions_search.DonorNameNormalized DESC|Donor Name Descending",
-                              "contributions_search.DonorNameNormalized|Donor Name Ascending");
+                              "contributions_search.TransactionDateEnd|Date Ascending",
+                              "contributions_search.TransactionDateEnd DESC|Date Descending",
+                              "contributions.DonorNameNormalized|Contributor Name Ascending",
+                              "contributions.DonorNameNormalized DESC|Contributor Name Descending",
+                              "contributions.DonorEmployerNormalized|Contributor Employer Ascending",
+                              "contributions.DonorEmployerNormalized DESC|Contributor Employer Descending",
+                              "contributions_search.DonorState|Contributor State Ascending",
+                              "contributions_search.DonorState DESC|Contributor State Descending",
+                              "contributions.RecipientCandidateNameNormalized|Recipient Name Ascending",
+                              "contributions.RecipientCandidateNameNormalized DESC|Recipient Name Descending",
+                              "contributions.RecipientCandidateOffice, contributions.RecipientCandidateOffice|Recipient Office Ascending",
+                              "contributions.RecipientCandidateOffice DESC, contributions.RecipientCandidateOffice DESC|Recipient Office Descending",
+                              "contributions.RecipientCandidateNameNormalized|Recipient Committee Ascending",
+                              "contributions.RecipientCandidateNameNormalized DESC|Recipient Committee Descending");
 
         $result = my_query ("SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$search_join} {$where} ORDER BY {$sort} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;

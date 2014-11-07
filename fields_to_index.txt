@@ -1,3 +1,7 @@
+DonorNameNormalized
+DonorEmployerNormalized
+RecipientCandidateOffice
+RecipientCandidateOffice
 Election
 Target
 RecipientCommitteeNameNormalized
