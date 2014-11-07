@@ -46,82 +46,73 @@
     if ($search_data["state_list"] != "ALL") {$DonorState = "contributions_search.DonorState = '{$search_data["state_list"]}'";}
 
 
-    #------------------------------------------------------------------------------------------
-    # Build candidate search query:
-    if (isset ($search_data["candidates"])) {
-      # Candidates checked
-      $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
+    switch ($search_data["contrib_types"]) {
+      case "candidates":
+        #------------------------------------------------------------------------------------------
+        # Build candidate search query:
+        $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
 
-      switch ($search_data["cand_select"]) {
-        case "search":
-          # build candidate search query
-          if ($search_data["candidate_list"] == "Select candidate") {
-            $word_str = "";
-            foreach (explode (" ", $search_data["search_candidates"]) as $word) {
-              $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-              $word_str .= "+{$word} ";
+        switch ($search_data["cand_select"]) {
+          case "search":
+            # build candidate search query
+            if ($search_data["candidate_list"] == "Select candidate") {
+              $word_str = "";
+              foreach (explode (" ", $search_data["search_candidates"]) as $word) {
+                $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+                $word_str .= "+{$word} ";
+              }
+              $Candidate .= "MATCH (smry_candidates.CandidateWords) AGAINST ('{$word_str}' IN BOOLEAN MODE)";
+            } else {
+              $CandidateList = "smry_candidates.RecipientCandidateNameNormalized = '" . addslashes ($search_data["candidate_list"]) . "'";
             }
-            $Candidate .= "MATCH (smry_candidates.CandidateWords) AGAINST ('{$word_str}' IN BOOLEAN MODE)";
-          } else {
-            $CandidateList = "smry_candidates.RecipientCandidateNameNormalized = '" . addslashes ($search_data["candidate_list"]) . "'";
-          }
-          break;
-   
-        case "office":
-          # build office list query
-          $OfficeList = "smry_offices.RecipientCandidateOffice = '" . addslashes ($search_data["office_list"]) . "'";
-          break;
-      }
-    }
+            break;
 
-
-    #------------------------------------------------------------------------------------------
-    # Build ballot measure search query:
-    if (isset ($search_data["propositions"])) {
-      # Ballot Measures checked
-      $PropositionContribution = "contributions_search.BallotMeasureContribution = 'Y'";
-
-      if ($search_data["search_propositions"] != "Search propositions" && $search_data["proposition_list"] == "ALL") {
-        # build proposition search query
-        $word_str = "";
-        foreach (explode (" ", $search_data["search_propositions"]) as $word) {
-          $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-          $word_str .= "+{$word} ";
+          case "office":
+            # build office list query
+            $OfficeList = "smry_offices.RecipientCandidateOffice = '" . addslashes ($search_data["office_list"]) . "'";
+            break;
         }
-        $PropositionSearch .= "MATCH (smry_propositions.PropositionWords) AGAINST ('{$word_str}' IN BOOLEAN MODE)";
-#        foreach (explode (" ", $search_data["search_propositions"]) as $word) {
-#          $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-#          $PropositionSearch .= "smry_propositions.PropositionWords LIKE \"% " . addslashes ($word) . " %\" AND ";
-#        }
-#        if ($PropositionSearch != "") {$PropositionSearch = "(" . substr ($PropositionSearch, 0, -5) . ")";}
-      } else {
-        if ($search_data["proposition_list"] != "ALL") {
-          if (substr ($search_data["proposition_list"], 0, 3) == "ALL") {
-            # build query for a specific election
-            $selected_data = explode ("#", $search_data["proposition_list"]);
-            $Election = "smry_propositions.Election = '" . $selected_data[1] . "'";
-          } else {
-            # build query for a specific proposition
-            $selected_data = explode ("#", $search_data["proposition_list"]);
-            $Election = "smry_propositions.Election = '" . $selected_data[0] . "'";
-            $Proposition = "smry_propositions.Target = '" . addslashes ($selected_data[1]) . "'";
+        break; # candidates
+
+      case "ballots":
+        #------------------------------------------------------------------------------------------
+        # Build ballot measure search query:
+        $PropositionContribution = "contributions_search.BallotMeasureContribution = 'Y'";
+
+        if ($search_data["search_propositions"] != "Search propositions" && $search_data["proposition_list"] == "ALL") {
+          # build proposition search query
+          $word_str = "";
+          foreach (explode (" ", $search_data["search_propositions"]) as $word) {
+            $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+            $word_str .= "+{$word} ";
+          }
+          $PropositionSearch .= "MATCH (smry_propositions.PropositionWords) AGAINST ('{$word_str}' IN BOOLEAN MODE)";
+        } else {
+          if ($search_data["proposition_list"] != "ALL") {
+            if (substr ($search_data["proposition_list"], 0, 3) == "ALL") {
+              # build query for a specific election
+              $selected_data = explode ("#", $search_data["proposition_list"]);
+              $Election = "smry_propositions.Election = '" . $selected_data[1] . "'";
+            } else {
+              # build query for a specific proposition
+              $selected_data = explode ("#", $search_data["proposition_list"]);
+              $Election = "smry_propositions.Election = '" . $selected_data[0] . "'";
+              $Proposition = "smry_propositions.Target = '" . addslashes ($selected_data[1]) . "'";
+            }
           }
         }
-      }
 
-      # build support/oppose query
-      if ($search_data["position"] == "S") {$Position = "contributions_search.PositionID = 1";}
-      if ($search_data["position"] == "O") {$Position = "contributions_search.PositionID = 2";}
+        # build support/oppose query
+        if ($search_data["position"] == "S") {$Position = "contributions_search.PositionID = 1";}
+        if ($search_data["position"] == "O") {$Position = "contributions_search.PositionID = 2";}
 
-      # exclude allied committees query
-      if (isset ($search_data["exclude"])) {$Allied = "contributions_search.AlliedCommittee = 'N'";}
-    }
+        # exclude allied committees query
+        if (isset ($search_data["exclude"])) {$Allied = "contributions_search.AlliedCommittee = 'N'";}
+        break; # ballots
 
-
-    #------------------------------------------------------------------------------------------
-    # Build committe search query:
-    if (isset ($search_data["committees"])) {
-      if ($search_data["comm_select"] != "all") {
+      case "committees":
+        #------------------------------------------------------------------------------------------
+        # Build committe search query:
         # build committee search query
         $word_str = "";
         foreach (explode (" ", $search_data["committee_search"]) as $word) {
@@ -129,14 +120,8 @@
           $word_str .= "+{$word} ";
         }
         $Committee .= "MATCH (smry_committees.CommitteeWords) AGAINST ('{$word_str}' IN BOOLEAN MODE)";
-#        foreach (explode (" ", $search_data["committee_search"]) as $word) {
-#          $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-#          $Committee .= "smry_committees.CommitteeWords LIKE \"% " . addslashes ($word) . " %\" AND ";
-#        }
-#        if ($Committee != "") {$Committee = "(" . substr ($Committee, 0, -5) . ")";}
-      } 
+        break; # committees
     }
-
 
     #------------------------------------------------------------------------------------------
     # Build dates / cycles query

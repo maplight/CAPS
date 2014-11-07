@@ -168,7 +168,7 @@
 <?php
   $checked = "";
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "ballots") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"props_to\" name=\"contrib_types\" values=\"ballots\" class=\"caps_radio1\" {$checked}>";
+  echo "<input type=\"radio\" id=\"props_to\" name=\"contrib_types\" value=\"ballots\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="props_to" class="caps_label1">Ballot Measures</label>
           <a href="#" class="info"></a>
