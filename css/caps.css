@@ -250,6 +250,13 @@ body{
   margin-bottom:8px;
 }
 
+.caps_box1{
+  margin-left:22px;
+  margin-bottom:16px;
+  font:bold 15px Arial, Helvetica, sans-serif;
+  color:#000;
+}
+
 .caps_label1{
   margin-left:4px;
   margin-bottom:16px;
@@ -349,7 +356,7 @@ body{
 .caps_text5{
   float:left;
   width:190px;
-  margin-left:4px;
+  margin-left:22px;
   margin-bottom:22px;
   padding:0px;
   border:2px solid #ccc;
