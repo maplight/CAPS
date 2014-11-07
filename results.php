@@ -41,9 +41,9 @@
           $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
           $word_str .= "+{$word} ";
         }
-        $Donor .= "MATCH (contributions_search.DonorWords) AGAINST ('{$word_str}' IN BOOLEAN MODE) OR ";
+        $Donor .= "(" . trim ($word_str) . ") ";
       }
-      if ($Donor != "") {$Donor = substr ($Donor, 0, -4);}
+      if ($Donor != "") {$Donor = "MATCH (contributions_search.DonorWords) AGAINST ('" . substr ($Donor, 0, -1) . "' IN BOOLEAN MODE)";}
     }
   
     # build locations query
@@ -67,9 +67,9 @@
                   $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
                   $word_str .= "+{$word} ";
                 }
-                $Candidate .= "MATCH (smry_candidates.CandidateWords) AGAINST ('{$word_str}' IN BOOLEAN MODE) OR ";
+                $Candidate .= "(" . trim ($word_str) . ") ";
               }
-              if ($Candidate != "") {$Candidate = substr ($Candidate, 0, -4);}
+              if ($Candidate != "") {$Candidate = "MATCH (smry_candidates.CandidateWords) AGAINST ('" . substr ($Candidate, 0, -1) . "' IN BOOLEAN MODE)";}
             } else {
               $CandidateList = "smry_candidates.RecipientCandidateNameNormalized = '" . addslashes ($search_data["candidate_list"]) . "'";
             }
@@ -96,9 +96,9 @@
               $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
               $word_str .= "+{$word} ";
             }
-            $PropositionSearch .= "MATCH (smry_propositions.PropositionWords) AGAINST ('{$word_str}' IN BOOLEAN MODE) OR ";
+            $PropositionSearch .= "(" . trim ($word_str) . ") ";
           }
-          if ($PropositionSearch != "") {$PropositionSearch = substr ($PropositionSearch, 0, -4);}
+          if ($PropositionSearch != "") {$PropositionSearch = "MATCH (smry_propositions.PropositionWords) AGAINST ('" . substr ($PropositionSearch, 0, -1) . "' IN BOOLEAN MODE)";}
         } else {
           if ($search_data["proposition_list"] != "ALL") {
             if (substr ($search_data["proposition_list"], 0, 3) == "ALL") {
@@ -132,9 +132,9 @@
             $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
             $word_str .= "+{$word} ";
           }
-          $Committee .= "MATCH (smry_committees.CommitteeWords) AGAINST ('{$word_str}' IN BOOLEAN MODE) OR ";
+          $Committee .= "(" . trim ($word_str) . ") ";
         }
-        if ($Committee != "") {$Committee = substr ($Committee, 0, -4);}
+        if ($Committee != "") {$Committee = "MATCH (smry_committees.CommitteeWords) AGAINST ('" . substr ($Committee, 0, -1) . "' IN BOOLEAN MODE)";}
         break; # committees
     }
 
@@ -167,7 +167,7 @@
     $date_where = "";
 
     # create donor query
-    if ($Donor != "") {$donor_where .= "({$Donor}) AND ";}
+    if ($Donor != "") {$donor_where .= "{$Donor} AND ";}
     if ($DonorState != "") {$donor_where .= "{$DonorState} AND ";}
     if ($donor_where != "") {$donor_where = substr ($donor_where, 0, -5);} # remove extra AND
     
