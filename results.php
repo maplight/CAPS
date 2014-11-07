@@ -347,7 +347,7 @@
         echo "</select>";
         echo "<input type=\"submit\" value=\"Update\" id=\"caps_update_btn\">";
         echo "<div id=\"download_box\">";
-        echo "<a href=\"#\" class=\"download_csv\">Download CSV</a>&nbsp;&nbsp;";
+        echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">Download CSV</a>&nbsp;&nbsp;";
         echo "<a href=\"#\" class=\"download_info\"></a>";
         echo "</div> <!-- download_box -->";
         echo "</div> <!-- filter_box -->";
