@@ -11,6 +11,9 @@
   # Create tables used to process the data
   process_sql_file ("install_processing_tables.sql");
 
+  # Create tables used for fast web searches
+  process_sql_file ("install_smry_tables.sql");
+
   # Create populated tables (name parse tables and state name table)
   process_sql_file ("install_populated.sql");
 
