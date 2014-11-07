@@ -314,8 +314,8 @@
                               "contributions_search.DonorState DESC|Contributor State Descending",
                               "contributions.RecipientCandidateNameNormalized|Recipient Name Ascending",
                               "contributions.RecipientCandidateNameNormalized DESC|Recipient Name Descending",
-                              "contributions.RecipientCandidateOffice, contributions.RecipientCandidateOffice|Recipient Office Ascending",
-                              "contributions.RecipientCandidateOffice DESC, contributions.RecipientCandidateOffice DESC|Recipient Office Descending",
+                              "contributions.RecipientCandidateOffice, contributions.RecipientCandidateDistrict|Recipient Office Ascending",
+                              "contributions.RecipientCandidateOffice DESC, contributions.RecipientCandidateDistrict DESC|Recipient Office Descending",
                               "contributions.RecipientCandidateNameNormalized|Recipient Committee Ascending",
                               "contributions.RecipientCandidateNameNormalized DESC|Recipient Committee Descending");
 
