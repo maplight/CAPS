@@ -34,12 +34,16 @@
     #------------------------------------------------------------------------------------------
     # Build contributor search query:
     if ($search_data["contrib_select"] == "search") {
-      $word_str = "";
-      foreach (explode (" ", $search_data["contributor"]) as $word) {
-        $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-        $word_str .= "+{$word} ";
+      $Donor = "";
+      foreach (explode (";", $search_data["contributor"]) as $search_item) {
+        $word_str = "";
+        foreach (explode (" ", $search_item) as $word) {
+          $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+          $word_str .= "+{$word} ";
+        }
+        $Donor .= "MATCH (contributions_search.DonorWords) AGAINST ('{$word_str}' IN BOOLEAN MODE) OR ";
       }
-      $Donor .= "MATCH (contributions_search.DonorWords) AGAINST ('{$word_str}' IN BOOLEAN MODE)";
+      if ($Donor != "") {$Donor = substr ($Donor, 0, -4);}
     }
   
     # build locations query
@@ -56,12 +60,16 @@
           case "search":
             # build candidate search query
             if ($search_data["candidate_list"] == "Select candidate") {
-              $word_str = "";
-              foreach (explode (" ", $search_data["search_candidates"]) as $word) {
-                $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-                $word_str .= "+{$word} ";
+              $Candidate = "";
+              foreach (explode (";", $search_data["search_candidates"]) as $search_item) {
+                $word_str = "";
+                foreach (explode (" ", $search_item) as $word) {
+                  $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+                  $word_str .= "+{$word} ";
+                }
+                $Candidate .= "MATCH (smry_candidates.CandidateWords) AGAINST ('{$word_str}' IN BOOLEAN MODE) OR ";
               }
-              $Candidate .= "MATCH (smry_candidates.CandidateWords) AGAINST ('{$word_str}' IN BOOLEAN MODE)";
+              if ($Candidate != "") {$Candidate = substr ($Candidate, 0, -4);}
             } else {
               $CandidateList = "smry_candidates.RecipientCandidateNameNormalized = '" . addslashes ($search_data["candidate_list"]) . "'";
             }
@@ -81,12 +89,16 @@
 
         if ($search_data["search_propositions"] != "Search propositions" && $search_data["proposition_list"] == "ALL") {
           # build proposition search query
-          $word_str = "";
-          foreach (explode (" ", $search_data["search_propositions"]) as $word) {
-            $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-            $word_str .= "+{$word} ";
+          $PropositionSearch = "";
+          foreach (explode (";", $search_data["search_propositions"]) as $search_item) {
+            $word_str = "";
+            foreach (explode (" ", $search_item) as $word) {
+              $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+              $word_str .= "+{$word} ";
+            }
+            $PropositionSearch .= "MATCH (smry_propositions.PropositionWords) AGAINST ('{$word_str}' IN BOOLEAN MODE) OR ";
           }
-          $PropositionSearch .= "MATCH (smry_propositions.PropositionWords) AGAINST ('{$word_str}' IN BOOLEAN MODE)";
+          if ($PropositionSearch != "") {$PropositionSearch = substr ($PropositionSearch, 0, -4);}
         } else {
           if ($search_data["proposition_list"] != "ALL") {
             if (substr ($search_data["proposition_list"], 0, 3) == "ALL") {
@@ -112,14 +124,17 @@
 
       case "committees":
         #------------------------------------------------------------------------------------------
-        # Build committe search query:
         # build committee search query
-        $word_str = "";
-        foreach (explode (" ", $search_data["committee_search"]) as $word) {
-          $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-          $word_str .= "+{$word} ";
+        $Committee = "";
+        foreach (explode (";", $search_data["committee_search"]) as $search_item) {
+          $word_str = "";
+          foreach (explode (" ", $search_item) as $word) {
+            $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+            $word_str .= "+{$word} ";
+          }
+          $Committee .= "MATCH (smry_committees.CommitteeWords) AGAINST ('{$word_str}' IN BOOLEAN MODE) OR ";
         }
-        $Committee .= "MATCH (smry_committees.CommitteeWords) AGAINST ('{$word_str}' IN BOOLEAN MODE)";
+        if ($Committee != "") {$Committee = substr ($Committee, 0, -4);}
         break; # committees
     }
 
@@ -152,13 +167,13 @@
     $date_where = "";
 
     # create donor query
-    if ($Donor != "") {$donor_where .= "{$Donor} AND ";}
+    if ($Donor != "") {$donor_where .= "({$Donor}) AND ";}
     if ($DonorState != "") {$donor_where .= "{$DonorState} AND ";}
     if ($donor_where != "") {$donor_where = substr ($donor_where, 0, -5);} # remove extra AND
     
     # create candidate query
     if ($CandidateList == "") {
-      if ($Candidate != "") {$candidate_where .= "{$Candidate} AND ";}
+      if ($Candidate != "") {$candidate_where .= "({$Candidate}) AND ";}
     } else {
       $candidate_where .= "{$CandidateList} AND ";
     }
@@ -168,7 +183,7 @@
 
     # create proposition query
     if ($Proposition == "") {
-      if ($PropositionSearch != "") {$proposition_where .= "{$PropositionSearch} AND ";}
+      if ($PropositionSearch != "") {$proposition_where .= "({$PropositionSearch}) AND ";}
     } else {
       $proposition_where .= "{$Proposition} AND ";
     }
@@ -179,7 +194,7 @@
     if ($proposition_where != "") {$proposition_where = substr ($proposition_where, 0, -5);} # Remove the final AND
 
     # create committee query
-    if ($Committee != "") {$committee_where .= "{$Committee} AND ";}
+    if ($Committee != "") {$committee_where .= "({$Committee}) AND ";}
     if ($committee_where != "") {$committee_where = substr ($committee_where, 0, -5);} # remove extra AND
 
     # create date query
