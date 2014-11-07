@@ -28,11 +28,7 @@
                    "contributions.DonorZipCode|Contributor ZipCode",
                    "contributions.DonorEmployerNormalized|Contributor Employer",
                    "contributions.DonorOccupationNormalized|Contributor Occupation",
-                   "contributions.DonorOrganization|Contributor Occupation",
-                   "contributions.Unitemized|Unitemized Contribution",
-                   "contributions.AlliedCommittee|Allied Committee",
-                   "contributions.CandidateContribution|Candidate Contribution",
-                   "contributions.BallotMeasureContribution|Ballot Measure Contribution");
+                   "contributions.DonorOrganization|Contributor Occupation");
 
   $select_fields = "";
   $header_line = "";
