@@ -5,7 +5,6 @@
       echo "<DIV CLASS=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</DIV>";
     } else {
       # Parse search form
-echo "<PRE>"; print_r ($_POST); echo "</PRE>";
       $where = parse_search_form ($_POST);
       display_data ($where);
     }

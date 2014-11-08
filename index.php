@@ -119,17 +119,15 @@
 <img src="images/qs_contributor.jpg" width=50 class="qs_img">
           <div id=qs_box>
             <div class="qs_title2">Contributors</div>
-How much has
-<input type=text>
-contributed?
-<input type="submit" value="Search Candidates">
+            How much has <input type="text" id="contributor" name="contributor" value="company, organization, or person" class="qs_text2"> contributed?<br>
+            <input type="submit" name="qs_button" value="Search Contributors" id="qs_btn1">
           </div> <!-- #qs_box -->
-<hr class="caps_hr1">
+          <hr class="caps_hr1">
 
-<img src="images/qs_advanced.jpg" width=50 class="qs_img">
+          <img src="images/qs_advanced.jpg" width=50 class="qs_img">
           <div id=qs_box>
-            <div class="qs_title2"><a href="advanced.php">Advanced Search</a></div>
-Search by date, committee name, and more.
+            <div class="qs_title2"><a href="advanced.php">Advanced Search</a></div><br>
+            Search by date, committee name, and more.
           </div> <!-- #qs_box -->
         </div> <!-- #qs_search -->
 

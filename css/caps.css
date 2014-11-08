@@ -590,6 +590,16 @@ body{
   border-radius:0;
 }
 
+.qs_text2{
+  width:230px;
+  padding:0px;
+  margin-bottom:8px;
+  border:2px solid #ccc;
+  font:15px Arial, Helvetica, sans-serif;
+  color:#898989;
+  border-radius:0;
+}
+
 .qs_select1{
   width:194px;
   margin-left:102px;
