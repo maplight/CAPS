@@ -29,6 +29,25 @@
     require ("connect.php");
     require ("sidebar.php");
     require ("results.php");
+
+    # Check for quick search entry
+    if (isset ($_POST["quick_search"])) {
+      if ($_POST["qs_button"] == "Search Candidates") {
+        $_POST["contrib_select"] = "all";
+        $_POST["contributor"] = "Just these contributors";
+        $_POST["state_list"] = "ALL";
+        $_POST["contrib_types"] = "candidates";
+        $_POST["cand_select"] = "search";
+        $_POST["office_list"] = "Attorney General";
+        $_POST["search_propositions"] = "Search propositions";
+        $_POST["proposition_list"] = "ALL";
+        $_POST["position"] = "B";
+        $_POST["committee_search"] = "Just these committees";
+        $_POST["date_select"] = "all";
+        $_POST["start_date"] = "mm/dd/yyyy";
+        $_POST["end_date"] = "mm/dd/yyyy";
+      }
+    }
 ?>
 
 <div id="caps_header">
@@ -58,7 +77,10 @@
     <div class="nav-grid-75">
     <div id="mainNavTogCont" aria-hidden="false">
         <!-- main navigation -->
-        <ul>
+        <ul id="utl" class="clearfix">
+        <li><b>CAL-ACCESS Power Search</b></li>
+        <li><a href="index.php">Quick Search</a></li>
+        <li><a href="advanced.php">Advanced Search</a></li>
         <li><a href="http://registertovote.ca.gov//help/">Website Help</a></li>
         </ul>
         <!-- // main navigation -->

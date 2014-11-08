@@ -58,7 +58,10 @@
     <div class="nav-grid-75">
     <div id="mainNavTogCont" aria-hidden="false">
         <!-- main navigation -->
-        <ul>
+        <ul id="utl" class="clearfix">
+        <li><b>CAL-ACCESS Power Search</b></li>
+        <li><a href="index.php">Quick Search</a></li>
+        <li><a href="advanced.php">Advanced Search</a></li>
         <li><a href="http://registertovote.ca.gov//help/">Website Help</a></li>
         </ul>
         <!-- // main navigation -->
@@ -75,7 +78,7 @@
   <div id="container">
     <div id="qs_page">
       <form action="advanced.php" method="post">
-      <input type="hidden" name=
+      <input type="hidden" name="quick_search" value="true">
  
         <div id="qs_title">    
           <h1 class="caps_title3">CAL-ACCESS Power Search</h1>
@@ -96,15 +99,6 @@
   fill_candidate_names ("");
 ?>
               </select><br>
-              
-
-  if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "search") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"search_cands\" name=\"cand_select\" value=\"search\" class=\"caps_radio3\" {$checked}>";
-  $text = "Search candidates";
-  if (isset ($_POST["search_candidates"])) {$text = $_POST["search_candidates"];}
-  echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"filter_candidates_list();\">";
-?>
-              <input type="hidden" name="cand_select" value="search">
               <input type="submit" name="qs_button" value="Search Candidates" id="qs_btn1">
           </div> <!-- #qs_box -->
           <hr class="caps_hr1">
