@@ -263,7 +263,8 @@
         if (isset ($_POST["sort"])) {
           $sort = $_POST["sort"];
         }
-
+ 
+        $field_set = "";
         $fields = array ("RecipientCandidateNameNormalized|Recipient Name|",
                          "RecipientCommitteeNameNormalized|Recipient Committee|",
                          "RecipientCandidateOffice|Office|",
@@ -274,32 +275,34 @@
                          "DonorState|Contributor State|",
                          "TransactionDateEnd|Date|Date",
                          "TransactionAmount|Amount|Currency");
-        if (isset ($_POST["fields"])) {
-          if ($_POST["fields"] == "Show more fields") {
-            $fields = array ("TransactionType|Transaction Type|",
-                             "ElectionCycle|Cyle|",
-                             "Election|Election|Date",
-                             "TransactionDateStart|Start Date|Date",
-                             "TransactionDateEnd|End Date|Date",
-                             "TransactionAmount|Amount|Currency",
-                             "RecipientCommitteeNameNormalized|Recipient Committee|",
-                             "RecipientCandidateNameNormalized|Recipient Name|",
-                             "RecipientCandidateOffice|Office|",
-                             "RecipientCandidateDistrict|District|",
-                             "Target|Ballot Measure|",
-                             "Position|Ballot Measure Support|",
-                             "DonorNameNormalized|Contributor Name|",
-                             "DonorCity|Contributor City|",
-                             "DonorState|Contributor State|",
-                             "DonorZipCode|Contributor ZipCode|",
-                             "DonorEmployerNormalized|Contributor Employer|",
-                             "DonorOccupationNormalized|Contributor Occupation|",
-                             "DonorOrganization|Contributor Occupation|",
-                             "Unitemized|Unitemized Contribution|",
-                             "AlliedCommittee|Allied Committee|",
-                             "CandidateContribution|Candidate Contribution|",
-                             "BallotMeasureContribution|Ballot Measure Contribution|");
-          }
+
+        if (isset ($_POST["field_list"])) {$field_set = $_POST["field_list"];}
+        if (isset ($_POST["fields"])) {$field_set = $_POST["fields"];}
+
+        if ($field_set == "Show more fields") {
+          $fields = array ("TransactionType|Transaction Type|",
+                           "ElectionCycle|Cyle|",
+                           "Election|Election|Date",
+                           "TransactionDateStart|Start Date|Date",
+                           "TransactionDateEnd|End Date|Date",
+                           "TransactionAmount|Amount|Currency",
+                           "RecipientCommitteeNameNormalized|Recipient Committee|",
+                           "RecipientCandidateNameNormalized|Recipient Name|",
+                           "RecipientCandidateOffice|Office|",
+                           "RecipientCandidateDistrict|District|",
+                           "Target|Ballot Measure|",
+                           "Position|Ballot Measure Support|",
+                           "DonorNameNormalized|Contributor Name|",
+                           "DonorCity|Contributor City|",
+                           "DonorState|Contributor State|",
+                           "DonorZipCode|Contributor ZipCode|",
+                           "DonorEmployerNormalized|Contributor Employer|",
+                           "DonorOccupationNormalized|Contributor Occupation|",
+                           "DonorOrganization|Contributor Occupation|",
+                           "Unitemized|Unitemized Contribution|",
+                           "AlliedCommittee|Allied Committee|",
+                           "CandidateContribution|Candidate Contribution|",
+                           "BallotMeasureContribution|Ballot Measure Contribution|");
         }
 
         $sort_fields = array ("contributions_search.TransactionAmount|Amount Ascending",
@@ -354,7 +357,7 @@
 
         echo "Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($totals_row["records"], 0, ".", ",") . "</strong> rows ";
         $field_msg = "Show more fields";
-        if (isset ($_POST["fields"])) {if ($_POST["fields"] == "Show more fields") {$field_msg = "Show fewer fields";}} 
+        if ($field_set == "Show more fields") {$field_msg = "Show fewer fields";}
         echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\" id=\"caps_field_btn\">";
         echo "<a href=\"#\" class=\"info\"></a>";
 
@@ -403,6 +406,7 @@
         # Pagination section
         echo "<center>";
         echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
+        echo "<input type=\"hidden\" name=\"field_list\" value=\"{$field_set}\">";
         if ($total_pages > 1) {
           if ($page > 1) {echo "<input type=\"submit\" name=\"page_button\" value=\"Previous\" id=\"caps_previous_btn\">";}
           if ($total_pages >= 3) {
