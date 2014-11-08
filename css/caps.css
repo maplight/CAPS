@@ -180,6 +180,31 @@ body{
   border:2px solid #ccc;
 }
 
+#qs_page{
+  padding:28px;
+  overflow:hidden;
+}
+
+#qs_title{
+  float:left;
+  padding:0;
+  width:460px;
+  position:relative;
+  overflow:hidden;
+}
+
+#qs_search{
+  clear:both;
+  float:left;
+  width:100%;
+  margin-top:28px;
+}
+
+#qs_box{
+  float:left;
+  margin-left:14px;
+}
+
 .caps_title1{
   font:bold 29px/40px Arial, Helvetica, sans-serif;
   color:#222;
@@ -527,6 +552,34 @@ body{
   height:16px;
 }
 
+.qs_link1{
+  float:right;
+  border:2px solid #124161;
+  background:#e6ecf0;
+  color:#124161;
+  padding:4px 8px 4px 8px;
+  font: bold 14px Arial, Helvetica, sans-serif;
+  text-decoration: none;
+}
+.qs_link1:hover{
+  color:#fff;
+  background:#124161;
+}
+
+.qs_img{
+  clear:both;
+  float:left;
+}
+
+.qs_title1{
+  font:bold 19px Arial, Helvetica, sans-serif;
+  color:#000;
+}
+
+.qs_title2{
+  font:bold 21px Arial, Helvetica, sans-serif;
+  color:#000;
+}
 
 @media only screen and (max-width:700px){
   #sidebar{

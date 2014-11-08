@@ -73,41 +73,59 @@
 
 <div id="wrapper">
   <div id="container">
-    <form method="post">
+    <div id="qs_page">
+      <form method="post">
+ 
+        <div id="qs_title">    
+          <h1 class="caps_title3">CAL-ACCESS Power Search</h1>
+          <strong>Search political contributions to candidates, ballot measures, and other committees from 2001 through the present.</strong>
+        </div> <!-- #qs_title -->
+        <a href="advanced.php" class="qs_link1">Go to Advanced Search</a>
+         
+        <div id="qs_search">
+          <div class="qs_title1">Quick Search</div>
+          <hr class="caps_hr1">
 
-CAL-ACCESS Power Search
-Search political contributions to candidates, ballot measures, and other committees from 2001 through the present.
-<a href="advanced.php">Go to Advanced Search</a>
-
-Quick Search
-<hr>
-
-Candidates
+          <img src="images/qs_candidate.jpg" width=50 class="qs_img">
+          <div id=qs_box>
+            <div class="qs_title2">Candidates</div>
 How much has
 <input type=text>
 <select><option>Somebody</option></select>
 received?
 <input type="submit" value="Search Candidates">
-<hr>
+          </div> <!-- #qs_box -->
+<hr class="caps_hr1">
 
-Ballot Measures
+<img src="images/qs_ballot.jpg" width=50 class="qs_img">
+          <div id=qs_box>
+            <div class="qs_title2">Ballot Measures</div>
 How much has been raised for all measures on the
 <select><option>Some Election</option></select>
 ballot?
 <input type="submit" value="Search Ballot Measures">
-<hr>
+          </div> <!-- #qs_box -->
+<hr class="caps_hr1">
 
-Contributors
+<img src="images/qs_contributor.jpg" width=50 class="qs_img">
+          <div id=qs_box>
+            <div class="qs_title2">Contributors</div>
 How much has
 <input type=text>
 contributed?
 <input type="submit" value="Search Candidates">
-<hr>
+          </div> <!-- #qs_box -->
+<hr class="caps_hr1">
 
-<a href="advanced.php">Advanced Search</a>
+<img src="images/qs_advanced.jpg" width=50 class="qs_img">
+          <div id=qs_box>
+            <div class="qs_title2"><a href="advanced.php">Advanced Search</a></div>
 Search by date, committee name, and more.
+          </div> <!-- #qs_box -->
+        </div> <!-- #qs_search -->
 
-    </form>
+      </form>
+    </div> <!-- #qs_container -->
   </div> <!-- #containter -->
 </div> <!-- #wrapper-->
 
