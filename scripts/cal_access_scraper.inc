@@ -7,7 +7,7 @@
 # update elections list
   function get_elections_list () {
     # Check upcoming elections
-    $html_page = file_get_html ("http://www.sos.ca.gov/elections/elections_cand.htm");
+    $html_page = get_html_file ("http://www.sos.ca.gov/elections/elections_cand.htm");
     if (! $html_page) {} else {
       foreach ($html_page->find ("li") as $list_item) {
         $election_data = parse_election_data ($list_item->plaintext);
@@ -18,7 +18,7 @@
     }
 
     # Check prior statewide elections
-    $html_page = file_get_html ("http://www.sos.ca.gov/elections/statewide-elections/");
+    $html_page = get_html_file ("http://www.sos.ca.gov/elections/statewide-elections/");
     if (! $html_page) {} else {
       foreach ($html_page->find ("li") as $list_item) {
         $election_data = parse_election_data ($list_item->plaintext);
@@ -31,7 +31,7 @@
     }
 
     # Check prior special elections
-    $html_page = file_get_html ("http://www.sos.ca.gov/elections/special-elections/");
+    $html_page = get_html_file ("http://www.sos.ca.gov/elections/special-elections/");
     if (! $html_page) {} else {
       $special_elections = explode ("<a href=", $html_page->innertext);                 # create an array of items by <a href=
       foreach ($special_elections as $election) {                                       # cycle through each of the array items
@@ -118,7 +118,7 @@
 #===============================================================================================
 # get propositions list for specific session
   function get_propositions ($session, $err_chk) {
-    $html_page = file_get_html ("http://cal-access.sos.ca.gov/Campaign/Measures/list.aspx?session=$session");
+    $html_page = get_html_file ("http://cal-access.sos.ca.gov/Campaign/Measures/list.aspx?session=$session");
     if (! $html_page && $err_chk == 1) {} else {
       my_query ("DELETE FROM cal_access_propositions WHERE session = $session");
 
@@ -167,7 +167,7 @@
     $query = "SELECT proposition_id, link FROM cal_access_propositions WHERE session = $session";
     $result = my_query ($query);
     while ($row = $result->fetch_assoc()) {
-      $html_page = file_get_html ($row["link"]);
+      $html_page = get_html_file ($row["link"]);
       if (! $html_page && $err_chk == 1) {} else {
         foreach ($html_page->find ("table") as $table) {
           if (strpos ($table->innertext, "COMMITTEE ID") !== false && strpos ($table->innertext, "category side nav starts here") === false) {
@@ -206,7 +206,7 @@
     $query = "DELETE FROM cal_access_candidates_committees WHERE session = $session"; my_query ($query);
 
     foreach ($alphabet as $letter) {
-      $html_page = file_get_html ("http://cal-access.sos.ca.gov/Campaign/Candidates/list.aspx?view=name&letter=$letter&session=$session");
+      $html_page = get_html_file ("http://cal-access.sos.ca.gov/Campaign/Candidates/list.aspx?view=name&letter=$letter&session=$session");
       if (! $html_page && $err_chk == 1) {} else {
         foreach ($html_page->find ("table[id=_ctl3_candidates]") as $table) {
           foreach ($table->find ("tr") as $tablerow) {
@@ -233,7 +233,7 @@
     $query = "SELECT id, link FROM cal_access_candidates WHERE session = $session";
     $result = my_query ($query);
     while ($row = $result->fetch_assoc()) {
-      $html_page = file_get_html ($row["link"]);
+      $html_page = get_html_file ($row["link"]);
       if (! $html_page && $err_chk == 1) {} else {
         $data_in_process = "";
         $historical_names = array ();
@@ -314,7 +314,7 @@
     $link = "http://cal-access.sos.ca.gov/Campaign/Committees/Detail.aspx?id={$filer_id}&session={$session}";
     $type = "UNKNOWN";
     
-    $html_page = file_get_html ($link);
+    $html_page = get_html_file ($link);
     if (! $html_page && $err_chk == 1) {} else {
       $name_span = $html_page->find ("span[id=lblFilerName]");
       $name = addslashes ($name_span[0]->innertext);
@@ -334,7 +334,7 @@
     $query = "SELECT link FROM cal_access_committees WHERE session = $session AND filer_id = $filer_id";
     $result = my_query ($query); $row = $result->fetch_assoc();
 
-    $html_page = file_get_html ($row["link"]); # load the page in
+    $html_page = get_html_file ($row["link"]); # load the page in
     if (! $html_page && $err_chk == 1) {} else {
       # get historical names
       foreach ($html_page->find ("table[id=_ctl3_names]") as $table) {
@@ -404,6 +404,21 @@
 
       $html_page->clear ();
     }
+  }
+
+
+#===============================================================================================
+# get html file with repeat before fail
+  function get_html_file ($url) {
+    $retries = 5;
+    $loop_count = 0;
+
+    do {
+      $html = file_get_html ($url);
+      $loop_count++;
+    } while ($loop_count < $retries && $html == "");
+
+    return $html; 
   }
 
 

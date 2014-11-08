@@ -1,7 +1,7 @@
 <?php
   # Setup the caps database / install script
+  # link in the needed libraries for scraping and connecting to the database
   require ("cal_access_scraper.inc");
-  require ("../connect.php");
 
   # Create the files directory if it's not already there
   if (!file_exists ("files")) {mkdir ("files", 0777, true);}
@@ -67,7 +67,7 @@
 #===============================================================================================
 # load an sql file
   function process_sql_file ($filename) {
-    global $login, $pwd
+    global $login, $pwd;
     system("mysql -u{$login} -p{$pwd} ca_search < \"$filename\"");
   }
 ?>
