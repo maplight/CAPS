@@ -359,7 +359,7 @@
         echo "<a href=\"#\" class=\"info\"></a>";
 
         echo "<div id=\"table_box\">";
-        echo "<table title=\"search table\" summary=\"search table\" class=\"search-table\">";
+        echo "<table title=\"search table\" summary=\"search table\" class=\"caps_table1\">";
         echo "<thead>";
         echo "<tr>";
 
@@ -417,9 +417,10 @@
           }
           if ($page < $total_pages) {echo "<input type=\"submit\" name=\"page_button\" value=\"Next\" id=\"caps_next_btn\">";}
         }
+        echo "<p>&nbsp;</p>";
+        echo "To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">download the CSV</a> file.<br>";
+        echo "Contributions data is current as of " . date ("F j, Y") . ".";
         echo "</center>";
-
-        echo "<p><div class=\"notes\"><p>To view the entire set of search results, <a href=\"#\">download the CSV</a> file.  Contributions data is current as of [today's date].</p></div>";
 
         echo "</div> <!-- results ->";
       }

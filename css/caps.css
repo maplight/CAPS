@@ -429,6 +429,37 @@ body{
   border-width:0;
 }
 
+.caps_table1{
+  border-collapse:collapse;
+  border-spacing:0;
+  border:1px solid #b8b8b8;
+  margin:0;
+  padding:0;
+}
+
+.caps_table1 thead{
+  margin:0;
+  padding:0;
+  background:#ebebeb;
+  font:13px Arial, Helvetica, sans-serif;
+  color:#333;
+}
+
+.caps_table1 thead tr th{
+  margin:0;
+  padding:7px 15px 7px 3px;
+}
+
+.caps_table1 tbody{
+  font:12px Arial, Helvetica, sans-serif;
+  color:#333;
+}
+
+.caps_table1 tbody tr td{
+  margin:0;
+  padding:4px 8px 4px 3px;
+}
+
 .info{
   float:right;
   position:relative;
@@ -495,7 +526,6 @@ body{
   width:15px;
   height:16px;
 }
-
 
 
 @media only screen and (max-width:700px){
