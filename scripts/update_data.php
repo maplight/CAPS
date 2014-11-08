@@ -28,7 +28,8 @@
 #===============================================================================================
 # load an sql file
   function process_sql_file ($filename) {
-    system("mysql -ucaps -pcaps-dev14 ca_search < \"$filename\"");
+    global $login, $pwd;
+    system("mysql -u{$login} -p{$pwd} ca_search < \"$filename\"");
   }
 
 
