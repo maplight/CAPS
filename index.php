@@ -103,15 +103,18 @@
           </div> <!-- #qs_box -->
           <hr class="caps_hr1">
 
-<img src="images/qs_ballot.jpg" width=50 class="qs_img">
+          <img src="images/qs_ballot.jpg" width=50 class="qs_img">
           <div id=qs_box>
             <div class="qs_title2">Ballot Measures</div>
-How much has been raised for all measures on the
-<select><option>Some Election</option></select>
-ballot?
-<input type="submit" value="Search Ballot Measures">
-          </div> <!-- #qs_box -->
-<hr class="caps_hr1">
+              How much has been raised for all measures on the
+              <select id="propositions_list" name="proposition_list" class="qs_select2">
+<?php
+  fill_qs_elections ();
+?>
+              </select> ballot?<br>
+              <input type="submit" name="qs_button" value="Search Ballot Measures" id="qs_btn1">
+           </div> <!-- #qs_box -->
+           <hr class="caps_hr1">
 
 <img src="images/qs_contributor.jpg" width=50 class="qs_img">
           <div id=qs_box>

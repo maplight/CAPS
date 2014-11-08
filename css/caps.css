@@ -601,6 +601,15 @@ body{
   border-radius:0;
 }
 
+.qs_select2{
+  margin-bottom:8px;
+  padding:0px;
+  border:2px solid #ccc;
+  font:15px Arial, Helvetica, sans-serif;
+  color:#898989;
+  border-radius:0;
+}
+
 #qs_btn1{
   background:#e6ecf0;
   color:#124161;

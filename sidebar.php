@@ -46,6 +46,14 @@
   }
 
 
+  function fill_qs_elections () {
+    $result = my_query ("SELECT DISTINCT Election FROM smry_propositions ORDER BY Election DESC, Target");
+    while ($row = $result->fetch_assoc()) {
+      echo "<OPTION VALUE=\"ALL#{$row["Election"]}\">" . date ("F j, Y", strtotime ($row["Election"])) . "</OPTION>";
+    }
+  }
+
+
   function fill_election_cycles ($cycles) {
     $result = my_query ("SELECT ElectionCycle FROM smry_cycles ORDER BY ElectionCycle DESC");
     while ($row = $result->fetch_assoc()) {

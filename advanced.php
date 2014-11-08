@@ -47,6 +47,22 @@
         $_POST["start_date"] = "mm/dd/yyyy";
         $_POST["end_date"] = "mm/dd/yyyy";
       }
+
+      if ($_POST["qs_button"] == "Search Ballot Measures") {
+        $_POST["contrib_select"] = "all";
+        $_POST["contributor"] = "Just these contributors";
+        $_POST["state_list"] = "ALL";
+        $_POST["contrib_types"] = "ballots";
+        $_POST["cand_select"] = "all";
+        $_POST["candidate_list"] = "Select candidate";
+        $_POST["office_list"] = "Attorney General";
+        $_POST["search_propositions"] = "Search propositions";
+        $_POST["position"] = "B";
+        $_POST["committee_search"] = "Just these committees";
+        $_POST["date_select"] = "all";
+        $_POST["start_date"] = "mm/dd/yyyy";
+        $_POST["end_date"] = "mm/dd/yyyy";
+      }
     }
 ?>
 
