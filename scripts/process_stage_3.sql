@@ -1,65 +1,1247 @@
-DROP TABLE IF EXISTS smry_candidates_temp;
-CREATE TABLE smry_candidates_temp LIKE smry_candidates;
-INSERT INTO smry_candidates_temp (RecipientCandidateNameNormalized) SELECT DISTINCT RecipientCandidateNameNormalized FROM contributions_temp WHERE RecipientCandidateNameNormalized <> '' AND CandidateContribution = 'Y';
+﻿
+-- ------------------------------------------------------------------------------------------
+-- populate tables (after name cleaning)
 
-DROP TABLE IF EXISTS smry_offices_temp;
-CREATE TABLE smry_offices_temp LIKE smry_offices;
-INSERT INTO smry_offices_temp (RecipientCandidateOffice) SELECT DISTINCT RecipientCandidateOffice FROM contributions_temp WHERE RecipientCandidateOffice <> '' AND CandidateContribution = 'Y';
+truncate table prop_filer_session_name_forms;
+insert into prop_filer_session_name_forms
+select
+    ftp_filer_filings.filer_id
+  , ftp_filer_filings.session_id
+  , ftp_cvr_campaign_disclosure.filer_naml
+  , ftp_cvr_campaign_disclosure.form_type
+  , group_concat( 
+      distinct concat(cal_access_propositions_committees.position, ' ', left(cal_access_propositions.name, 20)) 
+      order by concat(cal_access_propositions_committees.position, ' ', left(cal_access_propositions.name, 20)) 
+      separator '; '
+      ) as positions
+  , max(str_to_date(ftp_filer_filings.filing_date, '%m/%d/%Y %h:%i:%s %p')) as last_filing
+from 
+  ftp_cvr_campaign_disclosure
+  inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
+  inner join ftp_filer_filings 
+    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
+    and ftp_cvr_campaign_disclosure.filing_id = ftp_filer_filings.filing_id
+    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
+    and ftp_cvr_campaign_disclosure.amend_id = ftp_filer_filings.filing_sequence
+  inner join cal_access_propositions_committees 
+    on ftp_cvr_campaign_disclosure.filer_id = cal_access_propositions_committees.filer_id
+    and ftp_filer_filings.session_id = cal_access_propositions_committees.session
+  inner join cal_access_propositions 
+    on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
+    and cal_access_propositions.session = cal_access_propositions_committees.session
+  inner join filing_ids 
+    on ftp_cvr_campaign_disclosure.filing_id = filing_ids.filing_id
+    and ftp_cvr_campaign_disclosure.amend_id = filing_ids.amend_id_to_use
+group by 
+    ftp_filer_filings.filer_id
+  , ftp_filer_filings.session_id
+  , ftp_cvr_campaign_disclosure.filer_naml
+  , ftp_cvr_campaign_disclosure.form_type
+;
 
-DROP TABLE IF EXISTS smry_committees_temp;
-CREATE TABLE smry_committees_temp LIKE smry_committees;
-INSERT INTO smry_committees_temp (RecipientCommitteeNameNormalized) SELECT DISTINCT RecipientCommitteeNameNormalized FROM contributions_temp WHERE RecipientCommitteeNameNormalized <> '';
+truncate table prop_filer_sessions;
+insert into prop_filer_sessions
+select
+    prop_filer_session_name_forms.filer_id
+  , prop_filer_session_name_forms.session_id
+  , max(prop_filer_session_name_forms.filer_naml) as committee_name_to_use
+from 
+  prop_filer_session_name_forms
+  inner join (
+    select filer_id, session_id, max(last_filing) as last_filing
+    from prop_filer_session_name_forms
+    group by filer_id, session_id
+    ) as max_last_filing using (filer_id, session_id, last_filing)
+group by 
+    prop_filer_session_name_forms.filer_id
+  , prop_filer_session_name_forms.session_id
+;
 
-DROP TABLE IF EXISTS smry_cycles_temp;
-CREATE TABLE smry_cycles_temp LIKE smry_cycles;
-INSERT INTO smry_cycles_temp SELECT DISTINCT ElectionCycle FROM contributions_temp;
+drop table if exists contributions_full_temp;
+create table contributions_full_temp like contributions_full;
 
-DROP TABLE IF EXISTS smry_propositions_temp;
-CREATE TABLE smry_propositions_temp LIKE smry_propositions;
-INSERT INTO smry_propositions_temp (Election, Target) SELECT DISTINCT election_date, name FROM cal_access_propositions;
+-- regular contributions
+insert into contributions_full_temp (
+    Form
+  , RecipientCommitteeType
+  , Schedule
+  , ElectionCycle
+  , ElectionCvr
+  , ElectionProp
+  , PrimaryGeneralIndicator
+  , FilingID
+  , AmendID
+  , LineItem
+  , MemoRefNo
+  , TransactionID
+  , TransactionDateStart
+  , TransactionDateEnd
+  , TransactionAmount
+  , FiledDate
+  , RecipientCommitteeNameNormalized
+  , HasCandidateName
+  , RecipientCandidateID
+  , RecipientCandidateNameNormalized
+  , RecipientCandidateOfficeCvrCode
+  , RecipientCandidateOfficeCvrSoughtOrHeld
+  , RecipientCandidateOfficeCvrCustom
+  , RecipientCandidateDistrict
+  , HasProposition
+  , Target
+  , `Position`
+  , DonorNameNormalized
+  , DonorCity
+  , DonorState
+  , DonorZipCode
+  , DonorEmployerNormalized
+  , DonorOccupationNormalized
+  , DonorOrganization
+  , DonorCommitteeEntity
+  , DonorCommitteeID
+  , RecipientCommitteeID
+  , RecipientCommitteeEntity
+  , OriginTable
+  )  
+select
+    ftp_cvr_campaign_disclosure.form_type as Form
+  , ftp_cvr_campaign_disclosure.cmtte_type as RecipientCommitteeType
+  , contributions.form_type as Schedule
+  , ftp_filer_filings.session_id as ElectionCycle
+  , str_to_date(left(ftp_cvr_campaign_disclosure.elect_date,locate(' ',ftp_cvr_campaign_disclosure.elect_date)-1), '%m/%d/%Y') as ElectionCvr
+  , cal_access_propositions.election_date as ElectionProp
+  , '0' as PrimaryGeneralIndicator
+  , contributions.filing_id as FilingID
+  , contributions.amend_id as AmendID
+  , contributions.line_item
+  , contributions.memo_refno
+  , concat(contributions.filing_id, ' - ', contributions.tran_id) as TransactionID
+  , str_to_date(left(contributions.rcpt_date,locate(' ',contributions.rcpt_date)-1),'%m/%d/%Y') as TransactionDateStart
+  , str_to_date(left(contributions.rcpt_date,locate(' ',contributions.rcpt_date)-1),'%m/%d/%Y') as TransactionDateEnd
+  , contributions.amount as TransactionAmount
+  , str_to_date(ftp_filer_filings.filing_date,'%m/%d/%Y %h:%i:%s %p') as FiledDate
+  , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
+  , if(isnull(filing_amends.filing_id),'N','Y') as HasCandidateName
+  , ifnull(filing_amends.candidate_id,'') as RecipientCandidateID
+  , ifnull(filing_amends.display_name,'') as RecipientCandidateNameNormalized
+  , ftp_cvr_campaign_disclosure.office_cd as RecipientCandidateOfficeCvrCode
+  , ftp_cvr_campaign_disclosure.off_s_h_cd as RecipientCandidateOfficeCvrSoughtOrHeld
+  , ftp_cvr_campaign_disclosure.offic_dscr as RecipientCandidateOfficeCvrCustom
+  , ftp_cvr_campaign_disclosure.dist_no as RecipientCandidateDistrict
+  , if(isnull(cal_access_propositions_committees.filer_id),'N','Y') as HasProposition
+  , ifnull(cal_access_propositions.name,'') as Target
+  , ifnull(cal_access_propositions_committees.`position`,'') as `Position`
+  , if(contributions.ctrib_namf = '', contributions.ctrib_naml, concat(contributions.ctrib_naml, ', ', contributions.ctrib_namf)) as DonorNameNormalized
+  , contributions.ctrib_city as DonorCity
+  , contributions.ctrib_st as DonorState
+  , contributions.ctrib_zip4 as DonorZipCode
+  , contributions.ctrib_emp as DonorEmployerNormalized
+  , contributions.ctrib_occ as DonorOccupationNormalized
+  , if(contributions.entity_cd = 'IND', contributions.ctrib_emp, contributions.ctrib_naml) as DonorOrganization
+  , contributions.entity_cd as DonorCommitteeEntity
+  , contributions.cmte_id as DonorCommitteeID
+  , ftp_filer_filings.filer_id as RecipientCommitteeID
+  , ftp_cvr_campaign_disclosure.entity_cd as RecipientCommitteeEntity
+  , 'rcpt' as OriginTable
+from 
+  ftp_rcpt as contributions
+  inner join filing_ids -- include only the most recent filing
+    on contributions.filing_id = filing_ids.filing_id
+    and contributions.amend_id = filing_ids.amend_id_to_use
+  inner join ftp_cvr_campaign_disclosure 
+    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id
+    and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
+  inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
+  inner join ftp_filer_filings 
+    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
+    and contributions.filing_id = ftp_filer_filings.filing_id
+    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
+    and contributions.amend_id = ftp_filer_filings.filing_sequence
+  left join filing_amends 
+    on contributions.filing_id = filing_amends.filing_id 
+    and contributions.amend_id = filing_amends.amend_id
+  left join cal_access_propositions_committees
+    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id
+    and ftp_filer_filings.session_id = cal_access_propositions_committees.session
+  left join cal_access_propositions
+    on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
+    and cal_access_propositions.session = cal_access_propositions_committees.session
+  left join prop_filer_sessions
+    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
+    and ftp_filer_filings.session_id = prop_filer_sessions.session_id
+-- where ftp_filer_filings.session_id = 2013
+;
 
-DROP TABLE IF EXISTS contributions_search_temp;
-CREATE TABLE contributions_search_temp LIKE contributions_search;
-INSERT INTO contributions_search_temp
-  SELECT
-   id,
-   DonorState,
-   AlliedCommittee,
-   TransactionDateStart,
-   TransactionDateEnd,
-   TransactionAmount,
-   ElectionCycle,
-   CandidateContribution,
-   BallotMeasureContribution,
-   0,
-   0,
-   0,
-   0,
-   CASE Position
-     WHEN 'SUPPORT' THEN 1
-     WHEN 'OPPOSE' THEN 2
-     ELSE 0
-   END,
-   ''
-FROM contributions_temp;
+-- loans
+insert into contributions_full_temp (
+    Form
+  , RecipientCommitteeType
+  , Schedule
+  , ElectionCycle
+  , ElectionCvr
+  , ElectionProp
+  , PrimaryGeneralIndicator
+  , FilingID
+  , AmendID
+  , LineItem
+  , MemoRefNo
+  , TransactionID
+  , TransactionDateStart
+  , TransactionDateEnd
+  , TransactionAmount
+  , LoanPreExistingBalance
+  , FiledDate
+  , RecipientCommitteeNameNormalized
+  , HasCandidateName
+  , RecipientCandidateID
+  , RecipientCandidateNameNormalized
+  , RecipientCandidateOfficeCvrCode
+  , RecipientCandidateOfficeCvrSoughtOrHeld
+  , RecipientCandidateOfficeCvrCustom
+  , RecipientCandidateDistrict
+  , HasProposition
+  , Target
+  , `Position`
+  , DonorNameNormalized
+  , DonorCity
+  , DonorState
+  , DonorZipCode
+  , DonorEmployerNormalized
+  , DonorOccupationNormalized
+  , DonorOrganization
+  , DonorCommitteeEntity
+  , DonorCommitteeID
+  , RecipientCommitteeID
+  , RecipientCommitteeEntity
+  , OriginTable
+  )
+select
+    ftp_cvr_campaign_disclosure.form_type as Form
+  , ftp_cvr_campaign_disclosure.cmtte_type as RecipientCommitteeType
+  , contributions.form_type as Schedule
+  , ftp_filer_filings.session_id as ElectionCycle
+  , str_to_date(left(ftp_cvr_campaign_disclosure.elect_date,locate(' ',ftp_cvr_campaign_disclosure.elect_date)-1), '%m/%d/%Y') as ElectionCvr
+  , cal_access_propositions.election_date as ElectionProp
+  , '0' as PrimaryGeneralIndicator
+  , contributions.filing_id as FilingID
+  , contributions.amend_id as AmendID
+  , contributions.line_item
+  , contributions.memo_refno
+  , concat(contributions.filing_id, ' - ', contributions.tran_id) as TransactionID
+  , str_to_date(left(contributions.loan_date1,locate(' ',contributions.loan_date1)-1),'%m/%d/%Y') as TransactionDateStart
+  , str_to_date(left(contributions.loan_date1,locate(' ',contributions.loan_date1)-1),'%m/%d/%Y') as TransactionDateEnd
+  , contributions.loan_amt1 as TransactionAmount
+  , contributions.loan_amt4 as LoanPreExistingBalance
+  , str_to_date(ftp_filer_filings.filing_date,'%m/%d/%Y %h:%i:%s %p') as FiledDate
+  , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
+  , if(isnull(filing_amends.filing_id),'N','Y') as HasCandidateName
+  , ifnull(filing_amends.candidate_id,'') as RecipientCandidateID
+  , ifnull(filing_amends.display_name,'') as RecipientCandidateNameNormalized
+  , ftp_cvr_campaign_disclosure.office_cd as RecipientCandidateOfficeCvrCode
+  , ftp_cvr_campaign_disclosure.off_s_h_cd as RecipientCandidateOfficeCvrSoughtOrHeld
+  , ftp_cvr_campaign_disclosure.offic_dscr as RecipientCandidateOfficeCvrCustom
+  , ftp_cvr_campaign_disclosure.dist_no as RecipientCandidateDistrict
+  , if(isnull(cal_access_propositions_committees.filer_id),'N','Y') as HasProposition
+  , ifnull(cal_access_propositions.name,'') as Target
+  , ifnull(cal_access_propositions_committees.`position`,'') as `Position`
+  , if(contributions.lndr_namf = '', contributions.lndr_naml, concat(contributions.lndr_naml, ', ', contributions.lndr_namf)) as DonorNameNormalized
+  , contributions.loan_city as DonorCity
+  , contributions.loan_st as DonorState
+  , contributions.loan_zip4 as DonorZipCode
+  , contributions.loan_emp as DonorEmployerNormalized
+  , contributions.loan_occ as DonorOccupationNormalized
+  , if(contributions.entity_cd = 'IND', contributions.loan_emp, contributions.lndr_naml) as DonorOrganization
+  , contributions.entity_cd as DonorCommitteeEntity
+  , contributions.cmte_id as DonorCommitteeID
+  , ftp_filer_filings.filer_id as RecipientCommitteeID
+  , ftp_cvr_campaign_disclosure.entity_cd as RecipientCommitteeEntity
+  , 'loan' as OriginTable
+from 
+  ftp_loan as contributions
+  inner join filing_ids -- include only the most recent filing 
+    on contributions.filing_id = filing_ids.filing_id 
+    and contributions.amend_id = filing_ids.amend_id_to_use
+  inner join ftp_cvr_campaign_disclosure 
+    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id 
+    and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
+  inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
+  inner join ftp_filer_filings 
+    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id 
+    and contributions.filing_id = ftp_filer_filings.filing_id 
+    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id 
+    and contributions.amend_id = ftp_filer_filings.filing_sequence
+  left join filing_amends 
+    on contributions.filing_id = filing_amends.filing_id 
+    and contributions.amend_id = filing_amends.amend_id
+  left join cal_access_propositions_committees 
+    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id 
+    and ftp_filer_filings.session_id = cal_access_propositions_committees.session
+  left join cal_access_propositions 
+    on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id 
+    and cal_access_propositions.session = cal_access_propositions_committees.session
+  left join prop_filer_sessions 
+    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
+    and ftp_filer_filings.session_id = prop_filer_sessions.session_id
+-- where ftp_filer_filings.session_id = 2013
+;
 
-UPDATE contributions_temp
-  JOIN contributions_search_temp USING (id)
-  JOIN smry_propositions_temp ON (contributions_temp.Election = smry_propositions_temp.Election AND contributions_temp.Target = smry_propositions_temp.Target)
-  SET contributions_search_temp.PropositionID = smry_propositions_temp.PropositionID;
+-- late contributions
+insert into contributions_full_temp (
+    Form
+  , RecipientCommitteeType
+  , Schedule
+  , ElectionCycle
+  , ElectionCvr
+  , ElectionProp
+  , PrimaryGeneralIndicator
+  , FilingID
+  , AmendID
+  , LineItem
+  , MemoRefNo
+  , TransactionID
+  , TransactionDateStart
+  , TransactionDateEnd
+  , TransactionAmount
+  , FiledDate
+  , RecipientCommitteeNameNormalized
+  , HasCandidateName
+  , RecipientCandidateID
+  , RecipientCandidateNameNormalized
+  , RecipientCandidateOfficeCvrCode
+  , RecipientCandidateOfficeCvrSoughtOrHeld
+  , RecipientCandidateOfficeCvrCustom
+  , RecipientCandidateDistrict
+  , HasProposition
+  , Target
+  , `Position`
+  , DonorNameNormalized
+  , DonorCity
+  , DonorState
+  , DonorZipCode
+  , DonorEmployerNormalized
+  , DonorOccupationNormalized
+  , DonorOrganization
+  , DonorCommitteeEntity
+  , DonorCommitteeID
+  , RecipientCommitteeID
+  , RecipientCommitteeEntity
+  , OriginTable
+  , LateContributionCoveredByRegularFiling
+  )
+select
+    ftp_cvr_campaign_disclosure.form_type as Form
+  , ftp_cvr_campaign_disclosure.cmtte_type as RecipientCommitteeType
+  , contributions.form_type as Schedule
+  , ftp_filer_filings.session_id as ElectionCycle
+  , str_to_date(left(ftp_cvr_campaign_disclosure.elect_date,locate(' ',ftp_cvr_campaign_disclosure.elect_date)-1), '%m/%d/%Y') as ElectionCvr
+  , cal_access_propositions.election_date as ElectionProp
+  , '0' as PrimaryGeneralIndicator
+  , contributions.filing_id as FilingID
+  , contributions.amend_id as AmendID
+  , contributions.line_item
+  , contributions.memo_refno
+  , concat(contributions.filing_id, ' - ', contributions.tran_id) as TransactionID
+  , str_to_date(left(contributions.ctrib_date,locate(' ',contributions.ctrib_date)-1),'%m/%d/%Y') as TransactionDateStart
+  , str_to_date(left(contributions.ctrib_date,locate(' ',contributions.ctrib_date)-1),'%m/%d/%Y') as TransactionDateEnd
+  , contributions.amount as TransactionAmount
+  , str_to_date(ftp_filer_filings.filing_date,'%m/%d/%Y %h:%i:%s %p') as FiledDate
+  , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
+  , if(isnull(filing_amends.filing_id),'N','Y') as HasCandidateName
+  , ifnull(filing_amends.candidate_id,'') as RecipientCandidateID
+  , ifnull(filing_amends.display_name,'') as RecipientCandidateNameNormalized
+  , ftp_cvr_campaign_disclosure.office_cd as RecipientCandidateOfficeCvrCode
+  , ftp_cvr_campaign_disclosure.off_s_h_cd as RecipientCandidateOfficeCvrSoughtOrHeld
+  , ftp_cvr_campaign_disclosure.offic_dscr as RecipientCandidateOfficeCvrCustom
+  , ftp_cvr_campaign_disclosure.dist_no as RecipientCandidateDistrict
+  , if(isnull(cal_access_propositions_committees.filer_id),'N','Y') as HasProposition
+  , ifnull(cal_access_propositions.name,'') as Target
+  , ifnull(cal_access_propositions_committees.`position`,'') as `Position`
+  , if(contributions.enty_namf = '', contributions.enty_naml, concat(contributions.enty_naml, ', ', contributions.enty_namf)) as DonorNameNormalized
+  , contributions.enty_city as DonorCity
+  , contributions.enty_st as DonorState
+  , contributions.enty_zip4 as DonorZipCode
+  , contributions.ctrib_emp as DonorEmployerNormalized
+  , contributions.ctrib_occ as DonorOccupationNormalized
+  , if(contributions.entity_cd = 'IND', contributions.ctrib_emp, contributions.enty_naml) as DonorOrganization
+  , contributions.entity_cd as DonorCommitteeEntity
+  , contributions.cmte_id as DonorCommitteeID
+  , ftp_filer_filings.filer_id as RecipientCommitteeID
+  , ftp_cvr_campaign_disclosure.entity_cd as RecipientCommitteeEntity
+  , 's497' as OriginTable
+  , if(
+        (
+          ( 
+            str_to_date(ftp_filer_filings.rpt_end,'%m/%d/%Y') > filer_ids.max_rpt_end
+            AND str_to_date(contributions.ctrib_date, '%m/%d/%Y') > filer_ids.max_rpt_end
+            )
+          OR filer_ids.max_rpt_end is null
+          )
+      , 'N'
+      , 'Y'
+      ) as LateContributionCoveredByRegularFiling
+FROM 
+  ftp_s497 as contributions
+  inner join filing_ids -- include only the most recent filing
+    on contributions.filing_id = filing_ids.filing_id 
+    and contributions.amend_id = filing_ids.amend_id_to_use
+  inner join ftp_cvr_campaign_disclosure 
+    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id 
+    and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
+  inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
+  inner join ftp_filer_filings 
+    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id 
+    and contributions.filing_id = ftp_filer_filings.filing_id 
+    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id 
+    and contributions.amend_id = ftp_filer_filings.filing_sequence
+  left join filing_amends
+    on contributions.filing_id = filing_amends.filing_id 
+    and contributions.amend_id = filing_amends.amend_id
+  left join cal_access_propositions_committees 
+    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id 
+    and ftp_filer_filings.session_id = cal_access_propositions_committees.session
+  left join cal_access_propositions 
+    on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
+    and cal_access_propositions.session = cal_access_propositions_committees.session
+  left join prop_filer_sessions
+    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
+    and ftp_filer_filings.session_id = prop_filer_sessions.session_id
+  left join filer_ids on ftp_filer_filings.filer_id = filer_ids.filer_id
+-- where ftp_filer_filings.session_id = 2013
+;
 
-UPDATE contributions_temp
-  JOIN contributions_search_temp USING (id)
-  JOIN smry_committees_temp USING (RecipientCommitteeNameNormalized) 
-  SET contributions_search_temp.RecipientCommitteeID = smry_committees_temp.RecipientCommitteeID;
+-- unitemized monetary and non-monetary
+insert into contributions_full_temp (
+    Form
+  , RecipientCommitteeType
+  , Schedule
+  , ElectionCycle
+  , ElectionCvr
+  , ElectionProp
+  , PrimaryGeneralIndicator
+  , FilingID
+  , AmendID
+  , LineItem
+  , TransactionDateStart
+  , TransactionDateEnd
+  , TransactionAmount
+  , FiledDate
+  , RecipientCommitteeNameNormalized
+  , HasCandidateName
+  , RecipientCandidateID
+  , RecipientCandidateNameNormalized
+  , RecipientCandidateOfficeCvrCode
+  , RecipientCandidateOfficeCvrSoughtOrHeld
+  , RecipientCandidateOfficeCvrCustom
+  , RecipientCandidateDistrict
+  , HasProposition
+  , Target
+  , `Position`
+  , DonorNameNormalized
+  , RecipientCommitteeID
+  , RecipientCommitteeEntity
+  , Unitemized
+  , OriginTable
+  )
+select
+    ftp_cvr_campaign_disclosure.form_type as Form
+  , ftp_cvr_campaign_disclosure.cmtte_type as RecipientCommitteeType
+  , contributions.form_type as Schedule
+  , ftp_filer_filings.session_id as ElectionCycle
+  , str_to_date(left(ftp_cvr_campaign_disclosure.elect_date,locate(' ',ftp_cvr_campaign_disclosure.elect_date)-1), '%m/%d/%Y') as ElectionCvr
+  , cal_access_propositions.election_date as ElectionProp
+  , '0' as PrimaryGeneralIndicator
+  , contributions.filing_id as FilingID
+  , contributions.amend_id as AmendID
+  , contributions.line_item as LineItem
+  , str_to_date(left(ftp_filer_filings.rpt_start,locate(' ',ftp_filer_filings.rpt_start)-1),'%m/%d/%Y') as TransactionDateStart
+  , str_to_date(left(ftp_filer_filings.rpt_end,locate(' ',ftp_filer_filings.rpt_end)-1),'%m/%d/%Y') as TransactionDateEnd
+  , contributions.amount_a as TransactionAmount
+  , str_to_date(ftp_filer_filings.filing_date,'%m/%d/%Y %h:%i:%s %p') as FiledDate
+  , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
+  , if(isnull(filing_amends.filing_id),'N','Y') as HasCandidateName
+  , ifnull(filing_amends.candidate_id,'') as RecipientCandidateID
+  , ifnull(filing_amends.display_name,'') as RecipientCandidateNameNormalized
+  , ftp_cvr_campaign_disclosure.office_cd as RecipientCandidateOfficeCvrCode
+  , ftp_cvr_campaign_disclosure.off_s_h_cd as RecipientCandidateOfficeCvrSoughtOrHeld
+  , ftp_cvr_campaign_disclosure.offic_dscr as RecipientCandidateOfficeCvrCustom
+  , ftp_cvr_campaign_disclosure.dist_no as RecipientCandidateDistrict
+  , if(isnull(cal_access_propositions_committees.filer_id),'N','Y') as HasProposition
+  , ifnull(cal_access_propositions.name,'') as Target
+  , ifnull(cal_access_propositions_committees.`position`,'') as `Position`
+  , 'Unitemized Contributions' as DonorNameNormalized
+  , ftp_filer_filings.filer_id as RecipientCommitteeID
+  , ftp_cvr_campaign_disclosure.entity_cd as RecipientCommitteeEntity
+  , 'Y' as Unitemized
+  , 'smry' as OriginTable
+from
+  ftp_smry as contributions
+  inner join filing_ids -- include only the most recent filing
+    on contributions.filing_id = filing_ids.filing_id 
+    and contributions.amend_id = filing_ids.amend_id_to_use
+  inner join ftp_cvr_campaign_disclosure
+    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id 
+    and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
+  inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
+  inner join ftp_filer_filings
+    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id 
+    and contributions.filing_id = ftp_filer_filings.filing_id 
+    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id 
+    and contributions.amend_id = ftp_filer_filings.filing_sequence
+  left join filing_amends
+    on contributions.filing_id = filing_amends.filing_id 
+    and contributions.amend_id = filing_amends.amend_id
+  left join cal_access_propositions_committees
+    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id 
+    and ftp_filer_filings.session_id = cal_access_propositions_committees.session
+  left join cal_access_propositions
+    on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
+    and cal_access_propositions.session = cal_access_propositions_committees.session
+  left join prop_filer_sessions
+    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
+    and ftp_filer_filings.session_id = prop_filer_sessions.session_id
+where
+  contributions.form_type in ('A','C') 
+  and contributions.line_item = 2
+;
 
-UPDATE contributions_temp
-  JOIN contributions_search_temp USING (id)
-  JOIN smry_offices_temp USING (RecipientCandidateOffice)
-  SET contributions_search_temp.RecipientCandidateOfficeID = smry_offices_temp.RecipientCandidateOfficeID;
+-- calculations for unitemized loans
+update 
+  filing_ids a
+  join (
+    /*  Grouping by Target also, since contribution records are duplicated
+        by Target. The join below ignores Target, which is fine, since every 
+        Target for a particular filing should have the same records.    */
+    select FilingID, AmendID, Target, sum(TransactionAmount) 'Amount'
+    from contributions_full_temp
+    where 
+      Form = 'F460' 
+      and Schedule = 'B1'
+    group by FilingID, AmendID, Target
+    ) b 
+      on a.filing_id = b.FilingID
+      and a.amend_id_to_use = b.AmendID
+set a.loan_total_from_itemized = b.Amount
+;
+update 
+  filing_ids a
+  join ftp_smry b 
+    on a.filing_id = b.filing_id
+    and a.amend_id_to_use = b.amend_id
+set a.loan_total_from_summary = b.amount_a
+where
+  b.form_type = 'B1'
+  and b.line_item = '1'
+;
 
-UPDATE contributions_temp
-  JOIN contributions_search_temp USING (id)
-  JOIN smry_candidates_temp USING (RecipientCandidateNameNormalized)
-  SET contributions_search_temp.RecipientCandidateNameID = smry_candidates_temp.RecipientCandidateNameID;
+-- unitemized loans
+insert into contributions_full_temp (
+    Form
+  , RecipientCommitteeType
+  , Schedule
+  , ElectionCycle
+  , ElectionCvr
+  , ElectionProp
+  , PrimaryGeneralIndicator
+  , FilingID
+  , AmendID
+  , LineItem
+  , TransactionDateStart
+  , TransactionDateEnd
+  , TransactionAmount
+  , FiledDate
+  , RecipientCommitteeNameNormalized
+  , HasCandidateName
+  , RecipientCandidateID
+  , RecipientCandidateNameNormalized
+  , RecipientCandidateOfficeCvrCode
+  , RecipientCandidateOfficeCvrSoughtOrHeld
+  , RecipientCandidateOfficeCvrCustom
+  , RecipientCandidateDistrict
+  , HasProposition
+  , Target
+  , `Position`
+  , DonorNameNormalized
+  , RecipientCommitteeID
+  , RecipientCommitteeEntity
+  , Unitemized
+  , OriginTable
+  )
+select
+    ftp_cvr_campaign_disclosure.form_type as Form
+  , ftp_cvr_campaign_disclosure.cmtte_type as RecipientCommitteeType
+  , contributions.form_type as Schedule
+  , ftp_filer_filings.session_id as ElectionCycle
+  , str_to_date(left(ftp_cvr_campaign_disclosure.elect_date,locate(' ',ftp_cvr_campaign_disclosure.elect_date)-1), '%m/%d/%Y') as ElectionCvr
+  , cal_access_propositions.election_date as ElectionProp
+  , '0' as PrimaryGeneralIndicator
+  , contributions.filing_id as FilingID
+  , contributions.amend_id as AmendID
+  , contributions.line_item as LineItem
+  , str_to_date(left(ftp_filer_filings.rpt_start,locate(' ',ftp_filer_filings.rpt_start)-1),'%m/%d/%Y') as TransactionDateStart
+  , str_to_date(left(ftp_filer_filings.rpt_end,locate(' ',ftp_filer_filings.rpt_end)-1),'%m/%d/%Y') as TransactionDateEnd
+  , round(ifnull(filing_ids.loan_total_from_summary,0) - ifnull(filing_ids.loan_total_from_itemized,0),2) as TransactionAmount
+  , str_to_date(ftp_filer_filings.filing_date,'%m/%d/%Y %h:%i:%s %p') as FiledDate
+  , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
+  , if(isnull(filing_amends.filing_id),'N','Y') as HasCandidateName
+  , ifnull(filing_amends.candidate_id,'') as RecipientCandidateID
+  , ifnull(filing_amends.display_name,'') as RecipientCandidateNameNormalized
+  , ftp_cvr_campaign_disclosure.office_cd as RecipientCandidateOfficeCvrCode
+  , ftp_cvr_campaign_disclosure.off_s_h_cd as RecipientCandidateOfficeCvrSoughtOrHeld
+  , ftp_cvr_campaign_disclosure.offic_dscr as RecipientCandidateOfficeCvrCustom
+  , ftp_cvr_campaign_disclosure.dist_no as RecipientCandidateDistrict
+  , if(isnull(cal_access_propositions_committees.filer_id),'N','Y') as HasProposition
+  , ifnull(cal_access_propositions.name,'') as Target
+  , ifnull(cal_access_propositions_committees.`position`,'') as `Position`
+  , 'Unitemized Loans' as DonorNameNormalized
+  , ftp_filer_filings.filer_id as RecipientCommitteeID
+  , ftp_cvr_campaign_disclosure.entity_cd as RecipientCommitteeEntity
+  , 'Y' as Unitemized
+  , 'smry' as OriginTable
+from
+  ftp_smry as contributions
+  inner join filing_ids -- include only the most recent filing
+    on contributions.filing_id = filing_ids.filing_id 
+    and contributions.amend_id = filing_ids.amend_id_to_use
+  inner join ftp_cvr_campaign_disclosure
+    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id 
+    and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
+  inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
+  inner join ftp_filer_filings
+    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id 
+    and contributions.filing_id = ftp_filer_filings.filing_id 
+    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id 
+    and contributions.amend_id = ftp_filer_filings.filing_sequence
+  left join filing_amends
+    on contributions.filing_id = filing_amends.filing_id 
+    and contributions.amend_id = filing_amends.amend_id
+  left join cal_access_propositions_committees
+    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id 
+    and ftp_filer_filings.session_id = cal_access_propositions_committees.session
+  left join cal_access_propositions
+    on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
+    and cal_access_propositions.session = cal_access_propositions_committees.session
+  left join prop_filer_sessions
+    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
+    and ftp_filer_filings.session_id = prop_filer_sessions.session_id
+where
+  contributions.form_type = 'B1' 
+  and contributions.line_item = 1
+  and round(ifnull(filing_ids.loan_total_from_summary,0)) - round(ifnull(filing_ids.loan_total_from_itemized,0)) > 0
+  and ifnull(filing_ids.loan_total_from_summary,0) <> 0
+;
+  
+-- add F501 candidate office fields 
+update 
+  contributions_full_temp a
+  join candidate_sessions b
+    on a.RecipientCandidateID = b.candidate_id
+    and a.ElectionCycle = b.session
+set
+    a.RecipientCandidateOffice501Code = b.office_501_code
+  , a.RecipientCandidateOffice501Custom = b.office_501_custom
+;
+
+-- flag bad election cycles
+set @CurrentYear = year(current_date);
+update contributions_full_temp
+set BadElectionCycle = 'Y'
+where 
+  ElectionCycle < 2000
+  or ElectionCycle > @CurrentYear + 10
+;
+
+-- set labels and others
+update contributions_full_temp
+set
+  /*
+  -- add committee type labels
+    RecipientCommitteeTypeDescription = case
+      when RecipientCommitteeType = 'C' then 'Officeholder, Candidate Controlled Committee'
+      when RecipientCommitteeType = 'G' then 'General Purpose Committee'
+      when RecipientCommitteeType = 'B' then 'Primarily Formed Ballot Measure Committee'
+      when RecipientCommitteeType = 'P' then 'Primarily Formed Candidate/Officeholder Committee'
+      when RecipientCommitteeType = '' then 'Unknown'
+      end
+  */
+  -- add transaction type labels
+    TransactionType = CASE
+      WHEN Form = 'F460' AND Schedule = 'A' THEN 'Monetary Contribution'
+      WHEN Form = 'F460' AND Schedule = 'C' THEN 'Non-Monetary Contribution'
+      WHEN Form = 'F460' AND Schedule = 'B1' THEN 'Loan'
+      WHEN Form = 'F497' THEN 'Late Contribution'
+      ELSE 'Other'
+      END
+  -- save original committee types before attempting to correct errors
+  , RecipientCommitteeTypeOriginal = RecipientCommitteeType
+  -- save original candidate name before erasing it for ballot measure contributions
+  , RecipientCandidateNameNormalizedOriginal = RecipientCandidateNameNormalized
+  -- for propositions, use election date of prop, for others, use election date entered on filing
+  , Election = ifnull(ElectionProp,ElectionCvr)
+;
+
+-- add candidate office labels
+update
+  contributions_full_temp a
+  join california_data_office_codes b on a.RecipientCandidateOffice501Code = b.office_cd_501
+set a.RecipientCandidateOffice = b.description
+where 
+  a.RecipientCandidateOffice = ''
+  and b.office_cd_cvr <> 'OTH'
+;
+update contributions_full_temp
+set RecipientCandidateOffice = RecipientCandidateOffice501Custom
+where 
+  RecipientCandidateOffice = ''
+  and RecipientCandidateOffice501Custom <> ''
+;
+update
+  contributions_full_temp a
+  join california_data_office_codes b on a.RecipientCandidateOfficeCvrCode = b.office_cd_cvr
+set a.RecipientCandidateOffice = b.description
+where 
+  a.RecipientCandidateOffice = ''
+  and a.RecipientCandidateOfficeCvrCode <> 'OTH'
+  and (
+    a.RecipientCandidateOfficeCvrSoughtOrHeld <> 'H'
+    or a.RecipientCommitteeNameNormalized like '%reelect%'
+    or a.RecipientCommitteeNameNormalized like '%re_elect%'
+    or a.RecipientCommitteeNameNormalized like '%retain%'
+    )
+;
+update contributions_full_temp
+set RecipientCandidateOffice = RecipientCandidateOfficeCvrCustom
+where
+  RecipientCandidateOffice = ''
+  and RecipientCandidateOfficeCvrCustom <> ''
+  and (
+    RecipientCandidateOfficeCvrSoughtOrHeld <> 'H'
+    or RecipientCommitteeNameNormalized like '%reelect%'
+    or RecipientCommitteeNameNormalized like '%re_elect%'
+    or RecipientCommitteeNameNormalized like '%retain%'
+    )
+;
+
+-- stardardize custom offices
+update 
+  contributions_full_temp a
+  left join california_data_office_codes b on a.RecipientCandidateOfficeCvrCode = b.office_cd_cvr
+  left join california_data_office_codes c on a.RecipientCandidateOffice501Code = c.office_cd_501
+set a.RecipientCandidateOffice = case
+  when a.RecipientCandidateOffice like '%office held%' then ''
+  when a.RecipientCandidateOffice like '%Govern_r%' and a.RecipientCandidateOffice not like '%Lieuten_nt%' then 'Governor' 
+  when a.RecipientCandidateOffice like '%Lieuten_nt%Govern_r%' then 'Lieutenant Governor' 
+  when a.RecipientCandidateOffice like '%Secretary%' then 'Secretary of State' 
+  when a.RecipientCandidateOffice like '%state%Controll_r%' then 'State Controller' 
+  when a.RecipientCandidateOffice like '%Attorn%y gen%' then 'Attorney General' 
+  when a.RecipientCandidateOffice like '%state%Treasur_r%' then 'State Treasurer' 
+  when a.RecipientCandidateOffice like '%Insur_nce Com%' then 'Insurance Commissioner' 
+  when a.RecipientCandidateOffice like '%Superintend_nt%' then 'Superintendent of Public Instruction' 
+  when a.RecipientCandidateOffice like '%supreme court%' or a.RecipientCandidateOffice like '%supreme%justice%' then 'Supreme Court Justice' 
+  when a.RecipientCandidateOffice like '%Senate%' or a.RecipientCandidateOffice like '%Senat_r%' then 'State Senate' 
+  when a.RecipientCandidateOffice like '%Assem%b%y%' or a.RecipientCandidateOffice like '%ASM%' then 'State Assembly' 
+  when a.RecipientCandidateOffice like '%board of eq%' or a.RecipientCandidateOffice like '%boe%' then 'Board of Equalization' 
+  when a.RecipientCandidateOffice like '%public%emp%ret%sys%' or a.RecipientCandidateOffice like 'pers%' or a.RecipientCandidateOffice like '%calpers%' then 'Public Employees Retirement System' 
+  when a.RecipientCandidateOffice like '%appel%te%court%' or a.RecipientCandidateOffice like '%appel%te%justice%' then 'State Appellate Court Justice' 
+  when a.RecipientCandidateOffice like '%asses%r%' then 'Assessor' 
+  when a.RecipientCandidateOffice like '%board of ed%' then 'Board of Education' 
+  when a.RecipientCandidateOffice like '%board of super%' or a.RecipientCandidateOffice like '%supervis_r%' then 'Board of Supervisors' 
+  when a.RecipientCandidateOffice like '%city atto%rn%y%' then 'City Attorney' 
+  when a.RecipientCandidateOffice like '%com%college%' then 'Community College Board' 
+  when a.RecipientCandidateOffice like '%city%council%' or a.RecipientCandidateOffice like '%council%mem%' then 'City Council Member' 
+  when a.RecipientCandidateOffice like '%county coun__l%' then 'County Counsel' 
+  when a.RecipientCandidateOffice like '%county supervis_r%' then 'County Supervisor' 
+  when a.RecipientCandidateOffice like '%local%cont%' then 'Local Controller' 
+  when a.RecipientCandidateOffice like '%dist% atto%rn%y%' then 'District Attorney' 
+  when a.RecipientCandidateOffice like '%mayor%' then 'Mayor' 
+  when a.RecipientCandidateOffice like '%public%def%' then 'Public Defender' 
+  when a.RecipientCandidateOffice like '%planning%com%' then 'Planning Commissioner' 
+  when a.RecipientCandidateOffice like '%sher%iff%' then 'Sheriff-Coroner' 
+  when a.RecipientCandidateOffice like '%superior court%' or a.RecipientCandidateOffice like '%judge%' then 'Superior Court Judge' 
+  when a.RecipientCandidateOffice like '%Treasur_r%' and a.RecipientCandidateOffice not like '%state Treasur_r%' then 'Local Treasurer'
+  else ''
+  end
+where 
+  a.RecipientCandidateOffice <> ''
+  and ifnull(c.office_cd_cvr,'') in ('','OTH') 
+  and ifnull(b.office_cd_cvr,'') in ('','OTH') 
+;
+
+-- standardize office across all contributions for a particular candidate/cycle
+drop table if exists candidate_cycle_temp;
+create table candidate_cycle_temp (
+    RecipientCandidateID bigint(20) not null
+  , ElectionCycle smallint(6) not null
+  , RecipientCandidateOffice varchar(50) not null
+  , Amount float not null
+  , Contributions int not null
+  , Min501Code varchar(5) not null
+  , id bigint not null primary key auto_increment
+);
+insert candidate_cycle_temp (
+    RecipientCandidateID
+  , ElectionCycle
+  , RecipientCandidateOffice
+  , Amount
+  , Contributions
+  , Min501Code
+  )
+select
+    RecipientCandidateID
+  , ElectionCycle
+  , RecipientCandidateOffice
+  , sum(TransactionAmount) 'Amount'
+  , count(*) 'Contributions'
+  , min(RecipientCandidateOffice501Code) 'Min501Code'
+from contributions_full_temp
+where 
+  RecipientCandidateID > 0
+  and ElectionCycle > 0
+  and RecipientCandidateOffice <> ''
+group by 
+    RecipientCandidateID
+  , ElectionCycle
+  , RecipientCandidateOffice
+order by 
+    RecipientCandidateID
+  , ElectionCycle
+  , Amount desc
+  , Contributions desc
+  , Min501Code
+  , RecipientCandidateOffice
+;
+delete a
+from
+  candidate_cycle_temp a
+  left join (
+    select
+        RecipientCandidateID
+      , ElectionCycle
+      , min(id) as id
+    from candidate_cycle_temp
+    group by
+        RecipientCandidateID
+      , ElectionCycle
+    ) b using (RecipientCandidateID, ElectionCycle, id)
+where b.RecipientCandidateID is null
+;
+alter table candidate_cycle_temp
+add unique key (RecipientCandidateID, ElectionCycle)
+;
+update 
+  contributions_full_temp a
+  join candidate_cycle_temp b using (RecipientCandidateID, ElectionCycle)
+set a.RecipientCandidateOffice = b.RecipientCandidateOffice
+;
+drop table if exists candidate_cycle_temp;
+
+-- identify committees with inconsistent committee types
+drop table if exists tmp_committees_with_multiple_types;
+create table tmp_committees_with_multiple_types
+select 
+    RecipientCommitteeID -- , RecipientCommitteeNameNormalized
+  , group_concat(distinct RecipientCommitteeType order by RecipientCommitteeType separator ', ') 'RecipientCommitteeTypes'
+  , group_concat(distinct ElectionCycle order by ElectionCycle separator ', ') 'ElectionCycles'
+  , sum(TransactionAmount) 'Amount'
+from contributions_full_temp
+group by RecipientCommitteeID -- , RecipientCommitteeNameNormalized
+having 
+  RecipientCommitteeTypes like '%,%'
+;
+alter table tmp_committees_with_multiple_types
+  add column BiggestNonBlankType char(1) not null default ''
+, add primary key (RecipientCommitteeID -- , RecipientCommitteeNameNormalized
+      )
+-- , add key (RecipientCommitteeNameNormalized)
+;
+drop table if exists tmp_committee_types_with_multiple_types;
+create table tmp_committee_types_with_multiple_types
+select 
+    a.RecipientCommitteeID
+  -- , a.RecipientCommitteeNameNormalized
+  , b.Amount 'TotalAmount'
+  , a.RecipientCommitteeType
+  , group_concat(distinct a.ElectionCycle order by a.ElectionCycle separator ', ') 'ElectionCycles'
+  , sum(a.TransactionAmount) 'Amount'
+from 
+  contributions_full_temp a
+  join tmp_committees_with_multiple_types b using (RecipientCommitteeID -- , RecipientCommitteeNameNormalized
+    )
+group by
+    a.RecipientCommitteeID
+  -- , a.RecipientCommitteeNameNormalized
+  , b.Amount
+  , a.RecipientCommitteeType
+;
+alter table tmp_committee_types_with_multiple_types
+  add primary key (RecipientCommitteeID -- , RecipientCommitteeNameNormalized
+    , RecipientCommitteeType)
+;
+update tmp_committees_with_multiple_types a
+set a.BiggestNonBlankType = (
+  select b.RecipientCommitteeType
+  from tmp_committee_types_with_multiple_types b
+  where 
+    a.RecipientCommitteeID = b.RecipientCommitteeID
+    -- and a.RecipientCommitteeNameNormalized = b.RecipientCommitteeNameNormalized
+    and b.RecipientCommitteeType <> ''
+  order by b.Amount desc, b.RecipientCommitteeType
+  limit 1
+  )
+;
+
+-- For blank-C/B/P/Gs, change blanks to C/B/P/Gs
+update
+  contributions_full_temp a
+  join tmp_committees_with_multiple_types b using (
+      RecipientCommitteeID
+    -- , RecipientCommitteeNameNormalized
+    )
+set a.RecipientCommitteeType = b.BiggestNonBlankType
+where a.RecipientCommitteeType = ''
+;
+
+-- update temp table
+update tmp_committees_with_multiple_types
+set RecipientCommitteeTypes = mid(RecipientCommitteeTypes,3,99)
+where left(RecipientCommitteeTypes,2) = ', '
+;
+delete from tmp_committees_with_multiple_types
+where RecipientCommitteeTypes not like '%,%'
+;
+
+-- standardize remaining conflicting committee types
+update
+  contributions_full_temp a
+  join tmp_committees_with_multiple_types b using (RecipientCommitteeID)
+set a.RecipientCommitteeType = case
+  -- For C-Bs, if it's ever been a B, change Cs to Bs. Also change anything else to B.
+  when b.RecipientCommitteeTypes like '%B%C%' then 'B' 
+  -- For C-Gs, if it's ever been a G, change Cs to Gs. But don't change Ps to Gs.
+  when (b.RecipientCommitteeTypes like '%C%G%' and a.RecipientCommitteeType = 'C') then 'G' 
+  -- For C-Ps, change the type to the one with the highest contribution amount.
+  when b.RecipientCommitteeTypes = 'C, P' then b.BiggestNonBlankType 
+  -- Committees can change between Gs and Ps, so having both could be legit.
+  when b.RecipientCommitteeTypes = 'G, P' then a.RecipientCommitteeType 
+  else a.RecipientCommitteeType
+  end
+;
+
+drop table if exists tmp_committees_with_multiple_types;
+drop table if exists tmp_committee_types_with_multiple_types;
+
+-- flag ballot measure committees
+update contributions_full_temp
+set BallotMeasureCommittee = 'Y'
+where
+  RecipientCommitteeNameNormalized like '%ballot%'
+  or RecipientCommitteeType = 'B'
+;
+
+-- flag officeholder committees
+update contributions_full_temp
+set OfficeHolderCommittee = 'Y'
+where
+  RecipientCommitteeNameNormalized like '%office%holder%'
+  or RecipientCommitteeNameNormalized like '% oh com%'
+  or RecipientCommitteeNameNormalized like '% oh account%'
+;
+
+-- flag legal defense committees
+update contributions_full_temp
+set LegalDefenseCommittee = 'Y'
+where
+  RecipientCommitteeNameNormalized like '%legal def%'
+;
+
+-- Leave blank the 'Office' and 'Recipient Name' columns for Ballot Measure committees, otherwise it misleadingly implies that a Ballot Measure Committee has a Recipient Candidate, which is not the case.
+update contributions_full_temp
+set
+    RecipientCandidateNameNormalized = ''
+  , RecipientCandidateOffice = ''
+-- where BallotMeasureContribution = 'Y'
+where HasProposition = 'Y'
+;
+
+-- flag state offices based on office field
+update contributions_full_temp
+set StateOffice = 'Y'
+where 
+  HasProposition = 'N'
+  and (
+       RecipientCandidateOffice like '%Assembl%y%' 
+    or RecipientCandidateOffice like '%Senate%'
+    or RecipientCandidateOffice like '%Govern_r%'
+    or RecipientCandidateOffice like '%Controll_r%'
+    or (
+      RecipientCandidateOffice like '%Treasur_r%'
+      and RecipientCandidateOffice not like '%local Treasur_r%'
+      )
+    or RecipientCandidateOffice like '%Insur_nce Com%'
+    or RecipientCandidateOffice like '%Lieuten_nt%'
+    or RecipientCandidateOffice like '%Secretary%'
+    or RecipientCandidateOffice like '%Superintend%nt%' 
+    or RecipientCandidateOffice like '%Attorney gen%'
+    or RecipientCandidateOffice like '%board of eq%' 
+    or RecipientCandidateOffice like '%boe%'
+    )
+;
+
+-- flag local offices based on office field
+update contributions_full_temp
+set LocalOffice = 'Y'
+where
+  HasProposition = 'N'
+  and (
+       RecipientCandidateOffice like '%mayor%'
+    or RecipientCandidateOffice like '%judge%'
+    or RecipientCandidateOffice like '%supervis_r%'
+    or RecipientCandidateOffice like '%city council%'
+    or RecipientCandidateOffice like '%superior court%'
+    or RecipientCandidateOffice like '%asses%r%'
+    or RecipientCandidateOffice like '%board of education%'
+    or RecipientCandidateOffice like '%college board%'
+    or RecipientCandidateOffice like '%school board%'
+    or RecipientCandidateOffice like '%sher%iff%'
+    or RecipientCandidateOffice like '%local treasur_r%'
+    or RecipientCandidateOffice like '%city attorn%y%'
+    or RecipientCandidateOffice like '%district attorn%y%'
+    )
+;
+
+-- flag state offices based on committee name (if no state or local flag has been set yet)
+update contributions_full_temp
+set StateOffice = 'Y'
+where 
+  HasProposition = 'N'
+  and StateOffice = 'N'
+  and LocalOffice = 'N'
+  and (
+    RecipientCommitteeNameNormalized like '%Assembl%y%' 
+    or RecipientCommitteeNameNormalized like '%Senate%'
+    or RecipientCommitteeNameNormalized like '%Govern_r%'
+    or RecipientCommitteeNameNormalized like '%Controll_r%'
+    or (
+      RecipientCommitteeNameNormalized like '%Treasur_r%'
+      and RecipientCommitteeNameNormalized not like '%local Treasur_r%'
+      )
+    or RecipientCommitteeNameNormalized like '%Insur_nce Com%'
+    or RecipientCommitteeNameNormalized like '%Lieuten_nt%'
+    or RecipientCommitteeNameNormalized like '%Secretary%'
+    or RecipientCommitteeNameNormalized like '%Superintend_nt%' 
+    or RecipientCommitteeNameNormalized like '%Attorn%y gen%'
+    or RecipientCommitteeNameNormalized like '%board of eq%' 
+    or RecipientCommitteeNameNormalized like '%boe%'
+    )
+;
+
+-- flag local offices based on committee name (if no state or local flag has been set yet)
+update contributions_full_temp
+set LocalOffice = 'Y'
+where
+  HasProposition = 'N'
+  and StateOffice = 'N'
+  and LocalOffice = 'N'
+  and (
+    RecipientCommitteeNameNormalized like '%mayor%'
+    or RecipientCommitteeNameNormalized like '%judge%'
+    or RecipientCommitteeNameNormalized like '%supervis_r%'
+    or RecipientCommitteeNameNormalized like '%city council%'
+    or RecipientCommitteeNameNormalized like '%superior court%'
+    or RecipientCommitteeNameNormalized like '%asses%r%'
+    or RecipientCommitteeNameNormalized like '%board of education%'
+    or RecipientCommitteeNameNormalized like '%college board%'
+    or RecipientCommitteeNameNormalized like '%school board%'
+    or RecipientCommitteeNameNormalized like '%sher%iff%'
+    or RecipientCommitteeNameNormalized like '%local treasur_r%'
+    or RecipientCommitteeNameNormalized like '%city attorn%y%'
+    or RecipientCommitteeNameNormalized like '%district attorn%y%'
+    )
+;
+
+-- flag non-candidate-controlled committees
+-- non-candidate-controlled = committee types P and G (and B, which is a particular type of P or G)
+update contributions_full_temp
+set CandidateControlledCommittee = 'N' 
+where RecipientCommitteeType in ('P','G','B')
+;
+
+-- flag non-election committees
+-- non-candidate-election = legal defense, officeholder, and ballot measure
+update contributions_full_temp
+set CandidateElectionCommittee = 'N' 
+where
+  LegalDefenseCommittee = 'Y'
+  or OfficeHolderCommittee = 'Y'
+  or BallotMeasureCommittee = 'Y'
+;
+
+-- flag schedules to not include
+update contributions_full_temp
+set IncludedSchedule = 'N'
+where
+  not (
+    OriginTable = 'rcpt' 
+    and Form = 'F460' 
+    and Schedule in ('A','A-1','C')
+    -- and Schedule not in ('I')
+    )
+  and not (
+    OriginTable = 'loan' 
+    and Form = 'F460' 
+    and Schedule = 'B1'
+    )
+  and not (
+    OriginTable = 's497' 
+    and Form = 'F497'
+    and Schedule = 'F497P1' 
+    )
+  and not (
+    OriginTable = 'smry' 
+    and Form = 'F460'
+    and Schedule in ('A','B1','C') 
+    )
+;
+
+-- flag forgiven loans
+update 
+  contributions_full_temp a
+  join ftp_text_memo b
+    on a.FilingID = b.filing_id
+    and a.AmendID = b.amend_id
+    and a.Schedule = b.form_type
+    and a.MemoRefNo = b.ref_no
+set a.ForgivenLoan = 'Y'
+where
+  a.Schedule in ('A','F497P1')
+  and a.Unitemized = 'N'
+  and (
+       b.text4000 like '%forg_v%loan%'
+    or b.text4000 like '%loan%forg_v%'
+    )
+;
+
+-- flag loans with $0 amount (and an outstanding balance > $0 at the beginning of this period)
+update contributions_full_temp
+set NoNewLoanAmount = 'Y'
+where
+  OriginTable = 'loan' 
+  and Form = 'F460' 
+  and Schedule = 'B1'
+  and TransactionAmount = 0
+  and LoanPreExistingBalance > 0
+;  
+
+-- flag candidate contributions
+update contributions_full_temp
+set CandidateContribution = 'Y'
+where
+  IncludedSchedule = 'Y'
+  and HasCandidateName = 'Y'
+  and HasProposition = 'N'
+  and CandidateControlledCommittee = 'Y'
+  and CandidateElectionCommittee = 'Y'
+  and RecipientCommitteeEntity not in ('BMC', 'MDI', 'SMO')
+  and (RecipientCommitteeEntity in ('CAO', 'CTL') or RecipientCandidateNameNormalized <> '')
+;  
+
+-- flag ballot measure contributions
+update contributions_full_temp
+set BallotMeasureContribution = 'Y'
+where 
+  IncludedSchedule = 'Y'
+  and HasProposition = 'Y'
+;
+
+-- flag allied committees
+drop table if exists tmp_prop_committees;
+create table tmp_prop_committees
+select distinct RecipientCommitteeID, ElectionCycle, Election, Target, `Position`
+from contributions_full_temp
+where BallotMeasureContribution = 'Y'
+;
+alter table tmp_prop_committees
+add primary key (RecipientCommitteeID, ElectionCycle, Election, Target, `Position`)
+;
+update
+  contributions_full_temp a 
+  join tmp_prop_committees b
+    on a.DonorCommitteeID = b.RecipientCommitteeID 
+    and a.ElectionCycle = b.ElectionCycle
+    and a.Election = b.Election
+    and a.Target = b.Target
+    and a.`Position` = b.`Position`
+set a.AlliedCommittee = 'Y'
+where a.BallotMeasureContribution = 'Y'
+;
+drop table if exists tmp_prop_committees;
+
+drop table if exists contributions_full;
+rename table contributions_full_temp to contributions_full;
+
+-- populate contributions table
+drop table if exists contributions_temp;
+create table contributions_temp like contributions;
+insert contributions_temp (
+    TransactionType
+  , ElectionCycle
+  , Election
+  , TransactionDateStart
+  , TransactionDateEnd
+  , TransactionAmount
+  , RecipientCommitteeNameNormalized
+  , RecipientCandidateNameNormalized
+  , RecipientCandidateOffice
+  , RecipientCandidateDistrict
+  , Target
+  , `Position`
+  , DonorNameNormalized
+  , DonorCity
+  , DonorState
+  , DonorZipCode
+  , DonorEmployerNormalized
+  , DonorOccupationNormalized
+  , DonorOrganization
+  , Unitemized
+  , AlliedCommittee
+  , CandidateContribution
+  , BallotMeasureContribution
+  , id
+)
+select
+    TransactionType
+  , ElectionCycle
+  , Election
+  , TransactionDateStart
+  , TransactionDateEnd
+  , TransactionAmount
+  , RecipientCommitteeNameNormalized
+  , RecipientCandidateNameNormalized
+  , RecipientCandidateOffice
+  , RecipientCandidateDistrict
+  , Target
+  , `Position`
+  , DonorNameNormalized
+  , DonorCity
+  , DonorState
+  , DonorZipCode
+  , DonorEmployerNormalized
+  , DonorOccupationNormalized
+  , DonorOrganization
+  , Unitemized
+  , AlliedCommittee
+  , CandidateContribution
+  , BallotMeasureContribution
+  , id
+from contributions_full
+where
+  IncludedSchedule = 'Y'
+  and ForgivenLoan = 'N'
+  and NoNewLoanAmount = 'N'
+  and BadElectionCycle = 'N'
+  and LateContributionCoveredByRegularFiling = 'N'
+  and (StateOffice = 'Y' or LocalOffice = 'N')
+  and not (Unitemized = 'Y' and TransactionAmount = 0)
+;
+
+-- drop table if exists contributions;
+-- rename table contributions_temp to contributions;
 
