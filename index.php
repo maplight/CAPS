@@ -74,7 +74,8 @@
 <div id="wrapper">
   <div id="container">
     <div id="qs_page">
-      <form method="post">
+      <form action="advanced.php" method="post">
+      <input type="hidden" name=
  
         <div id="qs_title">    
           <h1 class="caps_title3">CAL-ACCESS Power Search</h1>
@@ -89,13 +90,24 @@
           <img src="images/qs_candidate.jpg" width=50 class="qs_img">
           <div id=qs_box>
             <div class="qs_title2">Candidates</div>
-How much has
-<input type=text>
-<select><option>Somebody</option></select>
-received?
-<input type="submit" value="Search Candidates">
+              How much has <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1"> recieved?<br>
+              <select id="candidate_list" name="candidate_list" class="qs_select1">
+<?php
+  fill_candidate_names ("");
+?>
+              </select><br>
+              
+
+  if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "search") {$checked = "checked";}}  
+  echo "<input type=\"radio\" id=\"search_cands\" name=\"cand_select\" value=\"search\" class=\"caps_radio3\" {$checked}>";
+  $text = "Search candidates";
+  if (isset ($_POST["search_candidates"])) {$text = $_POST["search_candidates"];}
+  echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"filter_candidates_list();\">";
+?>
+              <input type="hidden" name="cand_select" value="search">
+              <input type="submit" name="qs_button" value="Search Candidates" id="qs_btn1">
           </div> <!-- #qs_box -->
-<hr class="caps_hr1">
+          <hr class="caps_hr1">
 
 <img src="images/qs_ballot.jpg" width=50 class="qs_img">
           <div id=qs_box>

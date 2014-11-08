@@ -581,6 +581,41 @@ body{
   color:#000;
 }
 
+.qs_text1{
+  width:190px;
+  padding:0px;
+  border:2px solid #ccc;
+  font:15px Arial, Helvetica, sans-serif;
+  color:#898989;
+  border-radius:0;
+}
+
+.qs_select1{
+  width:194px;
+  margin-left:102px;
+  margin-bottom:8px;
+  padding:0px;
+  border:2px solid #ccc;
+  font:15px Arial, Helvetica, sans-serif;
+  color:#898989;
+  border-radius:0;
+}
+
+#qs_btn1{
+  background:#e6ecf0;
+  color:#124161;
+  border:2px solid #124161;
+  font:bold 15px Arial, Helvetica, sans-serif;
+  margin:2px 0 24px;
+  padding:4px 8px 4px 8px;
+}
+
+#qs_btn1:hover{
+  color:#fff;
+  background:#124161;
+}
+
+
 @media only screen and (max-width:700px){
   #sidebar{
     width:100%;
