@@ -49,7 +49,8 @@ create table candidate_ids (
 );
 
 drop table if exists ftp_f501_502_cleaned;
-create table ftp_f501_502_cleaned (
+drop table if exists f501_502_cleaned;
+create table f501_502_cleaned (
     filing_id bigint not null
   , amend_id int not null
   , form_type varchar(4) not null
