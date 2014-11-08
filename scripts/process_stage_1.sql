@@ -79,22 +79,111 @@ from
 group by ftp_cvr_campaign_disclosure.filer_id
 ;
 
+truncate table f501_502_cleaned;
+insert f501_502_cleaned (
+    filing_id
+  , amend_id
+  , form_type
+  , filer_id
+  , yr_of_elec
+  , session
+  , rpt_date
+  , office_cd
+  , offic_dscr
+  , cand_namf
+  , cand_naml
+  )
+select
+    filing_id
+  , amend_id
+  , form_type
+  , filer_id
+  , yr_of_elec
+  , if(cast(yr_of_elec as decimal)%2=0,cast(yr_of_elec as decimal)-1,cast(yr_of_elec as decimal)) as session
+  , str_to_date(left(rpt_date,locate(' ',rpt_date)-1),'%m/%d/%Y') as rpt_date
+  , office_cd
+  , offic_dscr
+  , cand_namf
+  , cand_naml
+from ftp_f501_502
+;
+set @CurrentYear = year(current_date);
+delete from f501_502_cleaned
+where
+  form_type <> 'F501'
+  or session < 2000 
+  or session > @CurrentYear + 10
+  or filer_id <= 0
+;
+update f501_502_cleaned
+set rpt_date = '1950-01-01'
+where rpt_date is null
+;
+
+truncate table candidate_sessions;
+insert candidate_sessions (
+    candidate_id
+  , session
+  , office_501_code
+  , office_501_custom
+  , candidate_name
+  )
+select
+    aa.filer_id
+  , aa.session
+  , aa.office_cd
+  , max(aa.offic_dscr) as offic_dscr
+  , max(concat(aa.cand_naml,', ',aa.cand_namf)) as candidate_name
+from 
+  f501_502_cleaned aa
+  join (
+    select 
+        a.filer_id
+      , a.session
+      , a.rpt_date
+      , min(a.office_cd) as office_cd -- lower codes are more likely to be state offices
+    from 
+      f501_502_cleaned a
+      join (
+        select 
+            filer_id
+          , session
+          , max(rpt_date) as rpt_date
+        from f501_502_cleaned
+        group by 
+            filer_id
+          , session
+        ) b using (filer_id, session, rpt_date)
+    group by 
+        a.filer_id
+      , a.session
+      , a.rpt_date
+    ) bb using (filer_id, session, rpt_date, office_cd)
+group by
+    aa.filer_id
+  , aa.session
+  , aa.office_cd
+;
+
+-- get candidates from scraped table
 truncate table candidate_ids;
 insert candidate_ids (candidate_id, number_of_names, last_session)
 select 
-    id
-  , count(distinct name) 'number_of_names'
-  , max(session)
+    id as candidate_id
+  , count(distinct name) as number_of_names
+  , max(session) as last_session
 from cal_access_candidates
 group by id
 ;
 
+-- updated those candidates with their name from their most recent session
 update 
   candidate_ids a
   join cal_access_candidates b on a.candidate_id = b.id and a.last_session = b.session
 set a.candidate_name = b.name
 ;
 
+-- append candidate_ids for committees
 update
   filer_ids a
   join (
@@ -105,12 +194,14 @@ update
 set a.candidate_id = b.id
 ;
 
+-- updated candidate name for committees
 update
   filer_ids a
   join candidate_ids b using (candidate_id)
 set a.candidate_name = b.candidate_name
 ;
 
+-- set up the table holding the candidate name possibilities for every filing/amendment
 truncate table filing_amends;
 insert into filing_amends (
     filing_id
