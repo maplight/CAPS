@@ -48,6 +48,33 @@ create table candidate_ids (
   , candidate_name varchar(100) null
 );
 
+drop table if exists ftp_f501_502_cleaned;
+create table ftp_f501_502_cleaned (
+    filing_id bigint not null
+  , amend_id int not null
+  , form_type varchar(4) not null
+  , filer_id bigint not null
+  , yr_of_elec smallint(6) not null
+  , session smallint(6) not null
+  , rpt_date datetime not null
+  , office_cd varchar(5) not null default ''
+  , offic_dscr varchar(50) not null default ''
+  , cand_namf varchar(50) not null default ''
+  , cand_naml varchar(50) not null default ''
+  , primary key filing_amend (filing_id, amend_id)
+  , key filer_session_rptdate_filing_amend (filer_id, session, rpt_date, filing_id, amend_id)
+);
+
+drop table if exists candidate_sessions;
+create table candidate_sessions (
+    candidate_id bigint(20) not null
+  , session smallint(6) not null
+  , office_501_code varchar(5) not null default ''
+  , office_501_custom varchar(50) not null default ''
+  , candidate_name varchar(255) not null default ''
+  , primary key candidate_session (candidate_id, session)
+);
+
 -- formerly grp_ftp_disclosure_candidate_name
 drop table if exists filing_amends;
 create table filing_amends (
@@ -91,6 +118,56 @@ create table prop_filer_sessions (
   , primary key filer_id_session_id (filer_id, session_id)
 );
 
+/*  The values in this table come from:
+    http://www.sos.ca.gov/prd/cal-access/
+    Cal-Access Documentation --> CalFormat --> cal_format_201.pdf --> page 12 (Office Codes)
+    The 501 codes come from: ?
+*/
+drop table if exists california_data_office_codes;
+create table california_data_office_codes (
+    office_code_id bigint(20) not null primary key auto_increment
+  , office_cd_cvr char(3) not null
+  , office_cd_501 char(5) null
+  , description varchar(200) not null
+  , region varchar(50) not null
+  , key office_cd_cvr (office_cd_cvr)
+  , key office_cd_501 (office_cd_501)
+  , key description (description)
+);
+insert california_data_office_codes (office_cd_cvr, office_cd_501, description, region)
+select 'GOV', '30002', 'Governor', 'Statewide' union
+select 'LTG', '30003', 'Lieutenant Governor', 'Statewide' union
+select 'SOS', '30004', 'Secretary of State', 'Statewide' union
+select 'CON', '30005', 'State Controller', 'Statewide' union
+select 'ATT', '30007', 'Attorney General', 'Statewide' union
+select 'TRE', '30006', 'State Treasurer', 'Statewide' union
+select 'INS', '30014', 'Insurance Commissioner', 'Statewide' union
+select 'SUP', '30008', 'Superintendent of Public Instruction', 'Statewide' union
+select 'SPM', null, 'Supreme Court Justice', 'Statewide' union
+select 'SEN', '30012', 'State Senate', 'State District' union
+select 'ASM', '30013', 'State Assembly', 'State District' union
+select 'BOE', '30009', 'Board of Equalization', 'State District' union
+select 'PER', '30058', 'Public Employees Retirement System', 'State District' union
+select 'APP', null, 'State Appellate Court Justice', 'State District' union
+select 'ASR', null, 'Assessor', 'City/County/Local' union
+select 'BED', null, 'Board of Education', 'City/County/Local' union
+select 'BSU', null, 'Board of Supervisors', 'City/County/Local' union
+select 'CAT', null, 'City Attorney', 'City/County/Local' union
+select 'CCB', null, 'Community College Board', 'City/County/Local' union
+select 'CCM', null, 'City Council Member', 'City/County/Local' union
+select 'COU', null, 'County Counsel', 'City/County/Local' union
+select 'CSU', null, 'County Supervisor', 'City/County/Local' union
+select 'CTR', null, 'Local Controller', 'City/County/Local' union
+select 'DAT', null, 'District Attorney', 'City/County/Local' union
+select 'MAY', null, 'Mayor', 'City/County/Local' union
+select 'PDR', null, 'Public Defender', 'City/County/Local' union
+select 'PLN', null, 'Planning Commissioner', 'City/County/Local' union
+select 'SHC', null, 'Sheriff-Coroner', 'City/County/Local' union
+select 'SCJ', '30053', 'Superior Court Judge', 'City/County/Local' union
+select 'TRS', null, 'Local Treasurer', 'City/County/Local' union
+select 'OTH', null, 'Other', 'Miscellaneous/Other'
+;
+
 drop table if exists contributions_full;
 create table contributions_full (
     TransactionType varchar(100) not null default ''
@@ -124,9 +201,11 @@ create table contributions_full (
   , RecipientCandidateParty varchar(50) not null default ''
   , RecipientCandidateICO varchar(10) not null default ''
   , RecipientCandidateStatus varchar(40) not null default ''
-  , RecipientCandidateOfficeCode varchar(3) not null default ''
-  , RecipientCandidateOfficeCustom varchar(50) not null default ''
-  , RecipientCandidateOfficeOriginal varchar(50) not null default ''
+  , RecipientCandidateOfficeCvrCode varchar(3) not null default ''
+  , RecipientCandidateOfficeCvrCustom varchar(50) not null default ''
+  , RecipientCandidateOfficeCvrSoughtOrHeld varchar(1) not null default ''
+  , RecipientCandidateOffice501Code varchar(5) not null default ''
+  , RecipientCandidateOffice501Custom varchar(50) not null default ''
   , RecipientCandidateOffice varchar(50) not null default ''
   , RecipientCandidateDistrict varchar(50) not null default ''
   , HasProposition enum('Y','N') default 'N'
@@ -197,51 +276,14 @@ create table contributions (
   , BallotMeasureContribution enum('Y','N') default 'N'
   , id bigint(20) not null
   , primary key (id)
-);
+  , key DonorNameNormalized (DonorNameNormalized(10) asc)
+  , key DonorEmployerNormalized (DonorEmployerNormalized(10) asc)
+  , key RecipientCandidateOffice (RecipientCandidateOffice(10) asc)
+  , key RecipientCandidateDistrict (RecipientCandidateDistrict(10) asc)
+  , key Election (Election asc)
+  , key Target (Target(10) asc)
+  , key RecipientCommitteeNameNormalized (RecipientCommitteeNameNormalized(10) asc)
+  , key RecipientCandidateNameNormalized (RecipientCandidateNameNormalized(10) asc)
+) ENGINE = MyISAM;
 
-/*  The values in this table come from:
-    http://www.sos.ca.gov/prd/cal-access/
-    Cal-Access Documentation --> CalFormat --> cal_format_201.pdf --> page 12 (Office Codes)
-*/
-drop table if exists california_data_office_codes;
-create table california_data_office_codes (
-    office_code_id bigint(20) not null primary key auto_increment
-  , office_cd char(3) not null
-  , description varchar(200) not null
-  , region varchar(50) not null
-  , key office_cd (office_cd)
-);
-insert california_data_office_codes (office_cd, description, region)
-select 'GOV', 'Governor', 'Statewide' union
-select 'LTG', 'Lieutenant Governor', 'Statewide' union
-select 'SOS', 'Secretary of State', 'Statewide' union
-select 'CON', 'State Controller', 'Statewide' union
-select 'ATT', 'Attorney General', 'Statewide' union
-select 'TRE', 'State Treasurer', 'Statewide' union
-select 'INS', 'Insurance Commissioner', 'Statewide' union
-select 'SUP', 'Superintendent of Public Instruction', 'Statewide' union
-select 'SPM', 'Supreme Court Justice', 'Statewide' union
-select 'SEN', 'State Senate', 'State District' union
-select 'ASM', 'State Assembly', 'State District' union
-select 'BOE', 'Board of Equalization', 'State District' union
-select 'PER', 'Public Employees Retirement System', 'State District' union
-select 'APP', 'State Appellate Court Justice', 'State District' union
-select 'ASR', 'Assessor', 'City/County/Local' union
-select 'BED', 'Board of Education', 'City/County/Local' union
-select 'BSU', 'Board of Supervisors', 'City/County/Local' union
-select 'CAT', 'City Attorney', 'City/County/Local' union
-select 'CCB', 'Community College Board', 'City/County/Local' union
-select 'CCM', 'City Council Member', 'City/County/Local' union
-select 'COU', 'County Counsel', 'City/County/Local' union
-select 'CSU', 'County Supervisor', 'City/County/Local' union
-select 'CTR', 'Local Controller', 'City/County/Local' union
-select 'DAT', 'District Attorney', 'City/County/Local' union
-select 'MAY', 'Mayor', 'City/County/Local' union
-select 'PDR', 'Public Defender', 'City/County/Local' union
-select 'PLN', 'Planning Commissioner', 'City/County/Local' union
-select 'SHC', 'Sheriff-Coroner', 'City/County/Local' union
-select 'SCJ', 'Superior Court Judge', 'City/County/Local' union
-select 'TRS', 'Local Treasurer', 'City/County/Local' union
-select 'OTH', 'Other', 'Miscellaneous/Other'
-;
 
