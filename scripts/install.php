@@ -1,6 +1,10 @@
 <?php
   # Setup the caps database / install script
   require ("cal_access_scraper.inc");
+  require ("../connect.php");
+
+  # Create the files directory if it's not already there
+  if (!file_exists ("files")) {mkdir ("files", 0777, true);}
 
   # Create empty cal_access tables (used to store data scraped)
   process_sql_file ("install_cal_access.sql");
@@ -22,6 +26,7 @@
   # Populate all cal_access sessions
   get_elections_list ();
 
+  # Scrape the cal-access data for all sessions (this process can take up to 8 - 10 hours)
   $query = "SELECT session FROM cal_access_sessions ORDER BY session";
   $result = my_query ($query);
   while ($row = $result->fetch_assoc()) {
@@ -55,13 +60,14 @@
     get_committee_information ($session, $filer_id, 1);
   }
 
-  # Process an update
+  # Process an update - the processes the ftp data
   system ("php update_data.php");
     
 
 #===============================================================================================
 # load an sql file
   function process_sql_file ($filename) {
-    system("mysql -ucaps -pcaps-dev14 ca_search < \"$filename\"");
+    global $login, $pwd
+    system("mysql -u{$login} -p{$pwd} ca_search < \"$filename\"");
   }
 ?>
