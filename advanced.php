@@ -111,7 +111,7 @@
         <div id="sidebar">
           <h1 class="caps_title1">Advanced Search</h1>
           <input type="submit" value="Search" id="caps_search_btn">
-          <a href="/advanced.php" id="caps_reset_btn">Reset</a>
+          <a href="advanced.php" id="caps_reset_btn">Reset</a>
 
 <!-- Contributions From -->
           <h2 class="caps_header1">Contributions From:</h2>
