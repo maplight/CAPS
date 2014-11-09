@@ -220,6 +220,18 @@ body{
   margin-left:14px;
 }
 
+#maplight_info{
+  float:right;
+  font:italic 12px Arial, Helvetica, sans-serif;
+  color:#898989;
+}
+
+.maplight_link{
+  font:italic 12px Arial, Helvetica, sans-serif;
+  color:#898989;
+  text-decoration:none;
+}
+
 .caps_title1{
   font:bold 29px/40px Arial, Helvetica, sans-serif;
   color:#222;

@@ -130,7 +130,6 @@
             Search by date, committee name, and more.
           </div> <!-- #qs_box -->
         </div> <!-- #qs_search -->
-
       </form>
 
 <?php
@@ -139,6 +138,7 @@
   echo "var candidates = [{$js_candidates}\"\"];\n";
   echo "</SCRIPT>";
 ?>
+    <div id="maplight_info">Power Search software by <A HREF=http://www.maplight.org class="maplight_link">MapLight</A></div>
 
     </div> <!-- #qs_container -->
   </div> <!-- #containter -->
