@@ -26,7 +26,7 @@ body{
 
 #two-columns{
   margin:0;
-  overflow: hidden;
+  overflow:hidden;
 }
 
 #sidebar{
@@ -35,6 +35,7 @@ body{
   background:#ebebeb;
   width:260px;
   position:relative;
+  overflow:hidden;
 }
 
 #content{
@@ -522,45 +523,6 @@ body{
   background:url(../images/sprite01.png) no-repeat 0 -15px;
   width:15px;
   height:16px;
-}
-
-span.dropt {
-  border-bottom:thin dotted;
-  background:#000000;
-}
-span.dropt:hover {
-  text-decoration:none;
-  background:#0c4363;
-  z-index:6;
-}
-span.dropt span {
-  position: absolute;
-  left:-9999px;
-  margin:20px 0 0 0px;
-  padding:3px 3px 3px 3px;
-  border:1px solid #000000;
-  z-index:6;
-}
-span.dropt:hover span {
-  left:2%;
-  background:#0c4363;
-} 
-span.dropt span {
-  position:absolute;
-  left:-9999px;
-  margin:4px 0 0 0px;
-  padding: 5px; 
-  border-style:solid;
-  border-color:black;
-  border-width:1px;
-}
-span.dropt:hover span {
-  margin:20px 0 0 170px;
-  background:#0c4363;
-  color:#ffffff;
-  text-align:center;
-  font:12px Arial, Helvetica, sans-serif;
-  z-index:6;
 }
  
 .content_title1{
