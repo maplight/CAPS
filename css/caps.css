@@ -64,6 +64,21 @@ body{
   background:#124161;
 }
 
+#caps_reset_btn{
+  float:right;
+  background:#e6ecf0;
+  color:#124161;
+  border:2px solid #124161;
+  font:bold 17px Arial, Helvetica, sans-serif;
+  padding:10px 15px 10px 15px;
+  text-decoration:none;
+}
+
+#caps_reset_btn:hover{
+  color:#fff;
+  background:#124161;
+}
+
 #caps_update_btn{
   background:#e6ecf0;
   color:#124161;
