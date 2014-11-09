@@ -421,9 +421,11 @@
           }
           if ($page < $total_pages) {echo "<input type=\"submit\" name=\"page_button\" value=\"Next\" id=\"caps_next_btn\">";}
         }
+        $result = my_query ("SELECT * FROM smry_last_update"); $row = $result->fetch_assoc(); $last_update = $row["LastUpdate"];
+
         echo "<p>&nbsp;</p>";
         echo "To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">download the CSV</a> file.<br>";
-        echo "Contributions data is current as of " . date ("F j, Y") . ".";
+        echo "<div class=\"last_update\">Contributions data is current as of " . date ("F j, Y", strtotime ($last_update)) . ".</div>";
         echo "</center>";
 
         echo "</div> <!-- results ->";

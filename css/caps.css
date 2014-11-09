@@ -485,6 +485,10 @@ body{
   padding:4px 8px 4px 3px;
 }
 
+.last_update{
+  margin-top:6px;
+}
+
 .info{
   float:right;
   position:relative;
