@@ -1,4 +1,4 @@
-﻿DROP TABLE IF EXISTS smry_candidates_temp;
+DROP TABLE IF EXISTS smry_candidates_temp;
 CREATE TABLE smry_candidates_temp LIKE smry_candidates;
 INSERT INTO smry_candidates_temp (RecipientCandidateNameNormalized) SELECT DISTINCT RecipientCandidateNameNormalized FROM contributions_temp WHERE RecipientCandidateNameNormalized <> '' AND CandidateContribution = 'Y';
 
