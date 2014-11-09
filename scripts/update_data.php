@@ -50,9 +50,9 @@
     while ($row = $result->fetch_assoc()) {
       if ($row["candidate_name"] == "") {
         if (substr ($row["cand_namf"], -1) == "-") {
-          $name = $row["cand_namt"] . " " . $row["cand_namf"] . $row["cand_naml"] . " " . $row["cand_nams"];
+          $name = $row["cand_naml"] . " " . $row["cand_nams"] . ", " . $row["cand_namt"] . " " . $row["cand_namf"];
         } else {
-          $name = $row["cand_namt"] . " " . $row["cand_namf"] . " " . $row["cand_naml"] . " " . $row["cand_nams"];
+          $name = $row["cand_naml"] . " " . $row["cand_nams"] . ", " . $row["cand_namt"] . " " . $row["cand_namf"];
         }
       } else {
         $name = $row["candidate_name"];
