@@ -72,3 +72,8 @@ CREATE TABLE smry_cycles (
   KEY ElectionCycle(ElectionCycle)
 ) ENGINE=MyISAM;
 
+DROP TABLE IF EXISTS smry_last_update;
+CREATE TABLE smry_last_update (
+  LastUpdate DATETIME NOT NULL
+) ENGINE=MyISAM;
+
