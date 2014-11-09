@@ -21,7 +21,7 @@
 
 <body>
 <?php
-    # Cal-Access Power Search Project
+    # Cal-Access Campaign Power Search Project
     # MapLight
     # Mike Krejci
 
@@ -59,7 +59,7 @@
     <div id="mainNavTogCont" aria-hidden="false">
         <!-- main navigation -->
         <ul id="utl" class="clearfix">
-        <li><b>CAL-ACCESS Power Search</b></li>
+        <li><b>CAL-ACCESS Campaign Power Search</b></li>
         <li><a href="index.php">Quick Search</a></li>
         <li><a href="advanced.php">Advanced Search</a></li>
         <li><a href="http://registertovote.ca.gov//help/">Website Help</a></li>
@@ -81,7 +81,7 @@
       <input type="hidden" name="quick_search" value="true">
  
         <div id="qs_title">    
-          <h1 class="caps_title3">CAL-ACCESS Power Search</h1>
+          <h1 class="caps_title3">CAL-ACCESS Campaign Power Search</h1>
           <strong>Search political contributions to candidates, ballot measures, and other committees from 2001 through the present.</strong>
         </div> <!-- #qs_title -->
         <a href="advanced.php" class="qs_link1">Go to Advanced Search</a>
@@ -130,7 +130,6 @@
             Search by date, committee name, and more.
           </div> <!-- #qs_box -->
         </div> <!-- #qs_search -->
-
       </form>
 
 <?php
@@ -139,6 +138,7 @@
   echo "var candidates = [{$js_candidates}\"\"];\n";
   echo "</SCRIPT>";
 ?>
+    <div id="maplight_info">Power Search software by <A HREF=http://www.maplight.org class="maplight_link">MapLight</A></div>
 
     </div> <!-- #qs_container -->
   </div> <!-- #containter -->

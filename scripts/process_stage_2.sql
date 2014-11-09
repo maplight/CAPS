@@ -678,21 +678,7 @@ set
   , Election = ifnull(ElectionProp,ElectionCvr)
 ;
 
--- add candidate office labels
-update
-  contributions_full_temp a
-  join california_data_office_codes b on a.RecipientCandidateOffice501Code = b.office_cd_501
-set a.RecipientCandidateOffice = b.description
-where 
-  a.RecipientCandidateOffice = ''
-  and b.office_cd_cvr <> 'OTH'
-;
-update contributions_full_temp
-set RecipientCandidateOffice = RecipientCandidateOffice501Custom
-where 
-  RecipientCandidateOffice = ''
-  and RecipientCandidateOffice501Custom <> ''
-;
+-- add candidate office labels in this order:
 update
   contributions_full_temp a
   join california_data_office_codes b on a.RecipientCandidateOfficeCvrCode = b.office_cd_cvr
@@ -718,6 +704,20 @@ where
     or RecipientCommitteeNameNormalized like '%re_elect%'
     or RecipientCommitteeNameNormalized like '%retain%'
     )
+;
+update
+  contributions_full_temp a
+  join california_data_office_codes b on a.RecipientCandidateOffice501Code = b.office_cd_501
+set a.RecipientCandidateOffice = b.description
+where 
+  a.RecipientCandidateOffice = ''
+  and b.office_cd_cvr <> 'OTH'
+;
+update contributions_full_temp
+set RecipientCandidateOffice = RecipientCandidateOffice501Custom
+where 
+  RecipientCandidateOffice = ''
+  and RecipientCandidateOffice501Custom <> ''
 ;
 
 -- stardardize custom offices
@@ -765,6 +765,7 @@ where
   and ifnull(b.office_cd_cvr,'') in ('','OTH') 
 ;
 
+/*
 -- standardize office across all contributions for a particular candidate/cycle
 drop table if exists candidate_cycle_temp;
 create table candidate_cycle_temp (
@@ -832,6 +833,7 @@ update
 set a.RecipientCandidateOffice = b.RecipientCandidateOffice
 ;
 drop table if exists candidate_cycle_temp;
+*/
 
 -- identify committees with inconsistent committee types
 drop table if exists tmp_committees_with_multiple_types;

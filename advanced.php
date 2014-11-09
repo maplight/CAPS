@@ -21,7 +21,7 @@
 
 <body>
 <?php
-    # Cal-Access Power Search Project
+    # Cal-Access Campaign Power Search Project
     # MapLight
     # Mike Krejci
 
@@ -32,20 +32,23 @@
 
     # Check for quick search entry
     if (isset ($_POST["quick_search"])) {
+      $_POST["state_list"] = "ALL";
+
       if ($_POST["qs_button"] == "Search Candidates") {
         $_POST["contrib_select"] = "all";
         $_POST["contributor"] = "Just these contributors";
-        $_POST["state_list"] = "ALL";
         $_POST["contrib_types"] = "candidates";
         $_POST["cand_select"] = "search";
-        $_POST["office_list"] = "Attorney General";
-        $_POST["date_select"] = "all";
+        $_POST["date_select"] = "cycle";
+        $cycles = array ();
+        $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
+         while ($row = $result->fetch_assoc()) {$cycles[] = $row["ElectionCycle"];}
+        $_POST["cycles"] = $cycles;      
       }
 
       if ($_POST["qs_button"] == "Search Ballot Measures") {
         $_POST["contrib_select"] = "all";
         $_POST["contributor"] = "Just these contributors";
-        $_POST["state_list"] = "ALL";
         $_POST["contrib_types"] = "ballots";
         $_POST["search_propositions"] = "Search propositions";
         $_POST["position"] = "B";
@@ -54,9 +57,12 @@
 
       if ($_POST["qs_button"] == "Search Contributors") {
         $_POST["contrib_select"] = "search";
-        $_POST["state_list"] = "ALL";
         $_POST["contrib_types"] = "all";
-        $_POST["date_select"] = "all";
+        $_POST["date_select"] = "cycle";
+        $cycles = array ();
+        $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
+         while ($row = $result->fetch_assoc()) {$cycles[] = $row["ElectionCycle"];}
+        $_POST["cycles"] = $cycles;      
       }
     }
 ?>
@@ -89,7 +95,7 @@
     <div id="mainNavTogCont" aria-hidden="false">
         <!-- main navigation -->
         <ul id="utl" class="clearfix">
-        <li><b>CAL-ACCESS Power Search</b></li>
+        <li><b>CAL-ACCESS Campaign Power Search</b></li>
         <li><a href="index.php">Quick Search</a></li>
         <li><a href="advanced.php">Advanced Search</a></li>
         <li><a href="http://registertovote.ca.gov//help/">Website Help</a></li>

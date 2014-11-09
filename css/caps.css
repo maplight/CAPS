@@ -203,7 +203,7 @@ body{
 #qs_title{
   float:left;
   padding:0;
-  width:460px;
+  width:580px;
   position:relative;
   overflow:hidden;
 }
@@ -218,6 +218,18 @@ body{
 #qs_box{
   float:left;
   margin-left:14px;
+}
+
+#maplight_info{
+  float:right;
+  font:italic 12px Arial, Helvetica, sans-serif;
+  color:#898989;
+}
+
+.maplight_link{
+  font:italic 12px Arial, Helvetica, sans-serif;
+  color:#898989;
+  text-decoration:none;
 }
 
 .caps_title1{
