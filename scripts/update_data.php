@@ -21,9 +21,13 @@
 
   generate_search_words (); 
 
+  # Reset last update file
+  my_query ("TRUNCATE smry_last_update");
+  my_query ("INSERT INTO smry_last_update VALUES (NOW())");
+
   # Process data for contributions table - stage 4
   process_sql_file ("process_stage_4.sql");
-    
+
 
 #===============================================================================================
 # load an sql file
