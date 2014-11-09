@@ -93,10 +93,10 @@
           <img src="images/qs_candidate.jpg" width=50 class="qs_img">
           <div id=qs_box>
             <div class="qs_title2">Candidates</div>
-              How much has <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1"> recieved?<br>
+              How much has <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1" onkeyup="filter_candidates_list();"> recieved?<br>
               <select id="candidate_list" name="candidate_list" class="qs_select1">
 <?php
-  fill_candidate_names ("");
+  $js_candidates = fill_candidate_names ("");
 ?>
               </select><br>
               <input type="submit" name="qs_button" value="Search Candidates" id="qs_btn1">
@@ -132,6 +132,14 @@
         </div> <!-- #qs_search -->
 
       </form>
+
+<?php
+  # Data for javascript to filter select boxes
+  echo "<SCRIPT type=text/javascript>";
+  echo "var candidates = [{$js_candidates}\"\"];\n";
+  echo "</SCRIPT>";
+?>
+
     </div> <!-- #qs_container -->
   </div> <!-- #containter -->
 </div> <!-- #wrapper-->
