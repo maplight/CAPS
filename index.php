@@ -93,7 +93,7 @@
           <img src="images/qs_candidate.jpg" width=50 class="qs_img">
           <div id=qs_box>
             <div class="qs_title2">Candidates</div>
-              How much has <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1" onkeyup="filter_candidates_list();"> recieved?<br>
+              How much has <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1" onkeyup="filter_candidates_list();"> received?<br>
               <select id="candidate_list" name="candidate_list" class="qs_select1">
 <?php
   $js_candidates = fill_candidate_names ("");
