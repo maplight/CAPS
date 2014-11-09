@@ -1,3 +1,11 @@
+OPTIMIZE TABLE smry_candidates_temp;
+OPTIMIZE TABLE smry_committees_temp;
+OPTIMIZE TABLE smry_cycles_temp;
+OPTIMIZE TABLE smry_offices_temp;
+OPTIMIZE TABLE smry_propositions_temp;
+OPTIMIZE TABLE contributions_search_temp; 
+OPTIMIZE TABLE contributions_temp;
+
 DROP TABLE IF EXISTS smry_candidates;
 RENAME TABLE smry_candidates_temp TO smry_candidates;
 
