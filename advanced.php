@@ -69,6 +69,14 @@
 ?>
 
 <div id="caps_header">
+<div class="frme" id="top">
+<img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;">
+</div>
+        <ul id="utl" class="clearfix">
+        <li><b>CAL-ACCESS Campaign Power Search</b></li>
+        <li><a href="index.php">Quick Search</a></li>
+        <li><a href="advanced.php">Advanced Search</a></li>
+        </ul>
 </div> <!-- caps_header -->
 
 <div id="wrapper">
