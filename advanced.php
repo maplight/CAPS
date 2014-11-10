@@ -128,7 +128,7 @@
   echo "<input type=\"radio\" id=\"all_contribs\" name=\"contrib_select\" value=\"all\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="all_contribs" class="caps_label1">All contributors</label>
-          <a href="#" class="info"></a>
+          <div class="info" title="Search contributions from all contributors"></div>
 <?php
   $checked = "";
   if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
@@ -138,7 +138,7 @@
   echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" class=\"caps_text1\">";
 ?>
           <label for="select_location" class="caps_label2">Contributor Location</label>
-          <a href="#" class="info"></a>
+          <div class="info" title="Search contributions from a particular state"></div>
           <select id="select_location" name="state_list" class="caps_select1">
 <?php
   $selected = "";
@@ -167,7 +167,7 @@
   echo "<input type=\"radio\" id=\"contrib_to\" name=\"contrib_types\" value=\"candidates\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="contrib_to" class="caps_label1">Candidates</label>
-          <a href="#" class="info"></a>
+          <div class="info" title="Search contributions to candidate campaigns only"></div>
 <?php
   $checked = "";
   if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
@@ -189,7 +189,7 @@
   $js_candidates = fill_candidate_names ($selected, "1999");
 ?>
           </select>
-          <a href="#" class="info"></a>
+          <div class="info" title="Search contributions to a particular candidate's campaign(s)"></div>
 <?php
   $checked = "";
   if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "office") {$checked = "checked";}}  
@@ -202,7 +202,7 @@
   fill_offices_sought ($selected);
 ?>
           </select>
-          <a href="#" class="info"></a>
+          <div class="info" title="Search contributions to all candidates running for a particular office"></div>
           <hr class="caps_hr1">
 
 <!-- Contributions To Ballot Measures -->
@@ -212,7 +212,7 @@
   echo "<input type=\"radio\" id=\"props_to\" name=\"contrib_types\" value=\"ballots\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="props_to" class="caps_label1">Ballot Measures</label>
-          <a href="#" class="info"></a>
+          <div class="info" title="Search contributions to committees formed to support or oppose ballot measures. Your results may return duplicate contributions if a contributor gave money to a committee supporting or opposing multiple ballot measures."></div>
 <?php
   $text = "Search propositions";
   if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
@@ -247,7 +247,7 @@
   echo "<input type=\"radio\" id=\"comms_to\" name=\"contrib_types\" value=\"committees\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="comms_to" class="caps_label1">Committees</label>
-          <a href="#" class="info"></a>
+          <div class="info" title="Search contributions to other committees, such as candidate office holder and legal defense committees"></div>
 <?php
   $text = "Just these committees";
   if (isset ($_POST["committee_search"])) {$text = $_POST["committee_search"];}
@@ -256,7 +256,10 @@
           <hr class="caps_hr1">
 
 <!-- Dates -->
-          <h2 class="caps_header1">Dates:<a href="#" class="info"></a></h2>
+          <h2 class="caps_header1">Dates:
+          <div class="info" title="Search contributions by the date range in which they were made"></div>
+          </h2>
+
 <?php
   $checked = "";
   if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
