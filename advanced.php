@@ -39,11 +39,12 @@
         $_POST["contributor"] = "Just these contributors";
         $_POST["contrib_types"] = "candidates";
         $_POST["cand_select"] = "search";
-        $_POST["date_select"] = "cycle";
-        $cycles = array ();
-        $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
-         while ($row = $result->fetch_assoc()) {$cycles[] = $row["ElectionCycle"];}
-        $_POST["cycles"] = $cycles;      
+        $_POST["date_select"] = "ALL";
+#        $_POST["date_select"] = "cycle";
+#        $cycles = array ();
+#        $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
+#         while ($row = $result->fetch_assoc()) {$cycles[] = $row["ElectionCycle"];}
+#        $_POST["cycles"] = $cycles;      
       }
 
       if ($_POST["qs_button"] == "Search Ballot Measures") {

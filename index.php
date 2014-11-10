@@ -98,7 +98,8 @@
 <?php
   $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
   while ($row = $result->fetch_assoc()) {$last_cycle = $row["ElectionCycle"];}
-  $js_candidates = fill_candidate_names ("", $last_cycle);
+#  $js_candidates = fill_candidate_names ("", $last_cycle);
+  $js_candidates = fill_candidate_names ("", "1999");
 ?>
               </select><br>
               <input type="submit" name="qs_button" value="Search Candidates" id="qs_btn1">
