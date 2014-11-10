@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS ca_search.ca_search.smry_candidates_temp;
-CREATE TABLE ca_search.ca_search.smry_candidates_temp LIKE ca_search.smry_candidates;
+DROP TABLE IF EXISTS ca_search.smry_candidates_temp;
+CREATE TABLE ca_search.smry_candidates_temp LIKE ca_search.smry_candidates;
 INSERT INTO ca_search.smry_candidates_temp (RecipientCandidateNameNormalized) SELECT DISTINCT RecipientCandidateNameNormalized FROM contributions_temp WHERE RecipientCandidateNameNormalized <> '' AND CandidateContribution = 'Y';
 
 DROP TABLE IF EXISTS ca_search.ca_search.smry_offices_temp;

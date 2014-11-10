@@ -86,7 +86,7 @@
       if ($middle_name <> "") {$mn = " $middle_name";} else {$mn = "";}
       $display_name = trim ($ln . $ns . $fn . $mn);
       $gender = $parsed_name["gender"];
-      if ($row["name"] != "") {$display_name = $name;}
+      if ($row["display_name"] != "") {$display_name = $name;}
 
       $removal_word_found = false;
       foreach ($words_to_remove as $removal_word) {
