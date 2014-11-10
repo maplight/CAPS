@@ -90,7 +90,7 @@
           <div class="qs_title1">Quick Search</div>
           <hr class="caps_hr1">
 
-          <img src="images/qs_candidate.jpg" width=50 class="qs_img">
+          <img src="img/qs_candidate.jpg" width=50 class="qs_img">
           <div id=qs_box>
             <div class="qs_title2">Candidates</div>
               How much has <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1" onkeyup="filter_candidates_list();"> received?<br>
@@ -103,7 +103,7 @@
           </div> <!-- #qs_box -->
           <hr class="caps_hr1">
 
-          <img src="images/qs_ballot.jpg" width=50 class="qs_img">
+          <img src="img/qs_ballot.jpg" width=50 class="qs_img">
           <div id=qs_box>
             <div class="qs_title2">Ballot Measures</div>
               How much has been raised for all measures on the
@@ -116,7 +116,7 @@
            </div> <!-- #qs_box -->
            <hr class="caps_hr1">
 
-<img src="images/qs_contributor.jpg" width=50 class="qs_img">
+<img src="img/qs_contributor.jpg" width=50 class="qs_img">
           <div id=qs_box>
             <div class="qs_title2">Contributors</div>
             How much has <input type="text" id="contributor" name="contributor" value="company, organization, or person" class="qs_text2"> contributed?<br>
@@ -124,7 +124,7 @@
           </div> <!-- #qs_box -->
           <hr class="caps_hr1">
 
-          <img src="images/qs_advanced.jpg" width=50 class="qs_img">
+          <img src="img/qs_advanced.jpg" width=50 class="qs_img">
           <div id=qs_box>
             <div class="qs_title2"><a href="advanced.php">Advanced Search</a></div><br>
             Search by date, committee name, and more.
