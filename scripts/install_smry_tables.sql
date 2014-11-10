@@ -34,8 +34,10 @@ DROP TABLE IF EXISTS ca_search.smry_candidates;
 CREATE TABLE ca_search.smry_candidates (
   RecipientCandidateNameID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   RecipientCandidateNameNormalized VARCHAR(250) NOT NULL,
+  LastCycle SMALLINT NOT NULL,
   CandidateWords VARCHAR(250) NOT NULL,
   KEY RecipientCandidateNameNormalized(RecipientCandidateNameNormalized(10)),
+  KEY LastCycle(LastCycle),
   FULLTEXT CandidateWords(CandidateWords)
 ) ENGINE=MyISAM;
 

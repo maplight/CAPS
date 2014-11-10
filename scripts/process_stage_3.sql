@@ -1,22 +1,22 @@
 DROP TABLE IF EXISTS ca_search.smry_candidates_temp;
 CREATE TABLE ca_search.smry_candidates_temp LIKE ca_search.smry_candidates;
-INSERT INTO ca_search.smry_candidates_temp (RecipientCandidateNameNormalized) SELECT DISTINCT RecipientCandidateNameNormalized FROM contributions_temp WHERE RecipientCandidateNameNormalized <> '' AND CandidateContribution = 'Y';
+INSERT INTO ca_search.smry_candidates_temp (RecipientCandidateNameNormalized, LastCycle) SELECT RecipientCandidateNameNormalized, MAX(ElectionCycle) AS LastCycle FROM ca_search.contributions_temp WHERE RecipientCandidateNameNormalized <> '' AND CandidateContribution = 'Y' GROUP BY RecipientCandidateNameNormalized;
 
 DROP TABLE IF EXISTS ca_search.ca_search.smry_offices_temp;
 CREATE TABLE ca_search.smry_offices_temp LIKE ca_search.smry_offices;
-INSERT INTO ca_search.smry_offices_temp (RecipientCandidateOffice) SELECT DISTINCT RecipientCandidateOffice FROM contributions_temp WHERE RecipientCandidateOffice <> '' AND CandidateContribution = 'Y';
+INSERT INTO ca_search.smry_offices_temp (RecipientCandidateOffice) SELECT DISTINCT RecipientCandidateOffice FROM ca_search.contributions_temp WHERE RecipientCandidateOffice <> '' AND CandidateContribution = 'Y';
 
 DROP TABLE IF EXISTS ca_search.smry_committees_temp;
 CREATE TABLE ca_search.smry_committees_temp LIKE ca_search.smry_committees;
-INSERT INTO ca_search.smry_committees_temp (RecipientCommitteeNameNormalized) SELECT DISTINCT RecipientCommitteeNameNormalized FROM contributions_temp WHERE RecipientCommitteeNameNormalized <> '';
+INSERT INTO ca_search.smry_committees_temp (RecipientCommitteeNameNormalized) SELECT DISTINCT RecipientCommitteeNameNormalized FROM ca_search.contributions_temp WHERE RecipientCommitteeNameNormalized <> '';
 
 DROP TABLE IF EXISTS ca_search.smry_cycles_temp;
 CREATE TABLE ca_search.smry_cycles_temp LIKE ca_search.smry_cycles;
-INSERT INTO ca_search.smry_cycles_temp SELECT DISTINCT ElectionCycle FROM contributions_temp;
+INSERT INTO ca_search.smry_cycles_temp SELECT DISTINCT ElectionCycle FROM ca_search.contributions_temp;
 
 DROP TABLE IF EXISTS ca_search.smry_propositions_temp;
 CREATE TABLE ca_search.smry_propositions_temp LIKE ca_search.smry_propositions;
-INSERT INTO ca_search.smry_propositions_temp (Election, Target) SELECT DISTINCT election_date, name FROM cal_access_propositions;
+INSERT INTO ca_search.smry_propositions_temp (Election, Target) SELECT DISTINCT election_date, name FROM ca_search.cal_access_propositions;
 
 DROP TABLE IF EXISTS ca_search.contributions_search_temp;
 CREATE TABLE ca_search.contributions_search_temp LIKE ca_search.contributions_search;

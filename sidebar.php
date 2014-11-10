@@ -8,10 +8,10 @@
   }
 
 
-  function fill_candidate_names ($selected) {
+  function fill_candidate_names ($selected, $last_cycle) {
     echo "<OPTION>Select candidate</OPTION>";
     $javascript_array = "[\"Select candidate\"],";
-    $result = my_query ("SELECT RecipientCandidateNameNormalized FROM smry_candidates ORDER BY RecipientCandidateNameNormalized");
+    $result = my_query ("SELECT RecipientCandidateNameNormalized FROM smry_candidates WHERE LastCycle >= $last_cycle ORDER BY RecipientCandidateNameNormalized");
     while ($row = $result->fetch_assoc()) {
       if ($row["RecipientCandidateNameNormalized"] == $selected) {echo "<OPTION SELECTED>{$row["RecipientCandidateNameNormalized"]}</OPTION>";} else {echo "<OPTION>{$row["RecipientCandidateNameNormalized"]}</OPTION>";}
       $javascript_array .= "\"" . str_replace ("\"", "", $row["RecipientCandidateNameNormalized"]) . "\",";

@@ -185,7 +185,7 @@
 <?php
   $selected = "";
   if (isset ($_POST["candidate_list"])) {$selected = $_POST["candidate_list"];}
-  $js_candidates = fill_candidate_names ($selected);
+  $js_candidates = fill_candidate_names ($selected, "1999");
 ?>
           </select>
           <a href="#" class="info"></a>
