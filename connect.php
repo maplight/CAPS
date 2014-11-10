@@ -1,6 +1,6 @@
 <?php
   $web_login = "caps"; $web_pwd = "caps_dev14";
-  $script_login = "caps_script"; $scripts_pwd = "97_caps_45";
+  $script_login = "caps_script"; $script_pwd = "97_caps_45";
   $error_email = "mike@maplight.org";
 
   $web_conn = mysqli_init ();

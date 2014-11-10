@@ -35,8 +35,8 @@
 #===============================================================================================
 # process script query
   function script_query ($query) {
-    global $web_conn;
-    $ret = $web_conn->query ($query);
+    global $script_conn;
+    $ret = $script_conn->query ($query);
     return $ret;
   }
 

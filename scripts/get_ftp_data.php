@@ -1,10 +1,12 @@
 <?php
   require ("../connect.php");
+  $script_conn = mysqli_init ();
+  mysqli_options ($script_conn, MYSQLI_OPT_LOCAL_INFILE, true);
+  mysqli_real_connect ($script_conn, "localhost", $script_login, $script_pwd, "ca_process");
 
 
 #===============================================================================================
   # Initilize errot_text and data to process arrays
-  $send_error_msg = "mike@maplight.org";
   $data_directory = "files/CalAccess/DATA";
   $error_text = "";
   $good_tables = array ();
@@ -12,7 +14,7 @@
 
   # get a list of all the ftp_* tables in the database
   $db_tables = array ();  
-  $result = my_query ("SHOW TABLES");
+  $result = script_query ("SHOW TABLES");
   while ($row = $result->fetch_array()) {
     if (substr ($row[0], 0, 4) == "ftp_") {$db_tables[] = $row[0];}
   }
@@ -25,7 +27,7 @@
   foreach ($db_tables as $db_table) {
     # get array of table field names
     $table_fields = array ();
-    $result = my_query ("DESCRIBE $db_table");
+    $result = script_query ("DESCRIBE $db_table");
     while ($row = $result->fetch_assoc()) {$table_fields[] = $row["Field"];}
 
     $tab_file = $data_directory . "/" . strtoupper (substr ($db_table, 4)) . "_CD.TSV";
@@ -62,16 +64,25 @@
 
   if ($error_text != "") {
     # send error message out if there was a data error
-    mail ($send_error_msg, "California Access FTP Errors", $error_text, "", "");
+    mail ($error_email, "California Access FTP Errors", $error_text, "", "");
   } else {
     # Process good data
     for ($i = 0; $i < count ($good_tables); $i++) {
-      my_query ("TRUNCATE TABLE $good_tables[$i]");
-      my_query ("LOAD DATA LOCAL INFILE '" . str_replace ('\\', '/', getcwd ()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
+      script_query ("TRUNCATE TABLE $good_tables[$i]");
+      script_query ("LOAD DATA LOCAL INFILE '" . str_replace ('\\', '/', getcwd ()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
       unlink ($good_files[$i]);
     }
   }
 
   # remove all downloaded files
   exec ("rm -rf files/*");
+
+
+#===============================================================================================
+# process script query
+  function script_query ($query) {
+    global $script_conn;
+    $ret = $script_conn->query ($query);
+    return $ret;
+  }
 ?>
