@@ -207,6 +207,7 @@ create table contributions_full (
   , RecipientCandidateOfficeCvrSoughtOrHeld varchar(1) not null default ''
   , RecipientCandidateOffice501Code varchar(5) not null default ''
   , RecipientCandidateOffice501Custom varchar(50) not null default ''
+  , RecipientCandidateOfficeNeedsCleanup enum('Y','N') default 'N'
   , RecipientCandidateOffice varchar(50) not null default ''
   , RecipientCandidateDistrict varchar(50) not null default ''
   , HasProposition enum('Y','N') default 'N'
@@ -249,42 +250,4 @@ create table contributions_full (
   , key Form (Form)
   , key Schedule (Schedule)
 );
-
-drop table if exists ca_search.contributions;
-create table ca_search.contributions (
-    TransactionType varchar(100) not null
-  , ElectionCycle smallint(6) not null default 0
-  , Election date default null
-  , TransactionDateStart date not null
-  , TransactionDateEnd date not null
-  , TransactionAmount double not null
-  , RecipientCommitteeNameNormalized varchar(200) not null
-  , RecipientCandidateNameNormalized varchar(250) not null default ''
-  , RecipientCandidateOffice varchar(50) not null default ''
-  , RecipientCandidateDistrict varchar(50) not null default ''
-  , Target varchar(250) not null default ''
-  , `Position` varchar(100) not null default ''
-  , DonorNameNormalized varchar(200) not null
-  , DonorCity varchar(30) not null
-  , DonorState char(2) not null
-  , DonorZipCode varchar(10) not null
-  , DonorEmployerNormalized varchar(200) not null
-  , DonorOccupationNormalized varchar(200) not null
-  , DonorOrganization varchar(200) not null
-  , Unitemized enum('Y','N') default 'N'
-  , AlliedCommittee enum('Y','N') default 'N' comment 'formerly Flag'
-  , CandidateContribution enum('Y','N') default 'N'
-  , BallotMeasureContribution enum('Y','N') default 'N'
-  , id bigint(20) not null
-  , primary key (id)
-  , key DonorNameNormalized (DonorNameNormalized(10) asc)
-  , key DonorEmployerNormalized (DonorEmployerNormalized(10) asc)
-  , key RecipientCandidateOffice (RecipientCandidateOffice(10) asc)
-  , key RecipientCandidateDistrict (RecipientCandidateDistrict(10) asc)
-  , key Election (Election asc)
-  , key Target (Target(10) asc)
-  , key RecipientCommitteeNameNormalized (RecipientCommitteeNameNormalized(10) asc)
-  , key RecipientCandidateNameNormalized (RecipientCandidateNameNormalized(10) asc)
-) ENGINE = MyISAM;
-
 
