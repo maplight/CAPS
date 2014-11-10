@@ -39,6 +39,7 @@
         $_POST["contributor"] = "Just these contributors";
         $_POST["contrib_types"] = "candidates";
         $_POST["cand_select"] = "search";
+        $_POST["proposition_list"] = "ALL";
         $_POST["date_select"] = "all";
 #        $_POST["date_select"] = "cycle";
 #        $cycles = array ();
@@ -59,6 +60,7 @@
       if ($_POST["qs_button"] == "Search Contributors") {
         $_POST["contrib_select"] = "search";
         $_POST["contrib_types"] = "all";
+        $_POST["proposition_list"] = "ALL";
         $_POST["date_select"] = "cycle";
         $cycles = array ();
         $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
