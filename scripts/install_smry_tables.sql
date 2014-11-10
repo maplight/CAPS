@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS contributions_search;
-CREATE TABLE contributions_search (
+DROP TABLE IF EXISTS ca_search.contributions_search;
+CREATE TABLE ca_search.contributions_search (
   id BIGINT NOT NULL PRIMARY KEY,
   DonorState CHAR(2) NOT NULL,
   AlliedCommittee ENUM('Y','N'),
@@ -30,17 +30,19 @@ CREATE TABLE contributions_search (
   FULLTEXT DonorWords(DonorWords)
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS smry_candidates;
-CREATE TABLE smry_candidates (
+DROP TABLE IF EXISTS ca_search.smry_candidates;
+CREATE TABLE ca_search.smry_candidates (
   RecipientCandidateNameID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   RecipientCandidateNameNormalized VARCHAR(250) NOT NULL,
+  LastCycle SMALLINT NOT NULL,
   CandidateWords VARCHAR(250) NOT NULL,
   KEY RecipientCandidateNameNormalized(RecipientCandidateNameNormalized(10)),
+  KEY LastCycle(LastCycle),
   FULLTEXT CandidateWords(CandidateWords)
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS smry_propositions;
-CREATE TABLE smry_propositions (
+DROP TABLE IF EXISTS ca_search.smry_propositions;
+CREATE TABLE ca_search.smry_propositions (
   PropositionID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   Election DATE NOT NULL,
   Target VARCHAR(250) NOT NULL,
@@ -50,8 +52,8 @@ CREATE TABLE smry_propositions (
   FULLTEXT PropositionWords(PropositionWords)
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS smry_committees;
-CREATE TABLE smry_committees (
+DROP TABLE IF EXISTS ca_search.smry_committees;
+CREATE TABLE ca_search.smry_committees (
   RecipientCommitteeID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   RecipientCommitteeNameNormalized VARCHAR(200) NOT NULL,
   CommitteeWords VARCHAR(200) NOT NULL,
@@ -59,21 +61,21 @@ CREATE TABLE smry_committees (
   FULLTEXT CommitteeWords(CommitteeWords)
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS smry_offices;
-CREATE TABLE smry_offices (
+DROP TABLE IF EXISTS ca_search.smry_offices;
+CREATE TABLE ca_search.smry_offices (
   RecipientCandidateOfficeID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   RecipientCandidateOffice VARCHAR(50) NOT NULL,
   KEY RecipientCandidateOffice(RecipientCandidateOffice(10))
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS smry_cycles;
-CREATE TABLE smry_cycles (
+DROP TABLE IF EXISTS ca_search.smry_cycles;
+CREATE TABLE ca_search.smry_cycles (
   ElectionCycle SMALLINT(6) NOT NULL,
   KEY ElectionCycle(ElectionCycle)
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS smry_last_update;
-CREATE TABLE smry_last_update (
+DROP TABLE IF EXISTS ca_search.smry_last_update;
+CREATE TABLE ca_search.smry_last_update (
   LastUpdate DATETIME NOT NULL
 ) ENGINE=MyISAM;
 

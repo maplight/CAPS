@@ -96,7 +96,10 @@
               How much has <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1" onkeyup="filter_candidates_list();"> received?<br>
               <select id="candidate_list" name="candidate_list" class="qs_select1">
 <?php
-  $js_candidates = fill_candidate_names ("");
+  $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
+  while ($row = $result->fetch_assoc()) {$last_cycle = $row["ElectionCycle"];}
+#  $js_candidates = fill_candidate_names ("", $last_cycle);
+  $js_candidates = fill_candidate_names ("", "1999");
 ?>
               </select><br>
               <input type="submit" name="qs_button" value="Search Candidates" id="qs_btn1">

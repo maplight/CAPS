@@ -1206,7 +1206,7 @@ rename table contributions_full_temp to contributions_full;
 -- populate contributions table
 drop table if exists ca_search.contributions_temp;
 create table ca_search.contributions_temp like ca_search.contributions;
-insert contributions_temp (
+insert ca_search.contributions_temp (
     TransactionType
   , ElectionCycle
   , Election

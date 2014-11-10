@@ -43,3 +43,6 @@ Step 9: Set the update_data.php to run in a cron job.
 
 
 Possible Multi-Server Setup Notes:
+Setting up a multi-server could be done a couple ways, the simpliest is to just have the web pages and database on multiservers with a load balancer serving up a free server.  This would require only replication of the ca_search database with one master database server that also processes the data updates.
+
+Another setup is to build a database cluster with a central entry point, again, just needing to cluster the ca_search database, then the web pages can be placed among multiple servers as needed.
