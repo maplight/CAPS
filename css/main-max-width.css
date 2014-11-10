@@ -102,7 +102,8 @@ Theme Name: California Secretary of State
    ========================== */
 
 /*base*/
-html{background:#444 url(i/constitutional-words-large.png);background-repeat:no-repeat;background-position:center 200px;overflow-y:scroll}
+/*html{background:#444 url(i/constitutional-words-large.png);background-repeat:no-repeat;background-position:center 200px;overflow-y:scroll} */
+html{background:#444;background-repeat:no-repeat;background-position:center 200px;overflow-y:scroll} 
 body{font-size:62.5%}
 footer{padding:10px 0;background:#333 url(i/poppies.png) bottom right no-repeat;border-top:10px solid #D78622;color:#FFF}
 
