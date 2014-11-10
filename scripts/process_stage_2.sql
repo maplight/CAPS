@@ -761,8 +761,32 @@ set a.RecipientCandidateOffice = case
   end
 where 
   a.RecipientCandidateOffice <> ''
-  and ifnull(c.office_cd_cvr,'') in ('','OTH') 
-  and ifnull(b.office_cd_cvr,'') in ('','OTH') 
+  and (
+    (
+      ifnull(b.office_cd_cvr,'') in ('','OTH')
+      and a.RecipientCandidateOfficeCvrCustom <> ''
+      and (
+        a.RecipientCandidateOfficeCvrSoughtOrHeld <> 'H'
+        or a.RecipientCommitteeNameNormalized like '%reelect%'
+        or a.RecipientCommitteeNameNormalized like '%re_elect%'
+        or a.RecipientCommitteeNameNormalized like '%retain%'
+        )
+      )
+    or (
+      ifnull(b.office_cd_cvr,'') in ('','OTH')
+      and not (
+        a.RecipientCandidateOfficeCvrCustom <> ''
+        and (
+          a.RecipientCandidateOfficeCvrSoughtOrHeld <> 'H'
+          or a.RecipientCommitteeNameNormalized like '%reelect%'
+          or a.RecipientCommitteeNameNormalized like '%re_elect%'
+          or a.RecipientCommitteeNameNormalized like '%retain%'
+          )
+        )
+      and ifnull(c.office_cd_cvr,'') in ('','OTH') 
+      and a.RecipientCandidateOffice501Custom <> ''
+      )
+    )
 ;
 
 /*
