@@ -1,29 +1,29 @@
-OPTIMIZE TABLE smry_candidates_temp;
-OPTIMIZE TABLE smry_committees_temp;
-OPTIMIZE TABLE smry_cycles_temp;
-OPTIMIZE TABLE smry_offices_temp;
-OPTIMIZE TABLE smry_propositions_temp;
-OPTIMIZE TABLE contributions_search_temp; 
-OPTIMIZE TABLE contributions_temp;
+OPTIMIZE TABLE ca_search.smry_candidates_temp;
+OPTIMIZE TABLE ca_search.smry_committees_temp;
+OPTIMIZE TABLE ca_search.smry_cycles_temp;
+OPTIMIZE TABLE ca_search.smry_offices_temp;
+OPTIMIZE TABLE ca_search.smry_propositions_temp;
+OPTIMIZE TABLE ca_search.contributions_search_temp; 
+OPTIMIZE TABLE ca_search.contributions_temp;
 
-DROP TABLE IF EXISTS smry_candidates;
-RENAME TABLE smry_candidates_temp TO smry_candidates;
+DROP TABLE IF EXISTS ca_search.smry_candidates;
+RENAME TABLE ca_search.smry_candidates_temp TO ca_search.smry_candidates;
 
-DROP TABLE IF EXISTS smry_committees;
-RENAME TABLE smry_committees_temp TO smry_committees;
+DROP TABLE IF EXISTS ca_search.smry_committees;
+RENAME TABLE ca_search.smry_committees_temp TO ca_search.smry_committees;
 
-DROP TABLE IF EXISTS smry_cycles;
-RENAME TABLE smry_cycles_temp TO smry_cycles;
+DROP TABLE IF EXISTS ca_search.smry_cycles;
+RENAME TABLE ca_search.smry_cycles_temp TO ca_search.smry_cycles;
 
-DROP TABLE IF EXISTS smry_offices;
-RENAME TABLE smry_offices_temp TO smry_offices;
+DROP TABLE IF EXISTS ca_search.smry_offices;
+RENAME TABLE ca_search.smry_offices_temp TO ca_search.smry_offices;
 
-DROP TABLE IF EXISTS smry_propositions;
-RENAME TABLE smry_propositions_temp TO smry_propositions;
+DROP TABLE IF EXISTS ca_search.smry_propositions;
+RENAME TABLE ca_search.smry_propositions_temp TO ca_search.smry_propositions;
 
-DROP TABLE IF EXISTS contributions_search;
-RENAME TABLE contributions_search_temp TO contributions_search; 
+DROP TABLE IF EXISTS ca_search.contributions_search;
+RENAME TABLE ca_search.contributions_search_temp TO ca_search.contributions_search; 
 
-DROP TABLE IF EXISTS contributions;
-RENAME TABLE contributions_temp TO contributions;
+DROP TABLE IF EXISTS ca_search.contributions;
+RENAME TABLE ca_search.contributions_temp TO ca_search.contributions;
 
