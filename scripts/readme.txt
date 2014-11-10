@@ -19,7 +19,7 @@ Step 3: You will need to create 2 databases on your master SQL server.  Call one
 
 Step 4: Create two MySQL users for these database, one user will need full read/write access to both databases and will be used for the install and update process.  This user will also need load data local infile access (file access) granted to it. The other user can be granted SELECT only and is used just for the web page side.  The same user can be used for both processes if desired though not recommended.
 For the users in our demo system:
-GRANT SELECT ca_search.* TO 'caps'@'localhost' IDENTIFIED BY 'caps_dev14';
+GRANT SELECT ON ca_search.* TO 'caps'@'localhost' IDENTIFIED BY 'caps_dev14';
 GRANT ALL ON ca_search.* TO 'caps_script'@'localhost' IDENTIFIED BY '97_caps_45';
 GRANT ALL ON ca_process.* TO 'caps_script'@'localhost';
 GRANT FILE ON *.* TO 'caps_script'@'localhost';
