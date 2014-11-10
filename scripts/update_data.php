@@ -25,8 +25,8 @@
   generate_search_words (); 
 
   # Reset last update file
-  script_query ("TRUNCATE smry_last_update");
-  script_query ("INSERT INTO smry_last_update VALUES (NOW())");
+  script_query ("TRUNCATE ca_search.smry_last_update");
+  script_query ("INSERT INTO ca_search.smry_last_update VALUES (NOW())");
 
   # Process data for contributions table - stage 4
   process_sql_file ("process_stage_4.sql");
@@ -44,8 +44,8 @@
 #===============================================================================================
 # load an sql file
   function process_sql_file ($filename) {
-    global $login, $pwd;
-    system("mysql -u{$login} -p{$pwd} ca_search < \"$filename\"");
+    global $script_login, $script_pwd;
+    system("mysql -u{$script_login} -p{$script_pwd} ca_process < \"$filename\"");
   }
 
 
@@ -122,36 +122,36 @@
 
 
   function generate_search_words () {
-    $query = "SELECT id, DonorNameNormalized, DonorEmployerNormalized, DonorOrganization FROM contributions_temp";
+    $query = "SELECT id, DonorNameNormalized, DonorEmployerNormalized, DonorOrganization FROM ca_search.contributions_temp";
     $result = script_query ($query);
     while ($row = $result->fetch_assoc()) {
       $word_str = " ";
       $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["DonorNameNormalized"] . " " . $row["DonorEmployerNormalized"] . " " . $row["DonorOrganization"]);
       $words = explode (" ", $word_data);
       foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
-      script_query ("UPDATE contributions_search_temp SET DonorWords = '{$word_str}' WHERE id = {$row["id"]}");
+      script_query ("UPDATE ca_search.contributions_search_temp SET DonorWords = '{$word_str}' WHERE id = {$row["id"]}");
     }
     $result->close();
 
-    $query = "SELECT * FROM smry_candidates_temp";
+    $query = "SELECT * FROM ca_search.smry_candidates_temp";
     $result = script_query ($query);
     while ($row = $result->fetch_assoc()) {
       $word_str = " ";
       $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["RecipientCandidateNameNormalized"]);
       $words = explode (" ", $word_data);
       foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
-      script_query ("UPDATE smry_candidates_temp SET CandidateWords = '{$word_str}' WHERE RecipientCandidateNameID = {$row["RecipientCandidateNameID"]}");
+      script_query ("UPDATE ca_search.smry_candidates_temp SET CandidateWords = '{$word_str}' WHERE RecipientCandidateNameID = {$row["RecipientCandidateNameID"]}");
     }
     $result->close();
 
-    $query = "SELECT * FROM smry_committees_temp";
+    $query = "SELECT * FROM ca_search.smry_committees_temp";
     $result = script_query ($query);
     while ($row = $result->fetch_assoc()) {
       $word_str = " ";
       $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["RecipientCommitteeNameNormalized"]);
       $words = explode (" ", $word_data);
       foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
-      script_query ("UPDATE smry_committees_temp SET CommitteeWords = '{$word_str}' WHERE RecipientCommitteeID = {$row["RecipientCommitteeID"]}");
+      script_query ("UPDATE ca_search.smry_committees_temp SET CommitteeWords = '{$word_str}' WHERE RecipientCommitteeID = {$row["RecipientCommitteeID"]}");
     }
     $result->close();
 
@@ -162,7 +162,7 @@
       $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["Target"]);
       $words = explode (" ", $word_data);
       foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
-      script_query ("UPDATE smry_propositions_temp SET PropositionWords = '{$word_str}' WHERE PropositionID = {$row["PropositionID"]}");
+      script_query ("UPDATE ca_search.smry_propositions_temp SET PropositionWords = '{$word_str}' WHERE PropositionID = {$row["PropositionID"]}");
     }
     $result->close();
   } 

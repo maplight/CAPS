@@ -250,8 +250,8 @@ create table contributions_full (
   , key Schedule (Schedule)
 );
 
-drop table if exists contributions;
-create table contributions (
+drop table if exists ca_search.contributions;
+create table ca_search.contributions (
     TransactionType varchar(100) not null
   , ElectionCycle smallint(6) not null default 0
   , Election date default null
