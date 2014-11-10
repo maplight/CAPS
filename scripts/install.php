@@ -28,7 +28,7 @@
 
   # Scrape the cal-access data for all sessions (this process can take up to 8 - 10 hours)
   $query = "SELECT session FROM cal_access_sessions ORDER BY session";
-  $result = my_query ($query);
+  $result = script_query ($query);
   while ($row = $result->fetch_assoc()) {
     $session = $row["session"];
 
@@ -42,7 +42,7 @@
   $query = "SELECT cal_access_propositions_committees.session, cal_access_propositions_committees.filer_id FROM cal_access_propositions_committees
             LEFT JOIN cal_access_committees ON (cal_access_committees.filer_id = cal_access_propositions_committees.filer_id AND cal_access_committees.session = cal_access_propositions_committees.session)
             WHERE ISNULL(cal_access_committees.filer_id)";
-  $result = my_query ($query);
+  $result = script_query ($query);
   while ($row = $result->fetch_assoc()) {
     $session = $row["session"];
     $filer_id = $row["filer_id"];
@@ -53,7 +53,7 @@
   $query = "SELECT cal_access_candidates_committees.session, cal_access_candidates_committees.filer_id FROM cal_access_candidates_committees
             LEFT JOIN cal_access_committees ON (cal_access_committees.filer_id = cal_access_candidates_committees.filer_id AND cal_access_committees.session = cal_access_candidates_committees.session)
             WHERE ISNULL(cal_access_committees.filer_id)";
-  $result = my_query ($query);
+  $result = script_query ($query);
   while ($row = $result->fetch_assoc()) {
     $session = $row["session"];
     $filer_id = $row["filer_id"];
@@ -67,7 +67,7 @@
 #===============================================================================================
 # load an sql file
   function process_sql_file ($filename) {
-    global $login, $pwd;
-    system("mysql -u{$login} -p{$pwd} ca_search < \"$filename\"");
+    global $script_login, $script_pwd;
+    system("mysql -u{$script_login} -p{$script_pwd} ca_process < \"$filename\"");
   }
 ?>
