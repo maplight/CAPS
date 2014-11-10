@@ -17,7 +17,12 @@ Step 2: Make sure your SQL server can process LOAD DATA LOCAL files, as this is 
 
 Step 3: You will need to create 2 databases on your master SQL server.  Call one ca_process and the other ca_search
 
-Step 4: Create two MySQL users for these database, one user will need full read/write access to the databases and will be used for the install and update process.  This user will also need load data local infile access (file access) granted to it. The other user can be granted SELECT only and is used just for the web page side.  The same user can be used for both processes if desired though not recommended.
+Step 4: Create two MySQL users for these database, one user will need full read/write access to both databases and will be used for the install and update process.  This user will also need load data local infile access (file access) granted to it. The other user can be granted SELECT only and is used just for the web page side.  The same user can be used for both processes if desired though not recommended.
+For the users in our demo system:
+GRANT SELECT ca_search.* TO 'caps'@'localhost' IDENTIFIED BY 'caps_dev14';
+GRANT ALL ON ca_search.* TO 'caps_script'@'localhost' IDENTIFIED BY '97_caps_45';
+GRANT ALL ON ca_process.* TO 'caps_script'@'localhost';
+GRANT FILE ON *.* TO 'caps_script'@'localhost';
 
 Step 5: One this is done copy all the CAPS files into the directory you wish to have them run from.  The following directory tree is used in the files:
 / - root folder, holds the files needed for the web database
