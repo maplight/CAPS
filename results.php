@@ -184,7 +184,7 @@
     
     # create candidate query
     if ($CandidateList == "") {
-      if ($Candidate != "") {$candidate_where .= "({$Candidate}) AND "; $summary_type .= "C";}
+      if ($Candidate != "") {$candidate_where .= "({$Candidate}) AND ";}
     } else {
       $candidate_where .= "{$CandidateList} AND "; $summary_type .= "C";
     }
@@ -194,7 +194,7 @@
 
     # create proposition query
     if ($Proposition == "") {
-      if ($PropositionSearch != "") {$proposition_where .= "({$PropositionSearch}) AND "; $summary_type .= "B";}
+      if ($PropositionSearch != "") {$proposition_where .= "({$PropositionSearch}) AND ";}
     } else {
       $proposition_where .= "{$Proposition} AND "; $summary_type .= "B";
     }
@@ -342,9 +342,21 @@
 
         echo "<div id=\"results\">";
 
-        echo "<h1 class=\"caps_title3\">Search Results</h1>";
-        echo "Summary Type: $summary_type";
-        echo "<hr class=\"caps_hr1\">";
+        if ($summary_type == "") {
+          echo "<h1 class=\"caps_title3\">Search Results</h1>";
+          echo "<hr class=\"caps_hr1\">";
+        } else {
+          if (strlen ($summary_type) == 1) {
+            switch ($summary_type) {
+              case "C":
+                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">{$_POST["candidate_list"]}</strong> has received</div>";
+                break;            
+            }
+          } else {
+            echo "<h1 class=\"caps_title3\">Search Results</h1>";
+            echo "<hr class=\"caps_hr1\">";
+          }
+        }
         echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions";
         echo "<a href=\"#\" class=\"info\"></a></div>";
         echo "<h2 class=\"caps_title4\">Contributions</h2>";
