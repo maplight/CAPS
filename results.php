@@ -372,6 +372,29 @@
                 }
                 echo "</div>";
                 echo "<hr class=\"caps_hr1\">";
+                break;
+
+              case "E":
+                $election = substr ($_POST["proposition_list"], 4);
+                $election_date = date ("F Y", strtotime ($election));
+                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">Ballot Measures</strong> on the {$election_date} ballot have received</div>";
+                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions";
+                echo "<a href=\"#\" class=\"info\"></a></div>";
+                echo "<div id=\"breakdown_box\">";
+                $result2 = my_query ("SELECT Target, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount, SUM(IF(PositionID = 1,1,0)) AS SupportCount, SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount, SUM(IF(PositionID = 2,1,0)) AS OpposeCount, SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount FROM contributions_search INNER JOIN smry_propositions USING (PropositionID) WHERE Election = '{$election}' GROUP BY Target ORDER BY Target");
+                while ($row2 = $result2->fetch_assoc()) {
+                  if (strpos ($row2["Target"], "-") !== false) {
+                    echo "<p><b>" . substr ($row2["Target"], 0, strpos ($row2["Target"], "-")) . "</b>" . substr ($row2["Target"], strpos ($row2["Target"], "-")) . "<br>";
+                  } else {
+                    echo "<p><b>{$row2["Target"]}</b><br>";
+                  }
+                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$" . number_format ($row2["TotalAmount"], 2, ".", ",") . " total raised - " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
+                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Support: $" . number_format ($row2["SupportAmount"], 2, ".", ",") . " raised - " . number_format ($row2["SupportCount"], 0, ".", ",") . " contributions<br>";
+                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Oppose: $" . number_format ($row2["OpposeAmount"], 2, ".", ",") . " raised - " . number_format ($row2["OpposeCount"], 0, ".", ",") . " contributions";
+                  echo "</p>";
+                }
+                echo "</div>";
+                echo "<hr class=\"caps_hr1\">";
                 break;            
             }
           } else {
