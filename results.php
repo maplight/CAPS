@@ -5,8 +5,8 @@
       echo "<DIV CLASS=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</DIV>";
     } else {
       # Parse search form
-      $where = parse_search_form ($_POST);
-      display_data ($where);
+      $parse_data = parse_search_form ($_POST);
+      display_data ($parse_data);
     }
   }
 
@@ -170,6 +170,7 @@
 
     #------------------------------------------------------------------------------------------
     # Build sub-query components
+    $summary_type = "";
     $donor_where = "";
     $candidate_where = "";
     $proposition_where = "";
@@ -177,34 +178,34 @@
     $date_where = "";
 
     # create donor query
-    if ($Donor != "") {$donor_where .= "{$Donor} AND ";}
-    if ($DonorState != "") {$donor_where .= "{$DonorState} AND ";}
+    if ($Donor != "") {$donor_where .= "{$Donor} AND "; $summary_type .= "D";}
+    if ($DonorState != "") {$donor_where .= "{$DonorState} AND "; $summary_type .= "S";}
     if ($donor_where != "") {$donor_where = substr ($donor_where, 0, -5);} # remove extra AND
     
     # create candidate query
     if ($CandidateList == "") {
-      if ($Candidate != "") {$candidate_where .= "({$Candidate}) AND ";}
+      if ($Candidate != "") {$candidate_where .= "({$Candidate}) AND "; $summary_type .= "C";}
     } else {
-      $candidate_where .= "{$CandidateList} AND ";
+      $candidate_where .= "{$CandidateList} AND "; $summary_type .= "C";
     }
-    if ($OfficeList != "") {$candidate_where .= "{$OfficeList} AND ";}
+    if ($OfficeList != "") {$candidate_where .= "{$OfficeList} AND "; $summary_type .= "O";}
     if ($CandidateContribution != "") {$candidate_where .= "$CandidateContribution AND ";}
     if ($candidate_where != "") {$candidate_where = substr ($candidate_where, 0, -5);} # Remove the final AND
 
     # create proposition query
     if ($Proposition == "") {
-      if ($PropositionSearch != "") {$proposition_where .= "({$PropositionSearch}) AND ";}
+      if ($PropositionSearch != "") {$proposition_where .= "({$PropositionSearch}) AND "; $summary_type .= "B";}
     } else {
-      $proposition_where .= "{$Proposition} AND ";
+      $proposition_where .= "{$Proposition} AND "; $summary_type .= "B";
     }
-    if ($Election != "") {$proposition_where .= "{$Election} AND ";}
-    if ($Position != "") {$proposition_where .= "{$Position} AND ";}
-    if ($Allied != "") {$proposition_where .= "{$Allied} AND ";}
+    if ($Election != "") {$proposition_where .= "{$Election} AND "; $summary_type .= "E";}
+    if ($Position != "") {$proposition_where .= "{$Position} AND "; $summary_type .= "P";}
+    if ($Allied != "") {$proposition_where .= "{$Allied} AND "; $summary_type .= "A";}
     if ($PropositionContribution != "") {$proposition_where .= "$PropositionContribution AND ";}
     if ($proposition_where != "") {$proposition_where = substr ($proposition_where, 0, -5);} # Remove the final AND
 
     # create committee query
-    if ($Committee != "") {$committee_where .= "({$Committee}) AND ";}
+    if ($Committee != "") {$committee_where .= "({$Committee}) AND "; $summary_type .= "M";}
     if ($committee_where != "") {$committee_where = substr ($committee_where, 0, -5);} # remove extra AND
 
     # create date query
@@ -225,11 +226,15 @@
     if ($date_where != "") {$where .= "{$date_where} AND ";}
     if ($where != "") {$where = "WHERE " . substr ($where, 0, -5);} # remove extra AND
 
-    return $where;
+    $parse_data = array ($where, $summary_type);
+    return $parse_data;
   }
 
 
-  function display_data ($where) {
+  function display_data ($parse_data) {
+    $where = $parse_data[0];
+    $summary_type = $parse_data[1];
+
     if ($where == "") {
       echo "You have not entered any search data, please select a criteria on the side.";
     } else {
@@ -336,7 +341,9 @@
         $rows_returned = $result->num_rows;
 
         echo "<div id=\"results\">";
+
         echo "<h1 class=\"caps_title3\">Search Results</h1>";
+        echo "Summary Type: $summary_type";
         echo "<hr class=\"caps_hr1\">";
         echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions";
         echo "<a href=\"#\" class=\"info\"></a></div>";
