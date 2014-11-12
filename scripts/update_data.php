@@ -155,7 +155,7 @@
     }
     $result->close();
 
-    $query = "SELECT * FROM smry_propositions_temp";
+    $query = "SELECT * FROM ca_search.smry_propositions_temp";
     $result = script_query ($query);
     while ($row = $result->fetch_assoc()) {
       $word_str = " ";

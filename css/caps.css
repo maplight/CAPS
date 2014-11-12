@@ -12,6 +12,8 @@ body{
 #caps_header{
   display:block;
   position:relative;
+  width:100%;
+  background:#FFFFFF;
   z-index:100;
   box-shadow:0px 8px 8px #a5a4a2;
 }

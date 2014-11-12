@@ -1,6 +1,6 @@
 <?php
   require ("connect.php");
-  $where = stripslashes ($my_conn->real_escape_string ($_GET["w"]));
+  $where = stripslashes ($web_conn->real_escape_string ($_GET["w"]));
 
   $filename = "data-" . date ("Y-m-d-H-i") . ".csv";
 
