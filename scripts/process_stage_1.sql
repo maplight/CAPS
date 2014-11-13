@@ -1,7 +1,7 @@
-﻿
+﻿/*
 -- ------------------------------------------------------------------------------------------
 -- populate tables (before name cleaning)
-
+*/
 truncate table filer_ids;
 insert filer_ids (filer_id, max_rpt_end)
 select filer_id
