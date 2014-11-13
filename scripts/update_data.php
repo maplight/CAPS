@@ -2,35 +2,48 @@
   require ("../connect.php");
   $script_conn = mysqli_init ();
   mysqli_options ($script_conn, MYSQLI_OPT_LOCAL_INFILE, true);
-  mysqli_real_connect ($script_conn, "localhost", $script_login, $script_pwd, "ca_process");
+  mysqli_real_connect ($script_conn, $hostname, $script_login, $script_pwd, "ca_process");
 
+ echo "Starting update... \n";
+
+
+ echo "Update the most recent cal_access session \n";
   # Update the most recent cal_access session
   system ("php cal_access_data_scraper.php");
 
+  echo "Get the ftp data \n";
   # Get the ftp data
   system ("php get_ftp_data.php");
 
+  echo "Process data for contributions table - stage 1 \n";
   # Process data for contributions table - stage 1
   process_sql_file ("process_stage_1.sql");
 
+  echo "Clean up names \n";
   # Clean up names
   clean_candidate_names ();
 
+  echo "Process data for contributions table - stage 2 \n";
   # Process data for contributions table - stage 2
   process_sql_file ("process_stage_2.sql");
 
+  echo "Process data for contributions table - stage 3 \n";
   # Process data for contributions table - stage 3
   process_sql_file ("process_stage_3.sql");
 
+  echo "generate search words \n";
   generate_search_words (); 
 
+  echo "Reset last update file \n";
   # Reset last update file
   script_query ("TRUNCATE ca_search.smry_last_update");
   script_query ("INSERT INTO ca_search.smry_last_update VALUES (NOW())");
 
+  echo "Process data for contributions table - stage 4 \n";
   # Process data for contributions table - stage 4
   process_sql_file ("process_stage_4.sql");
 
+  echo "Update done... \n";
 
 #===============================================================================================
 # process script query
@@ -43,10 +56,26 @@
 
 #===============================================================================================
 # load an sql file
-  function process_sql_file ($filename) {
-    global $script_login, $script_pwd;
-    system("mysql -u{$script_login} -p{$script_pwd} ca_process < \"$filename\"");
-  }
+function process_sql_file($filename)
+{
+    //  global $script_login, $script_pwd;
+    //  system("mysql -u{$script_login} -p{$script_pwd} ca_process < \"$filename\"");
+
+    $sql_contents = file_get_contents($filename);
+    $sql_contents = rtrim(rtrim($sql_contents), ";");
+    $sql_contents = preg_split("/;/", $sql_contents);
+
+
+
+    foreach ($sql_contents as $query) {
+
+        if($query){
+            $result = script_query (trim($query));
+            if (!$result)
+                echo "Error on import of " . $query . "\n";
+        }
+    }
+}
 
 
 #===============================================================================================

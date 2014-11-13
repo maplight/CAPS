@@ -2,7 +2,7 @@
   require ("../connect.php");
   $script_conn = mysqli_init ();
   mysqli_options ($script_conn, MYSQLI_OPT_LOCAL_INFILE, true);
-  mysqli_real_connect ($script_conn, "localhost", $script_login, $script_pwd, "ca_process");
+  mysqli_real_connect ($script_conn, $hostname, $script_login, $script_pwd, "ca_process");
 
 
 #===============================================================================================

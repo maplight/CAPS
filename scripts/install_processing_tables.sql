@@ -1,7 +1,3 @@
-﻿
--- ------------------------------------------------------------------------------------------
--- create tables
-
 drop table if exists table_filing_ids;
 create table table_filing_ids (
     OriginTable varchar(20) not null
@@ -32,7 +28,7 @@ create table filer_ids (
   , key max_rpt_end (max_rpt_end)
 );
 
--- formerly grp_ftp_disclosure_filer_id
+
 drop table if exists disclosure_filer_ids;
 create table disclosure_filer_ids (
     disclosure_filer_id bigint(20) not null primary key comment 'links to ftp_cvr_campaign_disclosure.filer_id'
@@ -76,7 +72,7 @@ create table candidate_sessions (
   , primary key candidate_session (candidate_id, session)
 );
 
--- formerly grp_ftp_disclosure_candidate_name
+/*-- formerly grp_ftp_disclosure_candidate_name*/
 drop table if exists filing_amends;
 create table filing_amends (
     filing_id bigint(20) not null
@@ -98,7 +94,7 @@ create table filing_amends (
   , primary key filing_id_amend_id (filing_id, amend_id)
 ); 
 
--- formerly grp_ftp_cal_access_filer_session_name_types
+/*-- formerly grp_ftp_cal_access_filer_session_name_types*/
 drop table if exists prop_filer_session_name_forms;
 create table prop_filer_session_name_forms (
     filer_id bigint(20) not null
@@ -110,7 +106,7 @@ create table prop_filer_session_name_forms (
   , key filer_id_session_id (filer_id, session_id)
 );
 
--- formerly grp_ftp_filer_sessions
+/*-- formerly grp_ftp_filer_sessions */
 drop table if exists prop_filer_sessions;
 create table prop_filer_sessions (
     filer_id bigint(20) not null
@@ -287,5 +283,3 @@ create table ca_search.contributions (
   , key RecipientCommitteeNameNormalized (RecipientCommitteeNameNormalized(10) asc)
   , key RecipientCandidateNameNormalized (RecipientCandidateNameNormalized(10) asc)
 ) ENGINE = MyISAM;
-
-
