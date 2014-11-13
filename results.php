@@ -308,11 +308,7 @@
                            "DonorZipCode|Contributor ZipCode|",
                            "DonorEmployerNormalized|Contributor Employer|",
                            "DonorOccupationNormalized|Contributor Occupation|",
-                           "DonorOrganization|Contributor Occupation|",
-                           "Unitemized|Unitemized Contribution|",
-                           "AlliedCommittee|Allied Committee|",
-                           "CandidateContribution|Candidate Contribution|",
-                           "BallotMeasureContribution|Ballot Measure Contribution|");
+                           "DonorOrganization|Contributor Occupation|");
         }
 
         $sort_fields = array ("contributions_search.TransactionAmount|Amount Ascending",
