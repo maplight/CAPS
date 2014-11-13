@@ -629,7 +629,7 @@ where
   and ifnull(filing_ids.loan_total_from_summary,0) <> 0
 ;
   
--- add F501 candidate office fields 
+-- append F501 candidate office fields 
 update 
   contributions_full_temp a
   join candidate_sessions b
@@ -652,16 +652,6 @@ where
 -- set labels and others
 update contributions_full_temp
 set
-  /*
-  -- add committee type labels
-    RecipientCommitteeTypeDescription = case
-      when RecipientCommitteeType = 'C' then 'Officeholder, Candidate Controlled Committee'
-      when RecipientCommitteeType = 'G' then 'General Purpose Committee'
-      when RecipientCommitteeType = 'B' then 'Primarily Formed Ballot Measure Committee'
-      when RecipientCommitteeType = 'P' then 'Primarily Formed Candidate/Officeholder Committee'
-      when RecipientCommitteeType = '' then 'Unknown'
-      end
-  */
   -- add transaction type labels
     TransactionType = CASE
       WHEN Form = 'F460' AND Schedule = 'A' THEN 'Monetary Contribution'
@@ -678,7 +668,7 @@ set
   , Election = ifnull(ElectionProp,ElectionCvr)
 ;
 
--- add candidate office labels in this order:
+-- use office labels from F460 office code, if any
 update
   contributions_full_temp a
   join california_data_office_codes b on a.RecipientCandidateOfficeCvrCode = b.office_cd_cvr
@@ -693,8 +683,12 @@ where
     or a.RecipientCommitteeNameNormalized like '%retain%'
     )
 ;
+
+-- if still no office, use custom office from F460, if any
 update contributions_full_temp
-set RecipientCandidateOffice = RecipientCandidateOfficeCvrCustom
+set 
+    RecipientCandidateOffice = RecipientCandidateOfficeCvrCustom
+  , RecipientCandidateOfficeNeedsCleanup = 'Y'
 where
   RecipientCandidateOffice = ''
   and RecipientCandidateOfficeCvrCustom <> ''
@@ -705,92 +699,111 @@ where
     or RecipientCommitteeNameNormalized like '%retain%'
     )
 ;
+
+-- cleanup custom offices from F460s
+update contributions_full_temp
+set 
+    RecipientCandidateOfficeNeedsCleanup = 'N'
+  , RecipientCandidateOffice = case
+      when RecipientCandidateOffice like '%office held%' then ''
+      when RecipientCandidateOffice like '%Govern_r%' and RecipientCandidateOffice not like '%Lieuten_nt%' then 'Governor' 
+      when RecipientCandidateOffice like '%Lieuten_nt%Govern_r%' then 'Lieutenant Governor' 
+      when RecipientCandidateOffice like '%Secretary%' then 'Secretary of State' 
+      when RecipientCandidateOffice like '%state%Controll_r%' then 'State Controller' 
+      when RecipientCandidateOffice like '%Attorn%y gen%' then 'Attorney General' 
+      when RecipientCandidateOffice like '%state%Treasur_r%' then 'State Treasurer' 
+      when RecipientCandidateOffice like '%Insur_nce Com%' then 'Insurance Commissioner' 
+      when RecipientCandidateOffice like '%Superintend_nt%' then 'Superintendent of Public Instruction' 
+      when RecipientCandidateOffice like '%supreme court%' or RecipientCandidateOffice like '%supreme%justice%' then 'Supreme Court Justice' 
+      when RecipientCandidateOffice like '%Senate%' or RecipientCandidateOffice like '%Senat_r%' then 'State Senate' 
+      when RecipientCandidateOffice like '%Assem%b%y%' or RecipientCandidateOffice like '%ASM%' then 'State Assembly' 
+      when RecipientCandidateOffice like '%board of eq%' or RecipientCandidateOffice like '%boe%' then 'Board of Equalization' 
+      when RecipientCandidateOffice like '%public%emp%ret%sys%' or RecipientCandidateOffice like 'pers%' or RecipientCandidateOffice like '%calpers%' then 'Public Employees Retirement System' 
+      when RecipientCandidateOffice like '%appel%te%court%' or RecipientCandidateOffice like '%appel%te%justice%' then 'State Appellate Court Justice' 
+      when RecipientCandidateOffice like '%asses%r%' then 'Assessor' 
+      when RecipientCandidateOffice like '%board of ed%' then 'Board of Education' 
+      when RecipientCandidateOffice like '%board of super%' or RecipientCandidateOffice like '%supervis_r%' then 'Board of Supervisors' 
+      when RecipientCandidateOffice like '%city atto%rn%y%' then 'City Attorney' 
+      when RecipientCandidateOffice like '%com%college%' then 'Community College Board' 
+      when RecipientCandidateOffice like '%city%council%' or RecipientCandidateOffice like '%council%mem%' then 'City Council Member' 
+      when RecipientCandidateOffice like '%county coun__l%' then 'County Counsel' 
+      when RecipientCandidateOffice like '%county supervis_r%' then 'County Supervisor' 
+      when RecipientCandidateOffice like '%local%cont%' then 'Local Controller' 
+      when RecipientCandidateOffice like '%dist% atto%rn%y%' then 'District Attorney' 
+      when RecipientCandidateOffice like '%mayor%' then 'Mayor' 
+      when RecipientCandidateOffice like '%public%def%' then 'Public Defender' 
+      when RecipientCandidateOffice like '%planning%com%' then 'Planning Commissioner' 
+      when RecipientCandidateOffice like '%sher%iff%' then 'Sheriff-Coroner' 
+      when RecipientCandidateOffice like '%superior court%' or RecipientCandidateOffice like '%judge%' then 'Superior Court Judge' 
+      when RecipientCandidateOffice like '%Treasur_r%' and RecipientCandidateOffice not like '%state Treasur_r%' then 'Local Treasurer'
+      else ''
+      end
+where RecipientCandidateOfficeNeedsCleanup = 'Y'
+;
+
+-- if still no office, use office labels from F501 office code, if any
 update
   contributions_full_temp a
   join california_data_office_codes b on a.RecipientCandidateOffice501Code = b.office_cd_501
 set a.RecipientCandidateOffice = b.description
-where 
+where
   a.RecipientCandidateOffice = ''
   and b.office_cd_cvr <> 'OTH'
 ;
+
+-- if still no office, use custom office from F501, if any
 update contributions_full_temp
-set RecipientCandidateOffice = RecipientCandidateOffice501Custom
+set 
+    RecipientCandidateOffice = RecipientCandidateOffice501Custom
+  , RecipientCandidateOfficeNeedsCleanup = 'Y'
 where 
   RecipientCandidateOffice = ''
   and RecipientCandidateOffice501Custom <> ''
 ;
 
--- stardardize custom offices
-update 
-  contributions_full_temp a
-  left join california_data_office_codes b on a.RecipientCandidateOfficeCvrCode = b.office_cd_cvr
-  left join california_data_office_codes c on a.RecipientCandidateOffice501Code = c.office_cd_501
-set a.RecipientCandidateOffice = case
-  when a.RecipientCandidateOffice like '%office held%' then ''
-  when a.RecipientCandidateOffice like '%Govern_r%' and a.RecipientCandidateOffice not like '%Lieuten_nt%' then 'Governor' 
-  when a.RecipientCandidateOffice like '%Lieuten_nt%Govern_r%' then 'Lieutenant Governor' 
-  when a.RecipientCandidateOffice like '%Secretary%' then 'Secretary of State' 
-  when a.RecipientCandidateOffice like '%state%Controll_r%' then 'State Controller' 
-  when a.RecipientCandidateOffice like '%Attorn%y gen%' then 'Attorney General' 
-  when a.RecipientCandidateOffice like '%state%Treasur_r%' then 'State Treasurer' 
-  when a.RecipientCandidateOffice like '%Insur_nce Com%' then 'Insurance Commissioner' 
-  when a.RecipientCandidateOffice like '%Superintend_nt%' then 'Superintendent of Public Instruction' 
-  when a.RecipientCandidateOffice like '%supreme court%' or a.RecipientCandidateOffice like '%supreme%justice%' then 'Supreme Court Justice' 
-  when a.RecipientCandidateOffice like '%Senate%' or a.RecipientCandidateOffice like '%Senat_r%' then 'State Senate' 
-  when a.RecipientCandidateOffice like '%Assem%b%y%' or a.RecipientCandidateOffice like '%ASM%' then 'State Assembly' 
-  when a.RecipientCandidateOffice like '%board of eq%' or a.RecipientCandidateOffice like '%boe%' then 'Board of Equalization' 
-  when a.RecipientCandidateOffice like '%public%emp%ret%sys%' or a.RecipientCandidateOffice like 'pers%' or a.RecipientCandidateOffice like '%calpers%' then 'Public Employees Retirement System' 
-  when a.RecipientCandidateOffice like '%appel%te%court%' or a.RecipientCandidateOffice like '%appel%te%justice%' then 'State Appellate Court Justice' 
-  when a.RecipientCandidateOffice like '%asses%r%' then 'Assessor' 
-  when a.RecipientCandidateOffice like '%board of ed%' then 'Board of Education' 
-  when a.RecipientCandidateOffice like '%board of super%' or a.RecipientCandidateOffice like '%supervis_r%' then 'Board of Supervisors' 
-  when a.RecipientCandidateOffice like '%city atto%rn%y%' then 'City Attorney' 
-  when a.RecipientCandidateOffice like '%com%college%' then 'Community College Board' 
-  when a.RecipientCandidateOffice like '%city%council%' or a.RecipientCandidateOffice like '%council%mem%' then 'City Council Member' 
-  when a.RecipientCandidateOffice like '%county coun__l%' then 'County Counsel' 
-  when a.RecipientCandidateOffice like '%county supervis_r%' then 'County Supervisor' 
-  when a.RecipientCandidateOffice like '%local%cont%' then 'Local Controller' 
-  when a.RecipientCandidateOffice like '%dist% atto%rn%y%' then 'District Attorney' 
-  when a.RecipientCandidateOffice like '%mayor%' then 'Mayor' 
-  when a.RecipientCandidateOffice like '%public%def%' then 'Public Defender' 
-  when a.RecipientCandidateOffice like '%planning%com%' then 'Planning Commissioner' 
-  when a.RecipientCandidateOffice like '%sher%iff%' then 'Sheriff-Coroner' 
-  when a.RecipientCandidateOffice like '%superior court%' or a.RecipientCandidateOffice like '%judge%' then 'Superior Court Judge' 
-  when a.RecipientCandidateOffice like '%Treasur_r%' and a.RecipientCandidateOffice not like '%state Treasur_r%' then 'Local Treasurer'
-  else ''
-  end
-where 
-  a.RecipientCandidateOffice <> ''
-  and (
-    (
-      ifnull(b.office_cd_cvr,'') in ('','OTH')
-      and a.RecipientCandidateOfficeCvrCustom <> ''
-      and (
-        a.RecipientCandidateOfficeCvrSoughtOrHeld <> 'H'
-        or a.RecipientCommitteeNameNormalized like '%reelect%'
-        or a.RecipientCommitteeNameNormalized like '%re_elect%'
-        or a.RecipientCommitteeNameNormalized like '%retain%'
-        )
-      )
-    or (
-      ifnull(b.office_cd_cvr,'') in ('','OTH')
-      and not (
-        a.RecipientCandidateOfficeCvrCustom <> ''
-        and (
-          a.RecipientCandidateOfficeCvrSoughtOrHeld <> 'H'
-          or a.RecipientCommitteeNameNormalized like '%reelect%'
-          or a.RecipientCommitteeNameNormalized like '%re_elect%'
-          or a.RecipientCommitteeNameNormalized like '%retain%'
-          )
-        )
-      and ifnull(c.office_cd_cvr,'') in ('','OTH') 
-      and a.RecipientCandidateOffice501Custom <> ''
-      )
-    )
+-- cleanup custom offices from F501s
+update contributions_full_temp
+set 
+    RecipientCandidateOfficeNeedsCleanup = 'N'
+  , RecipientCandidateOffice = case
+      when RecipientCandidateOffice like '%office held%' then ''
+      when RecipientCandidateOffice like '%Govern_r%' and RecipientCandidateOffice not like '%Lieuten_nt%' then 'Governor' 
+      when RecipientCandidateOffice like '%Lieuten_nt%Govern_r%' then 'Lieutenant Governor' 
+      when RecipientCandidateOffice like '%Secretary%' then 'Secretary of State' 
+      when RecipientCandidateOffice like '%state%Controll_r%' then 'State Controller' 
+      when RecipientCandidateOffice like '%Attorn%y gen%' then 'Attorney General' 
+      when RecipientCandidateOffice like '%state%Treasur_r%' then 'State Treasurer' 
+      when RecipientCandidateOffice like '%Insur_nce Com%' then 'Insurance Commissioner' 
+      when RecipientCandidateOffice like '%Superintend_nt%' then 'Superintendent of Public Instruction' 
+      when RecipientCandidateOffice like '%supreme court%' or RecipientCandidateOffice like '%supreme%justice%' then 'Supreme Court Justice' 
+      when RecipientCandidateOffice like '%Senate%' or RecipientCandidateOffice like '%Senat_r%' then 'State Senate' 
+      when RecipientCandidateOffice like '%Assem%b%y%' or RecipientCandidateOffice like '%ASM%' then 'State Assembly' 
+      when RecipientCandidateOffice like '%board of eq%' or RecipientCandidateOffice like '%boe%' then 'Board of Equalization' 
+      when RecipientCandidateOffice like '%public%emp%ret%sys%' or RecipientCandidateOffice like 'pers%' or RecipientCandidateOffice like '%calpers%' then 'Public Employees Retirement System' 
+      when RecipientCandidateOffice like '%appel%te%court%' or RecipientCandidateOffice like '%appel%te%justice%' then 'State Appellate Court Justice' 
+      when RecipientCandidateOffice like '%asses%r%' then 'Assessor' 
+      when RecipientCandidateOffice like '%board of ed%' then 'Board of Education' 
+      when RecipientCandidateOffice like '%board of super%' or RecipientCandidateOffice like '%supervis_r%' then 'Board of Supervisors' 
+      when RecipientCandidateOffice like '%city atto%rn%y%' then 'City Attorney' 
+      when RecipientCandidateOffice like '%com%college%' then 'Community College Board' 
+      when RecipientCandidateOffice like '%city%council%' or RecipientCandidateOffice like '%council%mem%' then 'City Council Member' 
+      when RecipientCandidateOffice like '%county coun__l%' then 'County Counsel' 
+      when RecipientCandidateOffice like '%county supervis_r%' then 'County Supervisor' 
+      when RecipientCandidateOffice like '%local%cont%' then 'Local Controller' 
+      when RecipientCandidateOffice like '%dist% atto%rn%y%' then 'District Attorney' 
+      when RecipientCandidateOffice like '%mayor%' then 'Mayor' 
+      when RecipientCandidateOffice like '%public%def%' then 'Public Defender' 
+      when RecipientCandidateOffice like '%planning%com%' then 'Planning Commissioner' 
+      when RecipientCandidateOffice like '%sher%iff%' then 'Sheriff-Coroner' 
+      when RecipientCandidateOffice like '%superior court%' or RecipientCandidateOffice like '%judge%' then 'Superior Court Judge' 
+      when RecipientCandidateOffice like '%Treasur_r%' and RecipientCandidateOffice not like '%state Treasur_r%' then 'Local Treasurer'
+      else ''
+      end
+where RecipientCandidateOfficeNeedsCleanup = 'Y'
 ;
 
 /*
--- standardize office across all contributions for a particular candidate/cycle
+-- (DON'T) standardize office across all contributions for a particular candidate/cycle
 drop table if exists candidate_cycle_temp;
 create table candidate_cycle_temp (
     RecipientCandidateID bigint(20) not null
@@ -954,6 +967,17 @@ set a.RecipientCommitteeType = case
 drop table if exists tmp_committees_with_multiple_types;
 drop table if exists tmp_committee_types_with_multiple_types;
 
+  /*
+  -- add committee type labels
+    RecipientCommitteeTypeDescription = case
+      when RecipientCommitteeType = 'C' then 'Officeholder, Candidate Controlled Committee'
+      when RecipientCommitteeType = 'G' then 'General Purpose Committee'
+      when RecipientCommitteeType = 'B' then 'Primarily Formed Ballot Measure Committee'
+      when RecipientCommitteeType = 'P' then 'Primarily Formed Candidate/Officeholder Committee'
+      when RecipientCommitteeType = '' then 'Unknown'
+      end
+  */
+
 -- flag ballot measure committees
 update contributions_full_temp
 set BallotMeasureCommittee = 'Y'
@@ -985,102 +1009,6 @@ set
   , RecipientCandidateOffice = ''
 -- where BallotMeasureContribution = 'Y'
 where HasProposition = 'Y'
-;
-
--- flag state offices based on office field
-update contributions_full_temp
-set StateOffice = 'Y'
-where 
-  HasProposition = 'N'
-  and (
-       RecipientCandidateOffice like '%Assembl%y%' 
-    or RecipientCandidateOffice like '%Senate%'
-    or RecipientCandidateOffice like '%Govern_r%'
-    or RecipientCandidateOffice like '%Controll_r%'
-    or (
-      RecipientCandidateOffice like '%Treasur_r%'
-      and RecipientCandidateOffice not like '%local Treasur_r%'
-      )
-    or RecipientCandidateOffice like '%Insur_nce Com%'
-    or RecipientCandidateOffice like '%Lieuten_nt%'
-    or RecipientCandidateOffice like '%Secretary%'
-    or RecipientCandidateOffice like '%Superintend%nt%' 
-    or RecipientCandidateOffice like '%Attorney gen%'
-    or RecipientCandidateOffice like '%board of eq%' 
-    or RecipientCandidateOffice like '%boe%'
-    )
-;
-
--- flag local offices based on office field
-update contributions_full_temp
-set LocalOffice = 'Y'
-where
-  HasProposition = 'N'
-  and (
-       RecipientCandidateOffice like '%mayor%'
-    or RecipientCandidateOffice like '%judge%'
-    or RecipientCandidateOffice like '%supervis_r%'
-    or RecipientCandidateOffice like '%city council%'
-    or RecipientCandidateOffice like '%superior court%'
-    or RecipientCandidateOffice like '%asses%r%'
-    or RecipientCandidateOffice like '%board of education%'
-    or RecipientCandidateOffice like '%college board%'
-    or RecipientCandidateOffice like '%school board%'
-    or RecipientCandidateOffice like '%sher%iff%'
-    or RecipientCandidateOffice like '%local treasur_r%'
-    or RecipientCandidateOffice like '%city attorn%y%'
-    or RecipientCandidateOffice like '%district attorn%y%'
-    )
-;
-
--- flag state offices based on committee name (if no state or local flag has been set yet)
-update contributions_full_temp
-set StateOffice = 'Y'
-where 
-  HasProposition = 'N'
-  and StateOffice = 'N'
-  and LocalOffice = 'N'
-  and (
-    RecipientCommitteeNameNormalized like '%Assembl%y%' 
-    or RecipientCommitteeNameNormalized like '%Senate%'
-    or RecipientCommitteeNameNormalized like '%Govern_r%'
-    or RecipientCommitteeNameNormalized like '%Controll_r%'
-    or (
-      RecipientCommitteeNameNormalized like '%Treasur_r%'
-      and RecipientCommitteeNameNormalized not like '%local Treasur_r%'
-      )
-    or RecipientCommitteeNameNormalized like '%Insur_nce Com%'
-    or RecipientCommitteeNameNormalized like '%Lieuten_nt%'
-    or RecipientCommitteeNameNormalized like '%Secretary%'
-    or RecipientCommitteeNameNormalized like '%Superintend_nt%' 
-    or RecipientCommitteeNameNormalized like '%Attorn%y gen%'
-    or RecipientCommitteeNameNormalized like '%board of eq%' 
-    or RecipientCommitteeNameNormalized like '%boe%'
-    )
-;
-
--- flag local offices based on committee name (if no state or local flag has been set yet)
-update contributions_full_temp
-set LocalOffice = 'Y'
-where
-  HasProposition = 'N'
-  and StateOffice = 'N'
-  and LocalOffice = 'N'
-  and (
-    RecipientCommitteeNameNormalized like '%mayor%'
-    or RecipientCommitteeNameNormalized like '%judge%'
-    or RecipientCommitteeNameNormalized like '%supervis_r%'
-    or RecipientCommitteeNameNormalized like '%city council%'
-    or RecipientCommitteeNameNormalized like '%superior court%'
-    or RecipientCommitteeNameNormalized like '%asses%r%'
-    or RecipientCommitteeNameNormalized like '%board of education%'
-    or RecipientCommitteeNameNormalized like '%college board%'
-    or RecipientCommitteeNameNormalized like '%school board%'
-    or RecipientCommitteeNameNormalized like '%sher%iff%'
-    or RecipientCommitteeNameNormalized like '%local treasur_r%'
-    or RecipientCommitteeNameNormalized like '%city attorn%y%'
-    or RecipientCommitteeNameNormalized like '%district attorn%y%'
-    )
 ;
 
 -- flag non-candidate-controlled committees
@@ -1200,13 +1128,120 @@ where a.BallotMeasureContribution = 'Y'
 ;
 drop table if exists tmp_prop_committees;
 
+-- flag state offices based on office field
+update contributions_full_temp
+set StateOffice = 'Y'
+where 
+  CandidateContribution = 'Y'
+  -- HasProposition = 'N'
+  and (
+       RecipientCandidateOffice like '%Assembl%y%' 
+    or RecipientCandidateOffice like '%Senate%'
+    or RecipientCandidateOffice like '%Govern_r%'
+    or RecipientCandidateOffice like '%Controll_r%'
+    or (
+      RecipientCandidateOffice like '%Treasur_r%'
+      and RecipientCandidateOffice not like '%local Treasur_r%'
+      )
+    or RecipientCandidateOffice like '%Insur_nce Com%'
+    or RecipientCandidateOffice like '%Lieuten_nt%'
+    or RecipientCandidateOffice like '%Secretary%'
+    or RecipientCandidateOffice like '%Superintend%nt%' 
+    or RecipientCandidateOffice like '%Attorney gen%'
+    or RecipientCandidateOffice like '%board of eq%' 
+    or RecipientCandidateOffice like '%boe%'
+    )
+;
+
+-- flag local offices based on office field
+update contributions_full_temp
+set LocalOffice = 'Y'
+where
+  CandidateContribution = 'Y'
+  -- HasProposition = 'N'
+  and (
+       RecipientCandidateOffice like '%mayor%'
+    or RecipientCandidateOffice like '%judge%'
+    or RecipientCandidateOffice like '%supervis_r%'
+    or RecipientCandidateOffice like '%city council%'
+    or RecipientCandidateOffice like '%superior court%'
+    or RecipientCandidateOffice like '%asses%r%'
+    or RecipientCandidateOffice like '%board of education%'
+    or RecipientCandidateOffice like '%college board%'
+    or RecipientCandidateOffice like '%school board%'
+    or RecipientCandidateOffice like '%sher%iff%'
+    or RecipientCandidateOffice like '%local treasur_r%'
+    or RecipientCandidateOffice like '%city attorn%y%'
+    or RecipientCandidateOffice like '%district attorn%y%'
+    )
+;
+
+-- flag state offices based on committee name (if no state or local flag has been set yet)
+update contributions_full_temp
+set StateOffice = 'Y'
+where 
+  CandidateContribution = 'Y'
+  -- HasProposition = 'N'
+  and StateOffice = 'N'
+  and LocalOffice = 'N'
+  and (
+    RecipientCommitteeNameNormalized like '%Assembl%y%' 
+    or RecipientCommitteeNameNormalized like '%Senate%'
+    or RecipientCommitteeNameNormalized like '%Govern_r%'
+    or RecipientCommitteeNameNormalized like '%Controll_r%'
+    or (
+      RecipientCommitteeNameNormalized like '%Treasur_r%'
+      and RecipientCommitteeNameNormalized not like '%local Treasur_r%'
+      )
+    or RecipientCommitteeNameNormalized like '%Insur_nce Com%'
+    or RecipientCommitteeNameNormalized like '%Lieuten_nt%'
+    or RecipientCommitteeNameNormalized like '%Secretary%'
+    or RecipientCommitteeNameNormalized like '%Superintend_nt%' 
+    or RecipientCommitteeNameNormalized like '%Attorn%y gen%'
+    or RecipientCommitteeNameNormalized like '%board of eq%' 
+    or RecipientCommitteeNameNormalized like '%boe%'
+    )
+;
+
+-- flag local offices based on committee name (if no state or local flag has been set yet)
+update contributions_full_temp
+set LocalOffice = 'Y'
+where
+  CandidateContribution = 'Y'
+  -- HasProposition = 'N'
+  and StateOffice = 'N'
+  and LocalOffice = 'N'
+  and (
+    RecipientCommitteeNameNormalized like '%mayor%'
+    or RecipientCommitteeNameNormalized like '%judge%'
+    or RecipientCommitteeNameNormalized like '%supervis_r%'
+    or RecipientCommitteeNameNormalized like '%city council%'
+    or RecipientCommitteeNameNormalized like '%superior court%'
+    or RecipientCommitteeNameNormalized like '%asses%r%'
+    or RecipientCommitteeNameNormalized like '%board of education%'
+    or RecipientCommitteeNameNormalized like '%college board%'
+    or RecipientCommitteeNameNormalized like '%school board%'
+    or RecipientCommitteeNameNormalized like '%sher%iff%'
+    or RecipientCommitteeNameNormalized like '%local treasur_r%'
+    or RecipientCommitteeNameNormalized like '%city attorn%y%'
+    or RecipientCommitteeNameNormalized like '%district attorn%y%'
+    )
+;
+
 drop table if exists contributions_full;
 rename table contributions_full_temp to contributions_full;
 
 -- populate contributions table
+-- /*
+drop table if exists ca_search.contributions_temp;
+create table ca_search.contributions_temp like ca_search.contributions;
+insert ca_search.contributions_temp (
+-- */
+/*
 drop table if exists contributions_temp;
 create table contributions_temp like contributions;
 insert contributions_temp (
+*/
     TransactionType
   , ElectionCycle
   , Election
@@ -1268,6 +1303,7 @@ where
   and not (Unitemized = 'Y' and TransactionAmount = 0)
 ;
 
--- drop table if exists contributions;
--- rename table contributions_temp to contributions;
-
+/*
+drop table if exists contributions;
+rename table contributions_temp to contributions;
+*/

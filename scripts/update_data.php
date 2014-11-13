@@ -1,5 +1,8 @@
 <?php
   require ("../connect.php");
+  $script_conn = mysqli_init ();
+  mysqli_options ($script_conn, MYSQLI_OPT_LOCAL_INFILE, true);
+  mysqli_real_connect ($script_conn, "localhost", $script_login, $script_pwd, "ca_process");
 
   # Update the most recent cal_access session
   system ("php cal_access_data_scraper.php");
@@ -22,18 +25,27 @@
   generate_search_words (); 
 
   # Reset last update file
-  my_query ("TRUNCATE smry_last_update");
-  my_query ("INSERT INTO smry_last_update VALUES (NOW())");
+  script_query ("TRUNCATE ca_search.smry_last_update");
+  script_query ("INSERT INTO ca_search.smry_last_update VALUES (NOW())");
 
   # Process data for contributions table - stage 4
   process_sql_file ("process_stage_4.sql");
 
 
 #===============================================================================================
+# process script query
+  function script_query ($query) {
+    global $script_conn;
+    $ret = $script_conn->query ($query);
+    return $ret;
+  }
+
+
+#===============================================================================================
 # load an sql file
   function process_sql_file ($filename) {
-    global $login, $pwd;
-    system("mysql -u{$login} -p{$pwd} ca_search < \"$filename\"");
+    global $script_login, $script_pwd;
+    system("mysql -u{$script_login} -p{$script_pwd} ca_process < \"$filename\"");
   }
 
 
@@ -43,10 +55,10 @@
     require_once ("name_parser.inc");
 
     $words_to_remove = array ();
-    $result = my_query ("SELECT * FROM names_to_remove");
+    $result = script_query ("SELECT * FROM names_to_remove");
     while ($row = $result->fetch_assoc()) {$words_to_remove[] = $row["removal_word"];}
 
-    $result = my_query ("SELECT * FROM filing_amends");
+    $result = script_query ("SELECT * FROM filing_amends");
     while ($row = $result->fetch_assoc()) {
       if ($row["candidate_name"] == "") {
         $name = $row["cand_naml"] . " " . $row["cand_nams"] . ", " . $row["cand_namt"] . " " . $row["cand_namf"];
@@ -74,7 +86,7 @@
       if ($middle_name <> "") {$mn = " $middle_name";} else {$mn = "";}
       $display_name = trim ($ln . $ns . $fn . $mn);
       $gender = $parsed_name["gender"];
-      if ($row["name"] != "") {$display_name = $name;}
+      if ($row["display_name"] != "") {$display_name = $name;}
 
       $removal_word_found = false;
       foreach ($words_to_remove as $removal_word) {
@@ -104,53 +116,53 @@
                             display_name = '" . addslashes ($display_name) . "'
                           WHERE filing_id = '{$row["filing_id"]}' AND amend_id = '{$row["amend_id"]}'";
       }
-      my_query ($query);
+      script_query ($query);
     }
   }
 
 
   function generate_search_words () {
-    $query = "SELECT id, DonorNameNormalized, DonorEmployerNormalized, DonorOrganization FROM contributions_temp";
-    $result = my_query ($query);
+    $query = "SELECT id, DonorNameNormalized, DonorEmployerNormalized, DonorOrganization FROM ca_search.contributions_temp";
+    $result = script_query ($query);
     while ($row = $result->fetch_assoc()) {
       $word_str = " ";
       $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["DonorNameNormalized"] . " " . $row["DonorEmployerNormalized"] . " " . $row["DonorOrganization"]);
       $words = explode (" ", $word_data);
       foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
-      my_query ("UPDATE contributions_search_temp SET DonorWords = '{$word_str}' WHERE id = {$row["id"]}");
+      script_query ("UPDATE ca_search.contributions_search_temp SET DonorWords = '{$word_str}' WHERE id = {$row["id"]}");
     }
     $result->close();
 
-    $query = "SELECT * FROM smry_candidates_temp";
-    $result = my_query ($query);
+    $query = "SELECT * FROM ca_search.smry_candidates_temp";
+    $result = script_query ($query);
     while ($row = $result->fetch_assoc()) {
       $word_str = " ";
       $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["RecipientCandidateNameNormalized"]);
       $words = explode (" ", $word_data);
       foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
-      my_query ("UPDATE smry_candidates_temp SET CandidateWords = '{$word_str}' WHERE RecipientCandidateNameID = {$row["RecipientCandidateNameID"]}");
+      script_query ("UPDATE ca_search.smry_candidates_temp SET CandidateWords = '{$word_str}' WHERE RecipientCandidateNameID = {$row["RecipientCandidateNameID"]}");
     }
     $result->close();
 
-    $query = "SELECT * FROM smry_committees_temp";
-    $result = my_query ($query);
+    $query = "SELECT * FROM ca_search.smry_committees_temp";
+    $result = script_query ($query);
     while ($row = $result->fetch_assoc()) {
       $word_str = " ";
       $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["RecipientCommitteeNameNormalized"]);
       $words = explode (" ", $word_data);
       foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
-      my_query ("UPDATE smry_committees_temp SET CommitteeWords = '{$word_str}' WHERE RecipientCommitteeID = {$row["RecipientCommitteeID"]}");
+      script_query ("UPDATE ca_search.smry_committees_temp SET CommitteeWords = '{$word_str}' WHERE RecipientCommitteeID = {$row["RecipientCommitteeID"]}");
     }
     $result->close();
 
-    $query = "SELECT * FROM smry_propositions_temp";
-    $result = my_query ($query);
+    $query = "SELECT * FROM ca_search.smry_propositions_temp";
+    $result = script_query ($query);
     while ($row = $result->fetch_assoc()) {
       $word_str = " ";
       $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["Target"]);
       $words = explode (" ", $word_data);
       foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
-      my_query ("UPDATE smry_propositions_temp SET PropositionWords = '{$word_str}' WHERE PropositionID = {$row["PropositionID"]}");
+      script_query ("UPDATE ca_search.smry_propositions_temp SET PropositionWords = '{$word_str}' WHERE PropositionID = {$row["PropositionID"]}");
     }
     $result->close();
   } 

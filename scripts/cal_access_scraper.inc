@@ -1,6 +1,18 @@
 <?php
   require ("simple_html_dom.php");
   require ("../connect.php");
+  $script_conn = mysqli_init ();
+  mysqli_options ($script_conn, MYSQLI_OPT_LOCAL_INFILE, true);
+  mysqli_real_connect ($script_conn, "localhost", $script_login, $script_pwd, "ca_process");
+
+
+#===============================================================================================
+# process script query
+  function script_query ($query) {
+    global $script_conn;
+    $ret = $script_conn->query ($query);
+    return $ret;
+  }
 
 
 #===============================================================================================
@@ -12,7 +24,7 @@
       foreach ($html_page->find ("li") as $list_item) {
         $election_data = parse_election_data ($list_item->plaintext);
         if ($election_data["election_date"] != "") {
-          if ($election_data["election_id"] == 0) {my_query ("INSERT INTO cal_access_elections (date, description, special, election_type, office) VALUES ('{$election_data["election_date"]}', '{$election_data["title"]}', {$election_data["special"]}, '{$election_data["election_type"]}', '{$election_data["office"]}')");}
+          if ($election_data["election_id"] == 0) {script_query ("INSERT INTO cal_access_elections (date, description, special, election_type, office) VALUES ('{$election_data["election_date"]}', '{$election_data["title"]}', {$election_data["special"]}, '{$election_data["election_type"]}', '{$election_data["office"]}')");}
         }
       }
     }
@@ -24,7 +36,7 @@
         $election_data = parse_election_data ($list_item->plaintext);
         if ($election_data["election_date"] != "") {
           if ($election_data["election_id"] == 0) {
-            my_query ("INSERT INTO cal_access_elections (date, description, special, election_type, office) VALUES ('{$election_data["election_date"]}', '{$election_data["title"]}', {$election_data["special"]}, '{$election_data["election_type"]}', '{$election_data["office"]}')");
+            script_query ("INSERT INTO cal_access_elections (date, description, special, election_type, office) VALUES ('{$election_data["election_date"]}', '{$election_data["title"]}', {$election_data["special"]}, '{$election_data["election_type"]}', '{$election_data["office"]}')");
           }
         }
       }
@@ -44,7 +56,7 @@
             $election_data = parse_election_data ($title . " Special " . substr ($election_date, 0, strpos ($election_date, "</li>")));
             if ($election_data["election_date"] != "") {
               if ($election_data["election_id"] == 0) {
-                my_query ("INSERT INTO cal_access_elections (date, description, special, election_type, office) VALUES ('{$election_data["election_date"]}', '{$election_data["title"]}', {$election_data["special"]}, '{$election_data["election_type"]}', '{$election_data["office"]}')");
+                script_query ("INSERT INTO cal_access_elections (date, description, special, election_type, office) VALUES ('{$election_data["election_date"]}', '{$election_data["title"]}', {$election_data["special"]}, '{$election_data["election_type"]}', '{$election_data["office"]}')");
               }
             }
           }
@@ -52,7 +64,7 @@
         $election_data = parse_election_data ($title);                                  # parse the title alone
         if ($election_data["election_date"] != "") {
           if ($election_data["election_id"] == 0) {
-            my_query ("INSERT INTO cal_access_elections (date, description, special, election_type, office) VALUES ('{$election_data["election_date"]}', '{$election_data["title"]}', {$election_data["special"]}, '{$election_data["election_type"]}', '{$election_data["office"]}')");
+            script_query ("INSERT INTO cal_access_elections (date, description, special, election_type, office) VALUES ('{$election_data["election_date"]}', '{$election_data["title"]}', {$election_data["special"]}, '{$election_data["election_type"]}', '{$election_data["office"]}')");
           }
         }
       }
@@ -98,13 +110,13 @@
 
     $title = trim ($title_array["district"] . $title_array["special"] . $title_array["type"] . " Election");
     if ($special == 0) {
-      $result = my_query ("SELECT election_id FROM cal_access_elections WHERE special = 0 AND office = 'ALL' AND election_type = '$election_type' AND YEAR(date) = '$election_year'");
+      $result = script_query ("SELECT election_id FROM cal_access_elections WHERE special = 0 AND office = 'ALL' AND election_type = '$election_type' AND YEAR(date) = '$election_year'");
       $row = $result->fetch_assoc();
       $election_id = $row["election_id"];
     } else {
       if ($election_type == "") {$election_type = "P";}
       if ($election_year == "2013" AND $office == "S04" AND $election_type == "P") {$election_type = "G";} # correct for incorrect election name (should be runoff)
-      $result = my_query ("SELECT election_id FROM cal_access_elections WHERE special = 1 AND office = '$office' AND election_type = '$election_type' AND YEAR(date) = '$election_year'");
+      $result = script_query ("SELECT election_id FROM cal_access_elections WHERE special = 1 AND office = '$office' AND election_type = '$election_type' AND YEAR(date) = '$election_year'");
       $row = $result->fetch_assoc();
       $election_id = $row["election_id"];
     }
@@ -120,7 +132,7 @@
   function get_propositions ($session, $err_chk) {
     $html_page = get_html_file ("http://cal-access.sos.ca.gov/Campaign/Measures/list.aspx?session=$session");
     if (! $html_page && $err_chk == 1) {} else {
-      my_query ("DELETE FROM cal_access_propositions WHERE session = $session");
+      script_query ("DELETE FROM cal_access_propositions WHERE session = $session");
 
       # look for upcoming elections
       foreach ($html_page->find ("table[id=ListElections1_Panel1]") as $main_table) {
@@ -134,7 +146,7 @@
             $id = substr (substr ($anchor->href, 0, strpos ($anchor->href, "&")), strpos (substr ($anchor->href, 0, strpos ($anchor->href, "&")), "id=") + 3);
             $name = addslashes (trim ($anchor->plaintext));
             $link = "http://cal-access.sos.ca.gov/Campaign/Measures/". trim ($anchor->href);
-            my_query ("INSERT INTO cal_access_propositions (session, proposition_id, election_date, name, link) VALUES ($session, $id, '$election_date', '$name', '$link')");
+            script_query ("INSERT INTO cal_access_propositions (session, proposition_id, election_date, name, link) VALUES ($session, $id, '$election_date', '$name', '$link')");
           }
         }
       }
@@ -151,7 +163,7 @@
             $id = substr (substr ($anchor->href, 0, strpos ($anchor->href, "&")), strpos (substr ($anchor->href, 0, strpos ($anchor->href, "&")), "id=") + 3);
             $name = addslashes (trim ($anchor->plaintext));
             $link = "http://cal-access.sos.ca.gov/Campaign/Measures/". trim ($anchor->href);
-            my_query ("INSERT INTO cal_access_propositions (session, proposition_id, election_date, name, link) VALUES ($session, $id, '$election_date', '$name', '$link')");
+            script_query ("INSERT INTO cal_access_propositions (session, proposition_id, election_date, name, link) VALUES ($session, $id, '$election_date', '$name', '$link')");
           }
         }
       }
@@ -162,10 +174,10 @@
 #===============================================================================================
 # get proposition committes for specific session
   function get_propositions_committees ($session, $err_chk) {
-    my_query ("DELETE FROM cal_access_propositions_committees WHERE session = $session");
+    script_query ("DELETE FROM cal_access_propositions_committees WHERE session = $session");
 
     $query = "SELECT proposition_id, link FROM cal_access_propositions WHERE session = $session";
-    $result = my_query ($query);
+    $result = script_query ($query);
     while ($row = $result->fetch_assoc()) {
       $html_page = get_html_file ($row["link"]);
       if (! $html_page && $err_chk == 1) {} else {
@@ -184,7 +196,7 @@
                 }
                 $td_count++;
               }
-              if ($tr_count > 0) {my_query ("INSERT INTO cal_access_propositions_committees (session, proposition_id, filer_id, position) VALUES ($session, {$row["proposition_id"]}, $id, '$position')");}
+              if ($tr_count > 0) {script_query ("INSERT INTO cal_access_propositions_committees (session, proposition_id, filer_id, position) VALUES ($session, {$row["proposition_id"]}, $id, '$position')");}
               $tr_count++;
             }
           }
@@ -199,11 +211,11 @@
   function get_candidate_names ($session, $err_chk) {
     $alphabet = array ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
 
-    $query = "DELETE FROM cal_access_candidates WHERE session = $session"; my_query ($query);
-    $query = "DELETE FROM cal_access_candidates_names WHERE session = $session"; my_query ($query);
-    $query = "DELETE FROM cal_access_candidates_spending_limits WHERE session = $session"; my_query ($query);
-    $query = "DELETE FROM cal_access_candidates_races WHERE session = $session"; my_query ($query);
-    $query = "DELETE FROM cal_access_candidates_committees WHERE session = $session"; my_query ($query);
+    $query = "DELETE FROM cal_access_candidates WHERE session = $session"; script_query ($query);
+    $query = "DELETE FROM cal_access_candidates_names WHERE session = $session"; script_query ($query);
+    $query = "DELETE FROM cal_access_candidates_spending_limits WHERE session = $session"; script_query ($query);
+    $query = "DELETE FROM cal_access_candidates_races WHERE session = $session"; script_query ($query);
+    $query = "DELETE FROM cal_access_candidates_committees WHERE session = $session"; script_query ($query);
 
     foreach ($alphabet as $letter) {
       $html_page = get_html_file ("http://cal-access.sos.ca.gov/Campaign/Candidates/list.aspx?view=name&letter=$letter&session=$session");
@@ -216,7 +228,7 @@
                 $link_element = $tabledata->find ("a");
                 $link = addslashes (trim ("http://cal-access.sos.ca.gov/Campaign/Candidates/" . htmlspecialchars_decode ($link_element[0]->href)));
                 $id = substr (substr ($link, 0, strpos ($link, "&")), strpos (substr ($link, 0, strpos ($link, "&")), "id=") + 3);
-                my_query ("INSERT INTO cal_access_candidates (session, name, id, link) VALUES ($session, '$name', $id, '$link')");
+                script_query ("INSERT INTO cal_access_candidates (session, name, id, link) VALUES ($session, '$name', $id, '$link')");
               }
             }
           }
@@ -231,7 +243,7 @@
 # get all candidate data for a specific session and candidate
   function get_candidate_data ($session, $err_chk) {
     $query = "SELECT id, link FROM cal_access_candidates WHERE session = $session";
-    $result = my_query ($query);
+    $result = script_query ($query);
     while ($row = $result->fetch_assoc()) {
       $html_page = get_html_file ($row["link"]);
       if (! $html_page && $err_chk == 1) {} else {
@@ -264,7 +276,7 @@
                         case 1: $election = trim ($tabledata->plaintext); break;
                         case 2:
                             if ($office != "OFFICE") {
-                              $result2 = my_query ("SELECT election_id, date, description FROM cal_access_elections WHERE IF(office = 'ALL', CONCAT(YEAR(date), IF(election_type = 'G', ' GENERAL', ' PRIMARY'), ' ELECTION'), '') = '$election';");
+                              $result2 = script_query ("SELECT election_id, date, description FROM cal_access_elections WHERE IF(office = 'ALL', CONCAT(YEAR(date), IF(election_type = 'G', ' GENERAL', ' PRIMARY'), ' ELECTION'), '') = '$election';");
                               $election_info = $result2->fetch_object();
                                if (! $election_info) {
                                  $election_data = parse_election_data ($office . " " . $election);
@@ -298,11 +310,11 @@
         }
         $html_page->clear ();
 
-        my_query ("UPDATE cal_access_candidates SET party = '$party' WHERE session = $session AND id = {$row["id"]}");
-        foreach ($historical_names as $name) {if ($name != "") {my_query ("INSERT INTO cal_access_candidates_names (session, id, name) VALUES ($session, {$row["id"]}, '$name')");}}
-        foreach ($spending_limits as $election => $accepted) {if ($election != "") {my_query ("INSERT INTO cal_access_candidates_spending_limits (session, id, election, accepted) VALUES ($session, {$row["id"]}, '$election', '$accepted')");}}
-        foreach ($races as $race_data) {my_query ("INSERT INTO cal_access_candidates_races (session, id, election_id, office, result, parsed) VALUES ($session, {$row["id"]}, {$race_data["election_id"]}, '{$race_data["office"]}', '{$race_data["result"]}', '{$race_data["election_parsed"]}')");}
-        foreach ($committees as $filer_id) {my_query ("INSERT INTO cal_access_candidates_committees (session, id, filer_id) VALUES ($session, {$row["id"]}, $filer_id)");}
+        script_query ("UPDATE cal_access_candidates SET party = '$party' WHERE session = $session AND id = {$row["id"]}");
+        foreach ($historical_names as $name) {if ($name != "") {script_query ("INSERT INTO cal_access_candidates_names (session, id, name) VALUES ($session, {$row["id"]}, '$name')");}}
+        foreach ($spending_limits as $election => $accepted) {if ($election != "") {script_query ("INSERT INTO cal_access_candidates_spending_limits (session, id, election, accepted) VALUES ($session, {$row["id"]}, '$election', '$accepted')");}}
+        foreach ($races as $race_data) {script_query ("INSERT INTO cal_access_candidates_races (session, id, election_id, office, result, parsed) VALUES ($session, {$row["id"]}, {$race_data["election_id"]}, '{$race_data["office"]}', '{$race_data["result"]}', '{$race_data["election_parsed"]}')");}
+        foreach ($committees as $filer_id) {script_query ("INSERT INTO cal_access_candidates_committees (session, id, filer_id) VALUES ($session, {$row["id"]}, $filer_id)");}
       }
     }
   }
@@ -321,7 +333,7 @@
 
       if ($name != "NAME") {
         $query = "INSERT INTO cal_access_committees (session, name, link, type, filer_id) VALUES ($session, '$name', '$link', '$type', $filer_id)";
-        my_query ($query);
+        script_query ($query);
         get_committee_general_information ($session, $filer_id, $err_chk);
       }
     }
@@ -332,7 +344,7 @@
 # get general information for a specific committee
   function get_committee_general_information ($session, $filer_id, $err_chk) {
     $query = "SELECT link FROM cal_access_committees WHERE session = $session AND filer_id = $filer_id";
-    $result = my_query ($query); $row = $result->fetch_assoc();
+    $result = script_query ($query); $row = $result->fetch_assoc();
 
     $html_page = get_html_file ($row["link"]); # load the page in
     if (! $html_page && $err_chk == 1) {} else {
@@ -342,7 +354,7 @@
           foreach ($tablerow->find ("td") as $tabledata) {
             if ($tabledata->plaintext != "HISTORICAL NAMES FOR THIS COMMITTEE") {
               $name = addslashes (trim ($tabledata->plaintext));
-              $query = "INSERT INTO cal_access_committees_names (session, filer_id, name) VALUES ($session, $filer_id, '$name')"; my_query ($query);
+              $query = "INSERT INTO cal_access_committees_names (session, filer_id, name) VALUES ($session, $filer_id, '$name')"; script_query ($query);
             }
           }
         }
@@ -400,7 +412,7 @@
       }
 
       $query = "UPDATE cal_access_committees SET phone = '$phone', status = '$status', last_date = '$last_date', report_start = '$report_start', report_end = '$report_end', total_start = '$total_start', total_end = '$total_end', report_contributions = $report_contributions, report_expenditures = $report_expenditures, total_contributions = $total_contributions, total_expenditures = $total_expenditures, ending_cash = $ending_cash, general_information = 1 WHERE session = $session AND filer_id = $filer_id";
-      my_query ($query);
+      script_query ($query);
 
       $html_page->clear ();
     }

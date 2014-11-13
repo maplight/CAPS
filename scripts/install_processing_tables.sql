@@ -207,6 +207,7 @@ create table contributions_full (
   , RecipientCandidateOfficeCvrSoughtOrHeld varchar(1) not null default ''
   , RecipientCandidateOffice501Code varchar(5) not null default ''
   , RecipientCandidateOffice501Custom varchar(50) not null default ''
+  , RecipientCandidateOfficeNeedsCleanup enum('Y','N') default 'N'
   , RecipientCandidateOffice varchar(50) not null default ''
   , RecipientCandidateDistrict varchar(50) not null default ''
   , HasProposition enum('Y','N') default 'N'
@@ -250,8 +251,8 @@ create table contributions_full (
   , key Schedule (Schedule)
 );
 
-drop table if exists contributions;
-create table contributions (
+drop table if exists ca_search.contributions;
+create table ca_search.contributions (
     TransactionType varchar(100) not null
   , ElectionCycle smallint(6) not null default 0
   , Election date default null

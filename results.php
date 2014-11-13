@@ -143,7 +143,17 @@
     switch ($search_data["date_select"]) {
       case "range":
         # build date range query
-        $DateRange = "contributions_search.TransactionDateStart >= '" . date ("Y-m-d", strtotime ($search_data["start_date"])) . "' AND contributions_search.TransactionDateEnd <= '" . date ("Y-m-d", strtotime ($search_data["end_date"])) . "'";
+        $start_date = strtotime ($search_data["start_date"]);
+        $end_date = strtotime ($search_data["end_date"]);
+        if ($start_date == "" && $end_date == "") {
+          $DateRange = "";
+        } else if ($start_date == "") {
+          $DateRange = "contributions_search.TransactionDateEnd <= '" . date ("Y-m-d", $end_date) . "'";
+        } else if ($end_date == "") {
+          $DateRange = "contributions_search.TransactionDateStart >= '" . date ("Y-m-d", $start_date) . "'";
+        } else {
+          $DateRange = "contributions_search.TransactionDateStart >= '" . date ("Y-m-d", $start_date) . "' AND contributions_search.TransactionDateEnd <= '" . date ("Y-m-d", $end_date) . "'";
+        }
         break;
 
       case "cycle":
