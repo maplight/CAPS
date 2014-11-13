@@ -384,7 +384,7 @@
                 $result2 = my_query ("SELECT Target, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount, SUM(IF(PositionID = 1,1,0)) AS SupportCount, SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount, SUM(IF(PositionID = 2,1,0)) AS OpposeCount, SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount FROM contributions_search INNER JOIN smry_propositions USING (PropositionID) WHERE Election = '{$election}' AND BallotMeasureContribution = 'Y' GROUP BY Target ORDER BY Target");
                 while ($row2 = $result2->fetch_assoc()) {
                   if (strpos ($row2["Target"], "-") !== false) {
-                    echo "<p><b>" . substr ($row2["Target"], 0, strpos ($row2["Target"], "-")) . "</b>" . substr ($row2["Target"], strpos ($row2["Target"], "-")) . "<br>";
+                    echo "<p><b>" . substr ($row2["Target"], 0, strrpos ($row2["Target"], " - ")) . "</b>" . substr ($row2["Target"], strrpos ($row2["Target"], " - ")) . "<br>";
                   } else {
                     echo "<p><b>{$row2["Target"]}</b><br>";
                   }
