@@ -80,7 +80,7 @@
         <li><a href="advanced.php">Advanced Search</a></li>
         </ul>
 
-<div style="border:2px solid #FF0000; background:#FFCCCC; margin:2px; color:red; text-align:center;"><b>NOTE: This search is in BETA.</b></div>
+<div style="border:2px solid #FF0000; background:#FFCCCC; margin:2px; color:red; text-align:center;"><b>NOTE: This search is in BETA. Please do not cite.</b></div>
 
 </div> <!-- caps_header -->
 
