@@ -24,7 +24,7 @@ GRANT ALL ON ca_search.* TO 'caps_script'@'localhost' IDENTIFIED BY '97_caps_45'
 GRANT ALL ON ca_process.* TO 'caps_script'@'localhost';
 GRANT FILE ON *.* TO 'caps_script'@'localhost';
 
-Step 5: One this is done copy all the CAPS files into the directory you wish to have them run from.  The following directory tree is used in the files:
+Step 5: Once this is done copy all the CAPS files into the directory you wish to have them run from.  The following directory tree is used in the files:
 / - root folder, holds the files needed for the web database
 /css - holds the css files
 /css/i - holds the CA-SOS images used in their css files
@@ -46,3 +46,6 @@ Possible Multi-Server Setup Notes:
 Setting up a multi-server could be done a couple ways, the simpliest is to just have the web pages and database on multiservers with a load balancer serving up a free server.  This would require only replication of the ca_search database with one master database server that also processes the data updates.
 
 Another setup is to build a database cluster with a central entry point, again, just needing to cluster the ca_search database, then the web pages can be placed among multiple servers as needed.
+
+HTML Header and Footer Notes:
+If you want to replace the header and footer information for the application, the SOS header and footer html resides in sos.html. The files that would would need to be updated are index.php and advanced.php
