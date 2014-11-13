@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>California Secretary of State</title>
+  <title>CAL-ACCESS Campaign Power Search</title>
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/main-max-width.css">
   <noscript><link href="css/noJs.css" rel="stylesheet" type="text/css" /></noscript>
@@ -40,6 +40,9 @@
         <li><a href="index.php">Quick Search</a></li>
         <li><a href="advanced.php">Advanced Search</a></li>
         </ul>
+
+<div style="border:2px solid #FF0000; background:#FFCCCC; margin:2px; color:red; text-align:center;"><b>NOTE: This search is in BETA.</b></div>
+
 </div> <!-- caps_header -->
 
 <div id="wrapper">
