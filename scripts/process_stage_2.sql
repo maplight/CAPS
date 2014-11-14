@@ -1,6 +1,5 @@
 ﻿/*
--- ------------------------------------------------------------------------------------------
--- populate tables (after name cleaning)
+ populate tables (after name cleaning)
 */
 truncate table prop_filer_session_name_forms;
 insert into prop_filer_session_name_forms
@@ -60,7 +59,7 @@ group by
 drop table if exists contributions_full_temp;
 create table contributions_full_temp like contributions_full;
 
--- regular contributions
+/*-- regular contributions*/
 insert into contributions_full_temp (
     Form
   , RecipientCommitteeType
@@ -144,7 +143,7 @@ select
   , 'rcpt' as OriginTable
 from 
   ftp_rcpt as contributions
-  inner join filing_ids -- include only the most recent filing
+  inner join filing_ids
     on contributions.filing_id = filing_ids.filing_id
     and contributions.amend_id = filing_ids.amend_id_to_use
   inner join ftp_cvr_campaign_disclosure 
@@ -168,10 +167,10 @@ from
   left join prop_filer_sessions
     on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
--- where ftp_filer_filings.session_id = 2013
+
 ;
 
--- loans
+/*-- loans */
 insert into contributions_full_temp (
     Form
   , RecipientCommitteeType
@@ -257,7 +256,7 @@ select
   , 'loan' as OriginTable
 from 
   ftp_loan as contributions
-  inner join filing_ids -- include only the most recent filing 
+  inner join filing_ids
     on contributions.filing_id = filing_ids.filing_id 
     and contributions.amend_id = filing_ids.amend_id_to_use
   inner join ftp_cvr_campaign_disclosure 
@@ -281,10 +280,10 @@ from
   left join prop_filer_sessions 
     on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
--- where ftp_filer_filings.session_id = 2013
+
 ;
 
--- late contributions
+/*-- late contributions */
 insert into contributions_full_temp (
     Form
   , RecipientCommitteeType
@@ -380,7 +379,7 @@ select
       ) as LateContributionCoveredByRegularFiling
 FROM 
   ftp_s497 as contributions
-  inner join filing_ids -- include only the most recent filing
+  inner join filing_ids
     on contributions.filing_id = filing_ids.filing_id 
     and contributions.amend_id = filing_ids.amend_id_to_use
   inner join ftp_cvr_campaign_disclosure 
@@ -405,10 +404,10 @@ FROM
     on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
   left join filer_ids on ftp_filer_filings.filer_id = filer_ids.filer_id
--- where ftp_filer_filings.session_id = 2013
+
 ;
 
--- unitemized monetary and non-monetary
+/*-- unitemized monetary and non-monetary */
 insert into contributions_full_temp (
     Form
   , RecipientCommitteeType
@@ -474,7 +473,7 @@ select
   , 'smry' as OriginTable
 from
   ftp_smry as contributions
-  inner join filing_ids -- include only the most recent filing
+  inner join filing_ids
     on contributions.filing_id = filing_ids.filing_id 
     and contributions.amend_id = filing_ids.amend_id_to_use
   inner join ftp_cvr_campaign_disclosure
@@ -503,7 +502,7 @@ where
   and contributions.line_item = 2
 ;
 
--- calculations for unitemized loans
+/* calculations for unitemized loans */
 update 
   filing_ids a
   join (
@@ -532,7 +531,7 @@ where
   and b.line_item = '1'
 ;
 
--- unitemized loans
+/*-- unitemized loans */
 insert into contributions_full_temp (
     Form
   , RecipientCommitteeType
@@ -598,7 +597,7 @@ select
   , 'smry' as OriginTable
 from
   ftp_smry as contributions
-  inner join filing_ids -- include only the most recent filing
+  inner join filing_ids
     on contributions.filing_id = filing_ids.filing_id 
     and contributions.amend_id = filing_ids.amend_id_to_use
   inner join ftp_cvr_campaign_disclosure
@@ -629,7 +628,7 @@ where
   and ifnull(filing_ids.loan_total_from_summary,0) <> 0
 ;
   
--- append F501 candidate office fields 
+/*-- append F501 candidate office fields */
 update 
   contributions_full_temp a
   join candidate_sessions b
@@ -640,7 +639,7 @@ set
   , a.RecipientCandidateOffice501Custom = b.office_501_custom
 ;
 
--- flag bad election cycles
+/*-- flag bad election cycles*/
 set @CurrentYear = year(current_date);
 update contributions_full_temp
 set BadElectionCycle = 'Y'
@@ -649,10 +648,10 @@ where
   or ElectionCycle > @CurrentYear + 10
 ;
 
--- set labels and others
+/*-- set labels and others */
 update contributions_full_temp
 set
-  -- add transaction type labels
+
     TransactionType = CASE
       WHEN Form = 'F460' AND Schedule = 'A' THEN 'Monetary Contribution'
       WHEN Form = 'F460' AND Schedule = 'C' THEN 'Non-Monetary Contribution'
@@ -660,15 +659,15 @@ set
       WHEN Form = 'F497' THEN 'Late Contribution'
       ELSE 'Other'
       END
-  -- save original committee types before attempting to correct errors
+
   , RecipientCommitteeTypeOriginal = RecipientCommitteeType
-  -- save original candidate name before erasing it for ballot measure contributions
+
   , RecipientCandidateNameNormalizedOriginal = RecipientCandidateNameNormalized
-  -- for propositions, use election date of prop, for others, use election date entered on filing
+
   , Election = ifnull(ElectionProp,ElectionCvr)
 ;
 
--- use office labels from F460 office code, if any
+/*-- use office labels from F460 office code, if any*/
 update
   contributions_full_temp a
   join california_data_office_codes b on a.RecipientCandidateOfficeCvrCode = b.office_cd_cvr
@@ -684,7 +683,7 @@ where
     )
 ;
 
--- if still no office, use custom office from F460, if any
+/*-- if still no office, use custom office from F460, if any*/
 update contributions_full_temp
 set 
     RecipientCandidateOffice = RecipientCandidateOfficeCvrCustom
@@ -700,7 +699,7 @@ where
     )
 ;
 
--- cleanup custom offices from F460s
+/*-- cleanup custom offices from F460s*/
 update contributions_full_temp
 set 
     RecipientCandidateOfficeNeedsCleanup = 'N'
@@ -741,7 +740,7 @@ set
 where RecipientCandidateOfficeNeedsCleanup = 'Y'
 ;
 
--- if still no office, use office labels from F501 office code, if any
+/*-- if still no office, use office labels from F501 office code, if any*/
 update
   contributions_full_temp a
   join california_data_office_codes b on a.RecipientCandidateOffice501Code = b.office_cd_501
@@ -751,7 +750,7 @@ where
   and b.office_cd_cvr <> 'OTH'
 ;
 
--- if still no office, use custom office from F501, if any
+/*-- if still no office, use custom office from F501, if any*/
 update contributions_full_temp
 set 
     RecipientCandidateOffice = RecipientCandidateOffice501Custom
@@ -761,7 +760,7 @@ where
   and RecipientCandidateOffice501Custom <> ''
 ;
 
--- cleanup custom offices from F501s
+/*-- cleanup custom offices from F501s*/
 update contributions_full_temp
 set 
     RecipientCandidateOfficeNeedsCleanup = 'N'
@@ -872,46 +871,46 @@ set a.RecipientCandidateOffice = b.RecipientCandidateOffice
 drop table if exists candidate_cycle_temp;
 */
 
--- identify committees with inconsistent committee types
+/*-- identify committees with inconsistent committee types*/
 drop table if exists tmp_committees_with_multiple_types;
 create table tmp_committees_with_multiple_types
 select 
-    RecipientCommitteeID -- , RecipientCommitteeNameNormalized
+    RecipientCommitteeID
   , group_concat(distinct RecipientCommitteeType order by RecipientCommitteeType separator ', ') 'RecipientCommitteeTypes'
   , group_concat(distinct ElectionCycle order by ElectionCycle separator ', ') 'ElectionCycles'
   , sum(TransactionAmount) 'Amount'
 from contributions_full_temp
-group by RecipientCommitteeID -- , RecipientCommitteeNameNormalized
+group by RecipientCommitteeID
 having 
   RecipientCommitteeTypes like '%,%'
 ;
 alter table tmp_committees_with_multiple_types
   add column BiggestNonBlankType char(1) not null default ''
-, add primary key (RecipientCommitteeID -- , RecipientCommitteeNameNormalized
+, add primary key (RecipientCommitteeID
       )
--- , add key (RecipientCommitteeNameNormalized)
+
 ;
 drop table if exists tmp_committee_types_with_multiple_types;
 create table tmp_committee_types_with_multiple_types
 select 
     a.RecipientCommitteeID
-  -- , a.RecipientCommitteeNameNormalized
+
   , b.Amount 'TotalAmount'
   , a.RecipientCommitteeType
   , group_concat(distinct a.ElectionCycle order by a.ElectionCycle separator ', ') 'ElectionCycles'
   , sum(a.TransactionAmount) 'Amount'
 from 
   contributions_full_temp a
-  join tmp_committees_with_multiple_types b using (RecipientCommitteeID -- , RecipientCommitteeNameNormalized
+  join tmp_committees_with_multiple_types b using (RecipientCommitteeID
     )
 group by
     a.RecipientCommitteeID
-  -- , a.RecipientCommitteeNameNormalized
+
   , b.Amount
   , a.RecipientCommitteeType
 ;
 alter table tmp_committee_types_with_multiple_types
-  add primary key (RecipientCommitteeID -- , RecipientCommitteeNameNormalized
+  add primary key (RecipientCommitteeID
     , RecipientCommitteeType)
 ;
 update tmp_committees_with_multiple_types a
@@ -920,25 +919,25 @@ set a.BiggestNonBlankType = (
   from tmp_committee_types_with_multiple_types b
   where 
     a.RecipientCommitteeID = b.RecipientCommitteeID
-    -- and a.RecipientCommitteeNameNormalized = b.RecipientCommitteeNameNormalized
+
     and b.RecipientCommitteeType <> ''
   order by b.Amount desc, b.RecipientCommitteeType
   limit 1
   )
 ;
 
--- For blank-C/B/P/Gs, change blanks to C/B/P/Gs
+/*-- For blank-C/B/P/Gs, change blanks to C/B/P/Gs*/
 update
   contributions_full_temp a
   join tmp_committees_with_multiple_types b using (
       RecipientCommitteeID
-    -- , RecipientCommitteeNameNormalized
+
     )
 set a.RecipientCommitteeType = b.BiggestNonBlankType
 where a.RecipientCommitteeType = ''
 ;
 
--- update temp table
+/*-- update temp table*/
 update tmp_committees_with_multiple_types
 set RecipientCommitteeTypes = mid(RecipientCommitteeTypes,3,99)
 where left(RecipientCommitteeTypes,2) = ', '
@@ -947,18 +946,18 @@ delete from tmp_committees_with_multiple_types
 where RecipientCommitteeTypes not like '%,%'
 ;
 
--- standardize remaining conflicting committee types
+/*-- standardize remaining conflicting committee types*/
 update
   contributions_full_temp a
   join tmp_committees_with_multiple_types b using (RecipientCommitteeID)
 set a.RecipientCommitteeType = case
-  -- For C-Bs, if it's ever been a B, change Cs to Bs. Also change anything else to B.
+
   when b.RecipientCommitteeTypes like '%B%C%' then 'B' 
-  -- For C-Gs, if it's ever been a G, change Cs to Gs. But don't change Ps to Gs.
+
   when (b.RecipientCommitteeTypes like '%C%G%' and a.RecipientCommitteeType = 'C') then 'G' 
-  -- For C-Ps, change the type to the one with the highest contribution amount.
+
   when b.RecipientCommitteeTypes = 'C, P' then b.BiggestNonBlankType 
-  -- Committees can change between Gs and Ps, so having both could be legit.
+
   when b.RecipientCommitteeTypes = 'G, P' then a.RecipientCommitteeType 
   else a.RecipientCommitteeType
   end
@@ -978,7 +977,7 @@ drop table if exists tmp_committee_types_with_multiple_types;
       end
   */
 
--- flag ballot measure committees
+/*-- flag ballot measure committees*/
 update contributions_full_temp
 set BallotMeasureCommittee = 'Y'
 where
@@ -986,7 +985,7 @@ where
   or RecipientCommitteeType = 'B'
 ;
 
--- flag officeholder committees
+/*-- flag officeholder committees*/
 update contributions_full_temp
 set OfficeHolderCommittee = 'Y'
 where
@@ -995,31 +994,31 @@ where
   or RecipientCommitteeNameNormalized like '% oh account%'
 ;
 
--- flag legal defense committees
+/*-- flag legal defense committees*/
 update contributions_full_temp
 set LegalDefenseCommittee = 'Y'
 where
   RecipientCommitteeNameNormalized like '%legal def%'
 ;
 
--- Leave blank the 'Office' and 'Recipient Name' columns for Ballot Measure committees, otherwise it misleadingly implies that a Ballot Measure Committee has a Recipient Candidate, which is not the case.
+/*-- Leave blank the 'Office' and 'Recipient Name' columns for Ballot Measure committees, otherwise it misleadingly implies that a Ballot Measure Committee has a Recipient Candidate, which is not the case.*/
 update contributions_full_temp
 set
     RecipientCandidateNameNormalized = ''
   , RecipientCandidateOffice = ''
--- where BallotMeasureContribution = 'Y'
+
 where HasProposition = 'Y'
 ;
 
--- flag non-candidate-controlled committees
--- non-candidate-controlled = committee types P and G (and B, which is a particular type of P or G)
+/*-- flag non-candidate-controlled committees
+ non-candidate-controlled = committee types P and G (and B, which is a particular type of P or G)*/
 update contributions_full_temp
 set CandidateControlledCommittee = 'N' 
 where RecipientCommitteeType in ('P','G','B')
 ;
 
--- flag non-election committees
--- non-candidate-election = legal defense, officeholder, and ballot measure
+/*-- flag non-election committees
+ non-candidate-election = legal defense, officeholder, and ballot measure*/
 update contributions_full_temp
 set CandidateElectionCommittee = 'N' 
 where
@@ -1028,7 +1027,7 @@ where
   or BallotMeasureCommittee = 'Y'
 ;
 
--- flag schedules to not include
+/*-- flag schedules to not include*/
 update contributions_full_temp
 set IncludedSchedule = 'N'
 where
@@ -1036,7 +1035,7 @@ where
     OriginTable = 'rcpt' 
     and Form = 'F460' 
     and Schedule in ('A','A-1','C')
-    -- and Schedule not in ('I')
+
     )
   and not (
     OriginTable = 'loan' 
@@ -1055,7 +1054,7 @@ where
     )
 ;
 
--- flag forgiven loans
+/*-- flag forgiven loans*/
 update 
   contributions_full_temp a
   join ftp_text_memo b
@@ -1073,7 +1072,7 @@ where
     )
 ;
 
--- flag loans with $0 amount (and an outstanding balance > $0 at the beginning of this period)
+/*-- flag loans with $0 amount (and an outstanding balance > $0 at the beginning of this period)*/
 update contributions_full_temp
 set NoNewLoanAmount = 'Y'
 where
@@ -1084,7 +1083,7 @@ where
   and LoanPreExistingBalance > 0
 ;  
 
--- flag candidate contributions
+/*-- flag candidate contributions*/
 update contributions_full_temp
 set CandidateContribution = 'Y'
 where
@@ -1097,7 +1096,7 @@ where
   and (RecipientCommitteeEntity in ('CAO', 'CTL') or RecipientCandidateNameNormalized <> '')
 ;  
 
--- flag ballot measure contributions
+/*-- flag ballot measure contributions*/
 update contributions_full_temp
 set BallotMeasureContribution = 'Y'
 where 
@@ -1105,7 +1104,7 @@ where
   and HasProposition = 'Y'
 ;
 
--- flag allied committees
+/*-- flag allied committees*/
 drop table if exists tmp_prop_committees;
 create table tmp_prop_committees
 select distinct RecipientCommitteeID, ElectionCycle, Election, Target, `Position`
@@ -1128,12 +1127,12 @@ where a.BallotMeasureContribution = 'Y'
 ;
 drop table if exists tmp_prop_committees;
 
--- flag state offices based on office field
+/*-- flag state offices based on office field*/
 update contributions_full_temp
 set StateOffice = 'Y'
 where 
   CandidateContribution = 'Y'
-  -- HasProposition = 'N'
+
   and (
        RecipientCandidateOffice like '%Assembl%y%' 
     or RecipientCandidateOffice like '%Senate%'
@@ -1153,12 +1152,12 @@ where
     )
 ;
 
--- flag local offices based on office field
+/*-- flag local offices based on office field*/
 update contributions_full_temp
 set LocalOffice = 'Y'
 where
   CandidateContribution = 'Y'
-  -- HasProposition = 'N'
+
   and (
        RecipientCandidateOffice like '%mayor%'
     or RecipientCandidateOffice like '%judge%'
@@ -1176,12 +1175,12 @@ where
     )
 ;
 
--- flag state offices based on committee name (if no state or local flag has been set yet)
+/*-- flag state offices based on committee name (if no state or local flag has been set yet)*/
 update contributions_full_temp
 set StateOffice = 'Y'
 where 
   CandidateContribution = 'Y'
-  -- HasProposition = 'N'
+
   and StateOffice = 'N'
   and LocalOffice = 'N'
   and (
@@ -1203,12 +1202,12 @@ where
     )
 ;
 
--- flag local offices based on committee name (if no state or local flag has been set yet)
+/*-- flag local offices based on committee name (if no state or local flag has been set yet)*/
 update contributions_full_temp
 set LocalOffice = 'Y'
 where
   CandidateContribution = 'Y'
-  -- HasProposition = 'N'
+
   and StateOffice = 'N'
   and LocalOffice = 'N'
   and (
@@ -1231,12 +1230,12 @@ where
 drop table if exists contributions_full;
 rename table contributions_full_temp to contributions_full;
 
--- populate contributions table
--- /*
+/*populate contributions table*/
+
 drop table if exists ca_search.contributions_temp;
 create table ca_search.contributions_temp like ca_search.contributions;
 insert ca_search.contributions_temp (
--- */
+
 /*
 drop table if exists contributions_temp;
 create table contributions_temp like contributions;
