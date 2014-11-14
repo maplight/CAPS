@@ -257,7 +257,7 @@
           <div id="cycles_box">
 <?php
   if (isset ($_POST["cycles"])) {$cycles = $_POST["cycles"];} else {$cycles = array ("");}
-  fill_election_cycles ($cycles);
+  fill_election_cycles ($cycles, false);
 ?>
           </div> <!-- cycles_box -->
           <input type="submit" value="Search" id="caps_search_btn">
@@ -273,7 +273,7 @@
 
         <div id="content">
 <?php
-  build_results_table ();
+  build_results_table (false);
 ?>
         </div> <!-- #content -->
       </form>
