@@ -28,7 +28,7 @@ body{
 
 #two-columns{
   margin:0;
-  overflow: hidden;
+  overflow:hidden;
 }
 
 #sidebar{
@@ -195,6 +195,12 @@ body{
   margin-bottom:15px;
   overflow:auto;
   border:2px solid #ccc;
+}
+
+#breakdown_box{
+  margin-top:10px;
+  margin-left:30px;
+  margin-bottom:8px;
 }
 
 #qs_page{
@@ -526,7 +532,7 @@ body{
   width:15px;
   height:16px;
 }
-
+ 
 .content_title1{
   font:21px/30px Arial, Helvetica, sans-serif;
   color:#222;
