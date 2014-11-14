@@ -2,7 +2,7 @@
   function build_results_table () {
     if (! isset ($_POST["contributor"])) {
       # No form search yet
-      echo "<DIV CLASS=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</DIV>";
+      echo "<div class=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</div>";
     } else {
       # Parse search form
       $parse_data = parse_search_form ($_POST);
@@ -342,7 +342,7 @@
           echo "<h1 class=\"caps_title3\">Search Results</h1>";
           echo "<hr class=\"caps_hr1\">";
           echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions";
-          echo "<a href=\"#\" class=\"info\"></a></div>";
+          echo "<a href=\"#tip9\" class=\"info\"></a></div>";
           echo "<h2 class=\"caps_title4\">Contributions</h2>";
           echo "<hr class=\"caps_hr1\">";
         } else {
@@ -351,14 +351,14 @@
               case "C":
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">{$_POST["candidate_list"]}</strong> has received</div>";
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions";
-                echo "<a href=\"#\" class=\"info\"></a></div>";
+                echo "<a href=\"#tip9\" class=\"info\"></a></div>";
                 echo "<hr class=\"caps_hr1\">";
                 break;            
 
               case "D":
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\"" . strtoupper ($_POST["contributor"]) . "\"</strong> has contributed</div>";
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions";
-                echo "<a href=\"#\" class=\"info\"></a></div>";
+                echo "<a href=\"#tip9\" class=\"info\"></a></div>";
                 echo "<div id=\"breakdown_box\">";
                 $result2 = my_query ("SELECT CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM ca_search.contributions_search {$where} GROUP BY CandidateContribution, BallotMeasureContribution ORDER BY CandidateContribution, BallotMeasureContribution");
                 while ($row2 = $result2->fetch_assoc()) {
@@ -366,7 +366,7 @@
                   if ($row2["CandidateContribution"] == "N" && $row2["BallotMeasureContribution"] == "Y") {echo "<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>ballot measures</b><br>";}
                   if ($row2["CandidateContribution"] == "N" && $row2["BallotMeasureContribution"] == "N") {echo "<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>other committees</b><br>";}
                 }
-                echo "</div>";
+                echo "</div> <!-- breakdown_box -->";
                 echo "<hr class=\"caps_hr1\">";
                 break;
 
@@ -375,7 +375,7 @@
                 $election_date = date ("F Y", strtotime ($election));
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">Ballot Measures</strong> on the {$election_date} ballot have received</div>";
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions";
-                echo "<a href=\"#\" class=\"info\"></a></div>";
+                echo "<a href=\"#tip9\" class=\"info\"></a></div>";
                 echo "<div id=\"breakdown_box\">";
                 $result2 = my_query ("SELECT Target, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount, SUM(IF(PositionID = 1,1,0)) AS SupportCount, SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount, SUM(IF(PositionID = 2,1,0)) AS OpposeCount, SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount FROM contributions_search INNER JOIN smry_propositions USING (PropositionID) WHERE Election = '{$election}' AND BallotMeasureContribution = 'Y' GROUP BY Target ORDER BY Target");
                 while ($row2 = $result2->fetch_assoc()) {
@@ -389,7 +389,7 @@
                   echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Oppose: $" . number_format ($row2["OpposeAmount"], 2, ".", ",") . " raised - " . number_format ($row2["OpposeCount"], 0, ".", ",") . " contributions";
                   echo "</p>";
                 }
-                echo "</div>";
+                echo "</div> <!-- breakdown_box -->";
                 echo "<hr class=\"caps_hr1\">";
                 break;            
             }
@@ -397,7 +397,7 @@
             echo "<h1 class=\"caps_title3\">Search Results</h1>";
             echo "<hr class=\"caps_hr1\">";
             echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions";
-            echo "<a href=\"#\" class=\"info\"></a></div>";
+            echo "<a href=\"#tip9\" class=\"info\"></a></div>";
             echo "<h2 class=\"caps_title4\">Contributions</h2>";
             echo "<hr class=\"caps_hr1\">";
           }
@@ -421,7 +421,7 @@
         echo "<input type=\"submit\" value=\"Update\" id=\"caps_update_btn\">";
         echo "<div id=\"download_box\">";
         echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">Download CSV</a>&nbsp;&nbsp;";
-        echo "<a href=\"#\" class=\"download_info\"></a>";
+        echo "<a href=\"#tip10\" class=\"download_info\"></a>";
         echo "</div> <!-- download_box -->";
         echo "</div> <!-- filter_box -->";
 
@@ -429,7 +429,7 @@
         $field_msg = "Show more fields";
         if ($field_set == "Show more fields") {$field_msg = "Show fewer fields";}
         echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\" id=\"caps_field_btn\">";
-        echo "<a href=\"#\" class=\"info\"></a>";
+        echo "<a href=\"#tip11\" class=\"info\"></a>";
 
         echo "<div id=\"table_box\">";
         echo "<table title=\"search table\" summary=\"search table\" class=\"caps_table1\">";

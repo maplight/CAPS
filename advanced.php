@@ -19,7 +19,8 @@
   <script src="js/caps.js"></script>
 </head>
 
-<body>
+<body style="min-height:4000px;">
+<form action="advanced.php" method="post">
 <?php
     # Cal-Access Campaign Power Search Project
     # MapLight
@@ -87,7 +88,6 @@
 <div id="wrapper">
   <div id="container">
     <div id="columns">
-      <form method="post">
         <div id="sidebar">
           <h1 class="caps_title1">Advanced Search</h1>
           <input type="submit" value="Search" id="caps_search_btn">
@@ -101,7 +101,7 @@
   echo "<input type=\"radio\" id=\"all_contribs\" name=\"contrib_select\" value=\"all\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="all_contribs" class="caps_label1">All contributors</label>
-          <a href="help.php?tip=1" class="info"></a>
+          <a href="#tip1" class="info"></a>
 
 <?php
   $checked = "";
@@ -141,7 +141,7 @@
   echo "<input type=\"radio\" id=\"contrib_to\" name=\"contrib_types\" value=\"candidates\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="contrib_to" class="caps_label1">Candidates</label>
-          <a href="#" class="info"></a>
+          <a href="#tip3" class="info"></a>
 <?php
   $checked = "";
   if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
@@ -163,7 +163,7 @@
   $js_candidates = fill_candidate_names ($selected, "1999");
 ?>
           </select>
-          <a href="#" class="info"></a>
+          <a href="#tip4" class="info"></a>
 <?php
   $checked = "";
   if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "office") {$checked = "checked";}}  
@@ -176,7 +176,7 @@
   fill_offices_sought ($selected);
 ?>
           </select>
-          <a href="#" class="info"></a>
+          <a href="#tip5" class="info"></a>
           <hr class="caps_hr1">
 
 <!-- Contributions To Ballot Measures -->
@@ -186,7 +186,7 @@
   echo "<input type=\"radio\" id=\"props_to\" name=\"contrib_types\" value=\"ballots\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="props_to" class="caps_label1">Ballot Measures</label>
-          <a href="#" class="info"></a>
+          <a href="#tip6" class="info"></a>
 <?php
   $text = "Search propositions";
   if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
@@ -221,7 +221,7 @@
   echo "<input type=\"radio\" id=\"comms_to\" name=\"contrib_types\" value=\"committees\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="comms_to" class="caps_label1">Committees</label>
-          <a href="#" class="info"></a>
+          <a href="#tip7" class="info"></a>
 <?php
   $text = "Just these committees";
   if (isset ($_POST["committee_search"])) {$text = $_POST["committee_search"];}
@@ -230,7 +230,7 @@
           <hr class="caps_hr1">
 
 <!-- Dates -->
-          <h2 class="caps_header1">Dates:<a href="#" class="info"></a></h2>
+          <h2 class="caps_header1">Dates:<a href="#tip8" class="info"></a></h2>
 <?php
   $checked = "";
   if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
@@ -277,15 +277,26 @@
   build_results_table ();
 ?>
         </div> <!-- #content -->
-      </form>
     </div> <!-- # columns -->
   </div> <!-- #containter -->
 </div> <!-- #wrapper-->
 
-<div style="background:#ebebeb;padding:20px;border-top:2px solid #000000;">
-<h1>Help</h1>
-<a name="tip2"><b>Contributor Location:</b> This is the tip for this item<p>
-</div>
+<div id="help_box">
+<h1>Help Tips</h1><p>&nbsp;</p>
+<p><a name="tip1"></a><b>All Contributors</b>: Search contributions from all contributors</p>
+<p><a name="tip2"></a><b>Contributor Location</b>: Search contributions from a particular state</p>
+<p><a name="tip3"></a><b>Candidates</b>: Search contributions to candidate campaigns only</p>
+<p><a name="tip4"></a><b>Just These candidates</b>: Search contributions to a particular candidate's campaign(s)</p>
+<p><a name="tip5"></a><b>By office sought</b>: Search contributions to all candidates running for a particular office</p>
+<p><a name="tip6"></a><b>Ballot Measures</b>: Search contributions to committees formed to support or oppose ballot measures. Your results may return duplicate contributions if a contributor gave money to a committee supporting or opposing multiple ballot measures.</p>
+<p><a name="tip7"></a><b>Committees</b>: Search contributions to other committees, such as candidate office holder and legal defense committees</p>
+<p><a name="tip8"></a><b>Dates</b>: Search contributions by the date range in which they were made</p>
+<p><a name="tip9"></a><b>Contributions</b>: This is the total amount received by number of contributions (does not include unitemized contributions). The table displays all contributions in the given search parameters, including both itemized contributions (of $100 or more) and unitemized contribution totals.</p>
+<p><a name="tip10"></a><b>Download CSV</b>: Download the search results as a CSV file</p>
+<p><a name="tip11"></a><b>Show more fields</b>: Show more columns in the table for additional information on contributors</p>
+<p><center><input type="submit" value="Return to Top"></p>
+</div> <!-- help_box -->
+</form>
 
 </body>
 </html>
