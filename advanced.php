@@ -19,7 +19,7 @@
   <script src="js/caps.js"></script>
 </head>
 
-<body style="min-height:4000px;">
+<body style="min-height:4500px;">
 <form action="advanced.php" method="post">
 <?php
     # Cal-Access Campaign Power Search Project
