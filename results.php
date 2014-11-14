@@ -1,8 +1,8 @@
 <?php
-  function build_results_table () {
+  function build_results_table ($ada) {
     if (! isset ($_POST["contributor"])) {
       # No form search yet
-      echo "<DIV CLASS=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</DIV>";
+      if (! $ada) {echo "<DIV CLASS=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</DIV>";}
     } else {
       # Parse search form
       $where = parse_search_form ($_POST);
