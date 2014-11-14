@@ -1,7 +1,7 @@
-﻿
+﻿/*
 -- ------------------------------------------------------------------------------------------
 -- populate tables (after name cleaning)
-
+*/
 truncate table prop_filer_session_name_forms;
 insert into prop_filer_session_name_forms
 select
