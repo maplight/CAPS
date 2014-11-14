@@ -1,9 +1,4 @@
-﻿/*
--- ------------------------------------------------------------------------------------------
--- populate tables (before name cleaning)
-*/
-truncate table filer_ids;
-insert filer_ids (filer_id, max_rpt_end)
+truncate table filer_ids;insert filer_ids (filer_id, max_rpt_end)
 select filer_id
   , max(str_to_date(
       case
@@ -65,7 +60,7 @@ from table_filing_ids
 group by filing_id
 ;
 
--- FILER_XREF: This table maps legacy filer identification numbers to the systems filer identification numbers. -from CalAccessTablesWeb.pdf
+/*-- FILER_XREF: This table maps legacy filer identification numbers to the systems filer identification numbers. -from CalAccessTablesWeb.pdf */
 truncate table disclosure_filer_ids;
 insert disclosure_filer_ids (disclosure_filer_id, filer_id)
 select
@@ -141,7 +136,7 @@ from
         a.filer_id
       , a.session
       , a.rpt_date
-      , min(a.office_cd) as office_cd -- lower codes are more likely to be state offices
+      , min(a.office_cd) as office_cd
     from 
       f501_502_cleaned a
       join (
@@ -165,7 +160,7 @@ group by
   , aa.office_cd
 ;
 
--- get candidates from scraped table
+/*-- get candidates from scraped table*/
 truncate table candidate_ids;
 insert candidate_ids (candidate_id, number_of_names, last_session)
 select 
@@ -176,14 +171,14 @@ from cal_access_candidates
 group by id
 ;
 
--- updated those candidates with their name from their most recent session
+/*-- updated those candidates with their name from their most recent session*/
 update 
   candidate_ids a
   join cal_access_candidates b on a.candidate_id = b.id and a.last_session = b.session
 set a.candidate_name = b.name
 ;
 
--- append candidate_ids for committees
+/*-- append candidate_ids for committees */
 update
   filer_ids a
   join (
@@ -194,14 +189,14 @@ update
 set a.candidate_id = b.id
 ;
 
--- updated candidate name for committees
+/*-- updated candidate name for committees*/
 update
   filer_ids a
   join candidate_ids b using (candidate_id)
 set a.candidate_name = b.candidate_name
 ;
 
--- set up the table holding the candidate name possibilities for every filing/amendment
+/*-- set up the table holding the candidate name possibilities for every filing/amendment */
 truncate table filing_amends;
 insert into filing_amends (
     filing_id
