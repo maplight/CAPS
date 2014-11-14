@@ -197,6 +197,12 @@ body{
   border:2px solid #ccc;
 }
 
+#breakdown_box{
+  margin-top:10px;
+  margin-left:30px;
+  margin-bottom:8px;
+}
+
 #qs_page{
   padding:28px;
   overflow:hidden;
