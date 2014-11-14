@@ -102,7 +102,8 @@
   echo "<input type=\"radio\" id=\"all_contribs\" name=\"contrib_select\" value=\"all\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="all_contribs" class="caps_label1">All contributors</label>
-          <a href="#" class="info"></a>
+          <a href="help.php?tip=1" class="info"></a>
+
 <?php
   $checked = "";
   if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
@@ -112,7 +113,7 @@
   echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" class=\"caps_text1\">";
 ?>
           <label for="select_location" class="caps_label2">Contributor Location</label>
-          <a href="#" class="info"></a>
+          <a href="#tip2" class="info"></a>
           <select id="select_location" name="state_list" class="caps_select1">
 <?php
   $selected = "";
@@ -281,6 +282,11 @@
     </div> <!-- # columns -->
   </div> <!-- #containter -->
 </div> <!-- #wrapper-->
+
+<div style="background:#ebebeb;padding:20px;border-top:2px solid #000000;">
+<h1>Help</h1>
+<a name="tip2"><b>Contributor Location:</b> This is the tip for this item<p>
+</div>
 
 </body>
 </html>
