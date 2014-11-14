@@ -75,9 +75,10 @@
 <img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;">
 </div>
         <ul id="utl" class="clearfix">
-        <li><b>CAL-ACCESS Campaign Power Search</b></li>
-        <li><a href="index.php">Quick Search</a></li>
-        <li><a href="advanced.php">Advanced Search</a></li>
+          <li><b>CAL-ACCESS Campaign Power Search</b></li>
+          <li><a href="index.php">Quick Search</a></li>
+          <li><a href="advanced.php">Advanced Search</a></li>
+          <li><a href="nocss.php">Plain Text Power Search</a></li>
         </ul>
 
 <div style="border:2px solid #FF0000; background:#FFCCCC; margin:2px; color:red; text-align:center;"><b>NOTE: This search is in BETA. Please do not cite.</b></div>

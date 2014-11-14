@@ -15,6 +15,45 @@
     require ("connect.php");
     require ("sidebar.php");
     require ("results.php");
+
+    # Check for quick search entry
+    if (isset ($_POST["quick_search"])) {
+      $_POST["state_list"] = "ALL";
+
+      if ($_POST["qs_button"] == "Search Candidates") {
+        $_POST["contrib_select"] = "all";
+        $_POST["contributor"] = "Just these contributors";
+        $_POST["contrib_types"] = "candidates";
+        $_POST["cand_select"] = "search";
+        $_POST["proposition_list"] = "ALL";
+        $_POST["date_select"] = "all";
+#        $_POST["date_select"] = "cycle";
+#        $cycles = array ();
+#        $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
+#         while ($row = $result->fetch_assoc()) {$cycles[] = $row["ElectionCycle"];}
+#        $_POST["cycles"] = $cycles;      
+      }
+
+      if ($_POST["qs_button"] == "Search Ballot Measures") {
+        $_POST["contrib_select"] = "all";
+        $_POST["contributor"] = "Just these contributors";
+        $_POST["contrib_types"] = "ballots";
+        $_POST["search_propositions"] = "Search propositions";
+        $_POST["position"] = "B";
+        $_POST["date_select"] = "all";
+      }
+
+      if ($_POST["qs_button"] == "Search Contributors") {
+        $_POST["contrib_select"] = "search";
+        $_POST["contrib_types"] = "all";
+        $_POST["proposition_list"] = "ALL";
+        $_POST["date_select"] = "cycle";
+        $cycles = array ();
+        $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
+         while ($row = $result->fetch_assoc()) {$cycles[] = $row["ElectionCycle"];}
+        $_POST["cycles"] = $cycles;      
+      }
+    }
 ?>
 <img src="img/MapLight_Demo.jpg">
 
@@ -27,9 +66,15 @@
 
 <b>NOTE: This search is in BETA. Please do not cite.</b><p>
 
-<h1>Advanced Search</h1>
-<p><a href="nocss-advanced.php">Reset Form</a></p>
 <form method="post">
+
+<?php
+  build_results_table (true);
+?>
+
+  <hr>
+  <h1>Advanced Search</h1>
+  <p><a href="nocss-advanced.php">Reset Form</a></p>
   <h2>Contributions From:</h2>
 
 <?php
@@ -191,12 +236,7 @@
   </blockquote>
 
   <input type="submit" value="Search">
-
-<?php
-  build_results_table (true);
-?>
-
-  </form>
+</form>
 
 </body>
 </html>
