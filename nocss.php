@@ -23,7 +23,7 @@
   <li><b>CAL-ACCESS Campaign Power Search</b></li>
   <li><a href="nocss.php">Quick Search</a></li>
   <li><a href="nocss-advanced.php">Advanced Search</a></li>
-  <li><a href="index.php">GUI Quick Search</a></li>
+  <li><a href="index.php">Graphical Power Search</a></li>
 </ul>
 
 <b>NOTE: This search is in BETA. Please do not cite.</b><p>
