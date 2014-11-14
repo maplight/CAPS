@@ -60,6 +60,7 @@ drop table if exists contributions_full_temp;
 create table contributions_full_temp like contributions_full;
 
 /*-- regular contributions*/
+
 insert into contributions_full_temp (
     Form
   , RecipientCommitteeType

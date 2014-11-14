@@ -1,5 +1,4 @@
-﻿
-truncate table filer_ids;insert filer_ids (filer_id, max_rpt_end)
+﻿truncate table filer_ids;insert filer_ids (filer_id, max_rpt_end)
 select filer_id
   , max(str_to_date(
       case
