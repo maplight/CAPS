@@ -101,7 +101,7 @@
   echo "<input type=\"radio\" id=\"all_contribs\" name=\"contrib_select\" value=\"all\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="all_contribs" class="caps_label1">All contributors</label>
-          <div class="info" title="Search contributions from all contributors"></div>
+          <a href="#" class="info" title="Search contributions from all contributors"></a>
 <?php
   $checked = "";
   if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
