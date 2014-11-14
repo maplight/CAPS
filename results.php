@@ -2,7 +2,7 @@
   function build_results_table ($ada) {
     if (! isset ($_POST["contributor"])) {
       # No form search yet
-      if (! $ada) {echo "<DIV CLASS=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</DIV>";}
+      if (! $ada) {echo "<div class=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</div>";}
     } else {
       # Parse search form
       $parse_data = parse_search_form ($_POST);
@@ -434,7 +434,7 @@
             echo "<h1 class=\"caps_title3\">Search Results</h1>";
             echo "<hr class=\"caps_hr1\">";
             echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions";
-            echo "<a href=\"#\" class=\"info\"></a></div>";
+            echo "<a href=\"#tip9\" class=\"info\"></a></div>";
             echo "<h2 class=\"caps_title4\">Contributions</h2>";
             echo "<hr class=\"caps_hr1\">";
           } else {
@@ -513,7 +513,7 @@
           echo "<input type=\"submit\" value=\"Update\" id=\"caps_update_btn\">";
           echo "<div id=\"download_box\">";
           echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">Download CSV</a>&nbsp;&nbsp;";
-          echo "<a href=\"#\" class=\"download_info\"></a>";
+          echo "<a href=\"#tip10\" class=\"download_info\"></a>";
           echo "</div> <!-- download_box -->";
           echo "</div> <!-- filter_box -->";
 
@@ -521,7 +521,7 @@
           $field_msg = "Show more fields";
           if ($field_set == "Show more fields") {$field_msg = "Show fewer fields";}
           echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\" id=\"caps_field_btn\">";
-          echo "<a href=\"#\" class=\"info\"></a>";
+          echo "<a href=\"#tip11\" class=\"info\"></a>";
 
           echo "<div id=\"table_box\">";
           echo "<table title=\"search table\" summary=\"search table\" class=\"caps_table1\">";

@@ -20,8 +20,6 @@ body{
 
 #container{
   font:15px Arial, Helvetica, sans-serif;
-  -webkit-text-size-adjust:100%;
-  -ms-text-size-adjust:none;
   z-index:10;
   margin:0 auto;
 }
@@ -226,6 +224,16 @@ body{
 #qs_box{
   float:left;
   margin-left:14px;
+}
+
+#help_box{
+  clear:both;
+  background:#ebebeb;
+  padding:20px;
+  border-top:2px solid #000000;
+  border-bottom:2px solid #000000;
+  font:15px Arial, Helvetica, sans-serif;
+  text-decoration:none;
 }
 
 #maplight_info{
