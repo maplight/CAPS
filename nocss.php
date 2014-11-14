@@ -2,10 +2,7 @@
 
 <html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>California Secretary of State</title>
+  <title>CAL-ACCESS Campaign Power Search</title>
 </head>
 
 <body>
@@ -18,94 +15,49 @@
     require ("connect.php");
     require ("sidebar.php");
     require ("results.php");
-
-    # Check for quick search entry
-    if (isset ($_POST["quick_search"])) {
-      $_POST["state_list"] = "ALL";
-
-      if ($_POST["qs_button"] == "Search Candidates") {
-        $_POST["contrib_select"] = "all";
-        $_POST["contributor"] = "Just these contributors";
-        $_POST["contrib_types"] = "candidates";
-        $_POST["cand_select"] = "search";
-        $_POST["proposition_list"] = "ALL";
-        $_POST["date_select"] = "all";
-#        $_POST["date_select"] = "cycle";
-#        $cycles = array ();
-#        $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
-#         while ($row = $result->fetch_assoc()) {$cycles[] = $row["ElectionCycle"];}
-#        $_POST["cycles"] = $cycles;      
-      }
-
-      if ($_POST["qs_button"] == "Search Ballot Measures") {
-        $_POST["contrib_select"] = "all";
-        $_POST["contributor"] = "Just these contributors";
-        $_POST["contrib_types"] = "ballots";
-        $_POST["search_propositions"] = "Search propositions";
-        $_POST["position"] = "B";
-        $_POST["date_select"] = "all";
-      }
-
-      if ($_POST["qs_button"] == "Search Contributors") {
-        $_POST["contrib_select"] = "search";
-        $_POST["contrib_types"] = "all";
-        $_POST["proposition_list"] = "ALL";
-        $_POST["date_select"] = "cycle";
-        $cycles = array ();
-        $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
-         while ($row = $result->fetch_assoc()) {$cycles[] = $row["ElectionCycle"];}
-        $_POST["cycles"] = $cycles;      
-      }
-    }
 ?>
+<img src="img/MapLight_Demo.jpg">
 
-<div id="caps_header">
-<div class="frme" id="top">
-<img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;">
-</div>
-        <ul id="utl" class="clearfix">
-        <li><b>CAL-ACCESS Campaign Power Search</b></li>
-        <li><a href="ada.php">Quick Search</a></li>
-        <li><a href="ada-advanced.php">Advanced Search</a></li>
-        </ul>
-</div> <!-- caps_header -->
+<ul>
+  <li><b>CAL-ACCESS Campaign Power Search</b></li>
+  <li><a href="index.php">Quick Search</a></li>
+  <li><a href="advanced.php">Advanced Search</a></li>
+</ul>
 
-<div id="wrapper">
-  <div id="container">
-    <div id="columns">
-      <form method="post">
-        <div id="sidebar">
-          <h1 class="caps_title1">Advanced Search</h1>
-          <input type="submit" value="Search" id="caps_search_btn">
-          <a href="advanced.php" id="caps_reset_btn">Reset</a>
+<b>NOTE: This search is in BETA. Please do not cite.</b><p>
 
-<!-- Contributions From -->
-          <h2 class="caps_header1">Contributions From:</h2>
+<h1>Advanced Search</h1>
+<p><a href="nocss.php">Reset Form</a></p>
+<form method="post">
+  <input type="submit" value="Search">
+
+  <h2>Contributions From:</h2>
+
 <?php
   $checked = "";
   if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button
-  echo "<input type=\"radio\" id=\"all_contribs\" name=\"contrib_select\" value=\"all\" class=\"caps_radio1\" {$checked}>";
-?>
-          <label for="all_contribs" class="caps_label1">All contributors</label>
-          <a href="#" class="info"></a>
-<?php
+  echo "<input type=\"radio\" name=\"contrib_select\" value=\"all\" {$checked}> All contributors (<i>tooltip info</i>)<br>";
+
   $checked = "";
   if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"select_contribs\" name=\"contrib_select\" value=\"search\" class=\"caps_radio1\" {$checked}>";
+  echo "<input type=\"radio\" name=\"contrib_select\" value=\"search\" {$checked}>";
+
   $text = "Just these contributors";
   if (isset ($_POST["contributor"])) {$text = $_POST["contributor"];}
-  echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" class=\"caps_text1\">";
+  echo "<input type=\"text\" name=\"contributor\" value=\"{$text}\"><br>";
 ?>
-          <label for="select_location" class="caps_label2">Contributor Location</label>
-          <a href="#" class="info"></a>
-          <select id="select_location" name="state_list" class="caps_select1">
+
+<b>Contributor Location</b><br>
+<select id="select_location" name="state_list" class="caps_select1">
+
 <?php
   $selected = "";
   if (isset ($_POST["state_list"])) {$selected = $_POST["state_list"];}
   fill_state_list ($selected);
 ?>
-          </select>
-          <hr class="caps_hr1">
+
+</select>
+<hr>
 
 <!-- Contributions To -->
           <h2 class="caps_header1">Contributions To:</h2>
