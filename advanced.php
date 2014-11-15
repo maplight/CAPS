@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -90,7 +90,7 @@
       <form method="post">
         <div id="sidebar">
           <h1 class="caps_title1">Advanced Search</h1>
-          <input type="submit" value="Search" id="caps_search_btn">
+          <input type="submit" name="search_btn" value="Search" id="caps_search_btn">
           <a href="advanced.php" id="caps_reset_btn">Reset</a>
 
 <!-- Contributions From -->
@@ -260,7 +260,7 @@
   fill_election_cycles ($cycles);
 ?>
           </div> <!-- cycles_box -->
-          <input type="submit" value="Search" id="caps_search_btn">
+          <input type="submit" name="search_btn"  value="Search" id="caps_search_btn">
 
 <?php
   # Data for javascript to filter select boxes
