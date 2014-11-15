@@ -76,10 +76,9 @@
 <img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;">
 </div>
         <ul id="utl" class="clearfix">
-          <li><b>CAL-ACCESS Campaign Power Search</b></li>
-          <li><a href="index.php">Quick Search</a></li>
-          <li><a href="advanced.php">Advanced Search</a></li>
-          <li><a href="nocss.php">Plain Text Power Search</a></li>
+        <li><b>CAL-ACCESS Campaign Power Search</b></li>
+        <li><a href="index.php">Quick Search</a></li>
+        <li><a href="advanced.php">Advanced Search</a></li>
         </ul>
 
 <div style="border:2px solid #FF0000; background:#FFCCCC; margin:2px; color:red; text-align:center;"><b>NOTE: This search is in BETA. Please do not cite.</b></div>
@@ -259,7 +258,7 @@
           <div id="cycles_box">
 <?php
   if (isset ($_POST["cycles"])) {$cycles = $_POST["cycles"];} else {$cycles = array ("");}
-  fill_election_cycles ($cycles, false);
+  fill_election_cycles ($cycles);
 ?>
           </div> <!-- cycles_box -->
           <input type="submit" name="search_btn"  value="Search" id="caps_search_btn">
@@ -275,7 +274,7 @@
 
         <div id="content">
 <?php
-  build_results_table (false);
+  build_results_table ();
 ?>
         </div> <!-- #content -->
     </div> <!-- # columns -->
