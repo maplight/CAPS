@@ -259,9 +259,9 @@
             default: $page = $_POST["page_button"]; break;
           }
         }
-
-        # Reset the page to 0 if you selected a smaller set then is currently displayed
-        if ($page > $total_pages) {$page = 1;}
+ 
+        # Reset the page to 1 if you selected a smaller set then is currently displayed, or if the search button was used
+        if ($page > $total_pages || isset ($_POST["search_btn"])) {$page = 1;}
 
         # Determine rows being displayed
         $first_row = ($page - 1) * $limit + 1;
