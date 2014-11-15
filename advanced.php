@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -75,9 +75,9 @@
 <img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;">
 </div>
         <ul id="utl" class="clearfix">
-          <li><b>CAL-ACCESS Campaign Power Search</b></li>
-          <li><a href="index.php">Quick Search</a></li>
-          <li><a href="advanced.php">Advanced Search</a></li>
+        <li><b>CAL-ACCESS Campaign Power Search</b></li>
+        <li><a href="index.php">Quick Search</a></li>
+        <li><a href="advanced.php">Advanced Search</a></li>
         </ul>
 
 <div style="border:2px solid #FF0000; background:#FFCCCC; margin:2px; color:red; text-align:center;"><b>NOTE: This search is in BETA. Please do not cite.</b></div>
@@ -90,7 +90,7 @@
       <form method="post">
         <div id="sidebar">
           <h1 class="caps_title1">Advanced Search</h1>
-          <input type="submit" value="Search" id="caps_search_btn">
+          <input type="submit" name="search_btn" value="Search" id="caps_search_btn">
           <a href="advanced.php" id="caps_reset_btn">Reset</a>
 
 <!-- Contributions From -->
@@ -257,10 +257,10 @@
           <div id="cycles_box">
 <?php
   if (isset ($_POST["cycles"])) {$cycles = $_POST["cycles"];} else {$cycles = array ("");}
-  fill_election_cycles ($cycles, false);
+  fill_election_cycles ($cycles);
 ?>
           </div> <!-- cycles_box -->
-          <input type="submit" value="Search" id="caps_search_btn">
+          <input type="submit" name="search_btn"  value="Search" id="caps_search_btn">
 
 <?php
   # Data for javascript to filter select boxes
@@ -273,7 +273,7 @@
 
         <div id="content">
 <?php
-  build_results_table (false);
+  build_results_table ();
 ?>
         </div> <!-- #content -->
       </form>
