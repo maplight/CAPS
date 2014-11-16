@@ -35,7 +35,6 @@ body{
   background:#ebebeb;
   width:260px;
   position:relative;
-  overflow:hidden;
 }
 
 #content{
@@ -544,10 +543,12 @@ body{
 .tooltip{
   display:none;
   position:absolute;
-  border:1px solid #000000;
-  width:140px;
+  border:2px solid #000000;
+  width:160px;
+  padding:5px;
   background:blue;
   color:white;
+  z-index:9999;
 }
  
 .content_title1{
