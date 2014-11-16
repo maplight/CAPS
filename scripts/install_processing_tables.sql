@@ -115,11 +115,7 @@ create table prop_filer_sessions (
   , primary key filer_id_session_id (filer_id, session_id)
 );
 
-/*  The values in this table come from:
-    http://www.sos.ca.gov/prd/cal-access/
-    Cal-Access Documentation --> CalFormat --> cal_format_201.pdf --> page 12 (Office Codes)
-    The 501 codes come from: ?
-*/
+
 drop table if exists california_data_office_codes;
 create table california_data_office_codes (
     office_code_id bigint(20) not null primary key auto_increment
