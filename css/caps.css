@@ -536,9 +536,18 @@ body{
   float:right;
   position:relative;
   margin-right:4px;
-  background:url(../img/sprite01.png) no-repeat 0 -15px;
   width:15px;
-  height:16px;
+  height:15px;
+  cursor:pointer;
+}
+
+.tooltip{
+  display:none;
+  position:absolute;
+  border:1px solid #000000;
+  width:140px;
+  background:blue;
+  color:white;
 }
  
 .content_title1{

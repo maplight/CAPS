@@ -42,3 +42,8 @@ function filter_propositions_list() {
     } 
   });
 }
+
+
+function display_tooltip(tooltip_id) {
+  alert(tooltip_id);
+}
