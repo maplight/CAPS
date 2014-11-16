@@ -20,8 +20,6 @@ body{
 
 #container{
   font:15px Arial, Helvetica, sans-serif;
-  -webkit-text-size-adjust:100%;
-  -ms-text-size-adjust:none;
   z-index:10;
   margin:0 auto;
 }
@@ -37,7 +35,6 @@ body{
   background:#ebebeb;
   width:260px;
   position:relative;
-  overflow:hidden;
 }
 
 #content{
@@ -226,6 +223,16 @@ body{
 #qs_box{
   float:left;
   margin-left:14px;
+}
+
+#help_box{
+  clear:both;
+  background:#ebebeb;
+  padding:20px;
+  border-top:2px solid #000000;
+  border-bottom:2px solid #000000;
+  font:15px Arial, Helvetica, sans-serif;
+  text-decoration:none;
 }
 
 #maplight_info{
@@ -528,9 +535,23 @@ body{
   float:right;
   position:relative;
   margin-right:4px;
-  background:url(../img/sprite01.png) no-repeat 0 -15px;
   width:15px;
-  height:16px;
+  height:15px;
+  cursor:pointer;
+}
+
+.tooltip{
+  position:absolute;
+  display:none;
+  border:2px solid #000000;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  width:160px;
+  padding:5px;
+  background:blue;
+  color:white;
+  z-index:9999;
 }
  
 .content_title1{
