@@ -1,11 +1,11 @@
 <?php
   require ("../connect.php");
+  //ini_set('memory_limit', '2028M');
   $script_conn = mysqli_init ();
   mysqli_options ($script_conn, MYSQLI_OPT_LOCAL_INFILE, true);
   mysqli_real_connect ($script_conn, $hostname, $script_login, $script_pwd, "ca_process");
 
  echo "Starting update... \n";
-
 
  echo "Update the most recent cal_access session \n";
   # Update the most recent cal_access session
@@ -63,9 +63,7 @@ function process_sql_file($filename)
 
     $sql_contents = file_get_contents($filename);
     $sql_contents = rtrim(rtrim($sql_contents), ";");
-    $sql_contents = preg_split("/;/", $sql_contents);
-
-
+    $sql_contents = preg_split("/;(\n|\r)/", $sql_contents);
 
     foreach ($sql_contents as $query) {
 
