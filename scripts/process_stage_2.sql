@@ -1,6 +1,3 @@
-/*
- populate tables (after name cleaning)
-*/
 truncate table prop_filer_session_name_forms;
 insert into prop_filer_session_name_forms
 select
@@ -59,7 +56,7 @@ group by
 drop table if exists contributions_full_temp;
 create table contributions_full_temp like contributions_full;
 
-/*-- regular contributions*/
+
 
 insert into contributions_full_temp (
     Form
@@ -507,9 +504,7 @@ where
 update 
   filing_ids a
   join (
-    /*  Grouping by Target also, since contribution records are duplicated
-        by Target. The join below ignores Target, which is fine, since every 
-        Target for a particular filing should have the same records.    */
+
     select FilingID, AmendID, Target, sum(TransactionAmount) 'Amount'
     from contributions_full_temp
     where 
@@ -802,75 +797,6 @@ set
 where RecipientCandidateOfficeNeedsCleanup = 'Y'
 ;
 
-/*
--- (DON'T) standardize office across all contributions for a particular candidate/cycle
-drop table if exists candidate_cycle_temp;
-create table candidate_cycle_temp (
-    RecipientCandidateID bigint(20) not null
-  , ElectionCycle smallint(6) not null
-  , RecipientCandidateOffice varchar(50) not null
-  , Amount float not null
-  , Contributions int not null
-  , Min501Code varchar(5) not null
-  , id bigint not null primary key auto_increment
-);
-insert candidate_cycle_temp (
-    RecipientCandidateID
-  , ElectionCycle
-  , RecipientCandidateOffice
-  , Amount
-  , Contributions
-  , Min501Code
-  )
-select
-    RecipientCandidateID
-  , ElectionCycle
-  , RecipientCandidateOffice
-  , sum(TransactionAmount) 'Amount'
-  , count(*) 'Contributions'
-  , min(RecipientCandidateOffice501Code) 'Min501Code'
-from contributions_full_temp
-where 
-  RecipientCandidateID > 0
-  and ElectionCycle > 0
-  and RecipientCandidateOffice <> ''
-group by 
-    RecipientCandidateID
-  , ElectionCycle
-  , RecipientCandidateOffice
-order by 
-    RecipientCandidateID
-  , ElectionCycle
-  , Amount desc
-  , Contributions desc
-  , Min501Code
-  , RecipientCandidateOffice
-;
-delete a
-from
-  candidate_cycle_temp a
-  left join (
-    select
-        RecipientCandidateID
-      , ElectionCycle
-      , min(id) as id
-    from candidate_cycle_temp
-    group by
-        RecipientCandidateID
-      , ElectionCycle
-    ) b using (RecipientCandidateID, ElectionCycle, id)
-where b.RecipientCandidateID is null
-;
-alter table candidate_cycle_temp
-add unique key (RecipientCandidateID, ElectionCycle)
-;
-update 
-  contributions_full_temp a
-  join candidate_cycle_temp b using (RecipientCandidateID, ElectionCycle)
-set a.RecipientCandidateOffice = b.RecipientCandidateOffice
-;
-drop table if exists candidate_cycle_temp;
-*/
 
 /*-- identify committees with inconsistent committee types*/
 drop table if exists tmp_committees_with_multiple_types;
@@ -1073,7 +999,6 @@ where
     )
 ;
 
-/*-- flag loans with $0 amount (and an outstanding balance > $0 at the beginning of this period)*/
 update contributions_full_temp
 set NoNewLoanAmount = 'Y'
 where
@@ -1084,7 +1009,6 @@ where
   and LoanPreExistingBalance > 0
 ;  
 
-/*-- flag candidate contributions*/
 update contributions_full_temp
 set CandidateContribution = 'Y'
 where
@@ -1097,7 +1021,6 @@ where
   and (RecipientCommitteeEntity in ('CAO', 'CTL') or RecipientCandidateNameNormalized <> '')
 ;  
 
-/*-- flag ballot measure contributions*/
 update contributions_full_temp
 set BallotMeasureContribution = 'Y'
 where 
@@ -1237,11 +1160,7 @@ drop table if exists ca_search.contributions_temp;
 create table ca_search.contributions_temp like ca_search.contributions;
 insert ca_search.contributions_temp (
 
-/*
-drop table if exists contributions_temp;
-create table contributions_temp like contributions;
-insert contributions_temp (
-*/
+
     TransactionType
   , ElectionCycle
   , Election
@@ -1303,7 +1222,3 @@ where
   and not (Unitemized = 'Y' and TransactionAmount = 0)
 ;
 
-/*
-drop table if exists contributions;
-rename table contributions_temp to contributions;
-*/
