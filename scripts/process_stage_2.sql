@@ -1007,7 +1007,7 @@ where
   and Schedule = 'B1'
   and TransactionAmount = 0
   and LoanPreExistingBalance > 0
-;  
+;
 
 update contributions_full_temp
 set CandidateContribution = 'Y'
@@ -1019,7 +1019,7 @@ where
   and CandidateElectionCommittee = 'Y'
   and RecipientCommitteeEntity not in ('BMC', 'MDI', 'SMO')
   and (RecipientCommitteeEntity in ('CAO', 'CTL') or RecipientCandidateNameNormalized <> '')
-;  
+;
 
 update contributions_full_temp
 set BallotMeasureContribution = 'Y'
