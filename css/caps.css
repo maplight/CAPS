@@ -35,7 +35,6 @@ body{
   background:#ebebeb;
   width:260px;
   position:relative;
-  overflow:hidden;
 }
 
 #content{
@@ -536,9 +535,20 @@ body{
   float:right;
   position:relative;
   margin-right:4px;
-  background:url(../img/sprite01.png) no-repeat 0 -15px;
   width:15px;
-  height:16px;
+  height:15px;
+  cursor:pointer;
+}
+
+.tooltip{
+  display:none;
+  position:absolute;
+  border:2px solid #000000;
+  width:160px;
+  padding:5px;
+  background:blue;
+  color:white;
+  z-index:9999;
 }
  
 .content_title1{
