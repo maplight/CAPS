@@ -541,9 +541,12 @@ body{
 }
 
 .tooltip{
-  display:none;
   position:absolute;
+  display:none;
   border:2px solid #000000;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   width:160px;
   padding:5px;
   background:blue;
