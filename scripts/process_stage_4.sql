@@ -3,7 +3,7 @@ OPTIMIZE TABLE ca_search.smry_committees_temp;
 OPTIMIZE TABLE ca_search.smry_cycles_temp;
 OPTIMIZE TABLE ca_search.smry_offices_temp;
 OPTIMIZE TABLE ca_search.smry_propositions_temp;
-OPTIMIZE TABLE ca_search.contributions_search_temp; 
+OPTIMIZE TABLE ca_search.contributions_search_temp;
 OPTIMIZE TABLE ca_search.contributions_temp;
 
 DROP TABLE IF EXISTS ca_search.smry_candidates;
@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS ca_search.smry_propositions;
 RENAME TABLE ca_search.smry_propositions_temp TO ca_search.smry_propositions;
 
 DROP TABLE IF EXISTS ca_search.contributions_search;
-RENAME TABLE ca_search.contributions_search_temp TO ca_search.contributions_search; 
+RENAME TABLE ca_search.contributions_search_temp TO ca_search.contributions_search;
 
 DROP TABLE IF EXISTS ca_search.contributions;
 RENAME TABLE ca_search.contributions_temp TO ca_search.contributions;
