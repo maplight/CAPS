@@ -34,7 +34,7 @@ body{
 #sidebar{
   float:left;
   padding:12px 6px 12px 6px;
-  background:#a7a7a7;
+  background:#bcbcbc;
   width:260px;
   position:relative;
   overflow:hidden;
@@ -178,7 +178,7 @@ body{
 }
 
 #filter_box{
-  background:#a7a7a7;
+  background:#bcbcbc;
   margin-top:25px;
   margin-bottom:15px;
   padding:8px;
@@ -259,7 +259,7 @@ body{
   margin:8px 0 12px;
   font:bold 21px Arial, Helvetica, sans-serif;
   color:#124161;
-  background:#a7a7a7;
+  background:#bcbcbc;
   border:0px;
 }
 
@@ -494,7 +494,7 @@ body{
 .caps_table1 thead{
   margin:0;
   padding:0;
-  background:#a7a7a7;
+  background:#bcbcbc;
   font:13px Arial, Helvetica, sans-serif;
   color:#333;
 }
