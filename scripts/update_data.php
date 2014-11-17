@@ -85,7 +85,7 @@ function process_sql_file($filename)
     $result = script_query ("SELECT * FROM names_to_remove");
     while ($row = $result->fetch_assoc()) {$words_to_remove[] = $row["removal_word"];}
 
-    $result = script_query ("SELECT * FROM filing_amends");
+    $result = script_query ("SELECT * FROM filing_amends WHERE NOT ISNULL(candidate_id)");
     while ($row = $result->fetch_assoc()) {
       if ($row["candidate_name"] == "") {
         $name = $row["cand_naml"] . " " . $row["cand_nams"] . ", " . $row["cand_namt"] . " " . $row["cand_namf"];
