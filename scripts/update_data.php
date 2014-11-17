@@ -85,7 +85,7 @@ function process_sql_file($filename)
     $result = script_query ("SELECT * FROM names_to_remove");
     while ($row = $result->fetch_assoc()) {$words_to_remove[] = $row["removal_word"];}
 
-    $result = script_query ("SELECT * FROM filing_amends");
+    $result = script_query ("SELECT * FROM filing_amends WHERE cand_naml <> '' OR cand_nams <> '' OR cand_namt <> '' OR cand_namf <> '' OR candidate_name <> ''");
     while ($row = $result->fetch_assoc()) {
       if ($row["candidate_name"] == "") {
         $name = $row["cand_naml"] . " " . $row["cand_nams"] . ", " . $row["cand_namt"] . " " . $row["cand_namf"];
@@ -130,7 +130,7 @@ function process_sql_file($filename)
                             name_prefix = '',
                             nick_name = '',
                             display_name = ''
-                          WHERE filing_id = '{$row["filing_id"]}' AND amend_id = '{$row["amend_id"]}'";
+                          WHERE filing_id = {$row["filing_id"]} AND amend_id = {$row["amend_id"]}";
       } else {
         $query = "UPDATE filing_amends
                             SET gender = '$gender',
@@ -141,7 +141,7 @@ function process_sql_file($filename)
                             name_prefix = '" . addslashes ($name_prefix) . "',
                             nick_name = '" . addslashes ($nick_name) . "',
                             display_name = '" . addslashes ($display_name) . "'
-                          WHERE filing_id = '{$row["filing_id"]}' AND amend_id = '{$row["amend_id"]}'";
+                          WHERE filing_id = {$row["filing_id"]} AND amend_id = {$row["amend_id"]}";
       }
       script_query ($query);
     }
