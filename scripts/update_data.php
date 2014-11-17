@@ -130,7 +130,7 @@ function process_sql_file($filename)
                             name_prefix = '',
                             nick_name = '',
                             display_name = ''
-                          WHERE filing_id = '{$row["filing_id"]}' AND amend_id = '{$row["amend_id"]}'";
+                          WHERE filing_id = {$row["filing_id"]} AND amend_id = {$row["amend_id"]}";
       } else {
         $query = "UPDATE filing_amends
                             SET gender = '$gender',
@@ -141,7 +141,7 @@ function process_sql_file($filename)
                             name_prefix = '" . addslashes ($name_prefix) . "',
                             nick_name = '" . addslashes ($nick_name) . "',
                             display_name = '" . addslashes ($display_name) . "'
-                          WHERE filing_id = '{$row["filing_id"]}' AND amend_id = '{$row["amend_id"]}'";
+                          WHERE filing_id = {$row["filing_id"]} AND amend_id = {$row["amend_id"]}";
       }
       script_query ($query);
     }
