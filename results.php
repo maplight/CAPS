@@ -351,6 +351,12 @@
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">{$_POST["candidate_list"]}</strong> has received</div>";
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
                 echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png';\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" onClick=\"display_tooltip(event, 9);\" alt=\"This is the total amount received by number of contributions (does not include unitemized contributions). The table displays all contributions in the given search parameters, including both itemized contributions (of $100 or more) and unitemized contribution totals.\">";
+                echo "<div id=\"breakdown_box\">";
+                $result2 = my_query ("SELECT RecipientCommitteeNameNormalized, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM contributions_search INNER JOIN smry_committees USING (RecipientCommitteeID) INNER JOIN smry_candidates USING (RecipientCandidateNameID) WHERE RecipientCandidateNameNormalized = '{$_POST["candidate_list"]}' GROUP BY RecipientCommitteeID ORDER BY RecipientCommitteeNameNormalized");
+                while ($row2 = $result2->fetch_assoc()) {
+                  echo "<b>{$row2["RecipientCommitteeNameNormalized"]}</b> has raised $" . number_format ($row2["TotalAmount"], 2, ".", ",") . " in " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
+                }
+                echo "</div>";
                 echo "<hr class=\"caps_hr1\">";
                 break;            
 
@@ -359,7 +365,7 @@
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
                 echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png';\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" onClick=\"display_tooltip(event, 9);\" alt=\"This is the total amount received by number of contributions (does not include unitemized contributions). The table displays all contributions in the given search parameters, including both itemized contributions (of $100 or more) and unitemized contribution totals.\">";
                 echo "<div id=\"breakdown_box\">";
-                $result2 = my_query ("SELECT CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM ca_search.contributions_search {$where} GROUP BY CandidateContribution, BallotMeasureContribution ORDER BY CandidateContribution, BallotMeasureContribution");
+                $result2 = my_query ("SELECT CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM contributions_search {$where} GROUP BY CandidateContribution, BallotMeasureContribution ORDER BY CandidateContribution, BallotMeasureContribution");
                 while ($row2 = $result2->fetch_assoc()) {
                   if ($row2["CandidateContribution"] == "Y" && $row2["BallotMeasureContribution"] == "N") {echo "<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>candidates</b><br>";}
                   if ($row2["CandidateContribution"] == "N" && $row2["BallotMeasureContribution"] == "Y") {echo "<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>ballot measures</b><br>";}
