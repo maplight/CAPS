@@ -134,7 +134,7 @@
   echo "<input type=\"radio\" id=\"comms_to\" name=\"contrib_types\" value=\"all\" class=\"caps_radio1\" {$checked}>";
 ?>
           <div class="caps_box1">Everything (Candidates, Ballot Measures & Other Committees)</div>
-          <hr class="caps_hr1">
+          <hr class="caps_hr2">
 
 <!-- Contributions To Candidates -->
 <?php
@@ -181,7 +181,7 @@
 ?>
           </select>
           <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 5);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions to all candidates running for a particular office.">
-          <hr class="caps_hr1">
+          <hr class="caps_hr2">
 
 <!-- Contributions To Ballot Measures -->
 <?php
@@ -216,7 +216,7 @@
   echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" class=\"caps_radio4\" {$checked}>";
 ?>
           <label for="exclude" class="caps_label3">Exclude contributions between allied committees</label>
-          <hr class="caps_hr1">
+          <hr class="caps_hr2">
 
 <!-- Contributions To Committees -->
 <?php

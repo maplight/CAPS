@@ -492,7 +492,19 @@ body{
   padding:0px;
   margin:0 0 20px 0;
   margin-bottom:20px;
-  background-color:#b7b7b7;
+  background-color:#a6a6a6;
+  height:2px;
+  border-width:0;
+}
+
+.caps_hr2{
+  clear:both;
+  float:left;
+  width:100%;
+  padding:0px;
+  margin:0 0 20px 0;
+  margin-bottom:20px;
+  background-color:#ffffff;
   height:2px;
   border-width:0;
 }
