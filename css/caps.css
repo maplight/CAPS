@@ -543,13 +543,13 @@ body{
 .tooltip{
   position:absolute;
   display:none;
-  border:2px solid #000000;
+  border:1px solid #124161;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
   width:160px;
   padding:5px;
-  background:blue;
+  background:#124161;
   color:white;
   z-index:9999;
 }
