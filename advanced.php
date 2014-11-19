@@ -130,7 +130,7 @@
   echo "<input type=\"radio\" id=\"comms_to\" name=\"contrib_types\" value=\"all\" class=\"caps_radio1\" {$checked}>";
 ?>
           <div class="caps_box1">Everything (Candidates, Ballot Measures & Other Committees)</div>
-          <hr class="caps_hr1">
+          <hr class="caps_hr2">
 
 <!-- Contributions To Candidates -->
 <?php
@@ -178,7 +178,7 @@
 ?>
           </select>
           <a href="#" class="info"></a>
-          <hr class="caps_hr1">
+          <hr class="caps_hr2">
 
 <!-- Contributions To Ballot Measures -->
 <?php
@@ -213,7 +213,7 @@
   echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" class=\"caps_radio4\" {$checked}>";
 ?>
           <label for="exclude" class="caps_label3">Exclude contributions between allied committees</label>
-          <hr class="caps_hr1">
+          <hr class="caps_hr2">
 
 <!-- Contributions To Committees -->
 <?php
