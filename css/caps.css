@@ -52,7 +52,7 @@ body{
 }
 
 #caps_search_btn{
-  float:left;
+  float:right;
   background:#e6ecf0;
   color:#124161;
   border:2px solid #124161;
@@ -67,12 +67,12 @@ body{
 }
 
 #caps_reset_btn{
-  float:right;
+  float:left;
   background:#e6ecf0;
   color:#124161;
   border:2px solid #124161;
   font:bold 17px Arial, Helvetica, sans-serif;
-  padding:10px 15px 10px 15px;
+  padding:2px 10px 2px 10px;
   text-decoration:none;
 }
 
