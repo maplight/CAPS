@@ -38,8 +38,7 @@
       if ($_POST["qs_button"] == "Search Candidates") {
         $_POST["contrib_select"] = "all";
         $_POST["contributor"] = "Just these contributors";
-        $_POST["contrib_types"] = "candidates";
-        $_POST["cand_select"] = "search";
+        $_POST["contrib_types"] = "search_candidates";
         $_POST["proposition_list"] = "ALL";
         $_POST["date_select"] = "all";
 #        $_POST["date_select"] = "cycle";
