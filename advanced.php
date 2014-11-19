@@ -107,7 +107,7 @@
   echo "<input type=\"radio\" id=\"select_contribs\" name=\"contrib_select\" value=\"search\" class=\"caps_radio1\" {$checked}>";
   $text = "Just these contributors";
   if (isset ($_POST["contributor"])) {$text = $_POST["contributor"];}
-  echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" class=\"caps_text1\">";
+  echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" class=\"caps_text1\" onFocus=\"if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\">";
 ?>
           <label for="select_location" class="caps_label2">Contributor Location</label>
           <a href="#" class="info"></a>
@@ -155,7 +155,7 @@
   echo "<input type=\"radio\" id=\"search_cands\" name=\"contrib_types\" value=\"search_candidates\" class=\"caps_radio3\" {$checked}>";
   $text = "Search candidates";
   if (isset ($_POST["search_candidates"])) {$text = $_POST["search_candidates"];}
-  echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"filter_candidates_list();\">";
+  echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"filter_candidates_list();\" onFocus=\"if(this.value == 'Search candidates') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search candidates';}\">";
 ?>
           <select id="candidate_list" name="candidate_list" class="caps_select2">
 <?php
@@ -191,7 +191,7 @@
 <?php
   $text = "Search propositions";
   if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
-  echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" class=\"caps_text2\" onkeyup=\"filter_propositions_list();\">";
+  echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" class=\"caps_text2\" onkeyup=\"filter_propositions_list();\" onFocus=\"if(this.value == 'Search propositions') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search propositions';}\">";
 ?>
           <select id="propositions_list" name="proposition_list" class="caps_select4">
 <?php
@@ -226,7 +226,7 @@
 <?php
   $text = "Just these committees";
   if (isset ($_POST["committee_search"])) {$text = $_POST["committee_search"];}
-  echo "<input type=\"text\" id=\"committee_search\" name=\"committee_search\" value=\"{$text}\" class=\"caps_text5\">";
+  echo "<input type=\"text\" id=\"committee_search\" name=\"committee_search\" value=\"{$text}\" class=\"caps_text5\" onFocus=\"if(this.value == 'Just these committees') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these committees';}\">";
 ?>
           <hr class="caps_hr1">
 
