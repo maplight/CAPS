@@ -49,38 +49,39 @@
     # build locations query
     if ($search_data["state_list"] != "ALL") {$DonorState = "contributions_search.DonorState = '{$search_data["state_list"]}'";}
 
-
     switch ($search_data["contrib_types"]) {
       case "candidates":
         #------------------------------------------------------------------------------------------
         # Build candidate search query:
         $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
+        break;
 
-        switch ($search_data["cand_select"]) {
-          case "search":
-            # build candidate search query
-            if ($search_data["candidate_list"] == "Select candidate") {
-              $Candidate = "";
-              foreach (explode (";", $search_data["search_candidates"]) as $search_item) {
-                $word_str = "";
-                foreach (explode (" ", $search_item) as $word) {
-                  $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-                  $word_str .= "+{$word} ";
-                }
-                $Candidate .= "(" . trim ($word_str) . ") ";
-              }
-              if ($Candidate != "") {$Candidate = "MATCH (smry_candidates.CandidateWords) AGAINST ('" . substr ($Candidate, 0, -1) . "' IN BOOLEAN MODE)";}
-            } else {
-              $CandidateList = "smry_candidates.RecipientCandidateNameNormalized = '" . addslashes ($search_data["candidate_list"]) . "'";
+      case "search_candidates":
+        # build candidate search query
+        $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
+
+        if ($search_data["candidate_list"] == "Select candidate") {
+          $Candidate = "";
+          foreach (explode (";", $search_data["search_candidates"]) as $search_item) {
+            $word_str = "";
+            foreach (explode (" ", $search_item) as $word) {
+              $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+              $word_str .= "+{$word} ";
             }
-            break;
-
-          case "office":
-            # build office list query
-            $OfficeList = "smry_offices.RecipientCandidateOffice = '" . addslashes ($search_data["office_list"]) . "'";
-            break;
+            $Candidate .= "(" . trim ($word_str) . ") ";
+          }
+          if ($Candidate != "") {$Candidate = "MATCH (smry_candidates.CandidateWords) AGAINST ('" . substr ($Candidate, 0, -1) . "' IN BOOLEAN MODE)";}
+        } else {
+          $CandidateList = "smry_candidates.RecipientCandidateNameNormalized = '" . addslashes ($search_data["candidate_list"]) . "'";
         }
-        break; # candidates
+        break;
+
+      case "office":
+        # build office list query
+        $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
+
+        $OfficeList = "smry_offices.RecipientCandidateOffice = '" . addslashes ($search_data["office_list"]) . "'";
+        break;
 
       case "ballots":
         #------------------------------------------------------------------------------------------
