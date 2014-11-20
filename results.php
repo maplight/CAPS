@@ -344,7 +344,7 @@
           echo "<h1 class=\"caps_title3\">Search Results</h1>";
           echo "<hr class=\"caps_hr1\">";
           echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-          echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 9);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount received by number of contributions (does not include unitemized contributions). The table displays all contributions in the given search parameters, including both itemized contributions (of $100 or more) and unitemized contribution totals.\">";
+          echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 9);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount received. The table below contains individual contributions.\">";
           echo "<h2 class=\"caps_title4\">Contributions</h2>";
           echo "<hr class=\"caps_hr1\">";
         } else {
@@ -353,7 +353,7 @@
               case "C":
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">{$_POST["candidate_list"]}</strong> has received</div>";
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 9);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount received by number of contributions (does not include unitemized contributions). The table displays all contributions in the given search parameters, including both itemized contributions (of $100 or more) and unitemized contribution totals.\">";
+                echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 12);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount received by candidate-controlled committees in the selected date range. The table below contains individual contributions.\">";
                 echo "<div id=\"breakdown_box\">";
                 $result2 = my_query ("SELECT RecipientCommitteeNameNormalized, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM contributions_search INNER JOIN smry_committees USING (RecipientCommitteeID) INNER JOIN smry_candidates USING (RecipientCandidateNameID) WHERE RecipientCandidateNameNormalized = '{$_POST["candidate_list"]}' AND CandidateContribution = 'Y' GROUP BY RecipientCommitteeID ORDER BY RecipientCommitteeNameNormalized");
                 while ($row2 = $result2->fetch_assoc()) {
@@ -366,7 +366,7 @@
               case "D":
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\"" . strtoupper ($_POST["contributor"]) . "\"</strong> has contributed</div>";
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 9);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount received by number of contributions (does not include unitemized contributions). The table displays all contributions in the given search parameters, including both itemized contributions (of $100 or more) and unitemized contribution totals.\">";
+                echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 13);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount given by the specified contributors in the selected date range. The table below contains individual contributions.\">";
                 echo "<div id=\"breakdown_box\">";
                 $result2 = my_query ("SELECT CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM contributions_search {$where} GROUP BY CandidateContribution, BallotMeasureContribution ORDER BY CandidateContribution, BallotMeasureContribution");
                 while ($row2 = $result2->fetch_assoc()) {
@@ -382,7 +382,7 @@
                 $election = substr ($_POST["proposition_list"], 4);
                 $election_date = date ("F Y", strtotime ($election));
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">Ballot Measures</strong> on the {$election_date} ballot ";
-                echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 9);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount received by number of contributions (does not include unitemized contributions). The table displays all contributions in the given search parameters, including both itemized contributions (of $100 or more) and unitemized contribution totals.\">";
+                echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 14);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount given towards the specified ballot measures. The table below contains individual contributions.\">";
                 echo "</div>";
                 echo "<div id=\"breakdown_box\">";
                 $result2 = my_query ("SELECT Target, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount, SUM(IF(PositionID = 1,1,0)) AS SupportCount, SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount, SUM(IF(PositionID = 2,1,0)) AS OpposeCount, SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount FROM contributions_search INNER JOIN smry_propositions USING (PropositionID) WHERE Election = '{$election}' AND BallotMeasureContribution = 'Y' GROUP BY Target ORDER BY Target");
@@ -405,7 +405,7 @@
             echo "<h1 class=\"caps_title3\">Search Results</h1>";
             echo "<hr class=\"caps_hr1\">";
             echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-            echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 9);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount received by number of contributions (does not include unitemized contributions). The table displays all contributions in the given search parameters, including both itemized contributions (of $100 or more) and unitemized contribution totals.\">";
+            echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 9);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount received. The table below contains individual contributions.\">";
             echo "<h2 class=\"caps_title4\">Contributions</h2>";
             echo "<hr class=\"caps_hr1\">";
           }
