@@ -55,20 +55,15 @@
   }
 
 
-  function fill_election_cycles ($cycles, $ada) {
+  function fill_election_cycles ($cycles) {
     $result = my_query ("SELECT ElectionCycle FROM smry_cycles ORDER BY ElectionCycle DESC");
     while ($row = $result->fetch_assoc()) {
       $cycle_start = $row["ElectionCycle"];
       $cycle_end = $cycle_start + 1;
-      if ($ada) {
-        if (in_array ($cycle_start, $cycles)) {echo "<input type=\"checkbox\" name=\"cycles[]\" value=\"{$cycle_start}\" CHECKED>";} else {echo "<input type=\"checkbox\" name=\"cycles[]\" value=\"{$cycle_start}\">";}
-        echo " $cycle_start-$cycle_end&nbsp;&nbsp;&nbsp;";
-      } else {
-        echo "<div class=\"year-check\">";
-        if (in_array ($cycle_start, $cycles)) {echo "<input type=\"checkbox\" id=\"y{$cycle_start}\" name=\"cycles[]\" value=\"{$cycle_start}\" class=\"caps_radio6\" CHECKED>";} else {echo "<input type=\"checkbox\" id=\"y{$cycle_start}\" name=\"cycles[]\" value=\"{$cycle_start}\" class=\"caps_radio6\">";}
-        echo "<label for=\"y{$cycle_start}\" class=\"caps_label6\">$cycle_start-$cycle_end</label>";
-        echo "</div>";
-      }
+      echo "<div class=\"year-check\">";
+      if (in_array ($cycle_start, $cycles)) {echo "<input type=\"checkbox\" id=\"y{$cycle_start}\" name=\"cycles[]\" value=\"{$cycle_start}\" class=\"caps_radio6\" CHECKED>";} else {echo "<input type=\"checkbox\" id=\"y{$cycle_start}\" name=\"cycles[]\" value=\"{$cycle_start}\" class=\"caps_radio6\">";}
+      echo "<label for=\"y{$cycle_start}\" class=\"caps_label6\">$cycle_start-$cycle_end</label>";
+      echo "</div>";
     }
   }
 ?>
