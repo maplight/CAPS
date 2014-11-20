@@ -225,6 +225,9 @@
     if ($date_where != "") {$where .= "{$date_where} AND ";}
     if ($where != "") {$where = "WHERE " . substr ($where, 0, -5);} # remove extra AND
 
+    # If the quick search button was not used, don't store a summary type
+    if (! isset ($search_data["quick_search"])) {$summary_type = "";}
+
     $parse_data = array ($where, $summary_type);
     return $parse_data;
   }
