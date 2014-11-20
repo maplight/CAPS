@@ -224,7 +224,7 @@
   echo "<input type=\"radio\" id=\"comms_to\" name=\"contrib_types\" value=\"committees\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="comms_to" class="caps_label1">Committees</label>
-          <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 6);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions to other committees, such as candidate office holder and legal defense committees.">
+          <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 7);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions to other committees, such as candidate office holder and legal defense committees.">
 <?php
   $text = "Just these committees";
   if (isset ($_POST["committee_search"])) {$text = $_POST["committee_search"];}
