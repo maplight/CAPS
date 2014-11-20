@@ -137,15 +137,10 @@
           <hr class="caps_hr2">
 
 <!-- Contributions To Candidates -->
-<?php
-#  $checked = "";
-#  if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "candidates") {$checked = "checked";}}  
-#  echo "<input type=\"radio\" id=\"contrib_to\" name=\"contrib_types\" value=\"candidates\" class=\"caps_radio1\" {$checked}>";
-#  echo "<label for=\"contrib_to\" class=\"caps_label1\">Candidates</label>";
-?>
-          <div class="caps_label1">Candidates
+          <div class="caps_header2">Candidates
           <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 3);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions to candidate campaigns only.">
           </div>
+
 <?php
   $checked = "";
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "candidates") {$checked = "checked";}} 
@@ -184,26 +179,26 @@
           <hr class="caps_hr2">
 
 <!-- Contributions To Ballot Measures -->
+          <div class="caps_header2">Ballot Measures
+          <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 6);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions to committees formed to support or oppose ballot measures. Your results may return duplicate contributions if a contributor gave money to a committee supporting or opposing multiple ballot measures.">
+          </div>
+
 <?php
   $checked = "";
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "ballots") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"props_to\" name=\"contrib_types\" value=\"ballots\" class=\"caps_radio1\" {$checked}>";
-?>
-          <label for="props_to" class="caps_label1">Ballot Measures</label>
-          <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 6);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions to committees formed to support or oppose ballot measures. Your results may return duplicate contributions if a contributor gave money to a committee supporting or opposing multiple ballot measures.">
-<?php
+  echo "<input type=\"radio\" id=\"props_to\" name=\"contrib_types\" value=\"ballots\" class=\"caps_radio3\" {$checked}>";
   $text = "Search propositions";
   if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
-  echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" class=\"caps_text2\" onkeyup=\"filter_propositions_list();\" onFocus=\"if(this.value == 'Search propositions') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search propositions';}\">";
+  echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"filter_propositions_list();\" onFocus=\"if(this.value == 'Search propositions') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search propositions';}\">";
 ?>
-          <select id="propositions_list" name="proposition_list" class="caps_select4">
+          <select id="propositions_list" name="proposition_list" class="caps_select2">
 <?php
   $selected = "";
   if (isset ($_POST["proposition_list"])) {$selected = $_POST["proposition_list"];}
   $js_propositions = fill_propositions ($selected);
 ?>
           </select>
-          <select id="position" name="position" class="caps_select4">
+          <select id="position" name="position" class="caps_select2">
           <option value="B">Both support &amp; oppose</option>
 <?php
   if ($_POST["position"] == "S") {echo "<option value=\"S\" SELECTED>Support</option>";} else {echo "<option value=\"S\">Support</option>";}
@@ -219,19 +214,19 @@
           <hr class="caps_hr2">
 
 <!-- Contributions To Committees -->
+          <div class="caps_header2">Committees
+          <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 7);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions to other committees, such as candidate office holder and legal defense committees.">
+          </div>
+
 <?php
   $checked = "";
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "committees") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"comms_to\" name=\"contrib_types\" value=\"committees\" class=\"caps_radio1\" {$checked}>";
-?>
-          <label for="comms_to" class="caps_label1">Committees</label>
-          <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 7);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions to other committees, such as candidate office holder and legal defense committees.">
-<?php
+  echo "<input type=\"radio\" id=\"search_cands\" name=\"contrib_types\" value=\"committees\" class=\"caps_radio3\" {$checked}>";
   $text = "Just these committees";
   if (isset ($_POST["committee_search"])) {$text = $_POST["committee_search"];}
-  echo "<input type=\"text\" id=\"committee_search\" name=\"committee_search\" value=\"{$text}\" class=\"caps_text5\" onFocus=\"if(this.value == 'Just these committees') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these committees';}\">";
+  echo "<input type=\"text\" id=\"committee_search\" name=\"committee_search\" value=\"{$text}\" class=\"caps_text1\" onFocus=\"if(this.value == 'Just these committees') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these committees';}\">";
 ?>
-          <hr class="caps_hr1">
+          <hr class="caps_hr3">
 
 <!-- Dates -->
           <h2 class="caps_header1">Dates:
@@ -264,7 +259,7 @@
           <div id="cycles_box">
 <?php
   if (isset ($_POST["cycles"])) {$cycles = $_POST["cycles"];} else {$cycles = array ("");}
-  fill_election_cycles ($cycles);
+  fill_election_cycles ($cycles, "");
 ?>
           </div> <!-- cycles_box -->
           <input type="submit" name="search_btn"  value="Search" id="caps_search_btn">
