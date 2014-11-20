@@ -64,7 +64,7 @@
           <img src="img/qs_candidate.jpg" width=50 class="qs_img" alt="Candidate option icon">
           <div id=qs_box>
             <div class="qs_title2">Candidates</div>
-              How much has <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1" onkeyup="filter_candidates_list();"> received?<br>
+              How much has <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1" onkeyup="filter_candidates_list();" onFocus="if(this.value == 'Search candidates') {this.value = '';}" onBlur="if(this.value == '') {this.value = 'Search candidates';}"> received?<br>
               <select id="candidate_list" name="candidate_list" class="qs_select1">
 <?php
   $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
@@ -92,7 +92,7 @@
           <img src="img/qs_contributor.jpg" width=50 class="qs_img" alt="Contributors option icon">
           <div id=qs_box>
             <div class="qs_title2">Contributors</div>
-            How much has <input type="text" id="contributor" name="contributor" value="company, organization, or person" class="qs_text2"> contributed?<br>
+            How much has <input type="text" id="contributor" name="contributor" value="company, organization, or person" class="qs_text2" onFocus="if(this.value == 'company, organization, or person') {this.value = '';}" onBlur="if(this.value == '') {this.value = 'company, organization, or person';}"> contributed?<br>
             <input type="submit" name="qs_button" value="Search Contributors" id="qs_btn1">
           </div> <!-- #qs_box -->
           <hr class="caps_hr1">
