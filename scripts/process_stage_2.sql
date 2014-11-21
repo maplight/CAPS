@@ -1,4 +1,4 @@
-truncate table prop_filer_session_name_forms;
+﻿truncate table prop_filer_session_name_forms;
 insert into prop_filer_session_name_forms
 select
     ftp_filer_filings.filer_id
@@ -56,8 +56,7 @@ group by
 drop table if exists contributions_full_temp;
 create table contributions_full_temp like contributions_full;
 
-
-
+/* regular contributions */
 insert into contributions_full_temp (
     Form
   , RecipientCommitteeType
@@ -69,6 +68,7 @@ insert into contributions_full_temp (
   , FilingID
   , AmendID
   , LineItem
+  , RecType
   , MemoRefNo
   , TransactionID
   , TransactionDateStart
@@ -109,8 +109,9 @@ select
   , '0' as PrimaryGeneralIndicator
   , contributions.filing_id as FilingID
   , contributions.amend_id as AmendID
-  , contributions.line_item
-  , contributions.memo_refno
+  , contributions.line_item as LineItem
+  , contributions.rec_type as RecType
+  , contributions.memo_refno as MemoRefNo
   , concat(contributions.filing_id, ' - ', contributions.tran_id) as TransactionID
   , str_to_date(left(contributions.rcpt_date,locate(' ',contributions.rcpt_date)-1),'%m/%d/%Y') as TransactionDateStart
   , str_to_date(left(contributions.rcpt_date,locate(' ',contributions.rcpt_date)-1),'%m/%d/%Y') as TransactionDateEnd
@@ -165,10 +166,12 @@ from
   left join prop_filer_sessions
     on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
-
+/* 
+where ftp_filer_filings.session_id = 2013 
+*/
 ;
 
-/*-- loans */
+/* loans */
 insert into contributions_full_temp (
     Form
   , RecipientCommitteeType
@@ -180,6 +183,7 @@ insert into contributions_full_temp (
   , FilingID
   , AmendID
   , LineItem
+  , RecType
   , MemoRefNo
   , TransactionID
   , TransactionDateStart
@@ -221,8 +225,9 @@ select
   , '0' as PrimaryGeneralIndicator
   , contributions.filing_id as FilingID
   , contributions.amend_id as AmendID
-  , contributions.line_item
-  , contributions.memo_refno
+  , contributions.line_item as LineItem
+  , contributions.rec_type as RecType
+  , contributions.memo_refno as MemoRefNo
   , concat(contributions.filing_id, ' - ', contributions.tran_id) as TransactionID
   , str_to_date(left(contributions.loan_date1,locate(' ',contributions.loan_date1)-1),'%m/%d/%Y') as TransactionDateStart
   , str_to_date(left(contributions.loan_date1,locate(' ',contributions.loan_date1)-1),'%m/%d/%Y') as TransactionDateEnd
@@ -278,10 +283,9 @@ from
   left join prop_filer_sessions 
     on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
-
 ;
 
-/*-- late contributions */
+/* late contributions */
 insert into contributions_full_temp (
     Form
   , RecipientCommitteeType
@@ -293,6 +297,7 @@ insert into contributions_full_temp (
   , FilingID
   , AmendID
   , LineItem
+  , RecType
   , MemoRefNo
   , TransactionID
   , TransactionDateStart
@@ -334,8 +339,9 @@ select
   , '0' as PrimaryGeneralIndicator
   , contributions.filing_id as FilingID
   , contributions.amend_id as AmendID
-  , contributions.line_item
-  , contributions.memo_refno
+  , contributions.line_item as LineItem
+  , contributions.rec_type as RecType
+  , contributions.memo_refno as MemoRefNo
   , concat(contributions.filing_id, ' - ', contributions.tran_id) as TransactionID
   , str_to_date(left(contributions.ctrib_date,locate(' ',contributions.ctrib_date)-1),'%m/%d/%Y') as TransactionDateStart
   , str_to_date(left(contributions.ctrib_date,locate(' ',contributions.ctrib_date)-1),'%m/%d/%Y') as TransactionDateEnd
@@ -402,10 +408,9 @@ FROM
     on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
   left join filer_ids on ftp_filer_filings.filer_id = filer_ids.filer_id
-
 ;
 
-/*-- unitemized monetary and non-monetary */
+/* unitemized monetary and non-monetary */
 insert into contributions_full_temp (
     Form
   , RecipientCommitteeType
@@ -417,6 +422,7 @@ insert into contributions_full_temp (
   , FilingID
   , AmendID
   , LineItem
+  , RecType
   , TransactionDateStart
   , TransactionDateEnd
   , TransactionAmount
@@ -449,6 +455,7 @@ select
   , contributions.filing_id as FilingID
   , contributions.amend_id as AmendID
   , contributions.line_item as LineItem
+  , contributions.rec_type as RecType
   , str_to_date(left(ftp_filer_filings.rpt_start,locate(' ',ftp_filer_filings.rpt_start)-1),'%m/%d/%Y') as TransactionDateStart
   , str_to_date(left(ftp_filer_filings.rpt_end,locate(' ',ftp_filer_filings.rpt_end)-1),'%m/%d/%Y') as TransactionDateEnd
   , contributions.amount_a as TransactionAmount
@@ -504,7 +511,9 @@ where
 update 
   filing_ids a
   join (
-
+    /*  Grouping by Target also, since contribution records are duplicated
+        by Target. The join below ignores Target, which is fine, since every 
+        Target for a particular filing should have the same records.    */
     select FilingID, AmendID, Target, sum(TransactionAmount) 'Amount'
     from contributions_full_temp
     where 
@@ -527,7 +536,7 @@ where
   and b.line_item = '1'
 ;
 
-/*-- unitemized loans */
+/* unitemized loans */
 insert into contributions_full_temp (
     Form
   , RecipientCommitteeType
@@ -539,6 +548,7 @@ insert into contributions_full_temp (
   , FilingID
   , AmendID
   , LineItem
+  , RecType
   , TransactionDateStart
   , TransactionDateEnd
   , TransactionAmount
@@ -571,6 +581,7 @@ select
   , contributions.filing_id as FilingID
   , contributions.amend_id as AmendID
   , contributions.line_item as LineItem
+  , contributions.rec_type as RecType
   , str_to_date(left(ftp_filer_filings.rpt_start,locate(' ',ftp_filer_filings.rpt_start)-1),'%m/%d/%Y') as TransactionDateStart
   , str_to_date(left(ftp_filer_filings.rpt_end,locate(' ',ftp_filer_filings.rpt_end)-1),'%m/%d/%Y') as TransactionDateEnd
   , round(ifnull(filing_ids.loan_total_from_summary,0) - ifnull(filing_ids.loan_total_from_itemized,0),2) as TransactionAmount
@@ -624,7 +635,7 @@ where
   and ifnull(filing_ids.loan_total_from_summary,0) <> 0
 ;
   
-/*-- append F501 candidate office fields */
+/* append F501 candidate office fields */
 update 
   contributions_full_temp a
   join candidate_sessions b
@@ -635,7 +646,33 @@ set
   , a.RecipientCandidateOffice501Custom = b.office_501_custom
 ;
 
-/*-- flag bad election cycles*/
+/*  assign ContributionID
+    (Since contributions can be duplicated if the recipient committee 
+    supports or opposes multiple propositions, a unique ID is needed 
+    to identify unique contributions.) */
+truncate table contribution_ids;
+insert contribution_ids (
+    FilingID
+  , AmendID
+  , LineItem
+  , RecType
+  , Schedule
+  )
+select distinct
+    FilingID
+  , AmendID
+  , LineItem
+  , RecType
+  , Schedule
+from contributions_full_temp
+;
+update
+  contributions_full_temp a
+  join contribution_ids b using (FilingID, AmendID, LineItem, RecType, Schedule)
+set a.ContributionID = b.ContributionID
+;
+
+/* flag bad (suspicious) election cycles*/
 set @CurrentYear = year(current_date);
 update contributions_full_temp
 set BadElectionCycle = 'Y'
@@ -644,10 +681,10 @@ where
   or ElectionCycle > @CurrentYear + 10
 ;
 
-/*-- set labels and others */
+/* set labels and others */
 update contributions_full_temp
 set
-
+  /* add transaction type labels */
     TransactionType = CASE
       WHEN Form = 'F460' AND Schedule = 'A' THEN 'Monetary Contribution'
       WHEN Form = 'F460' AND Schedule = 'C' THEN 'Non-Monetary Contribution'
@@ -655,15 +692,15 @@ set
       WHEN Form = 'F497' THEN 'Late Contribution'
       ELSE 'Other'
       END
-
+  /* save original committee types before attempting to correct errors */
   , RecipientCommitteeTypeOriginal = RecipientCommitteeType
-
+  /* save original candidate name before erasing it for ballot measure contributions */
   , RecipientCandidateNameNormalizedOriginal = RecipientCandidateNameNormalized
-
+  /* for propositions, use election date of prop; for ethers, use election date entered on filing */
   , Election = ifnull(ElectionProp,ElectionCvr)
 ;
 
-/*-- use office labels from F460 office code, if any*/
+/* use office labels from F460 office code, if any */
 update
   contributions_full_temp a
   join california_data_office_codes b on a.RecipientCandidateOfficeCvrCode = b.office_cd_cvr
@@ -679,7 +716,7 @@ where
     )
 ;
 
-/*-- if still no office, use custom office from F460, if any*/
+/* if still no office, use custom office from F460, if any */
 update contributions_full_temp
 set 
     RecipientCandidateOffice = RecipientCandidateOfficeCvrCustom
@@ -695,7 +732,7 @@ where
     )
 ;
 
-/*-- cleanup custom offices from F460s*/
+/* cleanup custom offices from F460s */
 update contributions_full_temp
 set 
     RecipientCandidateOfficeNeedsCleanup = 'N'
@@ -736,7 +773,7 @@ set
 where RecipientCandidateOfficeNeedsCleanup = 'Y'
 ;
 
-/*-- if still no office, use office labels from F501 office code, if any*/
+/* if still no office, use office labels from F501 office code, if any */
 update
   contributions_full_temp a
   join california_data_office_codes b on a.RecipientCandidateOffice501Code = b.office_cd_501
@@ -746,7 +783,7 @@ where
   and b.office_cd_cvr <> 'OTH'
 ;
 
-/*-- if still no office, use custom office from F501, if any*/
+/* if still no office, use custom office from F501, if any */
 update contributions_full_temp
 set 
     RecipientCandidateOffice = RecipientCandidateOffice501Custom
@@ -756,7 +793,7 @@ where
   and RecipientCandidateOffice501Custom <> ''
 ;
 
-/*-- cleanup custom offices from F501s*/
+/* cleanup custom offices from F501s */
 update contributions_full_temp
 set 
     RecipientCandidateOfficeNeedsCleanup = 'N'
@@ -797,8 +834,70 @@ set
 where RecipientCandidateOfficeNeedsCleanup = 'Y'
 ;
 
+/* if still no office, use office labels from F460 "held" office code, if any */
+update
+  contributions_full_temp a
+  join california_data_office_codes b on a.RecipientCandidateOfficeCvrCode = b.office_cd_cvr
+set a.RecipientCandidateOffice = b.description
+where 
+  a.RecipientCandidateOffice = ''
+  and a.RecipientCandidateOfficeCvrSoughtOrHeld = 'H'
+  and a.RecipientCandidateOfficeCvrCode <> 'OTH'
+;
 
-/*-- identify committees with inconsistent committee types*/
+/* if still no office, use "held" custom office from F460, if any */
+update contributions_full_temp
+set 
+    RecipientCandidateOffice = RecipientCandidateOfficeCvrCustom
+  , RecipientCandidateOfficeNeedsCleanup = 'Y'
+where
+  RecipientCandidateOffice = ''
+  and RecipientCandidateOfficeCvrSoughtOrHeld = 'H'
+  and RecipientCandidateOfficeCvrCustom <> ''
+;
+
+/* cleanup "held" custom offices from F460s */
+update contributions_full_temp
+set 
+    RecipientCandidateOfficeNeedsCleanup = 'N'
+  , RecipientCandidateOffice = case
+      when RecipientCandidateOffice like '%office held%' then ''
+      when RecipientCandidateOffice like '%Govern_r%' and RecipientCandidateOffice not like '%Lieuten_nt%' then 'Governor' 
+      when RecipientCandidateOffice like '%Lieuten_nt%Govern_r%' then 'Lieutenant Governor' 
+      when RecipientCandidateOffice like '%Secretary%' then 'Secretary of State' 
+      when RecipientCandidateOffice like '%state%Controll_r%' then 'State Controller' 
+      when RecipientCandidateOffice like '%Attorn%y gen%' then 'Attorney General' 
+      when RecipientCandidateOffice like '%state%Treasur_r%' then 'State Treasurer' 
+      when RecipientCandidateOffice like '%Insur_nce Com%' then 'Insurance Commissioner' 
+      when RecipientCandidateOffice like '%Superintend_nt%' then 'Superintendent of Public Instruction' 
+      when RecipientCandidateOffice like '%supreme court%' or RecipientCandidateOffice like '%supreme%justice%' then 'Supreme Court Justice' 
+      when RecipientCandidateOffice like '%Senate%' or RecipientCandidateOffice like '%Senat_r%' then 'State Senate' 
+      when RecipientCandidateOffice like '%Assem%b%y%' or RecipientCandidateOffice like '%ASM%' then 'State Assembly' 
+      when RecipientCandidateOffice like '%board of eq%' or RecipientCandidateOffice like '%boe%' then 'Board of Equalization' 
+      when RecipientCandidateOffice like '%public%emp%ret%sys%' or RecipientCandidateOffice like 'pers%' or RecipientCandidateOffice like '%calpers%' then 'Public Employees Retirement System' 
+      when RecipientCandidateOffice like '%appel%te%court%' or RecipientCandidateOffice like '%appel%te%justice%' then 'State Appellate Court Justice' 
+      when RecipientCandidateOffice like '%asses%r%' then 'Assessor' 
+      when RecipientCandidateOffice like '%board of ed%' then 'Board of Education' 
+      when RecipientCandidateOffice like '%board of super%' or RecipientCandidateOffice like '%supervis_r%' then 'Board of Supervisors' 
+      when RecipientCandidateOffice like '%city atto%rn%y%' then 'City Attorney' 
+      when RecipientCandidateOffice like '%com%college%' then 'Community College Board' 
+      when RecipientCandidateOffice like '%city%council%' or RecipientCandidateOffice like '%council%mem%' then 'City Council Member' 
+      when RecipientCandidateOffice like '%county coun__l%' then 'County Counsel' 
+      when RecipientCandidateOffice like '%county supervis_r%' then 'County Supervisor' 
+      when RecipientCandidateOffice like '%local%cont%' then 'Local Controller' 
+      when RecipientCandidateOffice like '%dist% atto%rn%y%' then 'District Attorney' 
+      when RecipientCandidateOffice like '%mayor%' then 'Mayor' 
+      when RecipientCandidateOffice like '%public%def%' then 'Public Defender' 
+      when RecipientCandidateOffice like '%planning%com%' then 'Planning Commissioner' 
+      when RecipientCandidateOffice like '%sher%iff%' then 'Sheriff-Coroner' 
+      when RecipientCandidateOffice like '%superior court%' or RecipientCandidateOffice like '%judge%' then 'Superior Court Judge' 
+      when RecipientCandidateOffice like '%Treasur_r%' and RecipientCandidateOffice not like '%state Treasur_r%' then 'Local Treasurer'
+      else ''
+      end
+where RecipientCandidateOfficeNeedsCleanup = 'Y'
+;
+
+/* identify committees with inconsistent committee types */
 drop table if exists tmp_committees_with_multiple_types;
 create table tmp_committees_with_multiple_types
 select 
@@ -808,37 +907,30 @@ select
   , sum(TransactionAmount) 'Amount'
 from contributions_full_temp
 group by RecipientCommitteeID
-having 
-  RecipientCommitteeTypes like '%,%'
+having RecipientCommitteeTypes like '%,%'
 ;
 alter table tmp_committees_with_multiple_types
   add column BiggestNonBlankType char(1) not null default ''
-, add primary key (RecipientCommitteeID
-      )
-
+, add primary key (RecipientCommitteeID)
 ;
 drop table if exists tmp_committee_types_with_multiple_types;
 create table tmp_committee_types_with_multiple_types
 select 
     a.RecipientCommitteeID
-
   , b.Amount 'TotalAmount'
   , a.RecipientCommitteeType
   , group_concat(distinct a.ElectionCycle order by a.ElectionCycle separator ', ') 'ElectionCycles'
   , sum(a.TransactionAmount) 'Amount'
 from 
   contributions_full_temp a
-  join tmp_committees_with_multiple_types b using (RecipientCommitteeID
-    )
+  join tmp_committees_with_multiple_types b using (RecipientCommitteeID)
 group by
     a.RecipientCommitteeID
-
   , b.Amount
   , a.RecipientCommitteeType
 ;
 alter table tmp_committee_types_with_multiple_types
-  add primary key (RecipientCommitteeID
-    , RecipientCommitteeType)
+add primary key (RecipientCommitteeID, RecipientCommitteeType)
 ;
 update tmp_committees_with_multiple_types a
 set a.BiggestNonBlankType = (
@@ -846,25 +938,21 @@ set a.BiggestNonBlankType = (
   from tmp_committee_types_with_multiple_types b
   where 
     a.RecipientCommitteeID = b.RecipientCommitteeID
-
     and b.RecipientCommitteeType <> ''
   order by b.Amount desc, b.RecipientCommitteeType
   limit 1
   )
 ;
 
-/*-- For blank-C/B/P/Gs, change blanks to C/B/P/Gs*/
+/* For blank-C/B/P/Gs, change blanks to C/B/P/Gs */
 update
   contributions_full_temp a
-  join tmp_committees_with_multiple_types b using (
-      RecipientCommitteeID
-
-    )
+  join tmp_committees_with_multiple_types b using (RecipientCommitteeID)
 set a.RecipientCommitteeType = b.BiggestNonBlankType
 where a.RecipientCommitteeType = ''
 ;
 
-/*-- update temp table*/
+/* update temp table */
 update tmp_committees_with_multiple_types
 set RecipientCommitteeTypes = mid(RecipientCommitteeTypes,3,99)
 where left(RecipientCommitteeTypes,2) = ', '
@@ -873,18 +961,18 @@ delete from tmp_committees_with_multiple_types
 where RecipientCommitteeTypes not like '%,%'
 ;
 
-/*-- standardize remaining conflicting committee types*/
+/* standardize remaining conflicting committee types */
 update
   contributions_full_temp a
   join tmp_committees_with_multiple_types b using (RecipientCommitteeID)
 set a.RecipientCommitteeType = case
-
+  /* For C-Bs, if it's ever been a B, change Cs to Bs. Also change anything else to B. */
   when b.RecipientCommitteeTypes like '%B%C%' then 'B' 
-
+  /* For C-Gs, if it's ever been a G, change Cs to Gs. But don't change Ps to Gs. */
   when (b.RecipientCommitteeTypes like '%C%G%' and a.RecipientCommitteeType = 'C') then 'G' 
-
+  /* For C-Ps, change the type to the one with the highest contribution amount. */
   when b.RecipientCommitteeTypes = 'C, P' then b.BiggestNonBlankType 
-
+  /* Committees can change between Gs and Ps, so having both could be legit. */
   when b.RecipientCommitteeTypes = 'G, P' then a.RecipientCommitteeType 
   else a.RecipientCommitteeType
   end
@@ -893,18 +981,7 @@ set a.RecipientCommitteeType = case
 drop table if exists tmp_committees_with_multiple_types;
 drop table if exists tmp_committee_types_with_multiple_types;
 
-  /*
-  -- add committee type labels
-    RecipientCommitteeTypeDescription = case
-      when RecipientCommitteeType = 'C' then 'Officeholder, Candidate Controlled Committee'
-      when RecipientCommitteeType = 'G' then 'General Purpose Committee'
-      when RecipientCommitteeType = 'B' then 'Primarily Formed Ballot Measure Committee'
-      when RecipientCommitteeType = 'P' then 'Primarily Formed Candidate/Officeholder Committee'
-      when RecipientCommitteeType = '' then 'Unknown'
-      end
-  */
-
-/*-- flag ballot measure committees*/
+/* flag ballot measure committees */
 update contributions_full_temp
 set BallotMeasureCommittee = 'Y'
 where
@@ -912,7 +989,7 @@ where
   or RecipientCommitteeType = 'B'
 ;
 
-/*-- flag officeholder committees*/
+/* flag officeholder committees */
 update contributions_full_temp
 set OfficeHolderCommittee = 'Y'
 where
@@ -921,31 +998,34 @@ where
   or RecipientCommitteeNameNormalized like '% oh account%'
 ;
 
-/*-- flag legal defense committees*/
+/* flag legal defense committees */
 update contributions_full_temp
 set LegalDefenseCommittee = 'Y'
 where
   RecipientCommitteeNameNormalized like '%legal def%'
 ;
 
-/*-- Leave blank the 'Office' and 'Recipient Name' columns for Ballot Measure committees, otherwise it misleadingly implies that a Ballot Measure Committee has a Recipient Candidate, which is not the case.*/
+/*  Leave blank the 'Office' and 'Recipient Name' columns for 
+    Ballot Measure committees, otherwise it misleadingly implies 
+    that a Ballot Measure Committee has a Recipient Candidate, 
+    which is not the case. */
 update contributions_full_temp
 set
     RecipientCandidateNameNormalized = ''
   , RecipientCandidateOffice = ''
-
 where HasProposition = 'Y'
 ;
 
-/*-- flag non-candidate-controlled committees
- non-candidate-controlled = committee types P and G (and B, which is a particular type of P or G)*/
+/*  flag non-candidate-controlled committees:
+    non-candidate-controlled = committee types P and G 
+    (and B, which is a particular type of P or G) */
 update contributions_full_temp
 set CandidateControlledCommittee = 'N' 
 where RecipientCommitteeType in ('P','G','B')
 ;
 
-/*-- flag non-election committees
- non-candidate-election = legal defense, officeholder, and ballot measure*/
+/*  flag non-election committees:
+    non-candidate-election = legal defense, officeholder, and ballot measure */
 update contributions_full_temp
 set CandidateElectionCommittee = 'N' 
 where
@@ -954,7 +1034,7 @@ where
   or BallotMeasureCommittee = 'Y'
 ;
 
-/*-- flag schedules to not include*/
+/* flag schedules to not include */
 update contributions_full_temp
 set IncludedSchedule = 'N'
 where
@@ -981,7 +1061,7 @@ where
     )
 ;
 
-/*-- flag forgiven loans*/
+/* flag forgiven loans */
 update 
   contributions_full_temp a
   join ftp_text_memo b
@@ -999,6 +1079,8 @@ where
     )
 ;
 
+/*  flag loans with $0 amount (and an outstanding balance > $0 
+    at the beginning of this period) */
 update contributions_full_temp
 set NoNewLoanAmount = 'Y'
 where
@@ -1009,6 +1091,7 @@ where
   and LoanPreExistingBalance > 0
 ;
 
+/* flag candidate contributions */
 update contributions_full_temp
 set CandidateContribution = 'Y'
 where
@@ -1021,6 +1104,7 @@ where
   and (RecipientCommitteeEntity in ('CAO', 'CTL') or RecipientCandidateNameNormalized <> '')
 ;
 
+/* flag ballot measure contributions */
 update contributions_full_temp
 set BallotMeasureContribution = 'Y'
 where 
@@ -1028,7 +1112,7 @@ where
   and HasProposition = 'Y'
 ;
 
-/*-- flag allied committees*/
+/* flag allied committees */
 drop table if exists tmp_prop_committees;
 create table tmp_prop_committees
 select distinct RecipientCommitteeID, ElectionCycle, Election, Target, `Position`
@@ -1051,12 +1135,11 @@ where a.BallotMeasureContribution = 'Y'
 ;
 drop table if exists tmp_prop_committees;
 
-/*-- flag state offices based on office field*/
+/* flag state offices based on office field */
 update contributions_full_temp
 set StateOffice = 'Y'
 where 
   CandidateContribution = 'Y'
-
   and (
        RecipientCandidateOffice like '%Assembl%y%' 
     or RecipientCandidateOffice like '%Senate%'
@@ -1076,12 +1159,11 @@ where
     )
 ;
 
-/*-- flag local offices based on office field*/
+/* flag local offices based on office field */
 update contributions_full_temp
 set LocalOffice = 'Y'
 where
   CandidateContribution = 'Y'
-
   and (
        RecipientCandidateOffice like '%mayor%'
     or RecipientCandidateOffice like '%judge%'
@@ -1099,12 +1181,12 @@ where
     )
 ;
 
-/*-- flag state offices based on committee name (if no state or local flag has been set yet)*/
+/*  flag state offices based on committee name 
+    (if no state or local flag has been set yet) */
 update contributions_full_temp
 set StateOffice = 'Y'
 where 
   CandidateContribution = 'Y'
-
   and StateOffice = 'N'
   and LocalOffice = 'N'
   and (
@@ -1126,12 +1208,12 @@ where
     )
 ;
 
-/*-- flag local offices based on committee name (if no state or local flag has been set yet)*/
+/*  flag local offices based on committee name 
+    (if no state or local flag has been set yet) */
 update contributions_full_temp
 set LocalOffice = 'Y'
 where
   CandidateContribution = 'Y'
-
   and StateOffice = 'N'
   and LocalOffice = 'N'
   and (
@@ -1154,13 +1236,15 @@ where
 drop table if exists contributions_full;
 rename table contributions_full_temp to contributions_full;
 
-/*populate contributions table*/
-
+/* populate contributions table */
 drop table if exists ca_search.contributions_temp;
 create table ca_search.contributions_temp like ca_search.contributions;
 insert ca_search.contributions_temp (
-
-
+/*
+drop table if exists contributions_temp;
+create table contributions_temp like contributions;
+insert contributions_temp (
+*/
     TransactionType
   , ElectionCycle
   , Election
@@ -1184,6 +1268,7 @@ insert ca_search.contributions_temp (
   , AlliedCommittee
   , CandidateContribution
   , BallotMeasureContribution
+  , ContributionID
   , id
 )
 select
@@ -1210,6 +1295,7 @@ select
   , AlliedCommittee
   , CandidateContribution
   , BallotMeasureContribution
+  , ContributionID
   , id
 from contributions_full
 where
@@ -1222,3 +1308,7 @@ where
   and not (Unitemized = 'Y' and TransactionAmount = 0)
 ;
 
+/*
+drop table if exists contributions;
+rename table contributions_temp to contributions;
+*/

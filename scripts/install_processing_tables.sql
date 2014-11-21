@@ -1,4 +1,4 @@
-drop table if exists table_filing_ids;
+﻿drop table if exists table_filing_ids;
 create table table_filing_ids (
     OriginTable varchar(20) not null
   , filing_id bigint(20) not null
@@ -28,7 +28,6 @@ create table filer_ids (
   , key max_rpt_end (max_rpt_end)
 );
 
-
 drop table if exists disclosure_filer_ids;
 create table disclosure_filer_ids (
     disclosure_filer_id bigint(20) not null primary key comment 'links to ftp_cvr_campaign_disclosure.filer_id'
@@ -44,7 +43,6 @@ create table candidate_ids (
   , candidate_name varchar(100) null
 );
 
-drop table if exists ftp_f501_502_cleaned;
 drop table if exists f501_502_cleaned;
 create table f501_502_cleaned (
     filing_id bigint not null
@@ -72,7 +70,6 @@ create table candidate_sessions (
   , primary key candidate_session (candidate_id, session)
 );
 
-/*-- formerly grp_ftp_disclosure_candidate_name*/
 drop table if exists filing_amends;
 create table filing_amends (
     filing_id bigint(20) not null
@@ -91,10 +88,10 @@ create table filing_amends (
   , nick_name varchar(50) not null default ''
   , gender char(1) not null default ''
   , display_name varchar(200) not null default ''
-  , primary key filing_id_amend_id (filing_id, amend_id)
-); 
+  , id bigint not null primary key auto_increment
+  , unique key filing_id_amend_id (filing_id, amend_id)
+);
 
-/*-- formerly grp_ftp_cal_access_filer_session_name_types*/
 drop table if exists prop_filer_session_name_forms;
 create table prop_filer_session_name_forms (
     filer_id bigint(20) not null
@@ -106,7 +103,6 @@ create table prop_filer_session_name_forms (
   , key filer_id_session_id (filer_id, session_id)
 );
 
-/*-- formerly grp_ftp_filer_sessions */
 drop table if exists prop_filer_sessions;
 create table prop_filer_sessions (
     filer_id bigint(20) not null
@@ -115,51 +111,28 @@ create table prop_filer_sessions (
   , primary key filer_id_session_id (filer_id, session_id)
 );
 
-
 drop table if exists california_data_office_codes;
 create table california_data_office_codes (
     office_code_id bigint(20) not null primary key auto_increment
-  , office_cd_cvr char(3) not null
+  , office_cd_cvr char(3) null
   , office_cd_501 char(5) null
   , description varchar(200) not null
-  , region varchar(50) not null
-  , key office_cd_cvr (office_cd_cvr)
-  , key office_cd_501 (office_cd_501)
+  , region varchar(50) not null default ''
+  , unique key office_cd_cvr (office_cd_cvr)
+  , unique key office_cd_501 (office_cd_501)
   , key description (description)
 );
-insert california_data_office_codes (office_cd_cvr, office_cd_501, description, region)
-select 'GOV', '30002', 'Governor', 'Statewide' union
-select 'LTG', '30003', 'Lieutenant Governor', 'Statewide' union
-select 'SOS', '30004', 'Secretary of State', 'Statewide' union
-select 'CON', '30005', 'State Controller', 'Statewide' union
-select 'ATT', '30007', 'Attorney General', 'Statewide' union
-select 'TRE', '30006', 'State Treasurer', 'Statewide' union
-select 'INS', '30014', 'Insurance Commissioner', 'Statewide' union
-select 'SUP', '30008', 'Superintendent of Public Instruction', 'Statewide' union
-select 'SPM', null, 'Supreme Court Justice', 'Statewide' union
-select 'SEN', '30012', 'State Senate', 'State District' union
-select 'ASM', '30013', 'State Assembly', 'State District' union
-select 'BOE', '30009', 'Board of Equalization', 'State District' union
-select 'PER', '30058', 'Public Employees Retirement System', 'State District' union
-select 'APP', null, 'State Appellate Court Justice', 'State District' union
-select 'ASR', null, 'Assessor', 'City/County/Local' union
-select 'BED', null, 'Board of Education', 'City/County/Local' union
-select 'BSU', null, 'Board of Supervisors', 'City/County/Local' union
-select 'CAT', null, 'City Attorney', 'City/County/Local' union
-select 'CCB', null, 'Community College Board', 'City/County/Local' union
-select 'CCM', null, 'City Council Member', 'City/County/Local' union
-select 'COU', null, 'County Counsel', 'City/County/Local' union
-select 'CSU', null, 'County Supervisor', 'City/County/Local' union
-select 'CTR', null, 'Local Controller', 'City/County/Local' union
-select 'DAT', null, 'District Attorney', 'City/County/Local' union
-select 'MAY', null, 'Mayor', 'City/County/Local' union
-select 'PDR', null, 'Public Defender', 'City/County/Local' union
-select 'PLN', null, 'Planning Commissioner', 'City/County/Local' union
-select 'SHC', null, 'Sheriff-Coroner', 'City/County/Local' union
-select 'SCJ', '30053', 'Superior Court Judge', 'City/County/Local' union
-select 'TRS', null, 'Local Treasurer', 'City/County/Local' union
-select 'OTH', null, 'Other', 'Miscellaneous/Other'
-;
+
+drop table if exists contribution_ids;
+create table contribution_ids (
+    ContributionID bigint(20) not null primary key auto_increment
+  , FilingID bigint(20) not null
+  , AmendID int(11) not null
+  , LineItem int(11) not null
+  , RecType varchar(5) not null default ''
+  , Schedule varchar(10) not null default ''
+  , key FilingIDAmendIDLineItemRecTypeSchedule (FilingID, AmendID, LineItem, RecType, Schedule)
+);
 
 drop table if exists contributions_full;
 create table contributions_full (
@@ -175,6 +148,7 @@ create table contributions_full (
   , AmendID int(11) not null
   , TransactionID varchar(32) not null default ''
   , LineItem int(11) not null
+  , RecType varchar(5) not null default ''
   , MemoRefNo varchar(25) not null default ''
   , TransactionDateStart date not null
   , TransactionDateEnd date not null
@@ -234,6 +208,7 @@ create table contributions_full (
   , BadElectionCycle enum('Y','N') default 'N'
   , CandidateContribution enum('Y','N') default 'N'
   , BallotMeasureContribution enum('Y','N') default 'N'
+  , ContributionID bigint(20) not null default 0
   , id bigint(20) not null auto_increment
   , primary key (id)
   , key RecipientCommitteeNameNormalized (RecipientCommitteeNameNormalized(10))
@@ -268,6 +243,7 @@ create table ca_search.contributions (
   , AlliedCommittee enum('Y','N') default 'N' comment 'formerly Flag'
   , CandidateContribution enum('Y','N') default 'N'
   , BallotMeasureContribution enum('Y','N') default 'N'
+  , ContributionID bigint(20) not null default 0
   , id bigint(20) not null
   , primary key (id)
   , key DonorNameNormalized (DonorNameNormalized(10) asc)
@@ -279,3 +255,4 @@ create table ca_search.contributions (
   , key RecipientCommitteeNameNormalized (RecipientCommitteeNameNormalized(10) asc)
   , key RecipientCandidateNameNormalized (RecipientCandidateNameNormalized(10) asc)
 ) ENGINE = MyISAM;
+
