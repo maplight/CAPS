@@ -250,13 +250,15 @@
 
       $result = my_query ("SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM (SELECT DISTINCT ContributionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContribs");
       $totals_row = $result->fetch_assoc();
+      $result = my_query ("SELECT COUNT(*) AS records FROM contributions_search {$search_join} {$where}");
+      $record_count = $result->fetch_assoc();
 
-      if ($totals_row["records"] == 0) {
+      if ($record_count["records"] == 0) {
         echo "Your search did not return any records.";
       } else {
         # Calculate total pages based on display rows
         if (isset ($_POST["return_rows"])) {$limit = $_POST["return_rows"];} else {$limit = 10;}
-        $total_pages = intval (($totals_row["records"] - 1) / $limit) + 1;
+        $total_pages = intval (($record_count["records"] - 1) / $limit) + 1;
  
         # Get page # to display
         if (isset ($_POST["page"])) {$page = $_POST["page"];} else {$page = 1;}
@@ -274,8 +276,8 @@
         # Determine rows being displayed
         $first_row = ($page - 1) * $limit + 1;
         $last_row = $first_row + $limit - 1;
-        if ($first_row > $totals_row["records"]) {$first_row = 1;}
-        if ($last_row > $totals_row["records"]) {$last_row = $totals_row["records"];}
+        if ($first_row > $record_count["records"]) {$first_row = 1;}
+        if ($last_row > $record_count["records"]) {$last_row = $record_count["records"];}
 
         $sort = "contributions_search.TransactionDateEnd DESC";
         if (isset ($_POST["sort"])) {
@@ -435,7 +437,7 @@
         echo "</div> <!-- download_box -->";
         echo "</div> <!-- filter_box -->";
 
-        echo "Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($totals_row["records"], 0, ".", ",") . "</strong> rows ";
+        echo "Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($record_count["records"], 0, ".", ",") . "</strong> rows ";
         $field_msg = "Show more fields";
         if ($field_set == "Show more fields") {$field_msg = "Show fewer fields";}
         echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\" id=\"caps_field_btn\">";
