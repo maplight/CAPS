@@ -1,4 +1,4 @@
-﻿truncate table prop_filer_session_name_forms;
+truncate table prop_filer_session_name_forms;
 insert into prop_filer_session_name_forms
 select
     ftp_filer_filings.filer_id

@@ -1,7 +1,3 @@
-﻿/*  The "office_cd_cvr" values in this table come from:
-    http://www.sos.ca.gov/prd/cal-access/
-    Cal-Access Documentation --> CalFormat --> cal_format_201.pdf --> page 12 (Office Codes)
-*/
 truncate table california_data_office_codes;
 insert california_data_office_codes (office_cd_cvr, description, region)
 select 'GOV', 'Governor', 'Statewide' union
@@ -36,6 +32,7 @@ select 'SCJ', 'Superior Court Judge', 'City/County/Local' union
 select 'TRS', 'Local Treasurer', 'City/County/Local' union
 select 'OTH', 'Other', 'Miscellaneous/Other'
 ;
+
 drop table if exists temp_501_codes;
 create table temp_501_codes
 select 
