@@ -14,6 +14,7 @@ CREATE TABLE ca_search.contributions_search (
   RecipientCommitteeID BIGINT NOT NULL,
   PropositionID BIGINT NOT NULL,
   PositionID BIGINT NOT NULL,
+  ContributionID BIGINT NOT NULL,
   DonorWords VARCHAR(250) NOT NULL,
   KEY DonorState(DonorState),
   KEY AlliedCommittee(AlliedCommittee),
@@ -27,6 +28,7 @@ CREATE TABLE ca_search.contributions_search (
   KEY RecipientCommitteeID(RecipientCommitteeID),
   KEY PropositionID(PropositionID),
   KEY PositionID(PositionID),
+  KEY ContributionID(ContributionID),
   FULLTEXT DonorWords(DonorWords)
 ) ENGINE=MyISAM;
 

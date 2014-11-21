@@ -40,6 +40,7 @@ INSERT INTO ca_search.contributions_search_temp
      WHEN 'OPPOSE' THEN 2
      ELSE 0
    END,
+   ContributionID,
    ''
 FROM ca_search.contributions_temp;
 

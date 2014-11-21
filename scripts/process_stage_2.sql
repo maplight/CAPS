@@ -1240,11 +1240,6 @@ rename table contributions_full_temp to contributions_full;
 drop table if exists ca_search.contributions_temp;
 create table ca_search.contributions_temp like ca_search.contributions;
 insert ca_search.contributions_temp (
-/*
-drop table if exists contributions_temp;
-create table contributions_temp like contributions;
-insert contributions_temp (
-*/
     TransactionType
   , ElectionCycle
   , Election
@@ -1308,7 +1303,3 @@ where
   and not (Unitemized = 'Y' and TransactionAmount = 0)
 ;
 
-/*
-drop table if exists contributions;
-rename table contributions_temp to contributions;
-*/
