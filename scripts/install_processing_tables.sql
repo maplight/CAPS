@@ -254,5 +254,6 @@ create table ca_search.contributions (
   , key Target (Target(10) asc)
   , key RecipientCommitteeNameNormalized (RecipientCommitteeNameNormalized(10) asc)
   , key RecipientCandidateNameNormalized (RecipientCandidateNameNormalized(10) asc)
+  , key ContributionID(ContributionID asc)
 ) ENGINE = MyISAM;
 
