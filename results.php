@@ -381,7 +381,8 @@
               case "E":
                 $election = substr ($_POST["proposition_list"], 4);
                 $election_date = date ("F Y", strtotime ($election));
-                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">Ballot Measures</strong> on the {$election_date} ballot ";
+                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">Ballot Measures</strong> on the {$election_date} ballot have received ";
+                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
                 echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 14);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount given towards the specified ballot measures. The table below contains individual contributions.\">";
                 echo "</div>";
                 echo "<div id=\"breakdown_box\">";
