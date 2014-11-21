@@ -131,9 +131,6 @@ from table_filing_ids
 group by filing_id
 ;
 
-/*  from CalAccessTablesWeb.pdf:
-    FILER_XREF: This table maps legacy filer identification numbers 
-    to the systems filer identification numbers. */
 truncate table disclosure_filer_ids;
 insert disclosure_filer_ids (disclosure_filer_id, filer_id)
 select

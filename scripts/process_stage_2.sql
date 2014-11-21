@@ -166,10 +166,8 @@ from
   left join prop_filer_sessions
     on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
-/* 
-where ftp_filer_filings.session_id = 2013 
-*/
 ;
+/* where ftp_filer_filings.session_id = 2013 */
 
 /* loans */
 insert into contributions_full_temp (
@@ -511,9 +509,6 @@ where
 update 
   filing_ids a
   join (
-    /*  Grouping by Target also, since contribution records are duplicated
-        by Target. The join below ignores Target, which is fine, since every 
-        Target for a particular filing should have the same records.    */
     select FilingID, AmendID, Target, sum(TransactionAmount) 'Amount'
     from contributions_full_temp
     where 
@@ -646,10 +641,6 @@ set
   , a.RecipientCandidateOffice501Custom = b.office_501_custom
 ;
 
-/*  assign ContributionID
-    (Since contributions can be duplicated if the recipient committee 
-    supports or opposes multiple propositions, a unique ID is needed 
-    to identify unique contributions.) */
 truncate table contribution_ids;
 insert contribution_ids (
     FilingID
@@ -1005,10 +996,6 @@ where
   RecipientCommitteeNameNormalized like '%legal def%'
 ;
 
-/*  Leave blank the 'Office' and 'Recipient Name' columns for 
-    Ballot Measure committees, otherwise it misleadingly implies 
-    that a Ballot Measure Committee has a Recipient Candidate, 
-    which is not the case. */
 update contributions_full_temp
 set
     RecipientCandidateNameNormalized = ''
@@ -1016,16 +1003,11 @@ set
 where HasProposition = 'Y'
 ;
 
-/*  flag non-candidate-controlled committees:
-    non-candidate-controlled = committee types P and G 
-    (and B, which is a particular type of P or G) */
 update contributions_full_temp
 set CandidateControlledCommittee = 'N' 
 where RecipientCommitteeType in ('P','G','B')
 ;
 
-/*  flag non-election committees:
-    non-candidate-election = legal defense, officeholder, and ballot measure */
 update contributions_full_temp
 set CandidateElectionCommittee = 'N' 
 where
@@ -1079,8 +1061,6 @@ where
     )
 ;
 
-/*  flag loans with $0 amount (and an outstanding balance > $0 
-    at the beginning of this period) */
 update contributions_full_temp
 set NoNewLoanAmount = 'Y'
 where
@@ -1181,8 +1161,6 @@ where
     )
 ;
 
-/*  flag state offices based on committee name 
-    (if no state or local flag has been set yet) */
 update contributions_full_temp
 set StateOffice = 'Y'
 where 
@@ -1208,8 +1186,6 @@ where
     )
 ;
 
-/*  flag local offices based on committee name 
-    (if no state or local flag has been set yet) */
 update contributions_full_temp
 set LocalOffice = 'Y'
 where
