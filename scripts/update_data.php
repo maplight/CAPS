@@ -58,9 +58,6 @@
 # load an sql file
 function process_sql_file($filename)
 {
-    //  global $script_login, $script_pwd;
-    //  system("mysql -u{$script_login} -p{$script_pwd} ca_process < \"$filename\"");
-
     $sql_contents = file_get_contents($filename);
     $sql_contents = rtrim(rtrim($sql_contents), ";");
     $sql_contents = preg_split("/;(\n|\r)/", $sql_contents);
@@ -130,7 +127,7 @@ function process_sql_file($filename)
                             name_prefix = '',
                             nick_name = '',
                             display_name = ''
-                          WHERE filing_id = {$row["filing_id"]} AND amend_id = {$row["amend_id"]}";
+                          WHERE id = {$row["id"]}";
       } else {
         $query = "UPDATE filing_amends
                             SET gender = '$gender',
@@ -141,7 +138,7 @@ function process_sql_file($filename)
                             name_prefix = '" . addslashes ($name_prefix) . "',
                             nick_name = '" . addslashes ($nick_name) . "',
                             display_name = '" . addslashes ($display_name) . "'
-                          WHERE filing_id = {$row["filing_id"]} AND amend_id = {$row["amend_id"]}";
+                          WHERE id = {$row["id"]}";
       }
       script_query ($query);
     }
@@ -155,7 +152,7 @@ function process_sql_file($filename)
       $word_str = " ";
       $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["DonorNameNormalized"] . " " . $row["DonorEmployerNormalized"] . " " . $row["DonorOrganization"]);
       $words = explode (" ", $word_data);
-      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
+      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper (ltrim ($word, "0")) . " ";}}
       script_query ("UPDATE ca_search.contributions_search_temp SET DonorWords = '{$word_str}' WHERE id = {$row["id"]}");
     }
     $result->close();
@@ -166,7 +163,7 @@ function process_sql_file($filename)
       $word_str = " ";
       $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["RecipientCandidateNameNormalized"]);
       $words = explode (" ", $word_data);
-      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
+      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper (ltrim ($word, "0")) . " ";}}
       script_query ("UPDATE ca_search.smry_candidates_temp SET CandidateWords = '{$word_str}' WHERE RecipientCandidateNameID = {$row["RecipientCandidateNameID"]}");
     }
     $result->close();
@@ -177,7 +174,7 @@ function process_sql_file($filename)
       $word_str = " ";
       $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["RecipientCommitteeNameNormalized"]);
       $words = explode (" ", $word_data);
-      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
+      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper (ltrim ($word, "0")) . " ";}}
       script_query ("UPDATE ca_search.smry_committees_temp SET CommitteeWords = '{$word_str}' WHERE RecipientCommitteeID = {$row["RecipientCommitteeID"]}");
     }
     $result->close();
@@ -188,7 +185,7 @@ function process_sql_file($filename)
       $word_str = " ";
       $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["Target"]);
       $words = explode (" ", $word_data);
-      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper ($word) . " ";}}
+      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper (ltrim ($word, "0")) . " ";}}
       script_query ("UPDATE ca_search.smry_propositions_temp SET PropositionWords = '{$word_str}' WHERE PropositionID = {$row["PropositionID"]}");
     }
     $result->close();
