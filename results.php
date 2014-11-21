@@ -248,7 +248,7 @@
       if (strpos ($where, "smry_committees") !== false) {$search_join .= "INNER JOIN smry_committees USING (RecipientCommitteeID) ";}
       if (strpos ($where, "smry_propositions") !== false) {$search_join .= "INNER JOIN smry_propositions USING (PropositionID) ";}
 
-      $result = my_query ("SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM contributions_search {$search_join} {$where}");
+      $result = my_query ("SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM (SELECT DISTINCT ContributionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContribs");
       $totals_row = $result->fetch_assoc();
 
       if ($totals_row["records"] == 0) {
