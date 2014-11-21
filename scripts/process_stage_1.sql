@@ -1,3 +1,73 @@
+truncate table california_data_office_codes;
+insert california_data_office_codes (office_cd_cvr, description, region)
+select 'GOV', 'Governor', 'Statewide' union
+select 'LTG', 'Lieutenant Governor', 'Statewide' union
+select 'SOS', 'Secretary of State', 'Statewide' union
+select 'CON', 'State Controller', 'Statewide' union
+select 'ATT', 'Attorney General', 'Statewide' union
+select 'TRE', 'State Treasurer', 'Statewide' union
+select 'INS', 'Insurance Commissioner', 'Statewide' union
+select 'SUP', 'Superintendent of Public Instruction', 'Statewide' union
+select 'SPM', 'Supreme Court Justice', 'Statewide' union
+select 'SEN', 'State Senate', 'State District' union
+select 'ASM', 'State Assembly', 'State District' union
+select 'BOE', 'Board of Equalization', 'State District' union
+select 'PER', 'Public Employees Retirement System', 'State District' union
+select 'APP', 'State Appellate Court Justice', 'State District' union
+select 'ASR', 'Assessor', 'City/County/Local' union
+select 'BED', 'Board of Education', 'City/County/Local' union
+select 'BSU', 'Board of Supervisors', 'City/County/Local' union
+select 'CAT', 'City Attorney', 'City/County/Local' union
+select 'CCB', 'Community College Board', 'City/County/Local' union
+select 'CCM', 'City Council Member', 'City/County/Local' union
+select 'COU', 'County Counsel', 'City/County/Local' union
+select 'CSU', 'County Supervisor', 'City/County/Local' union
+select 'CTR', 'Local Controller', 'City/County/Local' union
+select 'DAT', 'District Attorney', 'City/County/Local' union
+select 'MAY', 'Mayor', 'City/County/Local' union
+select 'PDR', 'Public Defender', 'City/County/Local' union
+select 'PLN', 'Planning Commissioner', 'City/County/Local' union
+select 'SHC', 'Sheriff-Coroner', 'City/County/Local' union
+select 'SCJ', 'Superior Court Judge', 'City/County/Local' union
+select 'TRS', 'Local Treasurer', 'City/County/Local' union
+select 'OTH', 'Other', 'Miscellaneous/Other'
+;
+
+drop table if exists temp_501_codes;
+create table temp_501_codes
+select 
+    code_id
+  , code_desc
+  , case
+      when code_desc = 'controller' then 'state controller'
+      when code_desc = 'treasurer' then 'state treasurer'
+      when code_desc = 'SUPREME COURT JUDGE' then 'Supreme Court Justice'
+      when code_desc = 'ASSEMBLY' then 'State Assembly'
+      when code_desc = 'MEMBER BOARD OF EQUALIZATION' then 'Board of Equalization'
+      when code_desc = 'APPELLATE COURT JUDGE' then 'State Appellate Court Justice'
+      when code_desc = 'CITY COUNCIL' then 'City Council Member'
+      else code_desc
+      end
+      'code_desc_new'
+from ftp_lookup_codes 
+where 
+  code_type = 30000
+  and code_id > 30000
+;
+update
+  california_data_office_codes a
+  join temp_501_codes b on a.description = b.code_desc_new
+set a.office_cd_501 = b.code_id
+;
+insert california_data_office_codes (office_cd_501, description)
+select b.code_id, b.code_desc
+from
+  temp_501_codes b
+  left join california_data_office_codes a on a.description = b.code_desc_new
+where a.description is null
+;
+drop table if exists temp_501_codes;
+
 truncate table filer_ids;
 insert filer_ids (filer_id, max_rpt_end)
 select filer_id
@@ -61,7 +131,6 @@ from table_filing_ids
 group by filing_id
 ;
 
-/*-- FILER_XREF: This table maps legacy filer identification numbers to the systems filer identification numbers. -from CalAccessTablesWeb.pdf */
 truncate table disclosure_filer_ids;
 insert disclosure_filer_ids (disclosure_filer_id, filer_id)
 select
@@ -161,7 +230,7 @@ group by
   , aa.office_cd
 ;
 
-
+/* get candidates from scraped table */
 truncate table candidate_ids;
 insert candidate_ids (candidate_id, number_of_names, last_session)
 select 
@@ -172,14 +241,14 @@ from cal_access_candidates
 group by id
 ;
 
-
+/* updated those candidates with their name from their most recent session */
 update 
   candidate_ids a
   join cal_access_candidates b on a.candidate_id = b.id and a.last_session = b.session
 set a.candidate_name = b.name
 ;
 
-
+/* append candidate_ids for committees */
 update
   filer_ids a
   join (
@@ -190,13 +259,14 @@ update
 set a.candidate_id = b.id
 ;
 
-
+/* update candidate name for committees */
 update
   filer_ids a
   join candidate_ids b using (candidate_id)
 set a.candidate_name = b.candidate_name
 ;
 
+/* set up the table holding the candidate name possibilities for every filing/amendment */
 truncate table filing_amends;
 insert into filing_amends (
     filing_id
