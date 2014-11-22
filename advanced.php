@@ -35,6 +35,7 @@
     if (isset ($_POST["quick_search"])) {
       $_POST["state_list"] = "ALL";
       $_POST["date_select"] = "all";
+      $_POST["show_summary"] = "yes";
 
       if ($_POST["qs_button"] == "Search Candidates") {
         $_POST["contrib_select"] = "all";
