@@ -60,6 +60,8 @@
     }
 ?>
 
+<div id="tooltip" class="tooltip"><span id="tooltip_text"></span></div>
+
 <div id="caps_header">
 <div class="frme" id="top">
 <img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;">
