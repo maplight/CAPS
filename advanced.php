@@ -90,6 +90,7 @@
   if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button
   echo "<input type=\"radio\" id=\"all_contribs\" name=\"contrib_select\" value=\"all\" class=\"caps_radio1\" {$checked}>";
 ?>
+
           <label for="all_contribs" class="caps_label1">All contributors</label>
           <a href="#" class="info"></a>
 <?php
