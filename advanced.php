@@ -34,6 +34,7 @@
     # Check for quick search entry
     if (isset ($_POST["quick_search"])) {
       $_POST["state_list"] = "ALL";
+      $_POST["show_summary"] = "yes";
 
       if ($_POST["qs_button"] == "Search Candidates") {
         $_POST["contrib_select"] = "all";
@@ -42,11 +43,6 @@
         $_POST["cand_select"] = "search";
         $_POST["proposition_list"] = "ALL";
         $_POST["date_select"] = "all";
-#        $_POST["date_select"] = "cycle";
-#        $cycles = array ();
-#        $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
-#         while ($row = $result->fetch_assoc()) {$cycles[] = $row["ElectionCycle"];}
-#        $_POST["cycles"] = $cycles;      
       }
 
       if ($_POST["qs_button"] == "Search Ballot Measures") {

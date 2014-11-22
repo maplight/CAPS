@@ -225,9 +225,6 @@
     if ($date_where != "") {$where .= "{$date_where} AND ";}
     if ($where != "") {$where = "WHERE " . substr ($where, 0, -5);} # remove extra AND
 
-    # If the quick search button was not used, don't store a summary type
-    if (! isset ($search_data["quick_search"])) {$summary_type = "";}
-
     $parse_data = array ($where, $summary_type);
     return $parse_data;
   }
@@ -236,6 +233,16 @@
   function display_data ($parse_data) {
     $where = $parse_data[0];
     $summary_type = $parse_data[1];
+
+    if (isset ($_POST["search_btn"])) {
+      $show_summary = "no";
+    } else {
+      if (isset ($_POST["show_summary"])) {
+        $show_summary = $_POST["show_summary"];
+      } else {
+        $show_summary = "yes";
+      }
+    }
 
     if ($where == "") {
       echo "You have not entered any search data, please select a criteria on the side.";
@@ -280,7 +287,7 @@
         if (isset ($_POST["sort"])) {
           $sort = $_POST["sort"];
         }
- 
+
         $field_set = "";
         $fields = array ("RecipientCandidateNameNormalized|Recipient Name|",
                          "RecipientCommitteeNameNormalized|Recipient Committee|",
@@ -340,7 +347,7 @@
 
         echo "<div id=\"results\">";
 
-        if ($summary_type == "") {
+        if ($show_summary == "no") {
           echo "<h1 class=\"caps_title3\">Search Results</h1>";
           echo "<hr class=\"caps_hr1\">";
           echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
@@ -486,6 +493,7 @@
         echo "<center>";
         echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
         echo "<input type=\"hidden\" name=\"field_list\" value=\"{$field_set}\">";
+        echo "<input type=\"hidden\" name=\"show_summary\" value=\"{$show_summary}\">";
         if ($total_pages > 1) {
           if ($page > 1) {echo "<input type=\"submit\" name=\"page_button\" value=\"Previous\" id=\"caps_previous_btn\">";}
           if ($total_pages >= 3) {
