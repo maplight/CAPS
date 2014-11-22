@@ -20,7 +20,6 @@
 </head>
 
 <body>
-<form action="advanced.php" method="post">
 <?php
     # Cal-Access Campaign Power Search Project
     # MapLight
@@ -61,8 +60,6 @@
     }
 ?>
 
-<div id="tooltip" class="tooltip"><span id="tooltip_text"></span></div>
-
 <div id="caps_header">
 <div class="frme" id="top">
 <img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;">
@@ -80,6 +77,7 @@
 <div id="wrapper">
   <div id="container">
     <div id="columns">
+      <form method="post">
         <div id="sidebar">
           <h1 class="caps_title1">Advanced Search</h1>
           <a href="advanced.php" id="caps_reset_btn">Clear Form</a>
@@ -93,10 +91,8 @@
   echo "<input type=\"radio\" id=\"all_contribs\" name=\"contrib_select\" value=\"all\" class=\"caps_radio1\" {$checked}>";
 ?>
           <label for="all_contribs" class="caps_label1">All contributors</label>
-
+          <a href="#" class="info"></a>
 <?php
-  display_tooltip ("Search contributions from all contributors.", 20, -20, 160);
-
   $checked = "";
   if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
   echo "<input type=\"radio\" id=\"select_contribs\" name=\"contrib_select\" value=\"search\" class=\"caps_radio1\" {$checked}>";
@@ -105,11 +101,7 @@
   echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" class=\"caps_text1\" onFocus=\"if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\">";
 ?>
           <label for="select_location" class="caps_label2">Contributor Location</label>
-
-<?php
-  display_tooltip ("Search contributions from a particular state.", 20, -20, 160);
-?>
-
+          <a href="#" class="info"></a>
           <select id="select_location" name="state_list" class="caps_select1">
 <?php
   $selected = "";
@@ -136,10 +128,9 @@
   $checked = "";
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "candidates") {$checked = "checked";}}  
   echo "<input type=\"radio\" id=\"contrib_to\" name=\"contrib_types\" value=\"candidates\" class=\"caps_radio1\" {$checked}>";
-
 ?>
           <label for="contrib_to" class="caps_label1">Candidates</label>
-
+          <a href="#" class="info"></a>
 <?php
   display_tooltip ("Search contributions to candidate campaigns only.", 20, -20, 160);
   $checked = "";
@@ -162,9 +153,8 @@
   $js_candidates = fill_candidate_names ($selected, "1999");
 ?>
           </select>
-
+          <a href="#" class="info"></a>
 <?php
-  display_tooltip ("Search contributions to a particular candidate\'s campaign(s).", 20, -20, 160);
   $checked = "";
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "office") {$checked = "checked";}}  
   echo "<input type=\"radio\" id=\"select_cands\" name=\"contrib_types\" value=\"office\" class=\"caps_radio3\" {$checked}>";
@@ -176,11 +166,7 @@
   fill_offices_sought ($selected);
 ?>
           </select>
-
-<?php
-  display_tooltip ("Search contributions to all candidates running for a particular office.", 20, -20, 160);
-?>
-
+          <a href="#" class="info"></a>
           <hr class="caps_hr1">
 
 <!-- Contributions To Ballot Measures -->
@@ -195,9 +181,8 @@
 ?>
 
           <label for="props_to" class="caps_label1">Ballot Measures</label>
-
+          <a href="#" class="info"></a>
 <?php
-  display_tooltip ("Search contributions to committees formed to support or oppose ballot measures. Your results may return duplicate contributions if a contributor gave money to a committee supporting or opposing multiple ballot measures.", 20, -20, 240);
   $text = "Search propositions";
   if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
   echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"filter_propositions_list();\" onFocus=\"if(this.value == 'Search propositions') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search propositions';}\">";
@@ -236,9 +221,8 @@
 ?>
 
           <label for="comms_to" class="caps_label1">Committees</label>
-
+          <a href="#" class="info"></a>
 <?php
-  display_tooltip ("Search contributions to any recipient committee(s) by name.", 20, -20, 160);
   $text = "Just these committees";
   if (isset ($_POST["committee_search"])) {$text = $_POST["committee_search"];}
   echo "<input type=\"text\" id=\"committee_search\" name=\"committee_search\" value=\"{$text}\" class=\"caps_text1\" onFocus=\"if(this.value == 'Just these committees') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these committees';}\">";
@@ -246,14 +230,7 @@
           <hr class="caps_hr3">
 
 <!-- Dates -->
-          <h2 class="caps_header1">Dates:
-
-<?php
-  display_tooltip ("Search contributions by the date range in which they were made.", 20, -20, 160);
-?>
-
-          </h2>
-
+          <h2 class="caps_header1">Dates:<a href="#" class="info"></a></h2>
 <?php
   $checked = "";
   if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
@@ -300,10 +277,10 @@
   build_results_table ();
 ?>
         </div> <!-- #content -->
+      </form>
     </div> <!-- # columns -->
   </div> <!-- #containter -->
 </div> <!-- #wrapper-->
-</form>
 
 </body>
 </html>

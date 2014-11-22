@@ -2,7 +2,7 @@
   function build_results_table () {
     if (! isset ($_POST["contributor"])) {
       # No form search yet
-      echo "<div class=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</div>";
+      echo "<DIV CLASS=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</DIV>";
     } else {
       # Parse search form
       $parse_data = parse_search_form ($_POST);
@@ -514,7 +514,7 @@
         $result = my_query ("SELECT * FROM smry_last_update"); $row = $result->fetch_assoc(); $last_update = $row["LastUpdate"];
 
         echo "<p>&nbsp;</p>";
-        echo "This page will not display more than 1,000 rows. To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">download the CSV</a> file.<br>";
+        echo "To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">download the CSV</a> file.<br>";
         echo "<div class=\"last_update\">Contributions data is current as of " . date ("F j, Y", strtotime ($last_update)) . ".</div>";
         echo "</center>";
 
