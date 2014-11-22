@@ -94,9 +94,9 @@
 ?>
           <label for="all_contribs" class="caps_label1">All contributors</label>
 
-          <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 1);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions from all contributors.">
-
 <?php
+  display_tooltip ("Search contributions from all contributors.", 20, -20, 160);
+
   $checked = "";
   if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
   echo "<input type=\"radio\" id=\"select_contribs\" name=\"contrib_select\" value=\"search\" class=\"caps_radio1\" {$checked}>";
@@ -105,7 +105,11 @@
   echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" class=\"caps_text1\" onFocus=\"if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\">";
 ?>
           <label for="select_location" class="caps_label2">Contributor Location</label>
-          <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 2);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions from a particular state.">
+
+<?php
+  display_tooltip ("Search contributions from a particular state.", 20, -20, 160);
+?>
+
           <select id="select_location" name="state_list" class="caps_select1">
 <?php
   $selected = "";
@@ -128,11 +132,16 @@
           <hr class="caps_hr2">
 
 <!-- Contributions To Candidates -->
-          <div class="caps_header2">Candidates
-          <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 3);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions to candidate campaigns only.">
-          </div>
+<?php
+  $checked = "";
+  if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "candidates") {$checked = "checked";}}  
+  echo "<input type=\"radio\" id=\"contrib_to\" name=\"contrib_types\" value=\"candidates\" class=\"caps_radio1\" {$checked}>";
+
+?>
+          <label for="contrib_to" class="caps_label1">Candidates</label>
 
 <?php
+  display_tooltip ("Search contributions to candidate campaigns only.", 20, -20, 160);
   $checked = "";
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "candidates") {$checked = "checked";}} 
   echo "<input type=\"radio\" id=\"all_cands\" name=\"contrib_types\" value=\"candidates\" class=\"caps_radio2\" {$checked}>";
@@ -153,8 +162,9 @@
   $js_candidates = fill_candidate_names ($selected, "1999");
 ?>
           </select>
-          <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 4);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions to a particular candidate\'s campaign(s).">
+
 <?php
+  display_tooltip ("Search contributions to a particular candidate\'s campaign(s).", 20, -20, 160);
   $checked = "";
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "office") {$checked = "checked";}}  
   echo "<input type=\"radio\" id=\"select_cands\" name=\"contrib_types\" value=\"office\" class=\"caps_radio3\" {$checked}>";
@@ -166,8 +176,12 @@
   fill_offices_sought ($selected);
 ?>
           </select>
-          <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 5);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions to all candidates running for a particular office.">
-          <hr class="caps_hr2">
+
+<?php
+  display_tooltip ("Search contributions to all candidates running for a particular office.", 20, -20, 160);
+?>
+
+          <hr class="caps_hr1">
 
 <!-- Contributions To Ballot Measures -->
           <div class="caps_header2">Ballot Measures
@@ -178,6 +192,12 @@
   $checked = "";
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "ballots") {$checked = "checked";}}  
   echo "<input type=\"radio\" id=\"props_to\" name=\"contrib_types\" value=\"ballots\" class=\"caps_radio3\" {$checked}>";
+?>
+
+          <label for="props_to" class="caps_label1">Ballot Measures</label>
+
+<?php
+  display_tooltip ("Search contributions to committees formed to support or oppose ballot measures. Your results may return duplicate contributions if a contributor gave money to a committee supporting or opposing multiple ballot measures.", 20, -20, 240);
   $text = "Search propositions";
   if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
   echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"filter_propositions_list();\" onFocus=\"if(this.value == 'Search propositions') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search propositions';}\">";
@@ -213,6 +233,12 @@
   $checked = "";
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "committees") {$checked = "checked";}}  
   echo "<input type=\"radio\" id=\"search_cands\" name=\"contrib_types\" value=\"committees\" class=\"caps_radio3\" {$checked}>";
+?>
+
+          <label for="comms_to" class="caps_label1">Committees</label>
+
+<?php
+  display_tooltip ("Search contributions to any recipient committee(s) by name.", 20, -20, 160);
   $text = "Just these committees";
   if (isset ($_POST["committee_search"])) {$text = $_POST["committee_search"];}
   echo "<input type=\"text\" id=\"committee_search\" name=\"committee_search\" value=\"{$text}\" class=\"caps_text1\" onFocus=\"if(this.value == 'Just these committees') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these committees';}\">";
@@ -221,8 +247,13 @@
 
 <!-- Dates -->
           <h2 class="caps_header1">Dates:
-          <img src="img/infotool.png" class="info" onMouseOver="this.src='img/infotool-hover.png'; display_tooltip(event, 8);" onMouseOut="this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';" alt="Search contributions by the date range in which they were made.">
+
+<?php
+  display_tooltip ("Search contributions by the date range in which they were made.", 20, -20, 160);
+?>
+
           </h2>
+
 <?php
   $checked = "";
   if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
