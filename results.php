@@ -183,7 +183,7 @@
     
     # create candidate query
     if ($CandidateList == "") {
-      if ($Candidate != "") {$candidate_where .= "({$Candidate}) AND ";}
+      if ($Candidate != "") {$candidate_where .= "({$Candidate}) AND "; $summary_type .= "C";}
     } else {
       $candidate_where .= "{$CandidateList} AND "; $summary_type .= "C";
     }
@@ -195,7 +195,7 @@
     if ($Proposition == "") {
       if ($PropositionSearch != "") {$proposition_where .= "({$PropositionSearch}) AND ";}
     } else {
-      $proposition_where .= "{$Proposition} AND "; $summary_type .= "B";
+      $proposition_where .= "{$Proposition} AND ";
     }
     if ($Election != "") {$proposition_where .= "{$Election} AND "; $summary_type .= "E";}
     if ($Position != "") {$proposition_where .= "{$Position} AND ";}
@@ -355,7 +355,7 @@
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
                 echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 12);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount received by candidate-controlled committees in the selected date range. The table below contains individual contributions.\">";
                 echo "<div id=\"breakdown_box\">";
-                $result2 = my_query ("SELECT RecipientCommitteeNameNormalized, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM contributions_search INNER JOIN smry_committees USING (RecipientCommitteeID) INNER JOIN smry_candidates USING (RecipientCandidateNameID) WHERE RecipientCandidateNameNormalized = '{$_POST["candidate_list"]}' AND CandidateContribution = 'Y' GROUP BY RecipientCommitteeID ORDER BY RecipientCommitteeNameNormalized");
+                $result2 = my_query ("SELECT RecipientCommitteeNameNormalized, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, RecipientCommitteeID, RecipientCommitteeNameNormalized, TransactionAmount FROM contributions_search INNER JOIN smry_committees USING (RecipientCommitteeID) INNER JOIN smry_candidates USING (RecipientCandidateNameID) {$where}) AS UniqueContributions GROUP BY RecipientCommitteeID ORDER BY RecipientCommitteeNameNormalized");
                 while ($row2 = $result2->fetch_assoc()) {
                   echo "<b>{$row2["RecipientCommitteeNameNormalized"]}</b> has raised $" . number_format ($row2["TotalAmount"], 2, ".", ",") . " in " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
                 }
