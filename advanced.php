@@ -92,8 +92,9 @@
 ?>
 
           <label for="all_contribs" class="caps_label1">All contributors</label>
-          <a href="#" class="info"></a>
+
 <?php
+  display_tooltip ("Search contributions from all contributors.", 20, -20, 160);
   $checked = "";
   if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
   echo "<input type=\"radio\" id=\"select_contribs\" name=\"contrib_select\" value=\"search\" class=\"caps_radio1\" {$checked}>";
@@ -102,7 +103,11 @@
   echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" class=\"caps_text1\" onFocus=\"if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\">";
 ?>
           <label for="select_location" class="caps_label2">Contributor Location</label>
-          <a href="#" class="info"></a>
+
+<?php
+  display_tooltip ("Search contributions from a particular state.", 20, -20, 160);
+?>
+
           <select id="select_location" name="state_list" class="caps_select1">
 <?php
   $selected = "";
@@ -154,8 +159,9 @@
   $js_candidates = fill_candidate_names ($selected, "1999");
 ?>
           </select>
-          <a href="#" class="info"></a>
+
 <?php
+  display_tooltip ("Search contributions to a particular candidate\'s campaign(s).", 20, -20, 160);
   $checked = "";
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "office") {$checked = "checked";}}  
   echo "<input type=\"radio\" id=\"select_cands\" name=\"contrib_types\" value=\"office\" class=\"caps_radio3\" {$checked}>";
@@ -233,7 +239,13 @@
           <hr class="caps_hr3">
 
 <!-- Dates -->
-          <h2 class="caps_header1">Dates:<a href="#" class="info"></a></h2>
+          <h2 class="caps_header1">Dates:
+
+<?php
+  display_tooltip ("Search contributions by the date range in which they were made.", 20, -20, 160);
+?>
+
+          </h2>
 <?php
   $checked = "";
   if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
