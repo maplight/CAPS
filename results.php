@@ -431,12 +431,16 @@
         $result = my_query ("SELECT * FROM smry_last_update"); $row = $result->fetch_assoc(); $last_update = $row["LastUpdate"];
 
         echo "<p>&nbsp;</p>";
-        echo "To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">download the CSV</a> file.<br>";
+        echo "This page will not display more than 1,000 rows. To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">download the CSV</a> file.<br>";
         echo "<div class=\"last_update\">Contributions data is current as of " . date ("F j, Y", strtotime ($last_update)) . ".</div>";
         echo "</center>";
 
         echo "</div> <!-- results ->";
       }
     }
+  }
+
+  function display_tooltip ($text, $pos_x, $pos_y, $width) {
+    echo "<img src=\"img/infotool.png\" class=\"info\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, '{$text}', {$pos_x}, {$pos_y}, {$width});\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"{$text}\">";
   }
 ?>
