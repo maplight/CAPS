@@ -2,11 +2,11 @@
   function build_results_table () {
     if (! isset ($_POST["contributor"])) {
       # No form search yet
-      echo "<DIV CLASS=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</DIV>";
+      echo "<div class=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</div>";
     } else {
       # Parse search form
-      $where = parse_search_form ($_POST);
-      display_data ($where);
+      $parse_data = parse_search_form ($_POST);
+      display_data ($parse_data);
     }
   }
 
@@ -168,9 +168,9 @@
         break;
     }
 
-
     #------------------------------------------------------------------------------------------
     # Build sub-query components
+    $summary_type = "";
     $donor_where = "";
     $candidate_where = "";
     $proposition_where = "";
@@ -178,15 +178,15 @@
     $date_where = "";
 
     # create donor query
-    if ($Donor != "") {$donor_where .= "{$Donor} AND ";}
+    if ($Donor != "") {$donor_where .= "{$Donor} AND "; $summary_type .= "D";}
     if ($DonorState != "") {$donor_where .= "{$DonorState} AND ";}
     if ($donor_where != "") {$donor_where = substr ($donor_where, 0, -5);} # remove extra AND
     
     # create candidate query
     if ($CandidateList == "") {
-      if ($Candidate != "") {$candidate_where .= "({$Candidate}) AND ";}
+      if ($Candidate != "") {$candidate_where .= "({$Candidate}) AND "; $summary_type .= "C";}
     } else {
-      $candidate_where .= "{$CandidateList} AND ";
+      $candidate_where .= "{$CandidateList} AND "; $summary_type .= "C";
     }
     if ($OfficeList != "") {$candidate_where .= "{$OfficeList} AND ";}
     if ($CandidateContribution != "") {$candidate_where .= "$CandidateContribution AND ";}
@@ -198,14 +198,14 @@
     } else {
       $proposition_where .= "{$Proposition} AND ";
     }
-    if ($Election != "") {$proposition_where .= "{$Election} AND ";}
+    if ($Election != "") {$proposition_where .= "{$Election} AND "; $summary_type .= "E";}
     if ($Position != "") {$proposition_where .= "{$Position} AND ";}
     if ($Allied != "") {$proposition_where .= "{$Allied} AND ";}
     if ($PropositionContribution != "") {$proposition_where .= "$PropositionContribution AND ";}
     if ($proposition_where != "") {$proposition_where = substr ($proposition_where, 0, -5);} # Remove the final AND
 
     # create committee query
-    if ($Committee != "") {$committee_where .= "({$Committee}) AND ";}
+    if ($Committee != "") {$committee_where .= "({$Committee}) AND "; $summary_type .= "M";}
     if ($committee_where != "") {$committee_where = substr ($committee_where, 0, -5);} # remove extra AND
 
     # create date query
@@ -226,11 +226,25 @@
     if ($date_where != "") {$where .= "{$date_where} AND ";}
     if ($where != "") {$where = "WHERE " . substr ($where, 0, -5);} # remove extra AND
 
-    return $where;
+    $parse_data = array ($where, $summary_type);
+    return $parse_data;
   }
 
 
-  function display_data ($where) {
+  function display_data ($parse_data) {
+    $where = $parse_data[0];
+    $summary_type = $parse_data[1];
+
+    if (isset ($_POST["search_btn"])) {
+      $show_summary = "no";
+    } else {
+      if (isset ($_POST["show_summary"])) {
+        $show_summary = $_POST["show_summary"];
+      } else {
+        $show_summary = "yes";
+      }
+    }
+
     if ($where == "") {
       echo "You have not entered any search data, please select a criteria on the side.";
     } else {
@@ -276,7 +290,7 @@
         if (isset ($_POST["sort"])) {
           $sort = $_POST["sort"];
         }
- 
+
         $field_set = "";
         $fields = array ("RecipientCandidateNameNormalized|Recipient Name|",
                          "RecipientCommitteeNameNormalized|Recipient Committee|",
@@ -335,12 +349,78 @@
         $rows_returned = $result->num_rows;
 
         echo "<div id=\"results\">";
-        echo "<h1 class=\"caps_title3\">Search Results</h1>";
-        echo "<hr class=\"caps_hr1\">";
-        echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions";
-        echo "<a href=\"#\" class=\"info\"></a></div>";
-        echo "<h2 class=\"caps_title4\">Contributions</h2>";
-        echo "<hr class=\"caps_hr1\">";
+
+        if ($show_summary == "no") {
+          echo "<h1 class=\"caps_title3\">Search Results</h1>";
+          echo "<hr class=\"caps_hr1\">";
+          echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
+          display_tooltip ("This is the total amount received. The table below contains individual contributions.", -180, 10, 160);
+          echo "<h2 class=\"caps_title4\">Contributions</h2>";
+          echo "<hr class=\"caps_hr1\">";
+        } else {
+          if (strlen ($summary_type) == 1) {
+            switch ($summary_type) {
+              case "C":
+                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">{$_POST["candidate_list"]}</strong> has received</div>";
+                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
+                display_tooltip ("This is the total amount received by candidate-controlled committees in the selected date range. The table below contains individual contributions.", -180, 10, 160);
+                echo "<div id=\"breakdown_box\">";
+                $result2 = my_query ("SELECT RecipientCommitteeNameNormalized, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, RecipientCommitteeID, RecipientCommitteeNameNormalized, TransactionAmount FROM contributions_search INNER JOIN smry_committees USING (RecipientCommitteeID) INNER JOIN smry_candidates USING (RecipientCandidateNameID) {$where}) AS UniqueContributions GROUP BY RecipientCommitteeID ORDER BY RecipientCommitteeNameNormalized");
+                while ($row2 = $result2->fetch_assoc()) {
+                  echo "<b>{$row2["RecipientCommitteeNameNormalized"]}</b> has raised $" . number_format ($row2["TotalAmount"], 2, ".", ",") . " in " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
+                }
+                echo "</div>";
+                echo "<hr class=\"caps_hr1\">";
+                break;            
+
+              case "D":
+                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\"" . strtoupper ($_POST["contributor"]) . "\"</strong> has contributed</div>";
+                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
+                display_tooltip ("This is the total amount given by the specified contributors in the selected date range. The table below contains individual contributions.", -180, 10, 160);
+                echo "<div id=\"breakdown_box\">";
+                $result2 = my_query ("SELECT CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, CandidateContribution, BallotMeasureContribution, TransactionAmount FROM contributions_search {$where}) AS UniqueContributions GROUP BY CandidateContribution, BallotMeasureContribution ORDER BY CandidateContribution, BallotMeasureContribution");
+                while ($row2 = $result2->fetch_assoc()) {
+                  if ($row2["CandidateContribution"] == "Y" && $row2["BallotMeasureContribution"] == "N") {echo "<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>candidates</b><br>";}
+                  if ($row2["CandidateContribution"] == "N" && $row2["BallotMeasureContribution"] == "Y") {echo "<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>ballot measures</b><br>";}
+                  if ($row2["CandidateContribution"] == "N" && $row2["BallotMeasureContribution"] == "N") {echo "<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>other committees</b><br>";}
+                }
+                echo "</div>";
+                echo "<hr class=\"caps_hr1\">";
+                break;
+
+              case "E":
+                $election = substr ($_POST["proposition_list"], 4);
+                $election_date = date ("F Y", strtotime ($election));
+                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">Ballot Measures</strong> on the {$election_date} ballot have received ";
+                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
+                display_tooltip ("This is the total amount given towards the specified ballot measures. The table below contains individual contributions.", -180, 10, 160);
+                echo "</div>";
+                echo "<div id=\"breakdown_box\">";
+                $result2 = my_query ("SELECT Target, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount, SUM(IF(PositionID = 1,1,0)) AS SupportCount, SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount, SUM(IF(PositionID = 2,1,0)) AS OpposeCount, SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount FROM (SELECT DISTINCT ContributionID, Target, PositionID, TransactionAmount FROM contributions_search INNER JOIN smry_propositions USING (PropositionID) WHERE Election = '{$election}' AND BallotMeasureContribution = 'Y') AS UniqueContributions GROUP BY Target ORDER BY Target");
+                while ($row2 = $result2->fetch_assoc()) {
+                  if (strpos ($row2["Target"], "-") !== false) {
+                    echo "<p><b>" . substr ($row2["Target"], 0, strrpos ($row2["Target"], " - ")) . "</b>" . substr ($row2["Target"], strrpos ($row2["Target"], " - ")) . "<br>";
+                  } else {
+                    echo "<p><b>{$row2["Target"]}</b><br>";
+                  }
+                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$" . number_format ($row2["TotalAmount"], 2, ".", ",") . " total raised - " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
+                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Support: $" . number_format ($row2["SupportAmount"], 2, ".", ",") . " raised - " . number_format ($row2["SupportCount"], 0, ".", ",") . " contributions<br>";
+                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Oppose: $" . number_format ($row2["OpposeAmount"], 2, ".", ",") . " raised - " . number_format ($row2["OpposeCount"], 0, ".", ",") . " contributions";
+                  echo "</p>";
+                }
+                echo "</div>";
+                echo "<hr class=\"caps_hr1\">";
+                break;            
+            }
+          } else {
+            echo "<h1 class=\"caps_title3\">Search Results</h1>";
+            echo "<hr class=\"caps_hr1\">";
+            echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
+            display_tooltip ("This is the total amount received. The table below contains individual contributions.", -180, 10, 160);
+            echo "<h2 class=\"caps_title4\">Contributions</h2>";
+            echo "<hr class=\"caps_hr1\">";
+          }
+        }
 
         echo "<div id=\"filter_box\">";
         echo "Show";
@@ -359,8 +439,8 @@
         echo "</select>";
         echo "<input type=\"submit\" value=\"Update\" id=\"caps_update_btn\">";
         echo "<div id=\"download_box\">";
-        echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">Download CSV</a>&nbsp;&nbsp;";
-        echo "<a href=\"#\" class=\"download_info\"></a>";
+        echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">Download CSV</a>&nbsp;";
+        display_tooltip ("Download the search results as a CSV file.", -180, 10, 160);
         echo "</div> <!-- download_box -->";
         echo "</div> <!-- filter_box -->";
 
@@ -368,7 +448,7 @@
         $field_msg = "Show more fields";
         if ($field_set == "Show more fields") {$field_msg = "Show fewer fields";}
         echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\" id=\"caps_field_btn\">";
-        echo "<a href=\"#\" class=\"info\"></a>";
+        display_tooltip ("Show more columns in the table for additional information on contributors.", -180, 10, 160);
 
         echo "<div id=\"table_box\">";
         echo "<table title=\"search table\" summary=\"search table\" class=\"caps_table1\">";
@@ -416,6 +496,7 @@
         echo "<center>";
         echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
         echo "<input type=\"hidden\" name=\"field_list\" value=\"{$field_set}\">";
+        echo "<input type=\"hidden\" name=\"show_summary\" value=\"{$show_summary}\">";
         if ($total_pages > 1) {
           if ($page > 1) {echo "<input type=\"submit\" name=\"page_button\" value=\"Previous\" id=\"caps_previous_btn\">";}
           if ($total_pages >= 3) {
@@ -433,12 +514,17 @@
         $result = my_query ("SELECT * FROM smry_last_update"); $row = $result->fetch_assoc(); $last_update = $row["LastUpdate"];
 
         echo "<p>&nbsp;</p>";
-        echo "To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">download the CSV</a> file.<br>";
+        echo "This page will not display more than 1,000 rows. To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">download the CSV</a> file.<br>";
         echo "<div class=\"last_update\">Contributions data is current as of " . date ("F j, Y", strtotime ($last_update)) . ".</div>";
         echo "</center>";
 
         echo "</div> <!-- results ->";
       }
     }
+  }
+
+
+  function display_tooltip ($text, $pos_x, $pos_y, $width) {
+    echo "<img src=\"img/infotool.png\" class=\"info\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, '{$text}', {$pos_x}, {$pos_y}, {$width});\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"{$text}\">";
   }
 ?>

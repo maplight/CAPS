@@ -42,3 +42,23 @@ function filter_propositions_list() {
     } 
   });
 }
+
+
+function display_tooltip(event, tip_text, pos_x, pos_y, width) {
+  if (window.event) {
+    x = window.event.clientX + document.documentElement.scrollLeft + document.body.scrollLeft;
+    y = window.event.clientY + document.documentElement.scrollTop + document.body.scrollTop;
+  } else {
+    x = event.clientX + window.scrollX;
+    y = event.clientY + window.scrollY;
+  }
+  
+  document.getElementById('tooltip_text').innerHTML = tip_text;
+  tip = document.getElementById('tooltip');
+  x = x + pos_x;
+  y = y + pos_y;
+  tip.style.width = width + 'px';
+  tip.style.top = y + 'px';
+  tip.style.left = x + 'px';
+  tip.style.display = 'block';
+}

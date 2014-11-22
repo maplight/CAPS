@@ -20,15 +20,13 @@ body{
 
 #container{
   font:15px Arial, Helvetica, sans-serif;
-  -webkit-text-size-adjust:100%;
-  -ms-text-size-adjust:none;
   z-index:10;
   margin:0 auto;
 }
 
 #two-columns{
   margin:0;
-  overflow: hidden;
+  overflow:hidden;
 }
 
 #sidebar{
@@ -37,7 +35,6 @@ body{
   background:#ebebeb;
   width:260px;
   position:relative;
-  overflow:hidden;
 }
 
 #content{
@@ -199,6 +196,13 @@ body{
   overflow:auto;
 }
 
+#breakdown_box{
+  margin-top:10px;
+  margin-left:30px;
+  margin-bottom:8px;
+  font:13px Arial, Helvetica, sans-serif;
+}
+
 #qs_page{
   padding:28px;
   overflow:hidden;
@@ -222,6 +226,16 @@ body{
 #qs_box{
   float:left;
   margin-left:14px;
+}
+
+#help_box{
+  clear:both;
+  background:#ebebeb;
+  padding:20px;
+  border-top:2px solid #000000;
+  border-bottom:2px solid #000000;
+  font:15px Arial, Helvetica, sans-serif;
+  text-decoration:none;
 }
 
 #maplight_info{
@@ -553,19 +567,32 @@ body{
   float:right;
   position:relative;
   margin-right:4px;
-  background:url(../img/sprite01.png) no-repeat 0 -15px;
   width:15px;
-  height:16px;
+  height:15px;
+  cursor:pointer;
 }
 
+.tooltip{
+  position:absolute;
+  display:none;
+  border:1px solid #124161;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding:5px;
+  background:#124161;
+  color:white;
+  z-index:9999;
+}
+ 
 .content_title1{
-  font:21px/30px Arial, Helvetica, sans-serif;
+  font:18px Arial, Helvetica, sans-serif;
   color:#222;
   margin:0 0 2px;
 }
 
 .content_strong1{
-  font:700 36px Arial, Helvetica, sans-serif;
+  font:700 24px Arial, Helvetica, sans-serif;
 }
 
 .content_select1{
