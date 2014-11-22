@@ -351,7 +351,7 @@
           echo "<h1 class=\"caps_title3\">Search Results</h1>";
           echo "<hr class=\"caps_hr1\">";
           echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-          echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 9);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount received. The table below contains individual contributions.\">";
+          display_tooltip ("This is the total amount received. The table below contains individual contributions.", -180, 10, 160);
           echo "<h2 class=\"caps_title4\">Contributions</h2>";
           echo "<hr class=\"caps_hr1\">";
         } else {
@@ -360,7 +360,7 @@
               case "C":
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">{$_POST["candidate_list"]}</strong> has received</div>";
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 12);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount received by candidate-controlled committees in the selected date range. The table below contains individual contributions.\">";
+                display_tooltip ("This is the total amount received by candidate-controlled committees in the selected date range. The table below contains individual contributions.", -180, 10, 160);
                 echo "<div id=\"breakdown_box\">";
                 $result2 = my_query ("SELECT RecipientCommitteeNameNormalized, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, RecipientCommitteeID, RecipientCommitteeNameNormalized, TransactionAmount FROM contributions_search INNER JOIN smry_committees USING (RecipientCommitteeID) INNER JOIN smry_candidates USING (RecipientCandidateNameID) {$where}) AS UniqueContributions GROUP BY RecipientCommitteeID ORDER BY RecipientCommitteeNameNormalized");
                 while ($row2 = $result2->fetch_assoc()) {
@@ -373,7 +373,7 @@
               case "D":
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\"" . strtoupper ($_POST["contributor"]) . "\"</strong> has contributed</div>";
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 13);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount given by the specified contributors in the selected date range. The table below contains individual contributions.\">";
+                display_tooltip ("This is the total amount given by the specified contributors in the selected date range. The table below contains individual contributions.", -180, 10, 160);
                 echo "<div id=\"breakdown_box\">";
                 $result2 = my_query ("SELECT CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, CandidateContribution, BallotMeasureContribution, TransactionAmount FROM contributions_search {$where}) AS UniqueContributions GROUP BY CandidateContribution, BallotMeasureContribution ORDER BY CandidateContribution, BallotMeasureContribution");
                 while ($row2 = $result2->fetch_assoc()) {
@@ -390,7 +390,7 @@
                 $election_date = date ("F Y", strtotime ($election));
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">Ballot Measures</strong> on the {$election_date} ballot have received ";
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 14);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount given towards the specified ballot measures. The table below contains individual contributions.\">";
+                display_tooltip ("This is the total amount given towards the specified ballot measures. The table below contains individual contributions.", -180, 10, 160);
                 echo "</div>";
                 echo "<div id=\"breakdown_box\">";
                 $result2 = my_query ("SELECT Target, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount, SUM(IF(PositionID = 1,1,0)) AS SupportCount, SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount, SUM(IF(PositionID = 2,1,0)) AS OpposeCount, SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount FROM (SELECT DISTINCT ContributionID, Target, PositionID, TransactionAmount FROM contributions_search INNER JOIN smry_propositions USING (PropositionID) WHERE Election = '{$election}' AND BallotMeasureContribution = 'Y') AS UniqueContributions GROUP BY Target ORDER BY Target");
@@ -413,7 +413,7 @@
             echo "<h1 class=\"caps_title3\">Search Results</h1>";
             echo "<hr class=\"caps_hr1\">";
             echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-            echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 9);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"This is the total amount received. The table below contains individual contributions.\">";
+            display_tooltip ("This is the total amount received. The table below contains individual contributions.", -180, 10, 160);
             echo "<h2 class=\"caps_title4\">Contributions</h2>";
             echo "<hr class=\"caps_hr1\">";
           }
@@ -436,8 +436,8 @@
         echo "</select>";
         echo "<input type=\"submit\" value=\"Update\" id=\"caps_update_btn\">";
         echo "<div id=\"download_box\">";
-        echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">Download CSV</a> ";
-        echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 10);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"Download the search results as a CSV file.\">";
+        echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">Download CSV</a>&nbsp;";
+        display_tooltip ("Download the search results as a CSV file.", -180, 10, 160);
         echo "</div> <!-- download_box -->";
         echo "</div> <!-- filter_box -->";
 
@@ -445,7 +445,7 @@
         $field_msg = "Show more fields";
         if ($field_set == "Show more fields") {$field_msg = "Show fewer fields";}
         echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\" id=\"caps_field_btn\">";
-        echo "<img src=\"img/infotool.png\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, 11);\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"Show more columns in the table for additional information on contributors.\">";
+        display_tooltip ("Show more columns in the table for additional information on contributors.", -180, 10, 160);
 
         echo "<div id=\"table_box\">";
         echo "<table title=\"search table\" summary=\"search table\" class=\"caps_table1\">";
@@ -519,6 +519,7 @@
       }
     }
   }
+
 
   function display_tooltip ($text, $pos_x, $pos_y, $width) {
     echo "<img src=\"img/infotool.png\" class=\"info\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, '{$text}', {$pos_x}, {$pos_y}, {$width});\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"{$text}\">";
