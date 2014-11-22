@@ -152,7 +152,6 @@
 
 <?php
   display_tooltip ("Search contributions to candidate campaigns only.", 20, -20, 160);
-
   $checked = "";
   if (isset ($_POST["cand_select"])) {if ($_POST["cand_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
   echo "<input type=\"radio\" id=\"all_cands\" name=\"cand_select\" value=\"all\" class=\"caps_radio2\" {$checked}>";
