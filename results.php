@@ -379,11 +379,7 @@
                 break;            
 
               case "D":
-                if (substr (trim ($_POST["contributor"]), 0, 1) == "\"") {
-                  echo "<div class=\"content_title1\"><strong class=\"content_strong1\">" . strtoupper ($_POST["contributor"]) . "</strong> has contributed</div>";
-                } else {
-                  echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\"" . strtoupper ($_POST["contributor"]) . "\"</strong> has contributed</div>";
-                }     
+                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">" . strtoupper ($_POST["contributor"]) . "</strong> has contributed</div>";
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
                 display_tooltip ("This is the total amount given by the specified contributors in the selected date range. The table below contains individual contributions.", -180, 10, 160);
                 echo "<div id=\"breakdown_box\">";
