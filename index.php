@@ -48,7 +48,7 @@
 <div id="wrapper">
   <div id="container">
     <div id="qs_page">
-      <form action="advanced.php" method="post">
+      <form id="qs_form" action="advanced.php" method="post">
       <input type="hidden" name="quick_search" value="true">
  
         <div id="qs_title">    
@@ -66,7 +66,8 @@
             <div class="qs_title2">Candidates</div>
               <div style="float:left">How much has&nbsp;</div> 
               <div style="float:left">
-                <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1" onkeyup="fill_candidate_list();" onFocus="if(this.value == 'Search candidates') {this.value = '';}" onBlur="if(this.value == '') {this.value = 'Search candidates';}">
+                <input type="hidden" id="match_candidate" name="match_candidate" value="no">
+                <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1" onkeyup="fill_candidate_list(event);" onFocus="if(this.value == 'Search candidates') {this.value = '';}" onBlur="if(this.value == '') {this.value = 'Search candidates';}">
                 <div id="candidates" class="qs_candidates"></div>
               </div>
               <div style="float:left">&nbsp;received?</div><br>
@@ -102,13 +103,6 @@
           </div> <!-- #qs_box -->
         </div> <!-- #qs_search -->
       </form>
-
-<?php
-  # Data for javascript to filter select boxes
-  echo "<SCRIPT type=text/javascript>";
-  echo "var candidates = [{$js_candidates}\"\"];\n";
-  echo "</SCRIPT>";
-?>
     <div id="maplight_info">Power Search software by <A HREF=http://www.maplight.org class="maplight_link">MapLight</A></div>
 
     </div> <!-- #qs_container -->

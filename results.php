@@ -65,7 +65,7 @@
         # build candidate search query
         $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
 
-        if ($search_data["candidate_list"] == "Select candidate") {
+        if ($search_data["match_candidate"] == "no") {
           $Candidate = "";
           foreach (explode (";", $search_data["search_candidates"]) as $search_item) {
             $word_str = "";
@@ -77,7 +77,7 @@
           }
           if ($Candidate != "") {$Candidate = "MATCH (smry_candidates.CandidateWords) AGAINST ('" . substr ($Candidate, 0, -1) . "' IN BOOLEAN MODE)";}
         } else {
-          $CandidateList = "smry_candidates.RecipientCandidateNameNormalized = '" . addslashes ($search_data["candidate_list"]) . "'";
+          $CandidateList = "smry_candidates.RecipientCandidateNameNormalized = '" . addslashes ($search_data["search_candidates"]) . "'";
         }
         break;
 
@@ -366,7 +366,7 @@
           if (strlen ($summary_type) == 1) {
             switch ($summary_type) {
               case "C":
-                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">{$_POST["candidate_list"]}</strong> has received</div>";
+                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">" . strtoupper ($_POST["search_candidates"]) . "</strong> has received</div>";
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
                 display_tooltip ("This is the total amount received by candidate-controlled committees in the selected date range. The table below contains individual contributions.", -180, 10, 160);
                 echo "<div id=\"breakdown_box\">";

@@ -20,27 +20,46 @@ function display_tooltip(event, tip_text, pos_x, pos_y, width) {
 
 
 //==============================================================================================================
-function fill_candidate_list() {
-  if ($('#search_candidates').val() == '') {
-    $('#candidates').hide();
+function fill_candidate_list(event) {
+  var keycode = (event.keyCode ? event.keyCode : event.which);
+  if (keycode == 40) {
+    // Down arrow pressed
+    $('#found_candidates option:first-child').attr("selected", "selected");
+    $('#found_candidates').focus();
   } else {
-    $.ajax({
-      type: 'POST',
-      url: 'xml/get_candidate_list.php',
-      async: false,
-      data: {search_text:$('#search_candidates').val()},
-      dataType: 'json',
-      success: function(data) {fill_candidate_list_return(data);}
-    });
+    if ($('#search_candidates').val() == '') {
+      $('#candidates').hide();
+    } else {
+      $.ajax({
+        type: 'POST',
+        url: 'xml/get_candidate_list.php',
+        async: false,
+        data: {search_text:$('#search_candidates').val()},
+        dataType: 'json',
+        success: function(data) {fill_candidate_list_return(data);}
+      });
+    }
   }
 }
 
 function fill_candidate_list_return(list_data) {
-  var candidates = '<select size=10>'; 
-  list_data.forEach(function(item) {candidates = candidates + '<option>' + item.RecipientCandidateNameNormalized + '</option>';});
-  candidates = candidates + '</select>';
-  $('#candidates').html(candidates);
-  $('#candidates').show();
+  if (list_data == '') {
+    $('#candidates').hide();
+  } else {
+    var candidates = '<select size=10 id="found_candidates" onclick="$(\'#search_candidates\').val(this.value); $(\'#match_candidate\').val(\'yes\'); $(\'#qs_form\'.submit();" onkeydown="list_item_selected(event, this.value);">'; 
+    list_data.forEach(function(item) {candidates = candidates + '<option>' + item.RecipientCandidateNameNormalized + '</option>';});
+    candidates = candidates + '</select>';
+    $('#candidates').html(candidates);
+    $('#candidates').show();
+  }
+}
+
+function list_item_selected(event, candidate_name) {
+  var keycode = (event.keyCode ? event.keyCode : event.which);
+  if (keycode == 13) {
+    $('#match_candidate').val('yes');
+    $('#search_candidates').val(candidate_name);
+  }
 }
 
 
