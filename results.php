@@ -37,11 +37,16 @@
       $Donor = "";
       foreach (explode (";", $search_data["contributor"]) as $search_item) {
         $word_str = "";
+        if (substr (trim ($search_item), 0, 1) == "\"") {$quoted = true;} else {$quoted = false;}
         foreach (explode (" ", $search_item) as $word) {
-          $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+          $word = strtoupper (ltrim (preg_replace ("/[^a-z0-9 ]+/i", "", $word), "0"));
           $word_str .= "+{$word} ";
         }
-        $Donor .= "(" . trim ($word_str) . ") ";
+        if ($quoted) {
+          $Donor .= "(\"" . trim ($word_str) . "\") ";
+        } else {
+          $Donor .= "(" . trim ($word_str) . ") ";
+        }
       }
       if ($Donor != "") {$Donor = "MATCH (contributions_search.DonorWords) AGAINST ('" . substr ($Donor, 0, -1) . "' IN BOOLEAN MODE)";}
     }
@@ -374,7 +379,11 @@
                 break;            
 
               case "D":
-                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\"" . strtoupper ($_POST["contributor"]) . "\"</strong> has contributed</div>";
+                if (substr (trim ($_POST["contributor"]), 0, 1) == "\"") {
+                  echo "<div class=\"content_title1\"><strong class=\"content_strong1\">" . strtoupper ($_POST["contributor"]) . "</strong> has contributed</div>";
+                } else {
+                  echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\"" . strtoupper ($_POST["contributor"]) . "\"</strong> has contributed</div>";
+                }     
                 echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
                 display_tooltip ("This is the total amount given by the specified contributors in the selected date range. The table below contains individual contributions.", -180, 10, 160);
                 echo "<div id=\"breakdown_box\">";
