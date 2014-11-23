@@ -712,6 +712,19 @@ body{
   z-index:9999;
 }
 
+#qs_candidate_btn{
+  background:#e6ecf0;
+  color:#124161;
+  border:2px solid #124161;
+  font:bold 15px Arial, Helvetica, sans-serif;
+  margin:2px 0 24px;
+  padding:4px 8px 4px 8px;
+}
+#qs_candidate_btn:hover{
+  color:#fff;
+  background:#124161;
+}
+
 #qs_btn1{
   background:#e6ecf0;
   color:#124161;
@@ -720,7 +733,6 @@ body{
   margin:2px 0 24px;
   padding:4px 8px 4px 8px;
 }
-
 #qs_btn1:hover{
   color:#fff;
   background:#124161;
