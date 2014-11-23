@@ -676,6 +676,7 @@ body{
   width:190px;
   padding:0px;
   border:2px solid #ccc;
+  margin-bottom:8px;
   font:15px Arial, Helvetica, sans-serif;
   color:#121212;
   border-radius:0;
@@ -691,9 +692,7 @@ body{
   border-radius:0;
 }
 
-.qs_select1{
-  width:194px;
-  margin-left:102px;
+.qs_select2{
   margin-bottom:8px;
   padding:0px;
   border:2px solid #ccc;
@@ -702,13 +701,15 @@ body{
   border-radius:0;
 }
 
-.qs_select2{
-  margin-bottom:8px;
-  padding:0px;
+.qs_candidates{
+  position:absolute;
+  display:none;
   border:2px solid #ccc;
-  font:15px Arial, Helvetica, sans-serif;
-  color:#121212;
-  border-radius:0;
+  border-radius: 0px;
+  margin-top:-8px;
+  padding:0px;
+  background:#FFFFFF;
+  z-index:9999;
 }
 
 #qs_btn1{

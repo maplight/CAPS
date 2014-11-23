@@ -64,14 +64,12 @@
           <img src="img/qs_candidate.jpg" width=50 class="qs_img" alt="Candidate option icon">
           <div id=qs_box>
             <div class="qs_title2">Candidates</div>
-              How much has <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1" onkeyup="filter_candidates_list();" onFocus="if(this.value == 'Search candidates') {this.value = '';}" onBlur="if(this.value == '') {this.value = 'Search candidates';}"> received?<br>
-              <select id="candidate_list" name="candidate_list" class="qs_select1">
-<?php
-  $result = my_query ("SELECT * FROM smry_cycles ORDER BY ElectionCycle DESC LIMIT 2");
-  while ($row = $result->fetch_assoc()) {$last_cycle = $row["ElectionCycle"];}
-  $js_candidates = fill_candidate_names ("", "1999");
-?>
-              </select><br>
+              <div style="float:left">How much has&nbsp;</div> 
+              <div style="float:left">
+                <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1" onkeyup="fill_candidate_list();" onFocus="if(this.value == 'Search candidates') {this.value = '';}" onBlur="if(this.value == '') {this.value = 'Search candidates';}">
+                <div id="candidates" class="qs_candidates"></div>
+              </div>
+              <div style="float:left">&nbsp;received?</div><br>
               <input type="submit" name="qs_button" value="Search Candidates" id="qs_btn1">
           </div> <!-- #qs_box -->
           <hr class="caps_hr1">
