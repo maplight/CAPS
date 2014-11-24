@@ -155,7 +155,7 @@
   echo "<div style=\"float:left\">";
   echo "<input type=\"hidden\" id=\"match_candidate\" name=\"match_candidate\" value=\"no\">";
   echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"fill_candidate_list(event);\" onFocus=\"if(this.value == 'Search candidates') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search candidates';}\">";
-  echo "<div id=\"candidates\" class=\"qs_candidates\"></div>";
+  echo "<div id=\"candidates\" class=\"search_dropbox\"></div>";
   echo "</div>";
 ?>
 
@@ -232,8 +232,12 @@
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "committees") {$checked = "checked";}}  
   echo "<input type=\"radio\" id=\"search_cands\" name=\"contrib_types\" value=\"committees\" class=\"caps_radio3\" {$checked}>";
   $text = "Just these committees";
-  if (isset ($_POST["committee_search"])) {$text = $_POST["committee_search"];}
-  echo "<input type=\"text\" id=\"committee_search\" name=\"committee_search\" value=\"{$text}\" class=\"caps_text1\" onFocus=\"if(this.value == 'Just these committees') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these committees';}\">";
+  if (isset ($_POST["search_committees"])) {$text = $_POST["search_committees"];}
+  echo "<div style=\"float:left\">";
+  echo "<input type=\"hidden\" id=\"match_committee\" name=\"match_committee\" value=\"no\">";
+  echo "<input type=\"text\" id=\"search_committees\" name=\"search_committees\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"fill_committee_list(event);\" onFocus=\"if(this.value == 'Just these committees') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these committees';}\">";
+  echo "<div id=\"committees\" class=\"search_dropbox\"></div>";
+  echo "</div>";
 ?>
           <hr class="caps_hr3">
 

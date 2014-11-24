@@ -46,7 +46,7 @@ function fill_candidate_list_return(list_data) {
   if (list_data == '') {
     $('#candidates').hide();
   } else {
-    var candidates = '<select size=10 id="found_candidates" onclick="list_item_clicked(this.value);" onkeydown="list_item_selected(event, this.value);">'; 
+    var candidates = '<select size=10 id="found_candidates" onclick="candidate_list_item_clicked(this.value);" onkeydown="candidate_list_item_selected(event, this.value);">'; 
     list_data.forEach(function(item) {candidates = candidates + '<option>' + item.RecipientCandidateNameNormalized + '</option>';});
     candidates = candidates + '</select>';
     $('#candidates').html(candidates);
@@ -54,7 +54,7 @@ function fill_candidate_list_return(list_data) {
   }
 }
 
-function list_item_clicked(candidate_name) {
+function candidate_list_item_clicked(candidate_name) {
   if (candidate_name != '') {
     $('#search_candidates').val(candidate_name);
     $('#match_candidate').val('yes');
@@ -63,11 +63,63 @@ function list_item_clicked(candidate_name) {
   }
 }
 
-function list_item_selected(event, candidate_name) {
+function candidate_list_item_selected(event, candidate_name) {
   var keycode = (event.keyCode ? event.keyCode : event.which);
   if (keycode == 13 && candidate_name != '') {
     $('#match_candidate').val('yes');
     $('#search_candidates').val(candidate_name);
+  }
+}
+
+
+//==============================================================================================================
+function fill_committee_list(event) {
+  var keycode = (event.keyCode ? event.keyCode : event.which);
+  if (keycode == 40) {
+    // Down arrow pressed
+    $('#found_committees option:first-child').attr("selected", "selected");
+    $('#found_committees').focus();
+  } else {
+    if ($('#search_committees').val() == '') {
+      $('#committees').hide();
+    } else {
+      $.ajax({
+        type: 'POST',
+        url: 'xml/get_committee_list.php',
+        async: false,
+        data: {search_text:$('#search_committees').val()},
+        dataType: 'json',
+        success: function(data) {fill_committee_list_return(data);}
+      });
+    }
+  }
+}
+
+function fill_committee_list_return(list_data) {
+  if (list_data == '') {
+    $('#committees').hide();
+  } else {
+    var committees = '<select size=10 id="found_committees" onclick="committee_list_item_clicked(this.value);" onkeydown="committee_list_item_selected(event, this.value);">'; 
+    list_data.forEach(function(item) {committees = committees + '<option>' + item.RecipientCommitteeNameNormalized + '</option>';});
+    committees = committees + '</select>';
+    $('#committees').html(committees);
+    $('#committees').show();
+  }
+}
+
+function committee_list_item_clicked(committee_name) {
+  if (committee_name != '') {
+    $('#search_committees').val(committee_name);
+    $('#match_committee').val('yes');
+    if (document.getElementById('caps_search_btn') != null) {$('#caps_search_btn').trigger('click');}
+  }
+}
+
+function committee_list_item_selected(event, committee_name) {
+  var keycode = (event.keyCode ? event.keyCode : event.which);
+  if (keycode == 13 && committee_name != '') {
+    $('#match_committee').val('yes');
+    $('#search_committees').val(committee_name);
   }
 }
 

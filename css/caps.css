@@ -702,15 +702,17 @@ body{
   border-radius:0;
 }
 
-.qs_candidates{
+.search_dropbox{
   position:absolute;
   display:none;
   border:2px solid #ccc;
+  max-width:400px;
   border-radius: 0px;
   margin-top:-8px;
   padding:0px;
   background:#FFFFFF;
   z-index:9999;
+  overflow:auto;
 }
 
 #qs_candidate_btn{

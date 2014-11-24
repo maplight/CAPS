@@ -68,7 +68,7 @@
               <div style="float:left">
                 <input type="hidden" id="match_candidate" name="match_candidate" value="no">
                 <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1" onkeyup="fill_candidate_list(event);" onFocus="if(this.value == 'Search candidates') {this.value = '';}" onBlur="if(this.value == '') {this.value = 'Search candidates';}">
-                <div id="candidates" class="qs_candidates"></div>
+                <div id="candidates" class="search_dropbox"></div>
               </div>
               <div style="float:left">&nbsp;received?</div><br>
               <input type="submit" name="qs_button" value="Search Candidates" id="qs_candidate_btn">

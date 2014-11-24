@@ -79,7 +79,7 @@
         } else {
           $CandidateList = "smry_candidates.RecipientCandidateNameNormalized = '" . addslashes ($search_data["search_candidates"]) . "'";
         }
-        break;
+        break; # candidates
 
       case "office":
         # build office list query
@@ -131,16 +131,20 @@
       case "committees":
         #------------------------------------------------------------------------------------------
         # build committee search query
-        $Committee = "";
-        foreach (explode (";", $search_data["committee_search"]) as $search_item) {
-          $word_str = "";
-          foreach (explode (" ", $search_item) as $word) {
-            $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-            $word_str .= "+{$word} ";
+        if ($search_data["match_committee"] == "no") {
+          $Committee = "";
+          foreach (explode (";", $search_data["search_committees"]) as $search_item) {
+            $word_str = "";
+            foreach (explode (" ", $search_item) as $word) {
+              $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
+              $word_str .= "+{$word} ";
+            }
+            $Committee .= "(" . trim ($word_str) . ") ";
           }
-          $Committee .= "(" . trim ($word_str) . ") ";
+          if ($Committee != "") {$Committee = "MATCH (smry_committees.CommitteeWords) AGAINST ('" . substr ($Committee, 0, -1) . "' IN BOOLEAN MODE)";}
+        } else {
+          $Committee = "smry_committees.RecipientCommitteeNameNormalized = '" . addslashes ($search_data["search_committees"]) . "'";
         }
-        if ($Committee != "") {$Committee = "MATCH (smry_committees.CommitteeWords) AGAINST ('" . substr ($Committee, 0, -1) . "' IN BOOLEAN MODE)";}
         break; # committees
     }
 
