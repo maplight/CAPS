@@ -151,47 +151,39 @@
             echo "</select>";
             display_tooltip ("Search contributions to all candidates running for a particular office.", 20, -20, 160);
             echo "<hr class=\"caps_hr2\">";
-          ?>
+
+            # Contributions To Ballot Measures
+            echo "<div class=\"clear_both input_font caps_sidebar_title\">Ballot Measures";
+            display_tooltip ("Search contributions to committees formed to support or oppose ballot measures. Your results may return duplicate contributions if a contributor gave money to a committee supporting or opposing multiple ballot measures.", 20, -20, 240);
+            echo "</div>";
+
+            $checked = "";
+            if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "ballots") {$checked = "checked";}}  
+            echo "<input type=\"radio\" id=\"props_to\" name=\"contrib_types\" value=\"ballots\" class=\"clear_both left caps_radio3\" {$checked} alt=\"Search Propositions\">";
+            $text = "Search propositions";
+            if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
+            echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" onkeyup=\"filter_propositions_list();\" onFocus=\"document.getElementById('props_to').checked=true; if(this.value == 'Search propositions') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search propositions';}\" class=\"font_input input_border caps_text1\" alt=\"Search Propositions Text\">";
+            echo "<select id=\"propositions_list\" name=\"proposition_list\" onFocus=\"document.getElementById('props_to').checked=true;\" class=\"left font_input input_border caps_select3\" alt=\"Select Proposition or Election\">";
+            $selected = "";
+            if (isset ($_POST["proposition_list"])) {$selected = $_POST["proposition_list"];}
+            $js_propositions = fill_propositions ($selected);
+            echo "</select>";
+
+            echo "<select id=\"position\" name=\"position\" onFocus=\"document.getElementById('props_to').checked=true;\" class=\"left font_input input_border caps_select3\" alt=\"Select Proposition or Election\">";
+            echo "<option value=\"B\">Both support &amp; oppose</option>";
+            if ($_POST["position"] == "S") {echo "<option value=\"S\" SELECTED>Support</option>";} else {echo "<option value=\"S\">Support</option>";}
+            if ($_POST["position"] == "O") {echo "<option value=\"O\" SELECTED>Oppose</option>";} else {echo "<option value=\"O\">Oppose</option>";}
+            echo "</select>";
+
+            $checked = "";
+            if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}}  
+            echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" onFocus=\"document.getElementById('props_to').checked=true;\" {$checked} class=\"clear_both left caps_radio4\" alt=\"Exclude contributions between allied committees\">";
+            echo "<label for=\"exclude\" class=\"left font_input caps_label3\">Exclude contributions between allied committees</label>";
+            echo "<hr class=\"caps_hr2\">";
 
 
-<!-- Contributions To Ballot Measures -->
-          <div class="caps_header2">Ballot Measures
-
-<?php
-  display_tooltip ("Search contributions to committees formed to support or oppose ballot measures. Your results may return duplicate contributions if a contributor gave money to a committee supporting or opposing multiple ballot measures.", 20, -20, 240);
 ?>
 
-          </div>
-
-<?php
-  $checked = "";
-  if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "ballots") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"props_to\" name=\"contrib_types\" value=\"ballots\" class=\"caps_radio3\" {$checked}>";
-  $text = "Search propositions";
-  if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
-  echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"filter_propositions_list();\" onFocus=\"document.getElementById('props_to').checked=true; if(this.value == 'Search propositions') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search propositions';}\">";
-?>
-          <select id="propositions_list" name="proposition_list" class="caps_select2" onFocus="document.getElementById('props_to').checked=true;">
-<?php
-  $selected = "";
-  if (isset ($_POST["proposition_list"])) {$selected = $_POST["proposition_list"];}
-  $js_propositions = fill_propositions ($selected);
-?>
-          </select>
-          <select id="position" name="position" class="caps_select2" onFocus="document.getElementById('props_to').checked=true;">
-          <option value="B">Both support &amp; oppose</option>
-<?php
-  if ($_POST["position"] == "S") {echo "<option value=\"S\" SELECTED>Support</option>";} else {echo "<option value=\"S\">Support</option>";}
-  if ($_POST["position"] == "O") {echo "<option value=\"O\" SELECTED>Oppose</option>";} else {echo "<option value=\"O\">Oppose</option>";}
-?>
-          </select>
-<?php
-  $checked = "";
-  if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}}  
-  echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" class=\"caps_radio4\" onFocus=\"document.getElementById('props_to').checked=true;\" {$checked}>";
-?>
-          <label for="exclude" class="caps_label3">Exclude contributions between allied committees</label>
-          <hr class="caps_hr2">
 
 <!-- Contributions To Committees -->
           <div class="caps_header2">Committees
