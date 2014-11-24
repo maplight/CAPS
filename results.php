@@ -131,7 +131,7 @@
       case "committees":
         #------------------------------------------------------------------------------------------
         # build committee search query
-        if ($search_data["match_committee"] == "no") {
+#        if ($search_data["match_committee"] == "no") {
           $Committee = "";
           foreach (explode (";", $search_data["search_committees"]) as $search_item) {
             $word_str = "";
@@ -142,9 +142,9 @@
             $Committee .= "(" . trim ($word_str) . ") ";
           }
           if ($Committee != "") {$Committee = "MATCH (smry_committees.CommitteeWords) AGAINST ('" . substr ($Committee, 0, -1) . "' IN BOOLEAN MODE)";}
-        } else {
-          $Committee = "smry_committees.RecipientCommitteeNameNormalized = '" . addslashes ($search_data["search_committees"]) . "'";
-        }
+#        } else {
+#          $Committee = "smry_committees.RecipientCommitteeNameNormalized = '" . addslashes ($search_data["search_committees"]) . "'";
+#        }
         break; # committees
     }
 
