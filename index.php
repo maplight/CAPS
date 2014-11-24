@@ -48,7 +48,7 @@
 <div id="wrapper">
   <div id="container">
     <div id="qs_page">
-      <form id="qs_form" action="advanced.php" method="post">
+      <form action="advanced.php" method="post">
       <input type="hidden" name="quick_search" value="true">
  
         <div id="qs_title">    
