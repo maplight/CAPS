@@ -102,7 +102,7 @@
   echo "<input type=\"radio\" id=\"select_contribs\" name=\"contrib_select\" value=\"search\" class=\"caps_radio1\" {$checked}>";
   $text = "Just these contributors";
   if (isset ($_POST["contributor"])) {$text = htmlspecialchars($_POST["contributor"]);}
-  echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" class=\"caps_text1\" onFocus=\"if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\">";
+  echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" class=\"caps_text1\" onFocus=\"document.getElementById('select_contribs').checked=true; if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\">";
 ?>
           <label for="select_location" class="caps_label2">Contributor Location</label>
 
@@ -154,7 +154,7 @@
   if (isset ($_POST["search_candidates"])) {$text = $_POST["search_candidates"];}
   echo "<div style=\"float:left\">";
   echo "<input type=\"hidden\" id=\"match_candidate\" name=\"match_candidate\" value=\"no\">";
-  echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"fill_candidate_list(event);\" onFocus=\"if(this.value == 'Search candidates') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search candidates';}\">";
+  echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"fill_candidate_list(event);\" onFocus=\"document.getElementById('search_cands').checked=true; if(this.value == 'Search candidates') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search candidates';}\">";
   echo "<div id=\"candidates\" class=\"search_dropbox\"></div>";
   echo "</div>";
 ?>
@@ -165,7 +165,8 @@
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "office") {$checked = "checked";}}  
   echo "<input type=\"radio\" id=\"select_cands\" name=\"contrib_types\" value=\"office\" class=\"caps_radio3\" {$checked}>";
 ?>
-          <select id="office_list" name="office_list" class="caps_select3">
+
+          <select id="office_list" name="office_list" class="caps_select3" onFocus="document.getElementById('select_cands').checked=true;">
 <?php
   $selected = "";
   if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
@@ -194,16 +195,16 @@
   echo "<input type=\"radio\" id=\"props_to\" name=\"contrib_types\" value=\"ballots\" class=\"caps_radio3\" {$checked}>";
   $text = "Search propositions";
   if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
-  echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"filter_propositions_list();\" onFocus=\"if(this.value == 'Search propositions') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search propositions';}\">";
+  echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"filter_propositions_list();\" onFocus=\"document.getElementById('props_to').checked=true; if(this.value == 'Search propositions') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search propositions';}\">";
 ?>
-          <select id="propositions_list" name="proposition_list" class="caps_select2">
+          <select id="propositions_list" name="proposition_list" class="caps_select2" onFocus="document.getElementById('props_to').checked=true;">
 <?php
   $selected = "";
   if (isset ($_POST["proposition_list"])) {$selected = $_POST["proposition_list"];}
   $js_propositions = fill_propositions ($selected);
 ?>
           </select>
-          <select id="position" name="position" class="caps_select2">
+          <select id="position" name="position" class="caps_select2" onFocus="document.getElementById('props_to').checked=true;">
           <option value="B">Both support &amp; oppose</option>
 <?php
   if ($_POST["position"] == "S") {echo "<option value=\"S\" SELECTED>Support</option>";} else {echo "<option value=\"S\">Support</option>";}
@@ -213,7 +214,7 @@
 <?php
   $checked = "";
   if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}}  
-  echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" class=\"caps_radio4\" {$checked}>";
+  echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" class=\"caps_radio4\" onFocus=\"document.getElementById('props_to').checked=true;\" {$checked}>";
 ?>
           <label for="exclude" class="caps_label3">Exclude contributions between allied committees</label>
           <hr class="caps_hr2">
@@ -230,12 +231,12 @@
 <?php
   $checked = "";
   if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "committees") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"search_cands\" name=\"contrib_types\" value=\"committees\" class=\"caps_radio3\" {$checked}>";
+  echo "<input type=\"radio\" id=\"search_comms\" name=\"contrib_types\" value=\"committees\" class=\"caps_radio3\" {$checked}>";
   $text = "Just these committees";
   if (isset ($_POST["search_committees"])) {$text = $_POST["search_committees"];}
   echo "<div style=\"float:left\">";
   echo "<input type=\"hidden\" id=\"match_committee\" name=\"match_committee\" value=\"no\">";
-  echo "<input type=\"text\" id=\"search_committees\" name=\"search_committees\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"fill_committee_list(event);\" onFocus=\"if(this.value == 'Just these committees') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these committees';}\">";
+  echo "<input type=\"text\" id=\"search_committees\" name=\"search_committees\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"fill_committee_list(event);\" onFocus=\"document.getElementById('search_comms').checked=true; if(this.value == 'Just these committees') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these committees';}\">";
   echo "<div id=\"committees\" class=\"search_dropbox\"></div>";
   echo "</div>";
 ?>
@@ -264,10 +265,10 @@
 <?php
   $text = "mm/dd/yyyy";
   if (isset ($_POST["start_date"])) {$text = $_POST["start_date"];}
-  echo "<input type=\"text\" id=\"start_date\" name=\"start_date\" value=\"{$text}\" class=\"caps_text3\">";
+  echo "<input type=\"text\" id=\"start_date\" name=\"start_date\" value=\"{$text}\" class=\"caps_text3\" onFocus=\"document.getElementById('range_dates').checked=true;\">";
   echo "<label for=\"start_date\" class=\"caps_label5\">to</label>";
   if (isset ($_POST["end_date"])) {$text = $_POST["end_date"];}
-  echo "<input type=\"text\" name=\"end_date\" value=\"{$text}\" class=\"caps_text4\">";
+  echo "<input type=\"text\" name=\"end_date\" value=\"{$text}\" class=\"caps_text4\" onFocus=\"document.getElementById('range_dates').checked=true;\">";
   $checked = "";
   if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "cycle") {$checked = "checked";}}  
   echo "<input type=\"radio\" id=\"cycle_dates\" name=\"date_select\" value=\"cycle\" class=\"caps_radio5\" {$checked}>";
