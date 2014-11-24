@@ -21,9 +21,8 @@
 
 <body>
 <?php
-    # Cal-Access Campaign Power Search Project
-    # MapLight
-    # Mike Krejci
+    # CAL-ACCESS Campaign Power Search Project
+    # Written by Mike Krejci for MapLight
 
     # Load required libraries
     require ("connect.php");
@@ -31,83 +30,86 @@
     require ("results.php");
 ?>
 
+<!-- default header, replace with sites header -->
 <div id="caps_header">
-<div class="frme" id="top">
-<img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;">
-</div>
-        <ul id="utl" class="clearfix">
+  <div><img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;"></div>
+  <ul id="utl">
         <li><b>CAL-ACCESS Campaign Power Search</b></li>
         <li><a href="index.php">Quick Search</a></li>
         <li><a href="advanced.php">Advanced Search</a></li>
-        </ul>
+  </ul>
+  <div style="border:2px solid #FF0000; background:#FFCCCC; margin:2px; color:red; text-align:center;"><b>NOTE: This search is in BETA. Please do not cite.</b></div>
+</div> <!-- end caps_header -->
 
-<div style="border:2px solid #FF0000; background:#FFCCCC; margin:2px; color:red; text-align:center;"><b>NOTE: This search is in BETA. Please do not cite.</b></div>
 
-</div> <!-- caps_header -->
-
-<div id="wrapper">
-  <div id="container">
+<div id="caps_wrapper">
+  <div id="caps_container">
     <div id="qs_page">
+
       <form action="advanced.php" method="post">
       <input type="hidden" name="quick_search" value="true">
  
-        <div id="qs_title">    
-          <h1 class="caps_title3">CAL-ACCESS Campaign Power Search</h1>
+        <div id="qs_title"> 
+          <h1 class="font_large_header">CAL-ACCESS Campaign Power Search</h1>
           <strong>Search political contributions to candidates, ballot measures, and other committees from 2001 through the present.</strong>
-        </div> <!-- #qs_title -->
-        <a href="advanced.php" class="qs_link1">Go to Advanced Search</a>
+        </div> <!-- end qs_title -->
+
+        <a href="advanced.php" class="right font_btn btn_border qs_link1">Go to Advanced Search</a>
          
         <div id="qs_search">
-          <div class="qs_title1">Quick Search</div>
+          <div class="font_title">Quick Search</div>
           <hr class="caps_hr1">
 
-          <img src="img/qs_candidate.jpg" width=50 class="qs_img" alt="Candidate option icon">
-          <div id=qs_box>
-            <div class="qs_title2">Candidates</div>
-              <div style="float:left">How much has&nbsp;</div> 
-              <div style="float:left">
+          <img src="img/qs_candidate.jpg" width="50" class="caps_img" alt="Candidate Option Icon">
+          <div id="qs_box">
+            <div class="font_title qs_option_title">Candidates</div>
+              <div class="left">How much has&nbsp;</div> 
+              <div class="left">
                 <input type="hidden" id="match_candidate" name="match_candidate" value="no">
-                <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" class="qs_text1" onkeyup="fill_candidate_list(event);" onFocus="if(this.value == 'Search candidates') {this.value = '';}" onBlur="if(this.value == '') {this.value = 'Search candidates';}">
-                <div id="candidates" class="search_dropbox"></div>
+                <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" onkeyup="fill_candidate_list(event);" onFocus="if(this.value == 'Search candidates') {this.value = '';}" onBlur="if(this.value == '') {this.value = 'Search candidates';}" class="font_input input_border qs_text1" alt="Search Candidates">
+                <div id="candidates" class="input_border caps_search_dropbox"></div>
               </div>
-              <div style="float:left">&nbsp;received?</div><br>
-              <input type="submit" name="qs_button" value="Search Candidates" id="qs_candidate_btn">
-          </div> <!-- #qs_box -->
+              <div class="left">&nbsp;received?</div><br>
+              <input type="submit" id="qs_btn" name="qs_button" value="Search Candidates">
+          </div> <!-- end qs_box (Candidates) -->
           <hr class="caps_hr1">
 
-          <img src="img/qs_ballot.jpg" width=50 class="qs_img" alt="Ballot measures option icon">
-          <div id=qs_box>
-            <div class="qs_title2">Ballot Measures</div>
-              How much has been raised for all measures on the
-              <select id="propositions_list" name="proposition_list" class="qs_select2">
+          <img src="img/qs_ballot.jpg" width="50" class="caps_img" alt="Ballot Measures Option Icon">
+          <div id="qs_box">
+            <div class="font_title qs_option_title">Ballot Measures</div>
+              How much has been raised for all measures on the <select id="propositions_list" name="proposition_list" class="font_input input_border qs_select" alt="Select Ballot Measure Election">
 <?php
+  # Fill election dates dropdown
   fill_qs_elections ();
 ?>
               </select> ballot?<br>
-              <input type="submit" name="qs_button" value="Search Ballot Measures" id="qs_btn1">
-           </div> <!-- #qs_box -->
+              <input type="submit" id="qs_btn" name="qs_button" value="Search Ballot Measures">
+           </div> <!-- end qs_box -->
            <hr class="caps_hr1">
 
-          <img src="img/qs_contributor.jpg" width=50 class="qs_img" alt="Contributors option icon">
-          <div id=qs_box>
-            <div class="qs_title2">Contributors</div>
-            How much has <input type="text" id="contributor" name="contributor" value="company, organization, or person" class="qs_text2" onFocus="if(this.value == 'company, organization, or person') {this.value = '';}" onBlur="if(this.value == '') {this.value = 'company, organization, or person';}"> contributed?<br>
-            <input type="submit" name="qs_button" value="Search Contributors" id="qs_btn1">
-          </div> <!-- #qs_box -->
+          <img src="img/qs_contributor.jpg" width="50" class="caps_img" alt="Contributors Option Icon">
+          <div id="qs_box">
+            <div class="font_title qs_option_title">Contributors</div>
+            How much has <input type="text" id="contributor" name="contributor" value="company, organization, or person" onFocus="if(this.value == 'company, organization, or person') {this.value = '';}" onBlur="if(this.value == '') {this.value = 'company, organization, or person';}" class="font_input input_border qs_text2" alt="Search Contributors"> contributed?<br>
+            <input type="submit" id="qs_btn" name="qs_button" value="Search Contributors">
+          </div> <!-- end qs_box -->
           <hr class="caps_hr1">
 
-          <img src="img/qs_advanced.jpg" width=50 class="qs_img" alt="Advanced search option icon">
-          <div id=qs_box>
-            <div class="qs_title2"><a href="advanced.php">Advanced Search</a></div><br>
-            Search by date, committee name, and more.
-          </div> <!-- #qs_box -->
-        </div> <!-- #qs_search -->
+          <img src="img/qs_advanced.jpg" width="50" class="caps_img" alt="Advanced Search Option Icon">
+          <div id="qs_box">
+            <div class="font_title qs_option_title"><a href="advanced.php">Advanced Search</a></div>Search by date, committee name, and more.
+          </div> <!-- end qs_box -->
+        </div> <!-- end qs_search -->
       </form>
+
     <div id="maplight_info">Power Search software by <A HREF=http://www.maplight.org class="maplight_link">MapLight</A></div>
 
-    </div> <!-- #qs_container -->
-  </div> <!-- #containter -->
-</div> <!-- #wrapper-->
+    </div> <!-- end qs_page -->
+  </div> <!-- end caps_containter -->
+</div> <!-- end caps_wrapper-->
+
+<!-- Place custom page footer here -->
+<footer style="display:none;"></footer>
 
 </body>
 </html>
