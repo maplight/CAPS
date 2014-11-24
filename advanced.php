@@ -21,9 +21,8 @@
 
 <body>
 <?php
-    # Cal-Access Campaign Power Search Project
-    # MapLight
-    # Mike Krejci
+    # CAL-ACCESS Campaign Power Search Project
+    # Written by Mike Krejci for MapLight
 
     # Load required libraries
     require ("connect.php");
@@ -60,79 +59,71 @@
     }
 ?>
 
-<div id="tooltip" class="tooltip"><span id="tooltip_text"></span></div>
-
+<!-- default header, replace with sites header -->
 <div id="caps_header">
-<div class="frme" id="top">
-<img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;">
-</div>
-        <ul id="utl" class="clearfix">
+  <div><img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;"></div>
+  <ul id="utl">
         <li><b>CAL-ACCESS Campaign Power Search</b></li>
         <li><a href="index.php">Quick Search</a></li>
         <li><a href="advanced.php">Advanced Search</a></li>
-        </ul>
+  </ul>
+  <div style="border:2px solid #FF0000; background:#FFCCCC; margin:2px; color:red; text-align:center;"><b>NOTE: This search is in BETA. Please do not cite.</b></div>
+</div> <!-- end caps_header -->
 
-<div style="border:2px solid #FF0000; background:#FFCCCC; margin:2px; color:red; text-align:center;"><b>NOTE: This search is in BETA. Please do not cite.</b></div>
 
-</div> <!-- caps_header -->
+<div id="tooltip" class="caps_tooltip"><span id="tooltip_text"></span></div>
 
-<div id="wrapper">
-  <div id="container">
-    <div id="columns">
+<div id="caps_wrapper">
+  <div id="caps_container">
+    <div id="caps_columns">
+
       <form method="post">
-        <div id="sidebar">
-          <h1 class="caps_title1">Advanced Search</h1>
+        <div id="caps_sidebar">
+          <h1 class="font_large_header">Advanced Search</h1><br>
           <a href="advanced.php" id="caps_reset_btn">Clear Form</a>
           <input type="submit" name="search_btn" value="Search" id="caps_search_btn">
 
 <!-- Contributions From -->
-          <h2 class="caps_header1">Contributions From:</h2>
-<?php
-  $checked = "";
-  if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button
-  echo "<input type=\"radio\" id=\"all_contribs\" name=\"contrib_select\" value=\"all\" class=\"caps_radio1\" {$checked}>";
-?>
+          <h2 class="font_title caps_option_title">Contributions From:</h2>
+          <?php
+            $checked = "";
+            if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button
+            echo "<input type=\"radio\" id=\"all_contribs\" name=\"contrib_select\" value=\"all\" class=\"clear_both left caps_radio1\" {$checked}>";
+            echo "<label for=\"all_contribs\" class=\"font_input caps_label1\">All contributors</label>";
+            display_tooltip ("Search contributions from all contributors.", 20, -20, 150);
 
-          <label for="all_contribs" class="caps_label1">All contributors</label>
+            $checked = "";
+            if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
+            echo "<input type=\"radio\" id=\"select_contribs\" name=\"contrib_select\" value=\"search\" class=\"clear_both left caps_radio1\" {$checked}>";
+            $text = "Just these contributors";
+            if (isset ($_POST["contributor"])) {$text = htmlspecialchars($_POST["contributor"]);}
+            echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" onFocus=\"document.getElementById('select_contribs').checked=true; if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\" class=\"font_input input_border caps_text1\" alt=\"Just These Contributors\">";
 
-<?php
-  display_tooltip ("Search contributions from all contributors.", 20, -20, 160);
-  $checked = "";
-  if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"select_contribs\" name=\"contrib_select\" value=\"search\" class=\"caps_radio1\" {$checked}>";
-  $text = "Just these contributors";
-  if (isset ($_POST["contributor"])) {$text = htmlspecialchars($_POST["contributor"]);}
-  echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" class=\"caps_text1\" onFocus=\"document.getElementById('select_contribs').checked=true; if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\">";
-?>
-          <label for="select_location" class="caps_label2">Contributor Location</label>
-
-<?php
-  display_tooltip ("Search contributions from a particular state.", 20, -20, 160);
-?>
-
-          <select id="select_location" name="state_list" class="caps_select1">
-<?php
-  $selected = "";
-  if (isset ($_POST["state_list"])) {$selected = $_POST["state_list"];}
-  fill_state_list ($selected);
-?>
-          </select>
-          <hr class="caps_hr1">
+            echo "<label for=\"select_location\" class=\"clear_both left font_input caps_label2\">Contributor Location</label>";
+            display_tooltip ("Search contributions from a particular state.", 20, -20, 160);
+            echo "<select id=\"select_location\" name=\"state_list\" class=\"clear_both left font_input input_border caps_select1\" alt=\"Contributor Location\">";
+            $selected = "";
+            if (isset ($_POST["state_list"])) {$selected = $_POST["state_list"];}
+            fill_state_list ($selected);
+            echo "</select>";
+            echo "<hr class=\"caps_hr1\">";
+          ?>
 
 <!-- Contributions To -->
-          <h2 class="caps_header1">Contributions To:</h2>
+          <h2 class="font_title caps_option_title">Contributions To:</h2>
+          <?php
+            # Contributions To Everything
+            $checked = "";
+            if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "all") {$checked= "checked";}} else {$checked = "checked";}  
+            echo "<input type=\"radio\" id=\"comms_to\" name=\"contrib_types\" value=\"all\" class=\"clear_both left caps_radio1\" {$checked} alt=\"Everything (Candidates, Ballot Measures & Other Committees)\">";
+            echo "<div class=\"font_input caps_everything_box\">Everything (Candidates, Ballot Measures & Other Committees)</div>";
+            echo "<hr class=\"caps_hr2\">";
 
-<!-- Contributions To Everything -->
-<?php
-  $checked = "";
-  if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "all") {$checked= "checked";}} else {$checked = "checked";}  
-  echo "<input type=\"radio\" id=\"comms_to\" name=\"contrib_types\" value=\"all\" class=\"caps_radio1\" {$checked}>";
+            # Contributions To Candidates
+
 ?>
-          <div class="caps_box1">Everything (Candidates, Ballot Measures & Other Committees)</div>
-          <hr class="caps_hr2">
-
 <!-- Contributions To Candidates -->
-          <div class="caps_header2">Candidates
+          <div class="clear_both input_font caps_sidebar_title">Candidates
 
 <?php
   display_tooltip ("Search contributions to candidate campaigns only.", 20, -20, 160);
@@ -288,17 +279,19 @@
   echo "var propositions = [{$js_propositions}\"\"];\n";
   echo "</SCRIPT>";
 ?>
-        </div> <!-- #sidebar -->
+        </div> <!-- end caps_sidebar -->
 
-        <div id="content">
-<?php
-  build_results_table ();
-?>
-        </div> <!-- #content -->
+        <div id="caps_content"> 
+          <?php build_results_table (); ?>
+        </div> <!-- end caps_content -->
       </form>
-    </div> <!-- # columns -->
-  </div> <!-- #containter -->
-</div> <!-- #wrapper-->
+
+    </div> <!-- end caps_columns -->
+  </div> <!-- end caps_containter -->
+</div> <!-- end caps_wrapper-->
+
+<!-- Place custom page footer here -->
+<footer style="display:none;"></footer>
 
 </body>
 </html>
