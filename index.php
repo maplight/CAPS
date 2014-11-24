@@ -71,7 +71,7 @@
                 <div id="candidates" class="qs_candidates"></div>
               </div>
               <div style="float:left">&nbsp;received?</div><br>
-              <input type="submit" name="qs_button" value="Search Candidates" id="qs_btn1">
+              <input type="submit" name="qs_button" value="Search Candidates" id="qs_candidate_btn">
           </div> <!-- #qs_box -->
           <hr class="caps_hr1">
 

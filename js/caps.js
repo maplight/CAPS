@@ -46,7 +46,7 @@ function fill_candidate_list_return(list_data) {
   if (list_data == '') {
     $('#candidates').hide();
   } else {
-    var candidates = '<select size=10 id="found_candidates" onclick="$(\'#search_candidates\').val(this.value); $(\'#match_candidate\').val(\'yes\'); if(this.value != '') {$(\'#qs_form\'.submit();}" onkeydown="list_item_selected(event, this.value);">'; 
+    var candidates = '<select size=10 id="found_candidates" onclick="list_item_clicked(this.value);" onkeydown="list_item_selected(event, this.value);">'; 
     list_data.forEach(function(item) {candidates = candidates + '<option>' + item.RecipientCandidateNameNormalized + '</option>';});
     candidates = candidates + '</select>';
     $('#candidates').html(candidates);
@@ -54,9 +54,17 @@ function fill_candidate_list_return(list_data) {
   }
 }
 
+function list_item_clicked(candidate_name) {
+  if (candidate_name != '') {
+    $('#search_candidates').val(candidate_name);
+    $('#match_candidate').val('yes');
+    $('#qs_candidate_btn').trigger('click');
+  }
+}
+
 function list_item_selected(event, candidate_name) {
   var keycode = (event.keyCode ? event.keyCode : event.which);
-  if (keycode == 13) {
+  if (keycode == 13 && candidate_name != '') {
     $('#match_candidate').val('yes');
     $('#search_candidates').val(candidate_name);
   }
