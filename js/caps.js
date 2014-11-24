@@ -59,7 +59,7 @@ function candidate_list_item_clicked(candidate_name) {
     $('#search_candidates').val(candidate_name);
     $('#match_candidate').val('yes');
     if (document.getElementById('caps_search_btn') != null) {$('#caps_search_btn').trigger('click');}
-    if (document.getElementById('qs_candidate_btn') != null) {$('#qs_candidate_btn').trigger('click');}
+    if (document.getElementById('qs_btn') != null) {$('#qs_btn').trigger('click');}
   }
 }
 
