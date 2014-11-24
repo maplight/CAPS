@@ -532,6 +532,6 @@
 
 
   function display_tooltip ($text, $pos_x, $pos_y, $width) {
-    echo "<img src=\"img/infotool.png\" class=\"info\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, '{$text}', {$pos_x}, {$pos_y}, {$width});\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"{$text}\">";
+    echo "<img src=\"img/infotool.png\" class=\"right caps_info\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, '{$text}', {$pos_x}, {$pos_y}, {$width});\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"{$text}\">";
   }
 ?>

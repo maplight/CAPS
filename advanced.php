@@ -120,56 +120,39 @@
             echo "<hr class=\"caps_hr2\">";
 
             # Contributions To Candidates
+            echo "<div class=\"clear_both input_font caps_sidebar_title\">Candidates";
+            display_tooltip ("Search contributions to candidate campaigns only.", 20, -20, 160);
+            echo "</div>";
 
-?>
-<!-- Contributions To Candidates -->
-          <div class="clear_both input_font caps_sidebar_title">Candidates
+            $checked = "";
+            if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "candidates") {$checked = "checked";}} 
+            echo "<input type=\"radio\" id=\"all_cands\" name=\"contrib_types\" value=\"candidates\" class=\"clear_both left caps_radio2\" {$checked} alt=\"All Candidates\">";
+            echo "<label for=\"all_cands\" class=\"caps_label1\">All candidates</label>";
 
-<?php
-  display_tooltip ("Search contributions to candidate campaigns only.", 20, -20, 160);
-?>
+            $checked = "";
+            if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "search_candidates") {$checked = "checked";}}  
+            echo "<input type=\"radio\" id=\"search_cands\" name=\"contrib_types\" value=\"search_candidates\" class=\"clear_both left caps_radio3\" {$checked} alt=\"Search Candidates\">";
+            $text = "Search candidates";
+            if (isset ($_POST["search_candidates"])) {$text = $_POST["search_candidates"];}
+            echo "<div class=\"left\">";
+            echo "<input type=\"hidden\" id=\"match_candidate\" name=\"match_candidate\" value=\"no\">";
+            echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" onkeyup=\"fill_candidate_list(event);\" onFocus=\"document.getElementById('search_cands').checked=true; if(this.value == 'Search candidates') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search candidates';}\" class=\"font_input input_border caps_text1\" alt=\"Search Candidates Text\">";
+            echo "<div id=\"candidates\" class=\"caps_search_dropbox\"></div>";
+            echo "</div>";
+            display_tooltip ("Search contributions to a particular candidate\'s campaign(s).", 20, -20, 160);
 
-          </div>
+            $checked = "";
+            if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "office") {$checked = "checked";}}  
+            echo "<input type=\"radio\" id=\"select_cands\" name=\"contrib_types\" value=\"office\" class=\"clear_both left caps_radio3\" {$checked} alt=\"Select Office\">";
+            echo "<select id=\"office_list\" name=\"office_list\" onFocus=\"document.getElementById('select_cands').checked=true;\" class=\"left font_input input_border caps_select2\" alt=\"Select Office\">";
+            $selected = "";
+            if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
+            fill_offices_sought ($selected);
+            echo "</select>";
+            display_tooltip ("Search contributions to all candidates running for a particular office.", 20, -20, 160);
+            echo "<hr class=\"caps_hr2\">";
+          ?>
 
-<?php
-  $checked = "";
-  if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "candidates") {$checked = "checked";}} 
-  echo "<input type=\"radio\" id=\"all_cands\" name=\"contrib_types\" value=\"candidates\" class=\"caps_radio2\" {$checked}>";
-?>
-          <label for="all_cands" class="caps_label1">All candidates</label>
-<?php
-  $checked = "";
-  if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "search_candidates") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"search_cands\" name=\"contrib_types\" value=\"search_candidates\" class=\"caps_radio3\" {$checked}>";
-  $text = "Search candidates";
-  if (isset ($_POST["search_candidates"])) {$text = $_POST["search_candidates"];}
-  echo "<div style=\"float:left\">";
-  echo "<input type=\"hidden\" id=\"match_candidate\" name=\"match_candidate\" value=\"no\">";
-  echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"fill_candidate_list(event);\" onFocus=\"document.getElementById('search_cands').checked=true; if(this.value == 'Search candidates') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search candidates';}\">";
-  echo "<div id=\"candidates\" class=\"search_dropbox\"></div>";
-  echo "</div>";
-?>
-
-<?php
-  display_tooltip ("Search contributions to a particular candidate\'s campaign(s).", 20, -20, 160);
-  $checked = "";
-  if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "office") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"select_cands\" name=\"contrib_types\" value=\"office\" class=\"caps_radio3\" {$checked}>";
-?>
-
-          <select id="office_list" name="office_list" class="caps_select3" onFocus="document.getElementById('select_cands').checked=true;">
-<?php
-  $selected = "";
-  if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
-  fill_offices_sought ($selected);
-?>
-          </select>
-
-<?php
-  display_tooltip ("Search contributions to all candidates running for a particular office.", 20, -20, 160);
-?>
-
-          <hr class="caps_hr1">
 
 <!-- Contributions To Ballot Measures -->
           <div class="caps_header2">Ballot Measures
