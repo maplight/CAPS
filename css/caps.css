@@ -265,6 +265,11 @@ body{
   margin-bottom:18px;
 }
 
+.caps_radio5{
+  margin-left:4px;
+  margin-bottom:4px;
+}
+
 .caps_label1{
   margin-left:4px;
   margin-bottom:16px;
@@ -284,11 +289,32 @@ body{
   font-weight:bold;
 }
 
+.caps_label4{
+  margin-left:4px;
+  margin-bottom:4px;
+  font-weight:bold;
+}
+
 .caps_text1{
   width:190px;
   padding:0px;
   margin-left:4px;
   margin-bottom:8px;
+  border-radius:0;
+}
+
+.caps_text2{
+  width:80px;
+  margin-left:22px;
+  margin-bottom:16px;
+  padding:0px;
+  border-radius:0;
+}
+
+.caps_text3{
+  width:80px;
+  margin-bottom:16px;
+  padding:0px;
   border-radius:0;
 }
 
