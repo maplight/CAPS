@@ -301,40 +301,38 @@
         }
 
         $field_set = "";
-        $fields = array ("RecipientCandidateNameNormalized|Recipient Name|",
+        $fields = array ("RecipientCandidateNameNormalized|Politicians's Name|",
                          "RecipientCommitteeNameNormalized|Recipient Committee|",
-                         "RecipientCandidateOffice|Office|",
+                         "RecipientCandidateOffice|Office Sought|",
+                         "Target|Ballot Measure|",
+                         "Position|Ballot Measure Stance|",
                          "DonorNameNormalized|Contributor Name|",
+                         "TransactionAmount|Amount|Currency",
+                         "TransactionDateEnd|Date|Date",
                          "DonorEmployerNormalized|Contributor Employer|",
                          "DonorOccupationNormalized|Contributor Occupation|",
-                         "DonorOrganization|Contributor Organization|",
-                         "DonorState|Contributor State|",
-                         "TransactionDateEnd|Date|Date",
-                         "TransactionAmount|Amount|Currency");
-
+                         "DonorState|Contributor State|");
         if (isset ($_POST["field_list"])) {$field_set = $_POST["field_list"];}
         if (isset ($_POST["fields"])) {$field_set = $_POST["fields"];}
 
         if ($field_set == "Show more fields") {
-          $fields = array ("TransactionType|Transaction Type|",
-                           "ElectionCycle|Cyle|",
-                           "Election|Election|Date",
-                           "TransactionDateStart|Start Date|Date",
-                           "TransactionDateEnd|End Date|Date",
-                           "TransactionAmount|Amount|Currency",
+          $fields = array ("RecipientCandidateNameNormalized|Politicians's Name|",
                            "RecipientCommitteeNameNormalized|Recipient Committee|",
-                           "RecipientCandidateNameNormalized|Recipient Name|",
-                           "RecipientCandidateOffice|Office|",
+                           "RecipientCandidateOffice|Office Sought|",
                            "RecipientCandidateDistrict|District|",
                            "Target|Ballot Measure|",
-                           "Position|Ballot Measure Support|",
+                           "Position|Ballot Measure Stance|",
                            "DonorNameNormalized|Contributor Name|",
-                           "DonorCity|Contributor City|",
-                           "DonorState|Contributor State|",
-                           "DonorZipCode|Contributor ZipCode|",
+                           "TransactionAmount|Amount|Currency",
+                           "TransactionDateEnd|Date|Date",
                            "DonorEmployerNormalized|Contributor Employer|",
                            "DonorOccupationNormalized|Contributor Occupation|",
-                           "DonorOrganization|Contributor Occupation|");
+                           "DonorState|Contributor State|",
+                           "DonorZipCode|Contributor Zip|",
+                           "DonorCity|Contributor City|",
+                           "TransactionType|Transaction Type|",
+                           "Election|Election|Date",
+                           "ElectionCycle|Cyle|");
         }
 
         $sort_fields = array ("contributions_search.TransactionAmount|Amount Ascending",
