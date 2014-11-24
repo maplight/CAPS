@@ -260,6 +260,11 @@ body{
   margin-bottom:4px;
 }
 
+.caps_radio4{
+  margin-left:22px;
+  margin-bottom:18px;
+}
+
 .caps_label1{
   margin-left:4px;
   margin-bottom:16px;
@@ -268,6 +273,14 @@ body{
 
 .caps_label2{
   margin-left:20px;
+  font-weight:bold;
+}
+
+.caps_label3{
+  width:200px;
+  text-align:left;
+  margin-left:4px;
+  margin-bottom:22px;
   font-weight:bold;
 }
 
@@ -290,6 +303,14 @@ body{
 .caps_select2{
   width:194px;
   margin-left:4px;
+  margin-bottom:22px;
+  padding:0px;
+  border-radius:0;
+}
+
+.caps_select3{
+  width:194px;
+  margin-left:34px;
   margin-bottom:22px;
   padding:0px;
   border-radius:0;
