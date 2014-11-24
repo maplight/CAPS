@@ -55,14 +55,16 @@ function fill_candidate_list_return(list_data) {
 }
 
 function list_item_clicked(candidate_name) {
-  $('#search_candidates').val(candidate_name);
-  $('#match_candidate').val('yes');
-  $('#qs_candidate_btn').trigger('click');
+  if (candidate_name != '') {
+    $('#search_candidates').val(candidate_name);
+    $('#match_candidate').val('yes');
+    $('#qs_candidate_btn').trigger('click');
+  }
 }
 
 function list_item_selected(event, candidate_name) {
   var keycode = (event.keyCode ? event.keyCode : event.which);
-  if (keycode == 13) {
+  if (keycode == 13 && candidate_name != '') {
     $('#match_candidate').val('yes');
     $('#search_candidates').val(candidate_name);
   }
