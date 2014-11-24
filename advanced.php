@@ -83,7 +83,7 @@
           <a href="advanced.php" id="caps_reset_btn">Clear Form</a>
           <input type="submit" name="search_btn" value="Search" id="caps_search_btn">
 
-<!-- Contributions From -->
+          <!-- Contributions From -->
           <h2 class="font_title caps_option_title">Contributions From:</h2>
           <?php
             $checked = "";
@@ -109,7 +109,7 @@
             echo "<hr class=\"caps_hr1\">";
           ?>
 
-<!-- Contributions To -->
+          <!-- Contributions To -->
           <h2 class="font_title caps_option_title">Contributions To:</h2>
           <?php
             # Contributions To Everything
@@ -181,42 +181,31 @@
             echo "<label for=\"exclude\" class=\"left font_input caps_label3\">Exclude contributions between allied committees</label>";
             echo "<hr class=\"caps_hr2\">";
 
+            # Contributions To Committees
+            echo "<div class=\"clear_both input_font caps_sidebar_title\">Committees";
+            display_tooltip ("Search contributions to any recipient committee(s) by name.", 20, -20, 160);
+            echo "</div>";
 
-?>
+            $checked = "";
+            if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "committees") {$checked = "checked";}}  
+            echo "<input type=\"radio\" id=\"search_comms\" name=\"contrib_types\" value=\"committees\" class=\"clear_both left caps_radio3\" {$checked} alt=\"Search Committees\">";
+            $text = "Just these committees";
+            if (isset ($_POST["search_committees"])) {$text = $_POST["search_committees"];}
+            echo "<div class=\"left\">";
+            echo "<input type=\"hidden\" id=\"match_committee\" name=\"match_committee\" value=\"no\">";
+            echo "<input type=\"text\" id=\"search_committees\" name=\"search_committees\" value=\"{$text}\" onkeyup=\"fill_committee_list(event);\" onFocus=\"document.getElementById('search_comms').checked=true; if(this.value == 'Just these committees') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these committees';}\" class=\"font_input input_border caps_text1\" alt=\"Just These Committees\">";
+            echo "<div id=\"committees\" class=\"caps_search_dropbox\"></div>";
+            echo "</div>";
+            echo "<hr class=\"caps_hr1\">";
+          ?>
+
+          <!-- Dates -->
+          <h2 class="font_title caps_option_title">Dates:
+          <?php
+            display_tooltip ("Search contributions by the date range in which they were made.", 20, -20, 160);
+            echo "</h2>";
 
 
-<!-- Contributions To Committees -->
-          <div class="caps_header2">Committees
-
-<?php
-  display_tooltip ("Search contributions to any recipient committee(s) by name.", 20, -20, 160);
-?>
-
-          </div>
-
-<?php
-  $checked = "";
-  if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "committees") {$checked = "checked";}}  
-  echo "<input type=\"radio\" id=\"search_comms\" name=\"contrib_types\" value=\"committees\" class=\"caps_radio3\" {$checked}>";
-  $text = "Just these committees";
-  if (isset ($_POST["search_committees"])) {$text = $_POST["search_committees"];}
-  echo "<div style=\"float:left\">";
-  echo "<input type=\"hidden\" id=\"match_committee\" name=\"match_committee\" value=\"no\">";
-  echo "<input type=\"text\" id=\"search_committees\" name=\"search_committees\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"fill_committee_list(event);\" onFocus=\"document.getElementById('search_comms').checked=true; if(this.value == 'Just these committees') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these committees';}\">";
-  echo "<div id=\"committees\" class=\"search_dropbox\"></div>";
-  echo "</div>";
-?>
-          <hr class="caps_hr3">
-
-<!-- Dates -->
-          <h2 class="caps_header1">Dates:
-
-<?php
-  display_tooltip ("Search contributions by the date range in which they were made.", 20, -20, 160);
-?>
-
-          </h2>
-<?php
   $checked = "";
   if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button 
   echo "<input type=\"radio\" id=\"all_dates\" name=\"date_select\" value=\"all\" class=\"caps_radio1\" {$checked}>";
