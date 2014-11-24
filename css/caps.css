@@ -384,10 +384,11 @@ body{
 }
 
 .caps_text1{
-  float:left;
   width:190px;
-  margin-left:4px;
   padding:0px;
+  border:2px solid #ccc;
+  margin-left:4px;
+  margin-bottom:8px;
   border:2px solid #ccc;
   font:15px Arial, Helvetica, sans-serif;
   color:#121212;

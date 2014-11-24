@@ -152,15 +152,12 @@
   echo "<input type=\"radio\" id=\"search_cands\" name=\"contrib_types\" value=\"search_candidates\" class=\"caps_radio3\" {$checked}>";
   $text = "Search candidates";
   if (isset ($_POST["search_candidates"])) {$text = $_POST["search_candidates"];}
-  echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"filter_candidates_list();\" onFocus=\"if(this.value == 'Search candidates') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search candidates';}\">";
+  echo "<div style=\"float:left\">";
+  echo "<input type=\"hidden\" id=\"match_candidate\" name=\"match_candidate\" value=\"no\">";
+  echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" class=\"caps_text1\" onkeyup=\"fill_candidate_list(event);\" onFocus=\"if(this.value == 'Search candidates') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search candidates';}\">";
+  echo "<div id=\"candidates\" class=\"qs_candidates\"></div>";
+  echo "</div>";
 ?>
-          <select id="candidate_list" name="candidate_list" class="caps_select2">
-<?php
-  $selected = "";
-  if (isset ($_POST["candidate_list"])) {$selected = $_POST["candidate_list"];}
-  $js_candidates = fill_candidate_names ($selected, "1999");
-?>
-          </select>
 
 <?php
   display_tooltip ("Search contributions to a particular candidate\'s campaign(s).", 20, -20, 160);
@@ -283,7 +280,6 @@
 <?php
   # Data for javascript to filter select boxes
   echo "<SCRIPT type=text/javascript>";
-  echo "var candidates = [{$js_candidates}\"\"];\n";
   echo "var propositions = [{$js_propositions}\"\"];\n";
   echo "</SCRIPT>";
 ?>
