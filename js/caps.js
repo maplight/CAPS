@@ -46,7 +46,7 @@ function fill_candidate_list_return(list_data) {
   if (list_data == '') {
     $('#candidates').hide();
   } else {
-    var candidates = '<select size=10 id="found_candidates" onclick="$(\'#search_candidates\').val(this.value); $(\'#match_candidate\').val(\'yes\'); $(\'#qs_form\'.submit();" onkeydown="list_item_selected(event, this.value);">'; 
+    var candidates = '<select size=10 id="found_candidates" onclick="$(\'#search_candidates\').val(this.value); $(\'#match_candidate\').val(\'yes\'); if(this.value != '') {$(\'#qs_form\'.submit();}" onkeydown="list_item_selected(event, this.value);">'; 
     list_data.forEach(function(item) {candidates = candidates + '<option>' + item.RecipientCandidateNameNormalized + '</option>';});
     candidates = candidates + '</select>';
     $('#candidates').html(candidates);
