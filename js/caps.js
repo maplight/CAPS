@@ -121,7 +121,7 @@ function fill_committee_list_return(list_data) {
       document.getElementById('found_committees').addEventListener('keydown', function() {committee_list_item_selected(event);});
     } else {
       document.getElementById('found_committees').attachEvent('onclick', function() {committee_list_item_clicked();});
-      document.getElementById('found_candidates').attachEvent('onkeydown', function() {committee_list_item_selected(event);});
+      document.getElementById('found_committees').attachEvent('onkeydown', function() {committee_list_item_selected(event);});
     }
     $('#committees').show();
   }
