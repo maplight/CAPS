@@ -115,25 +115,34 @@ function fill_committee_list_return(list_data) {
     for (var i = 0; i < list_data.length; i++) {committees = committees + '<option>' + list_data[i].RecipientCommitteeNameNormalized + '</option>';}
     committees = committees + '</select>';
     $('#committees').html(committees);
-    document.getElementById('found_committees').addEventListener('click', function() {committee_list_item_clicked(this.value);});
-    document.getElementById('found_committees').addEventListener('keydown', function() {committee_list_item_selected(event, this.value);});
+    // ie8 event handler
+    if (document.getElementById('found_committees').addEventListener) {
+      document.getElementById('found_committees').addEventListener('click', function() {committee_list_item_clicked();});
+      document.getElementById('found_committees').addEventListener('keydown', function() {committee_list_item_selected(event);});
+    } else {
+      document.getElementById('found_committees').attachEvent('onclick', function() {committee_list_item_clicked();});
+      document.getElementById('found_candidates').attachEvent('onkeydown', function() {committee_list_item_selected(event);});
+    }
     $('#committees').show();
   }
 }
 
-function committee_list_item_clicked(committee_name) {
+function committee_list_item_clicked() {
+  var candidate_name = $('#found_committees').val();
   if (committee_name != '') {
     $('#search_committees').val(committee_name);
     $('#match_committee').val('yes');
-    if (document.getElementById('caps_search_btn') != null) {$('#caps_search_btn').trigger('click');}
+    if (document.getElementById('caps_search_btn1') != null) {$('#caps_search_btn1').trigger('click');}
   }
 }
 
-function committee_list_item_selected(event, committee_name) {
+function committee_list_item_selected(event) {
+  var candidate_name = $('#found_committees').val();
   var keycode = (event.keyCode ? event.keyCode : event.which);
   if (keycode == 13 && committee_name != '') {
     $('#match_committee').val('yes');
     $('#search_committees').val(committee_name);
+    if (document.getElementById('caps_search_btn1') != null) {$('#caps_search_btn1').trigger('click');}
   }
 }
 
