@@ -229,18 +229,14 @@
             if (isset ($_POST["cycles"])) {$cycles = $_POST["cycles"];} else {$cycles = array ("");}
             fill_election_cycles ($cycles, "");
             echo "</div> <!-- end caps_cycles_box -->";
-?>
 
+            echo "<input type=\"submit\" name=\"search_btn\" value=\"Search\" id=\"caps_search_btn\">";
 
-
-          <input type="submit" name="search_btn"  value="Search" id="caps_search_btn">
-
-<?php
-  # Data for javascript to filter select boxes
-  echo "<SCRIPT type=text/javascript>";
-  echo "var propositions = [{$js_propositions}\"\"];\n";
-  echo "</SCRIPT>";
-?>
+            # Data for javascript to filter select boxes
+            echo "<SCRIPT type=text/javascript>";
+            echo "var propositions = [{$js_propositions}\"\"];\n";
+            echo "</SCRIPT>";
+          ?>
         </div> <!-- end caps_sidebar -->
 
         <div id="caps_content"> 
