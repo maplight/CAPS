@@ -64,7 +64,7 @@
 
 <div id="caps_header">
 <div class="frme" id="top">
-<img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;">
+<img id="maplight_logo" src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;">
 </div>
         <ul id="utl" class="clearfix">
         <li><b>CAL-ACCESS Campaign Power Search</b></li>
