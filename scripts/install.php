@@ -86,18 +86,15 @@ echo "Install complete....";
 # load an sql file
 function process_sql_file($filename)
 {
-    //  global $script_login, $script_pwd;
-    //  system("mysql -u{$script_login} -p{$script_pwd} ca_process < \"$filename\"");
-
     $sql_contents = file_get_contents($filename);
     $sql_contents = rtrim(rtrim($sql_contents), ";");
-    $sql_contents = preg_split("/;/", $sql_contents);
+    $sql_contents = preg_split("/;(\n|\r)/", $sql_contents);
 
     foreach ($sql_contents as $query) {
         if($query){
             $result = script_query (trim($query));
             if (!$result)
-            echo "Error on import of " . $query . "\n";
+                echo "Error on import of " . $query . "\n";
         }
     }
 }

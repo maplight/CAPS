@@ -1732,3 +1732,4 @@ CREATE TABLE `ftp_text_memo` (
   `ref_no` varchar(255) DEFAULT NULL,
   `text4000` varchar(4000) DEFAULT NULL
 );
+
