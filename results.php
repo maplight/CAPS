@@ -301,7 +301,7 @@
         }
 
         $field_set = "";
-        $fields = array ("RecipientCandidateNameNormalized|Politicians's Name|",
+        $fields = array ("RecipientCandidateNameNormalized|Recipient Name|",
                          "RecipientCommitteeNameNormalized|Recipient Committee|",
                          "RecipientCandidateOffice|Office Sought|",
                          "Target|Ballot Measure|",
@@ -316,7 +316,7 @@
         if (isset ($_POST["fields"])) {$field_set = $_POST["fields"];}
 
         if ($field_set == "Show more fields") {
-          $fields = array ("RecipientCandidateNameNormalized|Politicians's Name|",
+          $fields = array ("RecipientCandidateNameNormalized|Recipient Name|",
                            "RecipientCommitteeNameNormalized|Recipient Committee|",
                            "RecipientCandidateOffice|Office Sought|",
                            "RecipientCandidateDistrict|District|",
@@ -459,14 +459,16 @@
         display_tooltip ("Show more columns in the table for additional information on contributors.", -180, 10, 160, "");
         echo "</div>";
 
-        echo "<div id=\"table_box\">";
-        echo "<table title=\"search table\" summary=\"search table\" class=\"caps_table1\">";
+        echo "<div id=\"caps_table_box\">";
+        echo "<table title=\"search table\" summary=\"search table\" class=\"caps_table\">";
         echo "<thead>";
         echo "<tr>";
 
+        $count = 1;
         foreach ($fields as $field) {
           $field_data = explode ("|", $field);
-          echo "<th>{$field_data[1]}</th>";
+          echo "<th id=\"c{$count}\">{$field_data[1]}</th>";
+          $count++;
         }
         echo "</tr>";
         echo "</thead>";
@@ -474,32 +476,34 @@
 
         while ($row = $result->fetch_assoc()) {
           echo "<tr>";
+          $count = 1;
           foreach ($fields as $field) {
             $field_data = explode ("|", $field);
             switch ($field_data[2]) {
               case "Date":
                 if (date ("F j, Y", strtotime ($row[$field_data[0]])) == "December 31, 1969") {
-                  echo "<td><I>unknown</I></td>";
+                  echo "<td headers=\"c{$count}\"><I>unknown</I></td>";
                 } else {
-                  echo "<td>" . date ("M j, Y", strtotime ($row[$field_data[0]])) . "</td>";
+                  echo "<td headers=\"c{$count}\">" . date ("M j, Y", strtotime ($row[$field_data[0]])) . "</td>";
                 }
                 break;
 
               case "Currency":
-                echo "<td style=\"text-align:right\">$" . number_format($row[$field_data[0]], 2, ".", ",") . "</td>";
+                echo "<td headers=\"c{$count}\" style=\"text-align:right\">$" . number_format($row[$field_data[0]], 2, ".", ",") . "</td>";
                 break;
 
               default: 
-                echo "<td>{$row[$field_data[0]]}</td>";
+                echo "<td headers=\"c{$count}\">{$row[$field_data[0]]}</td>";
                 break;
             }
+            $count++;
           }
           echo "</tr>";
         }
 
         echo "</tbody>";
         echo "</table>";
-        echo "</div> <!-- table_box -->";
+        echo "</div> <!-- end caps_table_box -->";
 
         # Pagination section
         echo "<center>";

@@ -75,6 +75,13 @@ body{
   font:15px Arial, Helvetica, sans-serif;
 }
 
+#caps_table_box{
+  margin-top:8px;
+  margin-bottom:15px;
+  border:2px solid #cccccc;
+  overflow:auto;
+}
+
 #qs_page{
   padding:28px;
   overflow:hidden;
@@ -462,5 +469,32 @@ body{
   margin-left:22px;
   margin-bottom:16px;
   font-weight:bold;
+}
+
+.caps_table{
+  border-collapse:collapse;
+  border-spacing:0;
+  border:1px solid #b8b8b8;
+  margin:0;
+  padding:0;
+}
+.caps_table thead{
+  margin:0;
+  padding:0;
+  background:#ebebeb;
+  font:13px Arial, Helvetica, sans-serif;
+  color:#333333;
+}
+.caps_table thead tr th{
+  margin:0;
+  padding:4px 4px 4px 4px;
+}
+.caps_table tbody{
+  font:12px Arial, Helvetica, sans-serif;
+  color:#333333;
+}
+.caps_table tbody tr td{
+  margin:0;
+  padding:3px 3px 3px 3px;
 }
 
