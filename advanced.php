@@ -61,7 +61,7 @@
 
 <!-- default header, replace with sites header -->
 <div id="caps_header">
-  <div><img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;"></div>
+  <div><img id="maplight_logo" src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;"></div>
   <ul id="utl">
         <li><b>CAL-ACCESS Campaign Power Search</b></li>
         <li><a href="index.php">Quick Search</a></li>

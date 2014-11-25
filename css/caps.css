@@ -588,7 +588,7 @@ and (max-device-width : 480px) {
     }
 
     #sidebar{
-        width:95%;
+        width:100%;
     }
 
     .caps_title1{
