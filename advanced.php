@@ -80,8 +80,8 @@
       <form method="post">
         <div id="caps_sidebar">
           <h1 class="font_large_header">Advanced Search</h1><br>
-          <a href="advanced.php" id="caps_reset_btn1">Clear Form</a>
-          <input type="submit" name="search_btn" value="Search" id="caps_search_btn">
+          <a href="advanced.php" id="caps_reset_btn">Clear Form</a>
+          <input type="submit" name="search_btn" value="Search" id="caps_search_btn1">
 
           <!-- Contributions From -->
           <h2 class="font_title caps_option_title">Contributions From:</h2>
