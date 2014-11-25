@@ -32,7 +32,7 @@
 
 <!-- default header, replace with sites header -->
 <div id="caps_header">
-  <div><img id="maplight_logo" src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;"></div>
+  <div><img src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;"></div>
   <ul id="utl">
         <li><b>CAL-ACCESS Campaign Power Search</b></li>
         <li><a href="index.php">Quick Search</a></li>
@@ -51,10 +51,10 @@
  
         <div id="qs_title"> 
           <h1 class="font_large_header">CAL-ACCESS Campaign Power Search</h1>
-          <strong><p id="caps_description">Search political contributions to candidates, ballot measures, and other committees from 2001 through the present.</p></strong>
+          <strong>Search political contributions to candidates, ballot measures, and other committees from 2001 through the present.</strong>
         </div> <!-- end qs_title -->
 
-        <a id="advanced_button" href="advanced.php" class="right font_btn btn_border qs_link1">Go to Advanced Search</a>
+        <a href="advanced.php" class="right font_btn btn_border qs_link1">Go to Advanced Search</a>
          
         <div id="qs_search">
           <div class="font_title">Quick Search</div>
