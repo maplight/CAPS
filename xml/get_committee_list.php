@@ -1,7 +1,7 @@
 <?php
   require ("../connect.php");
 
-  $search_text = sql_clean_str ($_POST["search_text"]);
+  $search_text = $_POST["search_text"];
   $committees = array ();
 
   $result = my_query ("SELECT RecipientCommitteeNameNormalized FROM smry_committees WHERE RecipientCommitteeNameNormalized LIKE '%{$search_text}%' ORDER BY RecipientCommitteeNameNormalized LIMIT 200;");

@@ -16,14 +16,4 @@
     $ret = $web_conn->query (stripslashes ($web_conn->real_escape_string ($query)));
     return $ret;
   }
-
-
-#===============================================================================================
-# Clean string for SQL
-#  -- Use this function for any string data passed to SQL queries.  This will escape out quotes, but also will fix any potential SQL injections.
-#  -- For numeric data use intval or floatval
-  function sql_clean_str ($instr) {
-    global $web_conn;
-    return $web_conn->real_escape_string ($instr);  	
-  }  	    
 ?>

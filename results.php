@@ -135,18 +135,24 @@
           $Committee = "";
           foreach (explode (";", $search_data["search_committees"]) as $search_item) {
             $word_str = "";
+            if (substr (trim ($search_item), 0, 1) == "\"") {$quoted = true;} else {$quoted = false;}
             foreach (explode (" ", $search_item) as $word) {
               $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
               $word_str .= "+{$word} ";
             }
-            $Committee .= "(" . trim ($word_str) . ") ";
+            if ($quoted) {
+              $Committee .= "(\"" . trim ($word_str) . "\") ";
+            } else {
+              $Committee .= "(" . trim ($word_str) . ") ";
+            }
           }
           if ($Committee != "") {$Committee = "MATCH (smry_committees.CommitteeWords) AGAINST ('" . substr ($Committee, 0, -1) . "' IN BOOLEAN MODE)";}
         } else {
           $Committee = "smry_committees.RecipientCommitteeNameNormalized = '" . addslashes ($search_data["search_committees"]) . "'";
         }
         break; # committees
-    }
+      }
+
 
     #------------------------------------------------------------------------------------------
     # Build dates / cycles query

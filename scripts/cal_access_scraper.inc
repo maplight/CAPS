@@ -12,7 +12,7 @@
 # process script query
   function script_query ($query) {
     global $script_conn;
-    $ret = $script_conn->query ($query);
+    $ret = $script_conn->query (stripslashes ($script_conn->real_escape_string ($query)));
     return $ret;
   }
 

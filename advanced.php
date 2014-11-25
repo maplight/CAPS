@@ -190,7 +190,7 @@
             if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "committees") {$checked = "checked";}}  
             echo "<input type=\"radio\" id=\"search_comms\" name=\"contrib_types\" value=\"committees\" class=\"clear_both left caps_radio3\" {$checked} alt=\"Search Committees\">";
             $text = "Just these committees";
-            if (isset ($_POST["search_committees"])) {$text = $_POST["search_committees"];}
+            if (isset ($_POST["search_committees"])) {$text = htmlspecialchars($_POST["search_committees"]);}
             echo "<div class=\"left\">";
             echo "<input type=\"hidden\" id=\"match_committee\" name=\"match_committee\" value=\"no\">";
             echo "<input type=\"text\" id=\"search_committees\" name=\"search_committees\" value=\"{$text}\" onkeyup=\"fill_committee_list(event);\" onFocus=\"document.getElementById('search_comms').checked=true; if(this.value == 'Just these committees') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these committees';}\" class=\"font_input input_border caps_text1\" alt=\"Just These Committees\">";

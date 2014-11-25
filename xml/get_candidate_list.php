@@ -1,7 +1,7 @@
 <?php
   require ("../connect.php");
 
-  $search_text = sql_clean_str ($_POST["search_text"]);
+  $search_text = $_POST["search_text"];
   $candidates = array ();
 
   $result = my_query ("SELECT RecipientCandidateNameNormalized FROM smry_candidates WHERE RecipientCandidateNameNormalized LIKE '%{$search_text}%' ORDER BY RecipientCandidateNameNormalized LIMIT 50;");
