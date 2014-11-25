@@ -80,7 +80,7 @@
       <form method="post">
         <div id="caps_sidebar">
           <h1 class="font_large_header">Advanced Search</h1><br>
-          <a href="advanced.php" id="caps_reset_btn">Clear Form</a>
+          <a href="advanced.php" id="caps_reset_btn1">Clear Form</a>
           <input type="submit" name="search_btn" value="Search" id="caps_search_btn">
 
           <!-- Contributions From -->
@@ -230,7 +230,7 @@
             fill_election_cycles ($cycles, "");
             echo "</div> <!-- end caps_cycles_box -->";
 
-            echo "<input type=\"submit\" name=\"search_btn\" value=\"Search\" id=\"caps_search_btn\">";
+            echo "<input type=\"submit\" name=\"search_btn\" value=\"Search\" id=\"caps_search_btn2\">";
           ?>
         </div> <!-- end caps_sidebar -->
 

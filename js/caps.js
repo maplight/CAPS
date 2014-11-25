@@ -67,7 +67,7 @@ function candidate_list_item_clicked(candidate_name) {
   if (candidate_name != '') {
     $('#search_candidates').val(candidate_name);
     $('#match_candidate').val('yes');
-    if (document.getElementById('caps_search_btn') != null) {$('#caps_search_btn').trigger('click');}
+    if (document.getElementById('caps_search_btn1') != null) {$('#caps_search_btn1').trigger('click');}
     if (document.getElementById('qs_btn') != null) {$('#qs_btn').trigger('click');}
   }
 }
@@ -78,7 +78,7 @@ function candidate_list_item_selected(event, candidate_name) {
   if (keycode == 13 && candidate_name != '') {
     $('#match_candidate').val('yes');
     $('#search_candidates').val(candidate_name);
-    if (document.getElementById('caps_search_btn') != null) {$('#caps_search_btn').trigger('click');}
+    if (document.getElementById('caps_search_btn1') != null) {$('#caps_search_btn1').trigger('click');}
     if (document.getElementById('qs_btn') != null) {$('#qs_btn').trigger('click');}
   }
 }
