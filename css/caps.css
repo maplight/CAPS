@@ -591,6 +591,11 @@ and (max-device-width : 480px) {
         width:100%;
     }
 
+    #caps_content{
+        float:right;
+        margin-left:0px;
+    }
+
     .caps_title1{
         text-align: center
     }
