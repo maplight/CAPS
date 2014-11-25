@@ -128,7 +128,7 @@ function fill_committee_list_return(list_data) {
 }
 
 function committee_list_item_clicked() {
-  var candidate_name = $('#found_committees').val();
+  var committee_name = $('#found_committees').val();
   if (committee_name != '') {
     $('#search_committees').val(committee_name);
     $('#match_committee').val('yes');
@@ -137,7 +137,7 @@ function committee_list_item_clicked() {
 }
 
 function committee_list_item_selected(event) {
-  var candidate_name = $('#found_committees').val();
+  var committee_name = $('#found_committees').val();
   var keycode = (event.keyCode ? event.keyCode : event.which);
   if (keycode == 13 && committee_name != '') {
     $('#match_committee').val('yes');
