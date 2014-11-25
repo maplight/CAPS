@@ -122,7 +122,7 @@
 
             # Contributions To Candidates
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Candidates";
-            display_tooltip ("Search contributions to candidate-controlled campaign committees.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to candidate-controlled campaign committees at the state level.", 20, -20, 160, "right");
             echo "</div>";
 
             $checked = "";
@@ -140,7 +140,7 @@
             echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" onkeyup=\"fill_candidate_list(event);\" onFocus=\"document.getElementById('search_cands').checked=true; if(this.value == 'Search candidates') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search candidates';}\" class=\"font_input input_border caps_text1\" alt=\"Search Candidates Text\">";
             echo "<div id=\"candidates\" class=\"caps_search_dropbox\"></div>";
             echo "</div>";
-            display_tooltip ("Search contributions to a particular candidate\'s campaign committee(s).", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to a particular candidate\'s campaign committee(s) for state office.", 20, -20, 160, "right");
 
             $checked = "";
             if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "office") {$checked = "checked";}}  
@@ -150,7 +150,7 @@
             if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
             fill_offices_sought ($selected);
             echo "</select>";
-            display_tooltip ("Search contributions to candidate-controlled campaign committees for a particular office.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to candidate-controlled campaign committees for a particular state-level office.", 20, -20, 160, "right");
             echo "<hr class=\"caps_hr2\">";
 
             # Contributions To Ballot Measures
