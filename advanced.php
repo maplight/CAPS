@@ -34,7 +34,6 @@
       $_POST["state_list"] = "ALL";
       $_POST["date_select"] = "all";
       $_POST["show_summary"] = "yes";
-      $_POST["exclude"] = "on";
 
       if ($_POST["qs_button"] == "Search Candidates") {
         $_POST["contrib_select"] = "all";
@@ -50,6 +49,7 @@
         $_POST["search_propositions"] = "Search propositions";
         $_POST["position"] = "B";
         $_POST["date_select"] = "all";
+        $_POST["exclude"] = "on";
       }
 
       if ($_POST["qs_button"] == "Search Contributors") {
