@@ -355,7 +355,7 @@
         $result = my_query ("SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$search_join} {$where} ORDER BY {$sort} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;
 
-        echo "<div id=\"results\">";
+        echo "<div id=\"caps_results\">";
 
         if ($show_summary == "no") {
           echo "<h1 class=\"caps_title3\">Search Results</h1>";

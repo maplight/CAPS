@@ -43,6 +43,12 @@ body{
   padding:40px 8px 8px 20px;
 }
 
+#caps_results{
+  float:left;
+  width:100%;
+  overflow:hidden;
+}
+
 #caps_cycles_box{
   clear:both;
   float:left;
