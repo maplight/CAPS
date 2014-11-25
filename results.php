@@ -528,7 +528,7 @@
 
         echo "<p>&nbsp;</p>";
         echo "<div class=\"font_input\"><p>This page will not display more than 1,000 entries.</p>(To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">download the CSV</a> file.)</div><br>";
-        echo "<div class=\"font_small\">Contributions data is current as of " . date ("F j, Y", strtotime ($last_update)) . ".</div>";
+        echo "<div class=\"font_small\">Contributions data is current as of " . date ("F j, Y", strtotime ($last_update)) . ".</div><br>";
         echo "</center>";
 
         echo "</div> <!-- end caps_results ->";
