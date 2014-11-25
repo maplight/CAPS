@@ -62,9 +62,8 @@ function fill_candidate_list_return(list_data) {
   }
 }
 
-function candidate_list_item_clicked() {
+function candidate_list_item_clicked(candidate_name) {
   var candidate_name = $('#found_candidates').val();
-
   if (candidate_name != '') {
     $('#search_candidates').val(candidate_name);
     $('#match_candidate').val('yes');
