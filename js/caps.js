@@ -52,17 +52,19 @@ function fill_candidate_list_return(list_data) {
     $('#candidates').html(candidates);
     // ie8 event handler
     if (document.getElementById('found_candidates').addEventListener) {
-      document.getElementById('found_candidates').addEventListener('click', function() {candidate_list_item_clicked(this.value);});
+      document.getElementById('found_candidates').addEventListener('click', function() {candidate_list_item_clicked();});
       document.getElementById('found_candidates').addEventListener('keydown', function() {candidate_list_item_selected(event, this.value);});
     } else {
-      document.getElementById('found_candidates').attachEvent('onclick', function() {candidate_list_item_clicked(this.value);});
+      document.getElementById('found_candidates').attachEvent('onclick', function() {candidate_list_item_clicked();});
       document.getElementById('found_candidates').attachEvent('onkeydown', function() {candidate_list_item_selected(event, this.value);});
     }
     $('#candidates').show();
   }
 }
 
-function candidate_list_item_clicked(candidate_name) {
+function candidate_list_item_clicked() {
+  var candidate_name = $('#found_candidates').val();
+
   if (candidate_name != '') {
     $('#search_candidates').val(candidate_name);
     $('#match_candidate').val('yes');
