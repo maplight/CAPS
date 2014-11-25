@@ -358,51 +358,36 @@
         echo "<div id=\"caps_results\">";
 
         if ($show_summary == "no") {
-          echo "<h1 class=\"caps_title3\">Search Results</h1>";
+          echo "<h1 class=\"font_large_header\">Search Results</h1>";
           echo "<hr class=\"caps_hr1\">";
-          echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-          display_tooltip ("This is the total amount received. The table below contains individual contributions.", -180, 10, 160);
-          echo "<h2 class=\"caps_title4\">Contributions</h2>";
+          echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
+          display_tooltip ("This is the total amount received. The table below contains individual contributions.", -180, 10, 160, "");
+          echo "<h2 class=\"font_large_header caps_title1\">Contributions</h2>";
           echo "<hr class=\"caps_hr1\">";
         } else {
           if (strlen ($summary_type) == 1) {
             switch ($summary_type) {
               case "C":
-                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">" . strtoupper ($_POST["search_candidates"]) . "</strong> has received</div>";
-                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                display_tooltip ("This is the total amount received by candidate-controlled committees in the selected date range. The table below contains individual contributions.", -180, 10, 160);
-                echo "<div id=\"breakdown_box\">";
+                echo "<div class=\"font_results_header\"><strong>" . strtoupper ($_POST["search_candidates"]) . "</strong> has received</div>";
+                echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
+                display_tooltip ("This is the total amount received by candidate-controlled committees in the selected date range. The table below contains individual contributions.", -180, 10, 160, "");
+                echo "<div id=\"caps_breakdown_box\">";
                 $result2 = my_query ("SELECT RecipientCommitteeNameNormalized, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, RecipientCommitteeID, RecipientCommitteeNameNormalized, TransactionAmount FROM contributions_search INNER JOIN smry_committees USING (RecipientCommitteeID) INNER JOIN smry_candidates USING (RecipientCandidateNameID) {$where}) AS UniqueContributions GROUP BY RecipientCommitteeID ORDER BY RecipientCommitteeNameNormalized");
                 while ($row2 = $result2->fetch_assoc()) {
                   echo "<b>{$row2["RecipientCommitteeNameNormalized"]}</b> has raised $" . number_format ($row2["TotalAmount"], 2, ".", ",") . " in " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
                 }
-                echo "</div>";
+                echo "</div> <!-- end caps_breakdown_box -->";
                 echo "<hr class=\"caps_hr1\">";
                 break;            
-
-              case "D":
-                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">" . strtoupper ($_POST["contributor"]) . "</strong> has contributed</div>";
-                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                display_tooltip ("This is the total amount given by the specified contributors in the selected date range. The table below contains individual contributions.", -180, 10, 160);
-                echo "<div id=\"breakdown_box\">";
-                $result2 = my_query ("SELECT CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, CandidateContribution, BallotMeasureContribution, TransactionAmount FROM contributions_search {$where}) AS UniqueContributions GROUP BY CandidateContribution, BallotMeasureContribution ORDER BY CandidateContribution, BallotMeasureContribution");
-                while ($row2 = $result2->fetch_assoc()) {
-                  if ($row2["CandidateContribution"] == "Y" && $row2["BallotMeasureContribution"] == "N") {echo "<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>candidates</b><br>";}
-                  if ($row2["CandidateContribution"] == "N" && $row2["BallotMeasureContribution"] == "Y") {echo "<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>ballot measures</b><br>";}
-                  if ($row2["CandidateContribution"] == "N" && $row2["BallotMeasureContribution"] == "N") {echo "<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>other committees</b><br>";}
-                }
-                echo "</div>";
-                echo "<hr class=\"caps_hr1\">";
-                break;
 
               case "E":
                 $election = substr ($_POST["proposition_list"], 4);
                 $election_date = date ("F Y", strtotime ($election));
-                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">Ballot Measures</strong> on the {$election_date} ballot have received ";
-                echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                display_tooltip ("This is the total amount given towards the specified ballot measures. The table below contains individual contributions.", -180, 10, 160);
+                echo "<div class=\"font_results_header\"><strong>Ballot Measures</strong> on the {$election_date} ballot have received ";
+                echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
+                display_tooltip ("This is the total amount given towards the specified ballot measures. The table below contains individual contributions.", -180, 10, 160, "");
                 echo "</div>";
-                echo "<div id=\"breakdown_box\">";
+                echo "<div id=\"caps_breakdown_box\">";
                 $result2 = my_query ("SELECT Target, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount, SUM(IF(PositionID = 1,1,0)) AS SupportCount, SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount, SUM(IF(PositionID = 2,1,0)) AS OpposeCount, SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount FROM (SELECT DISTINCT ContributionID, Target, PositionID, TransactionAmount FROM contributions_search INNER JOIN smry_propositions USING (PropositionID) WHERE Election = '{$election}' AND BallotMeasureContribution = 'Y') AS UniqueContributions GROUP BY Target ORDER BY Target");
                 while ($row2 = $result2->fetch_assoc()) {
                   if (strpos ($row2["Target"], "-") !== false) {
@@ -418,13 +403,28 @@
                 echo "</div>";
                 echo "<hr class=\"caps_hr1\">";
                 break;            
+
+              case "D":
+                echo "<div class=\"font_results_header\"><strong>" . strtoupper ($_POST["contributor"]) . "</strong> has contributed</div>";
+                echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
+                display_tooltip ("This is the total amount given by the specified contributors in the selected date range. The table below contains individual contributions.", -180, 10, 160, "");
+                echo "<div id=\"caps_breakdown_box\">";
+                $result2 = my_query ("SELECT CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, CandidateContribution, BallotMeasureContribution, TransactionAmount FROM contributions_search {$where}) AS UniqueContributions GROUP BY CandidateContribution, BallotMeasureContribution ORDER BY CandidateContribution, BallotMeasureContribution");
+                while ($row2 = $result2->fetch_assoc()) {
+                  if ($row2["CandidateContribution"] == "Y" && $row2["BallotMeasureContribution"] == "N") {echo "<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>candidates</b><br>";}
+                  if ($row2["CandidateContribution"] == "N" && $row2["BallotMeasureContribution"] == "Y") {echo "<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>ballot measures</b><br>";}
+                  if ($row2["CandidateContribution"] == "N" && $row2["BallotMeasureContribution"] == "N") {echo "<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>other committees</b><br>";}
+                }
+                echo "</div>";
+                echo "<hr class=\"caps_hr1\">";
+                break;
             }
           } else {
-            echo "<h1 class=\"caps_title3\">Search Results</h1>";
+            echo "<h1 class=\"font_large_header\">Search Results</h1>";
             echo "<hr class=\"caps_hr1\">";
-            echo "<div class=\"content_title1\"><strong class=\"content_strong1\">\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-            display_tooltip ("This is the total amount received. The table below contains individual contributions.", -180, 10, 160);
-            echo "<h2 class=\"caps_title4\">Contributions</h2>";
+            echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
+            display_tooltip ("This is the total amount received. The table below contains individual contributions.", -180, 10, 160, "");
+            echo "<h2 class=\"font_large_header caps_title1\">Contributions</h2>";
             echo "<hr class=\"caps_hr1\">";
           }
         }
@@ -531,7 +531,7 @@
   }
 
 
-  function display_tooltip ($text, $pos_x, $pos_y, $width) {
-    echo "<img src=\"img/infotool.png\" class=\"right caps_info\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, '{$text}', {$pos_x}, {$pos_y}, {$width});\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"{$text}\">";
+  function display_tooltip ($text, $pos_x, $pos_y, $width, $position) {
+    echo "<img src=\"img/infotool.png\" class=\"{$position} caps_info\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, '{$text}', {$pos_x}, {$pos_y}, {$width});\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"{$text}\">";
   }
 ?>

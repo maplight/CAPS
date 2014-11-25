@@ -59,6 +59,13 @@ body{
   overflow:hidden;
 }
 
+#caps_breakdown_box{
+  margin-top:10px;
+  margin-left:30px;
+  margin-bottom:8px;
+  font:13px Arial, Helvetica, sans-serif;
+}
+
 #qs_page{
   padding:28px;
   overflow:hidden;
@@ -151,6 +158,7 @@ body{
 .font_title{font:bold 21px Arial, Helvetica, sans-serif;}
 .font_input{font:15px Arial, Helvetica, sans-serif;}
 .font_btn{font:bold 14px Arial, Helvetica, sans-serif;}
+.font_results_header{font:19px Arial, Helvetica, sans-serif;}
 
 .btn_border{border:2px solid #124161;}
 .input_border{border:2px solid #CCCCCC;}
@@ -214,6 +222,14 @@ body{
 .qs_link1:hover{
   color:#ffffff;
   background:#124161;
+}
+
+.caps_title1{
+  color:#222222;
+  margin:20px 0 4px 0;
+  padding:0;
+  background:#ffffff;
+  border:0;
 }
 
 .qs_text1{
