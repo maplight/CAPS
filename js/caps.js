@@ -50,8 +50,14 @@ function fill_candidate_list_return(list_data) {
     for (var i = 0; i < list_data.length; i++) {candidates = candidates + '<option>' + list_data[i].RecipientCandidateNameNormalized + '</option>';}
     candidates = candidates + '</select>';
     $('#candidates').html(candidates);
-    document.getElementById('found_candidates').addEventListener('click', function() {candidate_list_item_clicked(this.value);});
-    document.getElementById('found_candidates').addEventListener('keydown', function() {candidate_list_item_selected(event, this.value);});
+    // ie8 event handler
+    if (document.getElementById('found_candidates').addEventListener) {
+      document.getElementById('found_candidates').addEventListener('click', function() {candidate_list_item_clicked(this.value);});
+      document.getElementById('found_candidates').addEventListener('keydown', function() {candidate_list_item_selected(event, this.value);});
+    } else {
+      document.getElementById('found_candidates').attachEvent('onclick', function() {candidate_list_item_clicked(this.value);});
+      document.getElementById('found_candidates').attachEvent('onkeydown', function() {candidate_list_item_selected(event, this.value);});
+    }
     $('#candidates').show();
   }
 }
