@@ -13,7 +13,7 @@
 # process query
   function my_query ($query) {
     global $web_conn;
-    $ret = $web_conn->query ($query);
+    $ret = $web_conn->query (stripslashes ($web_conn->real_escape_string ($query)));
     return $ret;
   }
 
