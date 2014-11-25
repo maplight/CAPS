@@ -452,11 +452,12 @@
         echo "</div> <!-- end download_box -->";
         echo "</div> <!-- end filter_box -->";
 
-        echo "Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($record_count["records"], 0, ".", ",") . "</strong> rows ";
+        echo "<div class=\"font_input\">Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($record_count["records"], 0, ".", ",") . "</strong> rows ";
         $field_msg = "Show more fields";
         if ($field_set == "Show more fields") {$field_msg = "Show fewer fields";}
         echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\" id=\"caps_field_btn\">";
-        display_tooltip ("Show more columns in the table for additional information on contributors.", -180, 10, 160);
+        display_tooltip ("Show more columns in the table for additional information on contributors.", -180, 10, 160, "");
+        echo "</div>";
 
         echo "<div id=\"table_box\">";
         echo "<table title=\"search table\" summary=\"search table\" class=\"caps_table1\">";

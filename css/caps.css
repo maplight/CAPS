@@ -159,6 +159,20 @@ body{
   background:#124161;
 }
 
+#caps_field_btn{
+  background:#e6ecf0;
+  color:#124161;
+  border:2px solid #124161;
+  font:bold 15px Arial, Helvetica, sans-serif;
+  margin:0 4px;
+  padding:2px 6px 2px 6px;
+}
+
+#caps_field_btn:hover{
+  color:#fff;
+  background:#124161;
+}
+
 
 .caps_search_dropbox{
   position:absolute;
