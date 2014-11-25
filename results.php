@@ -367,7 +367,7 @@
           echo "<h1 class=\"font_large_header\">Search Results</h1>";
           echo "<hr class=\"caps_hr1\">";
           echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-          display_tooltip ("This is the total amount received. The table below contains individual contributions.", -180, 10, 160, "");
+          display_tooltip ("This is the total amount received. The table below displays individual contributions and may return duplicate rows for contributions given to committees that supported or opposed multiple ballot measures in one election.", -180, 10, 250, "");
           echo "<h2 class=\"font_large_header caps_title1\">Contributions</h2>";
           echo "<hr class=\"caps_hr1\">";
         } else {
@@ -429,7 +429,7 @@
             echo "<h1 class=\"font_large_header\">Search Results</h1>";
             echo "<hr class=\"caps_hr1\">";
             echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-            display_tooltip ("This is the total amount received. The table below contains individual contributions.", -180, 10, 160, "");
+            display_tooltip ("This is the total amount received. The table below displays individual contributions and may return duplicate rows for contributions given to committees that supported or opposed multiple ballot measures in one election.", -180, 10, 250, "");
             echo "<h2 class=\"font_large_header caps_title1\">Contributions</h2>";
             echo "<hr class=\"caps_hr1\">";
           }
@@ -462,7 +462,7 @@
         $field_msg = "Show more fields";
         if ($field_set == "Show more fields") {$field_msg = "Show fewer fields";}
         echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\" id=\"caps_field_btn\">";
-        display_tooltip ("Show more columns in the table for additional information on contributors.", -180, 10, 160, "");
+        display_tooltip ("Show more columns in the table for additional information on contributions.", -180, 10, 160, "");
         echo "</div>";
 
         echo "<div id=\"caps_table_box\">";

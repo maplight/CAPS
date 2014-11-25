@@ -90,7 +90,7 @@
             if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button
             echo "<input type=\"radio\" id=\"all_contribs\" name=\"contrib_select\" value=\"all\" class=\"clear_both left caps_radio1\" {$checked}>";
             echo "<label for=\"all_contribs\" class=\"font_input caps_label1\">All contributors</label>";
-            display_tooltip ("Search contributions from all contributors.", 20, -20, 150, "right");
+            display_tooltip ("Search contributions from all contributors.", 20, -20, 160, "right");
 
             $checked = "";
             if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
@@ -121,7 +121,7 @@
 
             # Contributions To Candidates
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Candidates";
-            display_tooltip ("Search contributions to candidate campaigns only.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to candidate-controlled campaign committees.", 20, -20, 160, "right");
             echo "</div>";
 
             $checked = "";
@@ -139,7 +139,7 @@
             echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" onkeyup=\"fill_candidate_list(event);\" onFocus=\"document.getElementById('search_cands').checked=true; if(this.value == 'Search candidates') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search candidates';}\" class=\"font_input input_border caps_text1\" alt=\"Search Candidates Text\">";
             echo "<div id=\"candidates\" class=\"caps_search_dropbox\"></div>";
             echo "</div>";
-            display_tooltip ("Search contributions to a particular candidate\'s campaign(s).", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to a particular candidate\'s campaign committee(s).", 20, -20, 160, "right");
 
             $checked = "";
             if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "office") {$checked = "checked";}}  
@@ -149,12 +149,12 @@
             if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
             fill_offices_sought ($selected);
             echo "</select>";
-            display_tooltip ("Search contributions to all candidates running for a particular office.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to candidate-controlled campaign committees for a particular office.", 20, -20, 160, "right");
             echo "<hr class=\"caps_hr2\">";
 
             # Contributions To Ballot Measures
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Ballot Measures";
-            display_tooltip ("Search contributions to committees formed to support or oppose ballot measures. Your results may return duplicate contributions if a contributor gave money to a committee supporting or opposing multiple ballot measures.", 20, -20, 240, "right");
+            display_tooltip ("Search contributions to committees formed to support or oppose ballot measures. ", 20, -20, 160, "right");
             echo "</div>";
 
             $checked = "";
@@ -183,7 +183,7 @@
 
             # Contributions To Committees
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Committees";
-            display_tooltip ("Search contributions to any recipient committee(s) by name.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to any recipient committee.", 20, -20, 160, "right");
             echo "</div>";
 
             $checked = "";
