@@ -34,6 +34,7 @@
       $_POST["state_list"] = "ALL";
       $_POST["date_select"] = "all";
       $_POST["show_summary"] = "yes";
+      $_POST["exclude"] = "on";
 
       if ($_POST["qs_button"] == "Search Candidates") {
         $_POST["contrib_select"] = "all";
@@ -176,7 +177,7 @@
             echo "</select>";
 
             $checked = "";
-            if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button
+            if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}}
             echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" onFocus=\"document.getElementById('props_to').checked=true;\" {$checked} class=\"clear_both left caps_radio4\" alt=\"Exclude contributions between allied committees\">";
             echo "<label for=\"exclude\" class=\"font_input caps_label3\">Exclude contributions between allied committees</label>";
             echo "<hr class=\"caps_hr2\">";
