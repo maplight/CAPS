@@ -12,7 +12,7 @@
 # process script query
   function script_query ($query) {
     global $script_conn;
-    $ret = $script_conn->query (str_replace (array ("\\'", "\\\"", "\\n"), array ("'", "\"", "\n"), mysqli_real_escape_string ($script_conn, $query)));
+    $ret = $script_conn->query (str_replace (array ("\\'", "\\\"", "\\n", "\\\\"), array ("'", "\"", "\n", "\\"), mysqli_real_escape_string ($script_conn, $query)));
     return $ret;
   }
 
