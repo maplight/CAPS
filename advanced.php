@@ -49,6 +49,7 @@
         $_POST["search_propositions"] = "Search propositions";
         $_POST["position"] = "B";
         $_POST["date_select"] = "all";
+        $_POST["exclude"] = "on";
       }
 
       if ($_POST["qs_button"] == "Search Contributors") {
@@ -81,7 +82,7 @@
         <div id="caps_sidebar">
           <h1 class="font_large_header">Advanced Search</h1><br>
           <a href="advanced.php" id="caps_reset_btn">Clear Form</a>
-          <input type="submit" name="search_btn" value="Search" id="caps_search_btn">
+          <input type="submit" name="search_btn" value="Search" id="caps_search_btn1">
 
           <!-- Contributions From -->
           <h2 class="font_title caps_option_title">Contributions From:</h2>
@@ -121,7 +122,7 @@
 
             # Contributions To Candidates
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Candidates";
-            display_tooltip ("Search contributions to candidate-controlled campaign committees.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to candidate-controlled campaign committees at the state level.", 20, -20, 160, "right");
             echo "</div>";
 
             $checked = "";
@@ -139,7 +140,7 @@
             echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" onkeyup=\"fill_candidate_list(event);\" onFocus=\"document.getElementById('search_cands').checked=true; if(this.value == 'Search candidates') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search candidates';}\" class=\"font_input input_border caps_text1\" alt=\"Search Candidates Text\">";
             echo "<div id=\"candidates\" class=\"caps_search_dropbox\"></div>";
             echo "</div>";
-            display_tooltip ("Search contributions to a particular candidate\'s campaign committee(s).", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to a particular candidate\'s campaign committee(s) for state office.", 20, -20, 160, "right");
 
             $checked = "";
             if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "office") {$checked = "checked";}}  
@@ -149,7 +150,7 @@
             if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
             fill_offices_sought ($selected);
             echo "</select>";
-            display_tooltip ("Search contributions to candidate-controlled campaign committees for a particular office.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to candidate-controlled campaign committees for a particular state office.", 20, -20, 160, "right");
             echo "<hr class=\"caps_hr2\">";
 
             # Contributions To Ballot Measures
@@ -176,9 +177,9 @@
             echo "</select>";
 
             $checked = "";
-            if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button
+            if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}}
             echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" onFocus=\"document.getElementById('props_to').checked=true;\" {$checked} class=\"clear_both left caps_radio4\" alt=\"Exclude contributions between allied committees\">";
-            echo "<label for=\"exclude\" class=\"left font_input caps_label3\">Exclude contributions between allied committees</label>";
+            echo "<label for=\"exclude\" class=\"font_input caps_label3\">Exclude contributions between allied committees</label>";
             echo "<hr class=\"caps_hr2\">";
 
             # Contributions To Committees
@@ -230,7 +231,7 @@
             fill_election_cycles ($cycles, "");
             echo "</div> <!-- end caps_cycles_box -->";
 
-            echo "<input type=\"submit\" name=\"search_btn\" value=\"Search\" id=\"caps_search_btn\">";
+            echo "<input type=\"submit\" name=\"search_btn\" value=\"Search\" id=\"caps_search_btn2\">";
           ?>
         </div> <!-- end caps_sidebar -->
 

@@ -13,7 +13,7 @@
 # process query
   function my_query ($query) {
     global $web_conn;
-    $ret = $web_conn->query (str_replace (array ("\\'", "\\\"", "\\n"), array ("'", "\"", "\n"), mysqli_real_escape_string ($web_conn, $query)));
+    $ret = $web_conn->query (str_replace (array ("\\'", "\\\"", "\\n", "\\\\"), array ("'", "\"", "\n", "\\"), mysqli_real_escape_string ($web_conn, $query)));
     return $ret;
   }
 ?>

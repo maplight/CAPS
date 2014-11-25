@@ -137,7 +137,7 @@ body{
   background:#124161;
 }
 
-#caps_search_btn{
+#caps_search_btn1{
   float:right;
   background:#e6ecf0;
   color:#124161;
@@ -147,7 +147,22 @@ body{
   padding:10px 15px 10px 15px;
 }
 
-#caps_search_btn:hover{
+#caps_search_btn1:hover{
+  color:#fff;
+  background:#124161;
+}
+
+#caps_search_btn2{
+  float:right;
+  background:#e6ecf0;
+  color:#124161;
+  border:2px solid #124161;
+  font:bold 17px Arial, Helvetica, sans-serif;
+  margin:0 0 9px;
+  padding:10px 15px 10px 15px;
+}
+
+#caps_search_btn2:hover{
   color:#fff;
   background:#124161;
 }
