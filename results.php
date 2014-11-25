@@ -376,7 +376,7 @@
               case "C":
                 echo "<div class=\"font_results_header\"><strong>" . strtoupper ($_POST["search_candidates"]) . "</strong> has received</div>";
                 echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                display_tooltip ("This is the total amount received by candidate-controlled committees in the selected date range. The table below contains individual contributions.", -180, 10, 160, "");
+                display_tooltip ("This is the total amount received. The table below displays individual contributions and may return duplicate rows for contributions given to committees that supported or opposed multiple ballot measures in one election.", -180, 10, 250, "");
                 echo "<div id=\"caps_breakdown_box\">";
                 $result2 = my_query ("SELECT RecipientCommitteeNameNormalized, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, RecipientCommitteeID, RecipientCommitteeNameNormalized, TransactionAmount FROM contributions_search INNER JOIN smry_committees USING (RecipientCommitteeID) INNER JOIN smry_candidates USING (RecipientCandidateNameID) {$where}) AS UniqueContributions GROUP BY RecipientCommitteeID ORDER BY RecipientCommitteeNameNormalized");
                 while ($row2 = $result2->fetch_assoc()) {
@@ -391,7 +391,7 @@
                 $election_date = date ("F Y", strtotime ($election));
                 echo "<div class=\"font_results_header\"><strong>Ballot Measures</strong> on the {$election_date} ballot have received ";
                 echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                display_tooltip ("This is the total amount given towards the specified ballot measures. The table below contains individual contributions.", -180, 10, 160, "");
+                display_tooltip ("This is the total amount received. The table below displays individual contributions and may return duplicate rows for contributions given to committees that supported or opposed multiple ballot measures in one election.", -180, 10, 250, "");
                 echo "</div>";
                 echo "<div id=\"caps_breakdown_box\">";
                 $result2 = my_query ("SELECT Target, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount, SUM(IF(PositionID = 1,1,0)) AS SupportCount, SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount, SUM(IF(PositionID = 2,1,0)) AS OpposeCount, SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount FROM (SELECT DISTINCT ContributionID, Target, PositionID, TransactionAmount FROM contributions_search INNER JOIN smry_propositions USING (PropositionID) WHERE Election = '{$election}' AND BallotMeasureContribution = 'Y') AS UniqueContributions GROUP BY Target ORDER BY Target");
@@ -413,7 +413,7 @@
               case "D":
                 echo "<div class=\"font_results_header\"><strong>" . strtoupper ($_POST["contributor"]) . "</strong> has contributed</div>";
                 echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                display_tooltip ("This is the total amount given by the specified contributors in the selected date range. The table below contains individual contributions.", -180, 10, 160, "");
+                display_tooltip ("This is the total amount received. The table below displays individual contributions and may return duplicate rows for contributions given to committees that supported or opposed multiple ballot measures in one election.", -180, 10, 250, "");
                 echo "<div id=\"caps_breakdown_box\">";
                 $result2 = my_query ("SELECT CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, CandidateContribution, BallotMeasureContribution, TransactionAmount FROM contributions_search {$where}) AS UniqueContributions GROUP BY CandidateContribution, BallotMeasureContribution ORDER BY CandidateContribution, BallotMeasureContribution");
                 while ($row2 = $result2->fetch_assoc()) {
