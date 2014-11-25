@@ -47,7 +47,7 @@ function fill_candidate_list_return(list_data) {
     $('#candidates').hide();
   } else {
     var candidates = '<select size=10 id="found_candidates" onclick="candidate_list_item_clicked(this.value);" onkeydown="candidate_list_item_selected(event, this.value);">'; 
-    list_data.forEach(function(item) {candidates = candidates + '<option>' + item.RecipientCandidateNameNormalized + '</option>';});
+    for (var i = 0; i < list_data.length; i++) {candidates = candidates + '<option>' + list_data[i].RecipientCandidateNameNormalized + '</option>';}
     candidates = candidates + '</select>';
     $('#candidates').html(candidates);
     $('#candidates').show();
@@ -100,7 +100,7 @@ function fill_committee_list_return(list_data) {
     $('#committees').hide();
   } else {
     var committees = '<select size=10 id="found_committees" onclick="committee_list_item_clicked(this.value);" onkeydown="committee_list_item_selected(event, this.value);">'; 
-    list_data.forEach(function(item) {committees = committees + '<option>' + item.RecipientCommitteeNameNormalized + '</option>';});
+    for (var i = 0; i < list_data.length; i++) {committees = committees + '<option>' + list_data[i].RecipientCommitteeNameNormalized + '</option>';}
     committees = committees + '</select>';
     $('#committees').html(committees);
     $('#committees').show();
