@@ -750,17 +750,98 @@ body{
 }
 
 
-@media only screen and (max-width:700px){
-  #sidebar{
-    width:100%;
-    padding:12px 6px 12px 6px;
-    margin:0 auto 20px;
-    float:none;
-  }
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px) {
 
-  #content{
-    width:100%;
-    margin:0 auto;
-    float:none;
-  }
+    .font_large_header{font:bold 25px Arial, Helvetica, sans-serif;  width: 95%; text-align: center}
+    #maplight_logo {
+        width: 95%;
+    }
+    #qs_title{
+        padding:0;
+        width:100%;
+    }
+
+    #advanced_button {
+        float: inherit;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    input#search_contribs {
+        width: 80%
+    }
+
+    #caps_description{
+        padding-bottom: 0.1em;
+    }
+
+    #sidebar{
+        width:95%;
+    }
+
+    .caps_title1{
+        text-align: center
+    }
+
+
+
 }
+
+/* Smartphones (landscape) ----------- */
+@media only screen
+and (min-width : 321px) {
+    /* Styles */
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen
+and (max-width : 320px) {
+    .font_large_header{font:bold 25px Arial, Helvetica, sans-serif; width: 100%; word-wrap: break-word;}
+}
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px) {
+    /* Styles */
+}
+
+/* iPads (landscape) ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : landscape) {
+    /* Styles */
+}
+
+/* iPads (portrait) ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : portrait) {
+    /* Styles */
+}
+
+/* Desktops and laptops ----------- */
+@media only screen
+and (min-width : 1224px) {
+    /* Styles */
+}
+
+/* Large screens ----------- */
+@media only screen
+and (min-width : 1824px) {
+    /* Styles */
+}
+
+/* iPhone 4 ----------- */
+@media
+only screen and (-webkit-min-device-pixel-ratio : 1.5),
+only screen and (min-device-pixel-ratio : 1.5) {
+    /* Styles */
+}
+
+
