@@ -150,7 +150,7 @@
             if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
             fill_offices_sought ($selected);
             echo "</select>";
-            display_tooltip ("Search contributions to candidate-controlled campaign committees for a particular state-level office.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to candidate-controlled campaign committees for a particular state office.", 20, -20, 160, "right");
             echo "<hr class=\"caps_hr2\">";
 
             # Contributions To Ballot Measures
