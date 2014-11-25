@@ -1,4 +1,4 @@
-﻿drop table if exists table_filing_ids;
+drop table if exists table_filing_ids;
 create table table_filing_ids (
     OriginTable varchar(20) not null
   , filing_id bigint(20) not null
