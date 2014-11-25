@@ -588,6 +588,8 @@ and (max-device-width : 480px) {
 
     #caps_sidebar{
         width:100%;
+        float: left;
+        clear: left;
     }
 
     .caps_title1{
@@ -595,7 +597,10 @@ and (max-device-width : 480px) {
     }
 
 
-
+    #caps_content {
+        margin-left: inherit;
+        padding: inherit;
+    }
 }
 
 /* Smartphones (landscape) ----------- */
@@ -650,5 +655,11 @@ and (min-width : 1824px) {
 only screen and (-webkit-min-device-pixel-ratio : 1.5),
 only screen and (min-device-pixel-ratio : 1.5) {
     /* Styles */
+}
+
+@media only screen and (max-width: 799px) {
+    .errMsg{background-position:50% 10%;padding-top:80px}
+    input[type=text],input[type=email],input[type=url],input[type=password],textarea{width:auto;}
+    select{font-size:1.313em}
 }
 
