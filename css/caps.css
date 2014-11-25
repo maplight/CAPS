@@ -66,6 +66,15 @@ body{
   font:13px Arial, Helvetica, sans-serif;
 }
 
+#caps_filter_box{
+  background:#ebebeb;
+  margin-top:25px;
+  margin-bottom:15px;
+  padding:8px;
+  border:2px solid #cccccc;
+  font:15px Arial, Helvetica, sans-serif;
+}
+
 #qs_page{
   padding:28px;
   overflow:hidden;
@@ -136,6 +145,20 @@ body{
   background:#124161;
 }
 
+#caps_update_btn{
+  background:#e6ecf0;
+  color:#124161;
+  border:2px solid #124161;
+  font:bold 15px Arial, Helvetica, sans-serif;
+  margin:0 4px;
+  padding:2px 6px 2px 6px;
+}
+
+#caps_update_btn:hover{
+  color:#fff;
+  background:#124161;
+}
+
 
 .caps_search_dropbox{
   position:absolute;
@@ -187,6 +210,35 @@ body{
 .caps_img{
   clear:both;
   float:left;
+}
+
+.download_csv{
+  background:#e6ecf0;
+  border:2px solid #124161;
+  font: bold 14px/22px Arial, Helvetica, sans-serif;
+  color:#124161;
+  margin:0 0 0 8px;
+  padding:0px 29px 0 4px;
+  text-decoration: none;
+  display: inline-block;
+  vertical-align: middle;
+  position:relative;
+}
+.download_csv:before{
+  position:absolute;
+  right:9px;
+  top:4px;
+  content:'';
+  background:url(../img/sprite01.png) no-repeat;
+  width:13px;
+  height:13px;
+}
+.download_csv:hover{
+  color:#fff;
+  background:#124161;
+}
+.download_csv:hover:before{
+  background-position:-22px 0;
 }
 
 .caps_hr1{
@@ -381,6 +433,13 @@ body{
   width:194px;
   margin-left:34px;
   margin-bottom:22px;
+  padding:0px;
+  border-radius:0;
+}
+
+.caps_select4{
+  margin-left:6px;
+  margin-right:6px;
   padding:0px;
   border-radius:0;
 }

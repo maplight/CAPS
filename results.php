@@ -429,27 +429,28 @@
           }
         }
 
-        echo "<div id=\"filter_box\">";
+        echo "<div id=\"caps_filter_box\">";
         echo "Show";
-        echo "<select id=\"show\" name=\"return_rows\" class=\"content_select1\">";
+        echo "<select id=\"show\" name=\"return_rows\" class=\"font_input input_border caps_select4\" alt=\"Number of Rows to Display\">";
         if ($limit == 10) {echo "<option selected>10</option>";} else {echo "<option>10</option>";}
         if ($limit == 25) {echo "<option selected>25</option>";} else {echo "<option>25</option>";}
         if ($limit == 50) {echo "<option selected>50</option>";} else {echo "<option>50</option>";}
         if ($limit == 100) {echo "<option selected>100</option>";} else {echo "<option>100</option>";}
         echo "</select>";
         echo "rows&nbsp;&nbsp;&nbsp;&nbsp;Sort by";
-        echo "<select id=\"sort\" name=\"sort\" class=\"content_select1\">";
+        echo "<select id=\"sort\" name=\"sort\" class=\"font_input input_border caps_select4\" alt=\"Sort By\">";
         foreach ($sort_fields as $sort_item) {
           $item_data = explode ("|", $sort_item); 
           if ($sort == $item_data[0]) {echo "<option value=\"{$item_data[0]}\" SELECTED>{$item_data[1]}</option>";} else {echo "<option value=\"{$item_data[0]}\">{$item_data[1]}</option>";}
         }
         echo "</select>";
         echo "<input type=\"submit\" value=\"Update\" id=\"caps_update_btn\">";
-        echo "<div id=\"download_box\">";
+
+        echo "<div class=\"right\">";
         echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">Download CSV</a>&nbsp;";
-        display_tooltip ("Download the search results as a CSV file.", -180, 10, 160);
-        echo "</div> <!-- download_box -->";
-        echo "</div> <!-- filter_box -->";
+        display_tooltip ("Download the search results as a CSV file.", -180, 10, 160, "");
+        echo "</div> <!-- end download_box -->";
+        echo "</div> <!-- end filter_box -->";
 
         echo "Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($record_count["records"], 0, ".", ",") . "</strong> rows ";
         $field_msg = "Show more fields";
