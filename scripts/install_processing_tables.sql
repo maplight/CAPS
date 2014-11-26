@@ -216,6 +216,7 @@ create table contributions_full (
   , key FilingIDAmendID (FilingID, AmendID)
   , key Form (Form)
   , key Schedule (Schedule)
+  , key FiledDate (FiledDate)
 );
 
 drop table if exists ca_search.contributions;

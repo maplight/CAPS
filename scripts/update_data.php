@@ -37,7 +37,7 @@
   echo "Reset last update file \n";
   # Reset last update file
   script_query ("TRUNCATE ca_search.smry_last_update");
-  script_query ("INSERT INTO ca_search.smry_last_update VALUES (NOW())");
+  script_query ("INSERT INTO ca_search.smry_last_update SELECT FiledDate FROM contributions_full WHERE FiledDate <= NOW() ORDER BY FiledDate DESC LIMIT 1");
 
   echo "Process data for contributions table - stage 4 \n";
   # Process data for contributions table - stage 4
