@@ -271,7 +271,7 @@ body{
   display:none;
   max-width:190px;
   margin-left:4px;
-  margin-top:8px;
+  margin-top:-8px;
   margin-bottom:8px;
   padding:0px;
   background:#FFFFFF;
