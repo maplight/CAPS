@@ -138,7 +138,7 @@
             echo "<div class=\"left\">";
             echo "<input type=\"hidden\" id=\"match_candidate\" name=\"match_candidate\" value=\"no\">";
             echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" onkeyup=\"fill_candidate_list(event);\" onFocus=\"document.getElementById('search_cands').checked=true; if(this.value == 'Search candidates') {this.value = '';} fill_candidate_list(event);\" onBlur=\"if(this.value == '') {this.value = 'Search candidates';}\" class=\"font_input input_border caps_text1\" alt=\"Search Candidates Text\">";
-            echo "<div id=\"candidates\" class=\"caps_search_dropbox\"></div>";
+            echo "<div id=\"candidates\" class=\"input_border caps_search_dropbox\"></div>";
             echo "</div>";
             display_tooltip ("Search contributions to a particular candidate\'s campaign committee(s) for state office.", 20, -20, 160, "right");
 
@@ -195,7 +195,7 @@
             echo "<div class=\"left\">";
             echo "<input type=\"hidden\" id=\"match_committee\" name=\"match_committee\" value=\"no\">";
             echo "<input type=\"text\" id=\"search_committees\" name=\"search_committees\" value=\"{$text}\" onkeyup=\"fill_committee_list(event);\" onFocus=\"document.getElementById('search_comms').checked=true; if(this.value == 'Just these committees') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these committees';}\" class=\"font_input input_border caps_text1\" alt=\"Just These Committees\">";
-            echo "<div id=\"committees\" class=\"caps_search_dropbox\"></div>";
+            echo "<div id=\"committees\" class=\"input_border caps_search_dropbox\"></div>";
             echo "</div>";
             echo "<hr class=\"caps_hr1\">";
           ?>

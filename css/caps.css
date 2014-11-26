@@ -253,8 +253,7 @@ body{
   background:#124161;
 }
 
-
-.caps_search_dropbox{
+.qs_search_dropbox{
   position:absolute;
   display:none;
   max-width:400px;
@@ -263,6 +262,18 @@ body{
   padding:0px;
   background:#FFFFFF;
   z-index:9999;
+  overflow:auto;
+}
+
+.caps_search_dropbox{
+  display:none;
+  max-width:210px;
+  border-radius: 0px;
+  margin-left:4px;
+  margin-top:-8px;
+  margin-bottom:8px;
+  padding:0px;
+  background:#FFFFFF;
   overflow:auto;
 }
 
