@@ -108,6 +108,7 @@ body{
 }
 
 #qs_btn{
+  clear:both;
   float:left;
   font:bold 14px Arial, Helvetica, sans-serif;
   color:#124161;
