@@ -3,25 +3,15 @@
 <html lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CAL-ACCESS Campaign Power Search</title>
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/main-max-width.css">
-  <noscript><link href="css/noJs.css" rel="stylesheet" type="text/css" /></noscript>
-  <!--[if lt IE 9]>
-    <link rel="stylesheet" href="css/ie-main-max-width.css" media="screen" />
-    <script src="js/vendor/compatibility.js"></script>
-  <![endif]-->
+  <title>Campaign Finances Power Search</title>
   <link rel="stylesheet" type="text/css" href="css/caps.css" media="all">
-  <script src="js/vendor/ga-async.js"></script>
   <script src="js/jquery.js"></script>
   <script src="js/caps.js"></script>
 </head>
 
 <body>
 <?php
-    # CAL-ACCESS Campaign Power Search Project
+    # Campaign Finance Power Search Project
     # Written by Mike Krejci for MapLight
 
     # Load required libraries
@@ -34,7 +24,7 @@
 <div id="caps_header">
   <div><img id="maplight_logo" src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;"></div>
   <ul id="utl">
-        <li><b>CAL-ACCESS Campaign Power Search</b></li>
+        <li><b>Campaign Finance Power Search</b></li>
         <li><a href="index.php">Quick Search</a></li>
         <li><a href="advanced.php">Advanced Search</a></li>
   </ul>
@@ -109,7 +99,7 @@
 </div> <!-- end caps_wrapper-->
 
 <!-- Place custom page footer here -->
-<footer style="display:none;"></footer>
+<footer></footer>
 
 </body>
 </html>
