@@ -66,7 +66,7 @@
               <div class="left">How much has&nbsp;</div> 
               <div class="left">
                 <input type="hidden" id="match_candidate" name="match_candidate" value="no">
-                <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" onkeyup="fill_candidate_list(event);" onFocus="if(this.value == 'Search candidates') {this.value = '';}" onBlur="if(this.value == '') {this.value = 'Search candidates';}" class="font_input input_border qs_text1" alt="Search Candidates">
+                <input type="text" id="search_candidates" name="search_candidates" value="Search candidates" onkeyup="fill_candidate_list(event);" onFocus="if(this.value == 'Search candidates') {this.value = '';} fill_candidate_list(event);" onBlur="if(this.value == '') {this.value = 'Search candidates';}" class="font_input input_border qs_text1" alt="Search Candidates"><br>
                 <div id="candidates" class="input_border caps_search_dropbox"></div>
               </div>
               <div class="left">&nbsp;received?</div><br>
