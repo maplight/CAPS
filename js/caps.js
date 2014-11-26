@@ -46,7 +46,7 @@ function fill_candidate_list_return(list_data) {
   if (list_data == '') {
     $('#candidates').hide();
   } else {
-    var candidates = '<select size=10 id="found_candidates">'; 
+    var candidates = '<select size=10 id="found_candidates" style="min-width:190px;">'; 
     for (var i = 0; i < list_data.length; i++) {candidates = candidates + '<option>' + list_data[i].RecipientCandidateNameNormalized + '</option>';}
     candidates = candidates + '</select>';
     $('#candidates').html(candidates);
@@ -111,7 +111,7 @@ function fill_committee_list_return(list_data) {
   if (list_data == '') {
     $('#committees').hide();
   } else {
-    var committees = '<select size=10 id="found_committees">'; 
+    var committees = '<select size=10 id="found_committees" style="min-width:190px;">'; 
     for (var i = 0; i < list_data.length; i++) {committees = committees + '<option>' + list_data[i].RecipientCommitteeNameNormalized + '</option>';}
     committees = committees + '</select>';
     $('#committees').html(committees);

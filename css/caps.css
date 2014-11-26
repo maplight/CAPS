@@ -270,12 +270,12 @@ body{
 .caps_search_dropbox{
   display:none;
   max-width:190px;
-  border-radius: 0px;
   margin-left:4px;
-  margin-top:-8px;
+  margin-top:8px;
   margin-bottom:8px;
   padding:0px;
   background:#FFFFFF;
+  border-radius:0px;
   overflow:auto;
 }
 
