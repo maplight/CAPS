@@ -87,7 +87,7 @@
             echo "<input type=\"radio\" id=\"select_contribs\" name=\"contrib_select\" value=\"search\" class=\"clear_both left caps_radio1\" {$checked}>";
             $text = "Just these contributors";
             if (isset ($_POST["contributor"])) {$text = htmlspecialchars($_POST["contributor"]);}
-            echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" onFocus=\"document.getElementById('select_contribs').checked=true; if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\" class=\"font_input input_border caps_text1\" alt=\"Just These Contributors\">";
+            echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" onFocus=\"document.getElementById('select_contribs').checked=true; if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\" class=\"left font_input input_border caps_text1\" alt=\"Just These Contributors\">";
 
             echo "<label for=\"select_location\" class=\"clear_both left font_input caps_label2\">Contributor Location</label>";
             display_tooltip ("Search contributions from a particular state.", 20, -20, 160, "right");
@@ -100,7 +100,7 @@
           ?>
 
           <!-- Contributions To -->
-          <h2 class="font_title caps_option_title">Contributions To:</h2>
+          <h2 class="clear_both font_title caps_option_title">Contributions To:</h2>
           <?php
             # Contributions To Everything
             $checked = "";
