@@ -20,14 +20,14 @@
     require ("results.php");
 ?>
 
-<!-- default header, replace with sites header -->
+<!-- default header, replace with a custom header -->
 <div id="caps_header">
   <div><img id="maplight_logo" src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;"></div>
-  <ul id="utl">
-        <li><b>Campaign Finance Power Search</b></li>
-        <li><a href="index.php">Quick Search</a></li>
-        <li><a href="advanced.php">Advanced Search</a></li>
-  </ul>
+  <div id="caps_menu"><ul>
+    <li><b>Campaign Finance Power Search</b></li>
+    <li><a href="index.php">Quick Search</a></li>
+    <li><a href="advanced.php">Advanced Search</a></li>
+  </ul></div>
   <div style="border:2px solid #FF0000; background:#FFCCCC; margin:2px; color:red; text-align:center;"><b>NOTE: This search is in BETA. Please do not cite.</b></div>
 </div> <!-- end caps_header -->
 
