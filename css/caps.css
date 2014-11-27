@@ -3,23 +3,31 @@ body{
 }
 
 #caps_menu ul{
-  margin:0;
   padding:0;
+  margin:2px;
+  color:#124161;
+  background:#E6ECF0;
+  border:2px solid #124161;
   list-style-type:none;
 }
 #caps_menu ul li{
   display:inline;
+  padding-left:8px;
+  padding-right:8px;
+  border-right:1px solid #124161;
+}
+#caps_menu ul li:last-child{
+  border-right:0;
 }
 #caps_menu ul li a{
-text-decoration: none;
-padding: .2em 1em;
-color: #fff;
-background-color: #036;
+  padding-left:8px;
+  padding-right:8px;
+  font:bold 14px Arial, Helvetica, sans-serif;
+  text-decoration: none;
 }
-#caps_menu ul li a:hover
-{
-color: #fff;
-background-color: #369;
+#caps_menu ul li a:hover{
+  color:#FFFFFF;
+  background:#124161;
 }
 
 #caps_header{
