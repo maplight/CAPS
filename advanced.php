@@ -69,12 +69,12 @@
 
       <form method="post">
         <div id="caps_sidebar">
-          <h1 class="font_large_header">Advanced Search</h1><br>
+          <h1 class="font_large_header">Advanced Search</h1>
           <a href="advanced.php" id="caps_reset_btn">Clear Form</a>
           <input type="submit" name="search_btn" value="Search" id="caps_search_btn1">
 
           <!-- Contributions From -->
-          <h2 class="font_title caps_option_title">Contributions From:</h2>
+          <h2 class="clear_both font_title caps_option_title">Contributions From:</h2>
           <?php
             $checked = "";
             if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button

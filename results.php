@@ -2,7 +2,7 @@
   function build_results_table () {
     if (! isset ($_POST["contributor"])) {
       # No form search yet
-      echo "<DIV CLASS=\"caps_title2\">Search political contributions from 2001 through the present, using the controls on the left.</DIV>";
+      echo "<DIV CLASS=\"font_title\">Search California political contributions from 2001 through the present using the form on this page.</DIV>";
     } else {
       # Parse search form
       $parse_data = parse_search_form ($_POST);
