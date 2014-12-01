@@ -96,7 +96,7 @@
             if (isset ($_POST["state_list"])) {$selected = $_POST["state_list"];}
             fill_state_list ($selected);
             echo "</select>";
-            echo "<hr class=\"caps_hr1\">";
+            echo "<hr class=\"clear_both caps_hr1\">";
           ?>
 
           <!-- Contributions To -->
@@ -107,7 +107,7 @@
             if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "all") {$checked= "checked";}} else {$checked = "checked";}  
             echo "<input type=\"radio\" id=\"comms_to\" name=\"contrib_types\" value=\"all\" class=\"clear_both left caps_radio1\" {$checked} alt=\"Everything (Candidates, Ballot Measures & Other Committees)\">";
             echo "<div class=\"font_input caps_everything_box\">Everything (Candidates, Ballot Measures & Other Committees)</div>";
-            echo "<hr class=\"caps_hr2\">";
+            echo "<hr class=\"clear_both caps_hr2\">";
 
             # Contributions To Candidates
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Candidates";
@@ -140,7 +140,7 @@
             fill_offices_sought ($selected);
             echo "</select>";
             display_tooltip ("Search contributions to candidate-controlled campaign committees for a particular state office.", 20, -20, 160, "right");
-            echo "<hr class=\"caps_hr2\">";
+            echo "<hr class=\"clear_both caps_hr2\">";
 
             # Contributions To Ballot Measures
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Ballot Measures";
@@ -169,7 +169,7 @@
             if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}}
             echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" onFocus=\"document.getElementById('props_to').checked=true;\" {$checked} class=\"clear_both left caps_radio4\" alt=\"Exclude contributions between allied committees\">";
             echo "<label for=\"exclude\" class=\"font_input caps_label3\">Exclude contributions between allied committees</label>";
-            echo "<hr class=\"caps_hr2\">";
+            echo "<hr class=\"clear_both caps_hr2\">";
 
             # Contributions To Committees
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Committees";
