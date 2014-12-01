@@ -3,15 +3,25 @@
 <html lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <title>Campaign Finances Power Search</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CAL-ACCESS Campaign Power Search</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main-max-width.css">
+  <noscript><link href="css/noJs.css" rel="stylesheet" type="text/css" /></noscript>
+  <!--[if lt IE 9]>
+    <link rel="stylesheet" href="css/ie-main-max-width.css" media="screen" />
+    <script src="js/vendor/compatibility.js"></script>
+  <![endif]-->
   <link rel="stylesheet" type="text/css" href="css/caps.css" media="all">
+  <script src="js/vendor/ga-async.js"></script>
   <script src="js/jquery.js"></script>
   <script src="js/caps.js"></script>
 </head>
 
 <body>
 <?php
-    # Campaign Finance Power Search Project
+    # CAL-ACCESS Campaign Power Search Project
     # Written by Mike Krejci for MapLight
 
     # Load required libraries
@@ -50,16 +60,17 @@
     }
 ?>
 
-<!-- default header, replace with a custom header -->
+<!-- default header, replace with sites header -->
 <div id="caps_header">
   <div><img id="maplight_logo" src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;"></div>
-  <div id="caps_menu"><ul>
-    <li><b>Campaign Finance Power Search</b></li>
-    <li><a href="index.php">Quick Search</a></li>
-    <li><a href="advanced.php">Advanced Search</a></li>
-  </ul></div>
+  <ul id="utl">
+        <li><b>CAL-ACCESS Campaign Power Search</b></li>
+        <li><a href="index.php">Quick Search</a></li>
+        <li><a href="advanced.php">Advanced Search</a></li>
+  </ul>
   <div style="border:2px solid #FF0000; background:#FFCCCC; margin:2px; color:red; text-align:center;"><b>NOTE: This search is in BETA. Please do not cite.</b></div>
 </div> <!-- end caps_header -->
+
 
 <div id="tooltip" class="caps_tooltip"><span id="tooltip_text"></span></div>
 
@@ -69,12 +80,12 @@
 
       <form method="post">
         <div id="caps_sidebar">
-          <h1 class="font_large_header">Advanced Search</h1>
+          <h1 class="font_large_header">Advanced Search</h1><br>
           <a href="advanced.php" id="caps_reset_btn">Clear Form</a>
           <input type="submit" name="search_btn" value="Search" id="caps_search_btn1">
 
           <!-- Contributions From -->
-          <h2 class="clear_both font_title caps_option_title">Contributions From:</h2>
+          <h2 class="font_title caps_option_title">Contributions From:</h2>
           <?php
             $checked = "";
             if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button
@@ -87,7 +98,7 @@
             echo "<input type=\"radio\" id=\"select_contribs\" name=\"contrib_select\" value=\"search\" class=\"clear_both left caps_radio1\" {$checked}>";
             $text = "Just these contributors";
             if (isset ($_POST["contributor"])) {$text = htmlspecialchars($_POST["contributor"]);}
-            echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" onFocus=\"document.getElementById('select_contribs').checked=true; if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\" class=\"left font_input input_border caps_text1\" alt=\"Just These Contributors\">";
+            echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" onFocus=\"document.getElementById('select_contribs').checked=true; if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\" class=\"font_input input_border caps_text1\" alt=\"Just These Contributors\">";
 
             echo "<label for=\"select_location\" class=\"clear_both left font_input caps_label2\">Contributor Location</label>";
             display_tooltip ("Search contributions from a particular state.", 20, -20, 160, "right");
@@ -96,18 +107,18 @@
             if (isset ($_POST["state_list"])) {$selected = $_POST["state_list"];}
             fill_state_list ($selected);
             echo "</select>";
-            echo "<hr class=\"clear_both caps_hr1\">";
+            echo "<hr class=\"caps_hr1\">";
           ?>
 
           <!-- Contributions To -->
-          <h2 class="clear_both font_title caps_option_title">Contributions To:</h2>
+          <h2 class="font_title caps_option_title">Contributions To:</h2>
           <?php
             # Contributions To Everything
             $checked = "";
             if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "all") {$checked= "checked";}} else {$checked = "checked";}  
             echo "<input type=\"radio\" id=\"comms_to\" name=\"contrib_types\" value=\"all\" class=\"clear_both left caps_radio1\" {$checked} alt=\"Everything (Candidates, Ballot Measures & Other Committees)\">";
             echo "<div class=\"font_input caps_everything_box\">Everything (Candidates, Ballot Measures & Other Committees)</div>";
-            echo "<hr class=\"clear_both caps_hr2\">";
+            echo "<hr class=\"caps_hr2\">";
 
             # Contributions To Candidates
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Candidates";
@@ -140,7 +151,7 @@
             fill_offices_sought ($selected);
             echo "</select>";
             display_tooltip ("Search contributions to candidate-controlled campaign committees for a particular state office.", 20, -20, 160, "right");
-            echo "<hr class=\"clear_both caps_hr2\">";
+            echo "<hr class=\"caps_hr2\">";
 
             # Contributions To Ballot Measures
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Ballot Measures";
@@ -169,7 +180,7 @@
             if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}}
             echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" onFocus=\"document.getElementById('props_to').checked=true;\" {$checked} class=\"clear_both left caps_radio4\" alt=\"Exclude contributions between allied committees\">";
             echo "<label for=\"exclude\" class=\"font_input caps_label3\">Exclude contributions between allied committees</label>";
-            echo "<hr class=\"clear_both caps_hr2\">";
+            echo "<hr class=\"caps_hr2\">";
 
             # Contributions To Committees
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Committees";
@@ -190,7 +201,7 @@
           ?>
 
           <!-- Dates -->
-          <h2 class="clear_both font_title caps_option_title">Dates:
+          <h2 class="font_title caps_option_title">Dates:
           <?php
             display_tooltip ("Search contributions by the date range in which they were made.", 20, -20, 160, "right");
             echo "</h2>";
@@ -203,7 +214,7 @@
             $checked = "";
             if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "range") {$checked = "checked";}}  
             echo "<input type=\"radio\" id=\"range_dates\" name=\"date_select\" value=\"range\" class=\"clear_both left caps_radio5\" {$checked} alt=\"Select Date Range\">";
-            echo "<div class=\"left font_input caps_label4\"><b>Date range</b></div>";
+            echo "<label for=\"range_dates\" class=\"font_input caps_label4\">Date range</label>";
             $text = "mm/dd/yyyy";
             if (isset ($_POST["start_date"])) {$text = $_POST["start_date"];}
             echo "<input type=\"text\" id=\"start_date\" name=\"start_date\" value=\"{$text}\" onFocus=\"document.getElementById('range_dates').checked=true; if(this.value == 'mm/dd/yyyy') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'mm/dd/yyyy';}\" class=\"clear_both left font_input input_border caps_text2\" alt=\"Enter Start Date\">";
@@ -214,7 +225,7 @@
             $checked = "";
             if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "cycle") {$checked = "checked";}}  
             echo "<input type=\"radio\" id=\"cycle_dates\" name=\"date_select\" value=\"cycle\" class=\"clear_both left caps_radio5\" {$checked} alt=\"Election Cycles\">";
-            echo "<div class=\"left font_input caps_label4\">Election cycles</div>";
+            echo "<label for=\"cycle_dates\" class=\"font_input caps_label4\">Election cycles</label>";
             echo "<div id=\"caps_cycles_box\">";
             if (isset ($_POST["cycles"])) {$cycles = $_POST["cycles"];} else {$cycles = array ("");}
             fill_election_cycles ($cycles, "");
