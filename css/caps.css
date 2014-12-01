@@ -592,7 +592,6 @@ body{
 .caps_table{
   border-collapse:collapse;
   border-spacing:0;
-  border:1px solid #b8b8b8;
   margin:0;
   padding:0;
 }
@@ -600,20 +599,22 @@ body{
   margin:0;
   padding:0;
   background:#ebebeb;
-  font:13px Arial, Helvetica, sans-serif;
+  font:12px Arial, Helvetica, sans-serif;
   color:#333333;
 }
 .caps_table thead tr th{
   margin:0;
-  padding:4px 4px 4px 4px;
+  padding:3px;
+  border:1px solid #b8b8b8;
 }
 .caps_table tbody{
-  font:12px Arial, Helvetica, sans-serif;
+  font:11px Arial, Helvetica, sans-serif;
   color:#333333;
 }
 .caps_table tbody tr td{
   margin:0;
-  padding:3px 3px 3px 3px;
+  padding:2px;
+  border:1px solid #b8b8b8;
 }
 
 
