@@ -604,7 +604,7 @@ body{
 }
 .caps_table thead tr th{
   margin:0;
-  padding:3px;
+  padding:4x;
   border:1px solid #b8b8b8;
 }
 .caps_table tbody{
@@ -613,7 +613,7 @@ body{
 }
 .caps_table tbody tr td{
   margin:0;
-  padding:2px;
+  padding:3px;
   border:1px solid #b8b8b8;
 }
 
