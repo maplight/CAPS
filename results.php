@@ -455,10 +455,14 @@
         echo "</select>";
         echo "<input type=\"submit\" value=\"Update\" id=\"caps_update_btn\">";
 
-        echo "<div class=\"right\">";
-        echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">Download CSV</a>&nbsp;";
-        display_tooltip ("Download the search results as a CSV file.", -180, 10, 160, "");
-        echo "</div> <!-- end download_box -->";
+        # Do not display the download option if there are more records then allowed to download
+        if ($totals_row["records"] <= $max_download_records) { 
+          echo "<div class=\"right\">";
+          echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">Download CSV</a>&nbsp;";
+          display_tooltip ("Download the search results as a CSV file.", -180, 10, 160, "");
+          echo "</div> <!-- end download_box -->";
+        }
+
         echo "</div> <!-- end filter_box -->";
 
         echo "<div class=\"font_input\">Showing <strong>" . number_format ($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format ($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format ($record_count["records"], 0, ".", ",") . "</strong> rows ";
@@ -536,8 +540,12 @@
         $result = my_query ("SELECT * FROM smry_last_update"); $row = $result->fetch_assoc(); $last_update = $row["LastUpdate"];
 
         echo "<p>&nbsp;</p>";
-        echo "<div class=\"font_input\"><p>This page will not display more than 1,000 entries.</p>(To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">download the CSV</a> file.)</div><br>";
-        echo "<div class=\"font_small\">Contributions data is current as of " . date ("F j, Y", strtotime ($last_update)) . ".</div><br>";
+        echo "<div class=\"font_input\"><p>This page will not display more than 1,000 entries.</p>";
+
+        # Do not display the download option if there are more records then allowed to download
+        if ($totals_row["records"] <= $max_download_records) {echo "(To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">download the CSV</a> file.)";}
+
+        echo "</div><br><div class=\"font_small\">Contributions data is current as of " . date ("F j, Y", strtotime ($last_update)) . ".</div><br>";
         echo "</center>";
 
         echo "</div> <!-- end caps_results ->";
