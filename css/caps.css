@@ -111,6 +111,16 @@ body{
   overflow:auto;
 }
 
+#caps_cycles_box{
+  clear:both;
+  float:left;
+  width:220px;
+  margin-left:0px;
+  margin-bottom:20px;
+  padding:4px;
+  overflow:hidden;
+}
+
 #qs_page{
   padding:28px;
   overflow:hidden;
