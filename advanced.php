@@ -190,7 +190,7 @@
           ?>
 
           <!-- Dates -->
-          <h2 class="font_title caps_option_title">Dates:
+          <h2 class="clear_both font_title caps_option_title">Dates:
           <?php
             display_tooltip ("Search contributions by the date range in which they were made.", 20, -20, 160, "right");
             echo "</h2>";
@@ -203,7 +203,7 @@
             $checked = "";
             if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "range") {$checked = "checked";}}  
             echo "<input type=\"radio\" id=\"range_dates\" name=\"date_select\" value=\"range\" class=\"clear_both left caps_radio5\" {$checked} alt=\"Select Date Range\">";
-            echo "<label for=\"range_dates\" class=\"font_input caps_label4\">Date range</label>";
+            echo "<div class=\"left font_input caps_radio5\"><b>Date range</b></div>";
             $text = "mm/dd/yyyy";
             if (isset ($_POST["start_date"])) {$text = $_POST["start_date"];}
             echo "<input type=\"text\" id=\"start_date\" name=\"start_date\" value=\"{$text}\" onFocus=\"document.getElementById('range_dates').checked=true; if(this.value == 'mm/dd/yyyy') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'mm/dd/yyyy';}\" class=\"clear_both left font_input input_border caps_text2\" alt=\"Enter Start Date\">";
@@ -211,14 +211,18 @@
             if (isset ($_POST["end_date"])) {$text = $_POST["end_date"];}
             echo "<input type=\"text\" name=\"end_date\" value=\"{$text}\" onFocus=\"document.getElementById('range_dates').checked=true; if(this.value == 'mm/dd/yyyy') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'mm/dd/yyyy';}\" class=\"left font_input input_border caps_text3\" alt=\"Enter Ending Date\">";
 
-            $checked = "";
-            if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "cycle") {$checked = "checked";}}  
-            echo "<input type=\"radio\" id=\"cycle_dates\" name=\"date_select\" value=\"cycle\" class=\"clear_both left caps_radio5\" {$checked} alt=\"Election Cycles\">";
-            echo "<label for=\"cycle_dates\" class=\"font_input caps_label4\">Election cycles</label>";
-            echo "<div id=\"caps_cycles_box\">";
-            if (isset ($_POST["cycles"])) {$cycles = $_POST["cycles"];} else {$cycles = array ("");}
-            fill_election_cycles ($cycles, "");
-            echo "</div> <!-- end caps_cycles_box -->";
+
+
+
+
+#            $checked = "";
+#            if (isset ($_POST["date_select"])) {if ($_POST["date_select"] == "cycle") {$checked = "checked";}}  
+#            echo "<input type=\"radio\" id=\"cycle_dates\" name=\"date_select\" value=\"cycle\" class=\"clear_both left caps_radio5\" {$checked} alt=\"Election Cycles\">";
+#            echo "<label for=\"cycle_dates\" class=\"font_input caps_label4\">Election cycles</label>";
+#            echo "<div id=\"caps_cycles_box\">";
+#            if (isset ($_POST["cycles"])) {$cycles = $_POST["cycles"];} else {$cycles = array ("");}
+#            fill_election_cycles ($cycles, "");
+#            echo "</div> <!-- end caps_cycles_box -->";
 
             echo "<input type=\"submit\" name=\"search_btn\" value=\"Search\" id=\"caps_search_btn2\">";
           ?>
