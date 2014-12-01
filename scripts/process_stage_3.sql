@@ -63,3 +63,4 @@ UPDATE ca_search.contributions_temp
   JOIN ca_search.contributions_search_temp USING (id)
   JOIN ca_search.smry_candidates_temp USING (RecipientCandidateNameNormalized)
   SET contributions_search_temp.RecipientCandidateNameID = smry_candidates_temp.RecipientCandidateNameID;
+
