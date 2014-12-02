@@ -248,7 +248,7 @@
 
   function display_data ($parse_data) {
     # Set this variable to control the maximum number of records that the download csv file is available.
-    $max_download_records = 250000;
+    $max_download_records = 150000;
 
     $where = $parse_data[0];
     $summary_type = $parse_data[1];

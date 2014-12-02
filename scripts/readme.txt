@@ -43,7 +43,7 @@ Step 9: Set the update_data.php to run in a cron job.
 
 Step 10: Set the maximum number of records to be able to download a csv file in results.php; display_data function.
 
-Step 11: In the file results.php there is a function called display_data.  The first variable in that function, $max_download_records, needs to be set to whatever the maximum number of records you want to have in a download file.  By default it is set to 250,000 records.
+Step 11: In the file results.php there is a function called display_data.  The first variable in that function, $max_download_records, needs to be set to whatever the maximum number of records you want to have in a download file.  By default it is set to 150,000 records.
 
 
 Possible Multi-Server Setup Notes:
