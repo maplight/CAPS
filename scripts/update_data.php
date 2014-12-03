@@ -118,7 +118,7 @@ function process_sql_file($filename)
         if (strpos (" " . strtoupper ($name) . " ", " " . $removal_word . " ") !== false) {$removal_word_found = true;}
       }
 
-      if ($removal_word_found) {
+      if ($removal_word_found && $row["candidate_name"] == "") {
         $query = "UPDATE filing_amends
                             SET gender = '',
                             first_name = '',
