@@ -449,6 +449,7 @@ body{
 #maplight_info{
   float:right;
   margin-bottom:15px;
+  margin-right:8px;
   font:italic 12px Arial, Helvetica, sans-serif;
   color:#898989;
 }
