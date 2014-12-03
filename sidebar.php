@@ -50,7 +50,7 @@
       $cycle_end = $cycle_start + 1;
       echo "<div>";
       if (in_array ($cycle_start, $cycles)) {echo "<input type=\"checkbox\" id=\"y{$cycle_start}\" name=\"cycles[]\" value=\"{$cycle_start}\" onFocus=\"document.getElementById('cycle_dates').checked=true;\" class=\"left caps_radio6\" alt=\"Election Cycle {$cycle_start}\" CHECKED>";} else {echo "<input type=\"checkbox\" id=\"y{$cycle_start}\" name=\"cycles[]\" value=\"{$cycle_start}\" onFocus=\"document.getElementById('cycle_dates').checked=true;\" class=\"left caps_radio6\" alt=\"Election Cycle {$cycle_start}\">";}
-      echo "<label for=\"y{$cycle_start}\" class=\"font_input caps_label5\">$cycle_start-$cycle_end</label>";
+      echo "<label for=\"y{$cycle_start}\" class=\"left font_input caps_label5\">$cycle_start-$cycle_end</label>";
       echo "</div>";
     }
   }

@@ -111,6 +111,7 @@ function process_sql_file($filename)
       $display_name = trim ($ln . $ns . $fn . $mn);
       $gender = $parsed_name["gender"];
       if ($row["display_name"] != "") {$display_name = $name;}
+      if ($row["candidate_name"] != "") {$display_name = $row["candidate_name"];}
 
       $removal_word_found = false;
       foreach ($words_to_remove as $removal_word) {
