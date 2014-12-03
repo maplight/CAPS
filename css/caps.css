@@ -573,7 +573,7 @@ body{
 }
 .caps_table thead tr th{
   margin:0;
-  padding:4px 4px 4px 4px;
+  padding:4px;
 }
 .caps_table tbody{
   font:12px Arial, Helvetica, sans-serif;
@@ -581,7 +581,8 @@ body{
 }
 .caps_table tbody tr td{
   margin:0;
-  padding:3px 3px 3px 3px;
+  padding:3px;
+  border:1px solid #b8b8b8;
 }
 
 
