@@ -93,7 +93,7 @@
         # Build ballot measure search query:
         $PropositionContribution = "contributions_search.BallotMeasureContribution = 'Y'";
 
-        if ($search_data["search_propositions"] != "Search propositions" && $search_data["proposition_list"] == "ALL") {
+        if ($search_data["search_propositions"] != "Search ballot measures" && $search_data["proposition_list"] == "ALL") {
           # build proposition search query
           $PropositionSearch = "";
           foreach (explode (";", $search_data["search_propositions"]) as $search_item) {
@@ -459,7 +459,7 @@
         if ($totals_row["records"] <= $max_download_records) { 
           echo "<div class=\"right\">";
           echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">Download CSV</a>&nbsp;";
-          display_tooltip ("Download the search results as a CSV file.", -180, 10, 160, "");
+          display_tooltip ("Download the search results as a CSV file, which can be opened in most spreadsheet software.", -180, 10, 160, "");
           echo "</div> <!-- end download_box -->";
         }
 

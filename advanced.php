@@ -149,11 +149,11 @@
 
             $checked = "";
             if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "ballots") {$checked = "checked";}}  
-            echo "<input type=\"radio\" id=\"props_to\" name=\"contrib_types\" value=\"ballots\" class=\"clear_both left caps_radio3\" {$checked} alt=\"Search Propositions\">";
-            $text = "Search propositions";
+            echo "<input type=\"radio\" id=\"props_to\" name=\"contrib_types\" value=\"ballots\" class=\"clear_both left caps_radio3\" {$checked} alt=\"Search ballot measures\">";
+            $text = "Search ballot measures";
             if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
-            echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" onFocus=\"document.getElementById('props_to').checked=true; if(this.value == 'Search propositions') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search propositions';}\" class=\"font_input input_border caps_text1\" alt=\"Search Propositions Text\">";
-            echo "<select id=\"propositions_list\" name=\"proposition_list\" onFocus=\"document.getElementById('props_to').checked=true;\" class=\"left font_input input_border caps_select3\" alt=\"Select Proposition or Election\">";
+            echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" onFocus=\"document.getElementById('props_to').checked=true; if(this.value == 'Search ballot measures') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search ballot measures';}\" class=\"font_input input_border caps_text1\" alt=\"Search ballot measures text\">";
+            echo "<select id=\"propositions_list\" name=\"proposition_list\" onFocus=\"document.getElementById('props_to').checked=true;\" class=\"left font_input input_border caps_select3\" alt=\"Select ballot measure or election\">";
             $selected = "";
             if (isset ($_POST["proposition_list"])) {$selected = $_POST["proposition_list"];}
             fill_propositions ($selected);

@@ -18,14 +18,14 @@
 
 
   function fill_propositions ($selected) {
-    echo "<OPTION VALUE=\"ALL\">All propositions</OPTION>";
-    $javascript_array = "[\"ALL\",\"All propositions\"],";
+    echo "<OPTION VALUE=\"ALL\">All ballot measures</OPTION>";
+    $javascript_array = "[\"ALL\",\"All ballot measures\"],";
     $last_election = "";
     $result = my_query ("SELECT DISTINCT Election, Target FROM smry_propositions ORDER BY Election DESC, Target");
     while ($row = $result->fetch_assoc()) {
       if ($last_election != $row["Election"]) {
-        if ("ALL#{$row["Election"]}" == $selected) {echo "<OPTION VALUE=\"ALL#{$row["Election"]}\" SELECTED>" . date ("M j, Y", strtotime ($row["Election"])) . " propositions</OPTION>";} else {echo "<OPTION VALUE=\"ALL#{$row["Election"]}\">" . date ("M j, Y", strtotime ($row["Election"])) . " propositions</OPTION>";}
-        $javascript_array .= "[\"ALL#{$row["Election"]}\",\"" . date ("M j, Y", strtotime ($row["Election"])) . " propositions\"],";
+        if ("ALL#{$row["Election"]}" == $selected) {echo "<OPTION VALUE=\"ALL#{$row["Election"]}\" SELECTED>" . date ("M j, Y", strtotime ($row["Election"])) . " ballot measures</OPTION>";} else {echo "<OPTION VALUE=\"ALL#{$row["Election"]}\">" . date ("M j, Y", strtotime ($row["Election"])) . " ballot measures</OPTION>";}
+        $javascript_array .= "[\"ALL#{$row["Election"]}\",\"" . date ("M j, Y", strtotime ($row["Election"])) . " ballot measures\"],";
         $last_election = $row["Election"];
       }
       if ("{$row["Election"]}#" . str_replace ("\"", "\\\"", $row["Target"]) == $selected) {echo "<OPTION VALUE=\"{$row["Election"]}#" . str_replace ("\"", "\\\"", $row["Target"]) . "\" SELECTED>&nbsp;&nbsp;&nbsp;&nbsp;{$row["Target"]}</OPTION>";} else {echo "<OPTION VALUE=\"{$row["Election"]}#" . str_replace ("\"", "\\\"", $row["Target"]) . "\">&nbsp;&nbsp;&nbsp;&nbsp;{$row["Target"]}</OPTION>";}
