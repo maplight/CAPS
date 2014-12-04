@@ -231,7 +231,9 @@
 
     </div> <!-- end caps_columns -->
   </div> <!-- end caps_containter -->
-  <div id="maplight_info">Power Search software by <A HREF=http://www.maplight.org class="maplight_link">MapLight</A></div>
+
+  <div id="maplight_info">Power Search software by <a href="http://www.maplight.org">MapLight</a><br><center><img src="img/MapLight_Logo.png" width="80"></center></div>
+
 </div> <!-- end caps_wrapper-->
 
 <!-- Place custom page footer here -->

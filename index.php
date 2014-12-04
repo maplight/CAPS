@@ -92,7 +92,7 @@
         </div> <!-- end qs_search -->
       </form>
 
-    <div id="maplight_info">Power Search software by <A HREF=http://www.maplight.org class="maplight_link">MapLight</A></div>
+    <div id="maplight_info">Power Search software by <a href="http://www.maplight.org">MapLight</a><br><center><img src="img/MapLight_Logo.png" width="80"></center></div>
 
     </div> <!-- end qs_page -->
   </div> <!-- end caps_containter -->
