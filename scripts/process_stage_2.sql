@@ -128,7 +128,16 @@ select
   , if(isnull(cal_access_propositions_committees.filer_id),'N','Y') as HasProposition
   , ifnull(cal_access_propositions.name,'') as Target
   , ifnull(cal_access_propositions_committees.`position`,'') as `Position`
-  , if(contributions.ctrib_namf = '', contributions.ctrib_naml, concat(contributions.ctrib_naml, ', ', contributions.ctrib_namf)) as DonorNameNormalized
+  , concat(
+      contributions.ctrib_naml
+    , if(contributions.ctrib_nams = '', '', concat(', ',contributions.ctrib_nams)) 
+    , if(contributions.ctrib_namt = '', '', concat(', ',contributions.ctrib_namt)) 
+    , case
+        when contributions.ctrib_namf = '' then ''
+        when contributions.ctrib_namf <> '' and contributions.ctrib_namt <> '' then concat(' ',contributions.ctrib_namf)
+        else concat(', ',contributions.ctrib_namf)
+        end
+    ) as DonorNameNormalized
   , contributions.ctrib_city as DonorCity
   , contributions.ctrib_st as DonorState
   , contributions.ctrib_zip4 as DonorZipCode
@@ -166,8 +175,10 @@ from
   left join prop_filer_sessions
     on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
+/* 
+where ftp_filer_filings.session_id = 2013 
+*/
 ;
-/* where ftp_filer_filings.session_id = 2013 */
 
 /* loans */
 insert into contributions_full_temp (
@@ -243,7 +254,16 @@ select
   , if(isnull(cal_access_propositions_committees.filer_id),'N','Y') as HasProposition
   , ifnull(cal_access_propositions.name,'') as Target
   , ifnull(cal_access_propositions_committees.`position`,'') as `Position`
-  , if(contributions.lndr_namf = '', contributions.lndr_naml, concat(contributions.lndr_naml, ', ', contributions.lndr_namf)) as DonorNameNormalized
+  , concat(
+      contributions.lndr_naml
+    , if(contributions.lndr_nams = '', '', concat(', ',contributions.lndr_nams)) 
+    , if(contributions.lndr_namt = '', '', concat(', ',contributions.lndr_namt)) 
+    , case
+        when contributions.lndr_namf = '' then ''
+        when contributions.lndr_namf <> '' and contributions.lndr_namt <> '' then concat(' ',contributions.lndr_namf)
+        else concat(', ',contributions.lndr_namf)
+        end
+    ) as DonorNameNormalized
   , contributions.loan_city as DonorCity
   , contributions.loan_st as DonorState
   , contributions.loan_zip4 as DonorZipCode
@@ -356,7 +376,16 @@ select
   , if(isnull(cal_access_propositions_committees.filer_id),'N','Y') as HasProposition
   , ifnull(cal_access_propositions.name,'') as Target
   , ifnull(cal_access_propositions_committees.`position`,'') as `Position`
-  , if(contributions.enty_namf = '', contributions.enty_naml, concat(contributions.enty_naml, ', ', contributions.enty_namf)) as DonorNameNormalized
+  , concat(
+      contributions.enty_naml
+    , if(contributions.enty_nams = '', '', concat(', ',contributions.enty_nams)) 
+    , if(contributions.enty_namt = '', '', concat(', ',contributions.enty_namt)) 
+    , case
+        when contributions.enty_namf = '' then ''
+        when contributions.enty_namf <> '' and contributions.enty_namt <> '' then concat(' ',contributions.enty_namf)
+        else concat(', ',contributions.enty_namf)
+        end
+    ) as DonorNameNormalized
   , contributions.enty_city as DonorCity
   , contributions.enty_st as DonorState
   , contributions.enty_zip4 as DonorZipCode
@@ -509,6 +538,9 @@ where
 update 
   filing_ids a
   join (
+    /*  Grouping by Target also, since contribution records are duplicated
+        by Target. The join below ignores Target, which is fine, since every 
+        Target for a particular filing should have the same records.    */
     select FilingID, AmendID, Target, sum(TransactionAmount) 'Amount'
     from contributions_full_temp
     where 
@@ -641,6 +673,10 @@ set
   , a.RecipientCandidateOffice501Custom = b.office_501_custom
 ;
 
+/*  assign ContributionID
+    (Since contributions can be duplicated if the recipient committee 
+    supports or opposes multiple propositions, a unique ID is needed 
+    to identify unique contributions.) */
 truncate table contribution_ids;
 insert contribution_ids (
     FilingID
@@ -996,6 +1032,10 @@ where
   RecipientCommitteeNameNormalized like '%legal def%'
 ;
 
+/*  Leave blank the 'Office' and 'Recipient Name' columns for 
+    Ballot Measure committees, otherwise it misleadingly implies 
+    that a Ballot Measure Committee has a Recipient Candidate, 
+    which is not the case. */
 update contributions_full_temp
 set
     RecipientCandidateNameNormalized = ''
@@ -1003,11 +1043,16 @@ set
 where HasProposition = 'Y'
 ;
 
+/*  flag non-candidate-controlled committees:
+    non-candidate-controlled = committee types P and G 
+    (and B, which is a particular type of P or G) */
 update contributions_full_temp
 set CandidateControlledCommittee = 'N' 
 where RecipientCommitteeType in ('P','G','B')
 ;
 
+/*  flag non-election committees:
+    non-candidate-election = legal defense, officeholder, and ballot measure */
 update contributions_full_temp
 set CandidateElectionCommittee = 'N' 
 where
@@ -1061,6 +1106,8 @@ where
     )
 ;
 
+/*  flag loans with $0 amount (and an outstanding balance > $0 
+    at the beginning of this period) */
 update contributions_full_temp
 set NoNewLoanAmount = 'Y'
 where
@@ -1161,6 +1208,8 @@ where
     )
 ;
 
+/*  flag state offices based on committee name 
+    (if no state or local flag has been set yet) */
 update contributions_full_temp
 set StateOffice = 'Y'
 where 
@@ -1186,6 +1235,8 @@ where
     )
 ;
 
+/*  flag local offices based on committee name 
+    (if no state or local flag has been set yet) */
 update contributions_full_temp
 set LocalOffice = 'Y'
 where
@@ -1216,6 +1267,11 @@ rename table contributions_full_temp to contributions_full;
 drop table if exists ca_search.contributions_temp;
 create table ca_search.contributions_temp like ca_search.contributions;
 insert ca_search.contributions_temp (
+/*
+drop table if exists contributions_temp;
+create table contributions_temp like contributions;
+insert contributions_temp (
+*/
     TransactionType
   , ElectionCycle
   , Election
@@ -1278,4 +1334,9 @@ where
   and (StateOffice = 'Y' or LocalOffice = 'N')
   and not (Unitemized = 'Y' and TransactionAmount = 0)
 ;
+
+/*
+drop table if exists contributions;
+rename table contributions_temp to contributions;
+*/
 
