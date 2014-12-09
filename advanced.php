@@ -24,6 +24,7 @@
       $_POST["state_list"] = "ALL";
       $_POST["date_select"] = "all";
       $_POST["show_summary"] = "yes";
+      $_POST["office_list"] = "All Offices";
 
       if ($_POST["qs_button"] == "Search Candidates") {
         $_POST["contrib_select"] = "all";

@@ -73,5 +73,6 @@ INSERT INTO ca_search.contributions_grouped_temp
     IF(NOT ISNULL(Target), GROUP_CONCAT(CONCAT(IF(PositionID = 1, 'SUPPORTED', IF(PositionID = 2, 'OPPOSED', '')), ': ', Target) SEPARATOR ' | '), '')
   FROM ca_search.contributions_search_temp
     LEFT JOIN ca_search.smry_propositions_temp USING (PropositionID)
-  GROUP BY ContributionID;
+  GROUP BY ContributionID
+  ORDER BY Target;
 
