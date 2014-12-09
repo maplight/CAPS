@@ -366,7 +366,7 @@
                               "contributions.RecipientCandidateNameNormalized|Recipient Name Ascending",
                               "contributions.RecipientCandidateNameNormalized DESC|Recipient Name Descending");
 
-        $result = my_query ("SELECT contributions.*, ballot_measures FROM contributions_grouped INNER JOIN contributions USING (id) INNER JOIN contributions_search USING(id) {$search_join} {$where} ORDER BY {$sort} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
+        $result = my_query ("SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING (id) INNER JOIN contributions_search USING(id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;
 
         echo "<div id=\"caps_results\">";
