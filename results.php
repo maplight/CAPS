@@ -59,11 +59,25 @@
         #------------------------------------------------------------------------------------------
         # Build candidate search query:
         $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
+
+        # build office list query
+        if ($search_data["office_list"] == "All Offices") {
+          $OfficeList = "";
+        } else {
+          $OfficeList = "smry_offices.RecipientCandidateOffice = '" . addslashes ($search_data["office_list"]) . "'";
+        }
         break;
 
       case "search_candidates":
         # build candidate search query
         $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
+
+        # build office list query
+        if ($search_data["office_list"] == "All Offices") {
+          $OfficeList = "";
+        } else {
+          $OfficeList = "smry_offices.RecipientCandidateOffice = '" . addslashes ($search_data["office_list"]) . "'";
+        }
 
         if ($search_data["match_candidate"] == "no") {
           $Candidate = "";
@@ -80,13 +94,6 @@
           $CandidateList = "smry_candidates.RecipientCandidateNameNormalized = '" . addslashes ($search_data["search_candidates"]) . "'";
         }
         break; # candidates
-
-      case "office":
-        # build office list query
-        $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
-
-        $OfficeList = "smry_offices.RecipientCandidateOffice = '" . addslashes ($search_data["office_list"]) . "'";
-        break;
 
       case "ballots":
         #------------------------------------------------------------------------------------------
