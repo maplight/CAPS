@@ -5,6 +5,7 @@ OPTIMIZE TABLE ca_search.smry_offices_temp;
 OPTIMIZE TABLE ca_search.smry_propositions_temp;
 OPTIMIZE TABLE ca_search.contributions_search_temp;
 OPTIMIZE TABLE ca_search.contributions_temp;
+OPTIMIZE TABLE ca_search.contributions_grouped_temp;
 
 DROP TABLE IF EXISTS ca_search.smry_candidates;
 RENAME TABLE ca_search.smry_candidates_temp TO ca_search.smry_candidates;
@@ -26,4 +27,7 @@ RENAME TABLE ca_search.contributions_search_temp TO ca_search.contributions_sear
 
 DROP TABLE IF EXISTS ca_search.contributions;
 RENAME TABLE ca_search.contributions_temp TO ca_search.contributions;
+
+DROP TABLE IF EXISTS ca_search.contributions_grouped;
+RENAME TABLE ca_search.contributions_grouped_temp TO ca_search.contributions_grouped;
 

@@ -275,7 +275,7 @@
 
       $result = my_query ("SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM (SELECT DISTINCT ContributionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContribs");
       $totals_row = $result->fetch_assoc();
-      $result = my_query ("SELECT COUNT(*) AS records FROM contributions_search {$search_join} {$where}");
+      $result = my_query ("SELECT COUNT(DISTINCT ContributionID) AS records FROM contributions_search {$search_join} {$where}");
       $record_count = $result->fetch_assoc();
 
       if ($record_count["records"] == 0) {
@@ -313,8 +313,7 @@
         $fields = array ("RecipientCandidateNameNormalized|Recipient Name|",
                          "RecipientCommitteeNameNormalized|Recipient Committee|",
                          "RecipientCandidateOffice|Office Sought|",
-                         "Target|Ballot Measure|",
-                         "Position|Ballot Measure Stance|",
+                         "ballot_measures|Ballot Measure(s)|MultiLine",
                          "DonorNameNormalized|Contributor Name|",
                          "TransactionAmount|Amount|Currency",
                          "TransactionDateEnd|Date|Date",
@@ -329,8 +328,7 @@
                            "RecipientCommitteeNameNormalized|Recipient Committee|",
                            "RecipientCandidateOffice|Office Sought|",
                            "RecipientCandidateDistrict|District|",
-                           "Target|Ballot Measure|",
-                           "Position|Ballot Measure Stance|",
+                           "ballot_measures|Ballot Measure(s)|MultiLine",
                            "DonorNameNormalized|Contributor Name|",
                            "TransactionAmount|Amount|Currency",
                            "TransactionDateEnd|Date|Date",
@@ -346,8 +344,8 @@
 
         $sort_fields = array ("contributions_search.TransactionAmount|Amount Ascending",
                               "contributions_search.TransactionAmount DESC|Amount Descending",
-                              "contributions.Target|Ballot Measure Ascending",
-                              "contributions.Target DESC|Ballot Measure Descending",
+                              "contributions_grouped.ballot_measures|Ballot Measures Ascending",
+                              "contributions_grouped.ballot_measures DESC|Ballot Measures Descending",
                               "contributions.DonorEmployerNormalized|Contributor Employer Ascending",
                               "contributions.DonorEmployerNormalized DESC|Contributor Employer Descending",
                               "contributions.DonorNameNormalized|Contributor Name Ascending",
@@ -361,7 +359,7 @@
                               "contributions.RecipientCandidateNameNormalized|Recipient Name Ascending",
                               "contributions.RecipientCandidateNameNormalized DESC|Recipient Name Descending");
 
-        $result = my_query ("SELECT contributions.* FROM contributions INNER JOIN contributions_search USING(id) {$search_join} {$where} ORDER BY {$sort} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
+        $result = my_query ("SELECT contributions.*, ballot_measures FROM contributions_grouped INNER JOIN contributions USING (id) INNER JOIN contributions_search USING(id) {$search_join} {$where} ORDER BY {$sort} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;
 
         echo "<div id=\"caps_results\">";
@@ -503,6 +501,10 @@
 
               case "Currency":
                 echo "<td headers=\"c{$count}\" style=\"text-align:right\">$" . number_format($row[$field_data[0]], 2, ".", ",") . "</td>";
+                break;
+
+              case "MultiLine":
+                echo "<td headers=\"c{$count}\">" . str_replace (" | ", "<hr>", $row[$field_data[0]]) . "</td>";
                 break;
 
               default: 

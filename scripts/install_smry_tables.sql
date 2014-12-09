@@ -32,6 +32,16 @@ CREATE TABLE ca_search.contributions_search (
   FULLTEXT DonorWords(DonorWords)
 ) ENGINE=MyISAM;
 
+DROP TABLE IF EXISTS ca_search.contributions_grouped;
+CREATE TABLE ca_search.contributions_grouped (
+  id BIGINT NOT NULL,
+  ContributionID BIGINT NOT NULL,
+  ballot_measures LONGTEXT NOT NULL,
+  KEY id(id),
+  KEY ContributionID(ContributionID),
+  KEY ballot_measures(ballot_measures(10))
+) ENGINE=MyISAM;
+
 DROP TABLE IF EXISTS ca_search.smry_candidates;
 CREATE TABLE ca_search.smry_candidates (
   RecipientCandidateNameID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,

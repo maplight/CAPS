@@ -20,8 +20,7 @@
                    "contributions.RecipientCandidateNameNormalized|Recipient Name",
                    "contributions.RecipientCandidateOffice|Office",
                    "contributions.RecipientCandidateDistrict|District",
-                   "contributions.Target|Ballot Measure",
-                   "contributions.Position|Ballot Measure Support",
+                   "contributions_grouped.ballot_measures|Ballot Measure(s)",
                    "contributions.DonorNameNormalized|Contributor Name",
                    "contributions.DonorCity|Contributor City",
                    "contributions.DonorState|Contributor State",
@@ -41,7 +40,7 @@
   $header_line = substr ($header_line, 0, -1);
 
   $data = "";
-  $query = "SELECT {$select_fields} FROM contributions INNER JOIN contributions_search USING(id) {$search_join} {$where}";
+  $query = "SELECT {$select_fields} FROM contributions_grouped INNER JOIN contributions USING (id) INNER JOIN contributions_search USING(id) {$search_join} {$where}";
   $result = my_query ($query);
   while ($row = $result->fetch_row()) {
     $data_line = "";

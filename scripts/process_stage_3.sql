@@ -64,3 +64,14 @@ UPDATE ca_search.contributions_temp
   JOIN ca_search.smry_candidates_temp USING (RecipientCandidateNameNormalized)
   SET contributions_search_temp.RecipientCandidateNameID = smry_candidates_temp.RecipientCandidateNameID;
 
+DROP TABLE IF EXISTS ca_search.contributions_grouped_temp;
+CREATE TABLE ca_search.contributions_grouped_temp LIKE ca_search.contributions_grouped;
+INSERT INTO ca_search.contributions_grouped_temp
+  SELECT
+    id,
+    ContributionID,
+    IF(NOT ISNULL(Target), GROUP_CONCAT(CONCAT(IF(PositionID = 0, 'SUPPORTED', 'OPPOSED'), ': ', Target) SEPARATOR ' | '), '')
+  FROM ca_search.contributions_search_temp
+    LEFT JOIN ca_search.smry_propositions_temp USING (PropositionID)
+  GROUP BY ContributionID;
+
