@@ -9,7 +9,7 @@
 
 
   function fill_offices_sought ($selected) {
-    echo "<OPTION>Select Office</OPTION>";
+    echo "<OPTION>All Offices</OPTION>";
     $result = my_query ("SELECT DISTINCT RecipientCandidateOffice FROM smry_offices ORDER BY RecipientCandidateOffice");
     while ($row = $result->fetch_assoc()) {
       if ($row["RecipientCandidateOffice"] == $selected) {echo "<OPTION SELECTED>{$row["RecipientCandidateOffice"]}</OPTION>";} else {echo "<OPTION>{$row["RecipientCandidateOffice"]}</OPTION>";}

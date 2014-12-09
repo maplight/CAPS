@@ -131,10 +131,7 @@
             echo "</div>";
             display_tooltip ("Search contributions to a particular candidate\'s campaign committee(s) for state office.", 20, -20, 160, "right");
 
-            $checked = "";
-            if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "office") {$checked = "checked";}}  
-            echo "<input type=\"radio\" id=\"select_cands\" name=\"contrib_types\" value=\"office\" class=\"clear_both left caps_radio3\" {$checked} alt=\"Select Office\">";
-            echo "<select id=\"office_list\" name=\"office_list\" onFocus=\"document.getElementById('select_cands').checked=true;\" class=\"left font_input input_border caps_select2\" alt=\"Select Office\">";
+            echo "<select id=\"office_list\" name=\"office_list\" onFocus=\"if(!document.getElementById('all_cands').checked && !document.getElementById('search_cands').checked) {document.getElementById('all_cands').checked=true;}\" class=\"clear_both left font_input input_border caps_select3\" alt=\"Select Office\">";
             $selected = "";
             if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
             fill_offices_sought ($selected);
