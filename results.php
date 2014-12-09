@@ -344,8 +344,8 @@
 
         $sort_fields = array ("contributions_search.TransactionAmount|Amount Ascending",
                               "contributions_search.TransactionAmount DESC|Amount Descending",
-                              "contributions_grouped.ballot_measures|Ballot Measures Ascending",
-                              "contributions_grouped.ballot_measures DESC|Ballot Measures Descending",
+                              "contributions.Target|Ballot Measures Ascending",
+                              "contributions.Target DESC|Ballot Measures Descending",
                               "contributions.DonorEmployerNormalized|Contributor Employer Ascending",
                               "contributions.DonorEmployerNormalized DESC|Contributor Employer Descending",
                               "contributions.DonorNameNormalized|Contributor Name Ascending",
