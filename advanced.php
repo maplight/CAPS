@@ -89,6 +89,7 @@
             $text = "Just these contributors";
             if (isset ($_POST["contributor"])) {$text = htmlspecialchars($_POST["contributor"]);}
             echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" onFocus=\"document.getElementById('select_contribs').checked=true; if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\" class=\"left font_input input_border caps_text1\" alt=\"Just These Contributors\">";
+            display_tooltip ("Search for a contributor name. Multiple terms can be separated by semicolons.", 20, -20, 160, "right");
 
             echo "<label for=\"select_location\" class=\"clear_both left font_input caps_label2\">Contributor Location</label>";
             display_tooltip ("Search contributions from a particular state.", 20, -20, 160, "right");
@@ -130,19 +131,19 @@
             echo "<input type=\"text\" id=\"search_candidates\" name=\"search_candidates\" value=\"{$text}\" onkeyup=\"fill_candidate_list(event);\" onFocus=\"document.getElementById('search_cands').checked=true; if(this.value == 'Search candidates') {this.value = '';} fill_candidate_list(event);\" onBlur=\"if(this.value == '') {this.value = 'Search candidates';}\" class=\"font_input input_border caps_text1\" alt=\"Search Candidates Text\">";
             echo "<div id=\"candidates\" class=\"input_border caps_search_dropbox\"></div>";
             echo "</div>";
-            display_tooltip ("Search contributions to a particular candidate\'s campaign committee(s) for state office.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to a particular candidate\'s campaign committee(s).", 20, -20, 160, "right");
 
             echo "<select id=\"office_list\" name=\"office_list\" onFocus=\"if(!document.getElementById('all_cands').checked && !document.getElementById('search_cands').checked) {document.getElementById('all_cands').checked=true;}\" class=\"clear_both left font_input input_border caps_select3\" alt=\"Select Office\">";
             $selected = "";
             if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
             fill_offices_sought ($selected);
             echo "</select>";
-            display_tooltip ("Search contributions to candidate-controlled campaign committees for a particular state office.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to a candidate(s) running for a particular office.", 20, -20, 160, "right");
             echo "<hr class=\"clear_both caps_hr2\">";
 
             # Contributions To Ballot Measures
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Ballot Measures";
-            display_tooltip ("Search contributions to committees formed to support or oppose ballot measures. ", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to committees formed to support or oppose ballot measures.", 20, -20, 160, "right");
             echo "</div>";
 
             $checked = "";
