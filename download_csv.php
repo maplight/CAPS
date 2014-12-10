@@ -40,7 +40,7 @@
   $header_line = substr ($header_line, 0, -1);
 
   $data = "";
-  $query = "SELECT {$select_fields} FROM contributions_grouped INNER JOIN contributions USING (id) INNER JOIN contributions_search USING(id) {$search_join} {$where}";
+  $query = "SELECT {$select_fields} FROM contributions LEFT JOIN contributions_grouped USING (ContributionID) INNER JOIN contributions_search ON (contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY contributions_grouped.ContributionID";
   $result = my_query ($query);
   while ($row = $result->fetch_row()) {
     $data_line = "";
