@@ -68,8 +68,6 @@ function candidate_list_item_clicked() {
     $('#search_candidates').val(candidate_name);
     $('#match_candidate').val('yes');
     $('#candidates').hide();
-//    if (document.getElementById('caps_search_btn1') != null) {$('#caps_search_btn1').trigger('click');}
-//    if (document.getElementById('qs_btn') != null) {$('#qs_btn').trigger('click');}
   }
 }
 
@@ -80,8 +78,6 @@ function candidate_list_item_selected(event) {
     $('#match_candidate').val('yes');
     $('#search_candidates').val(candidate_name);
     $('#candidates').hide();
-//    if (document.getElementById('caps_search_btn1') != null) {$('#caps_search_btn1').trigger('click');}
-//    if (document.getElementById('qs_btn') != null) {$('#qs_btn').trigger('click');}
   }
 }
 
@@ -131,10 +127,9 @@ function fill_committee_list_return(list_data) {
 
 function committee_list_item_clicked() {
   var committee_name = $('#found_committees').val();
-  if (committee_name != '') {
+  if (committee_name != '' && committee_name != null) {
     $('#search_committees').val(committee_name);
     $('#match_committee').val('yes');
-//    if (document.getElementById('caps_search_btn1') != null) {$('#caps_search_btn1').trigger('click');}
   }
 }
 
@@ -144,7 +139,6 @@ function committee_list_item_selected(event) {
   if (keycode == 13 && committee_name != '') {
     $('#match_committee').val('yes');
     $('#search_committees').val(committee_name);
-//    if (document.getElementById('caps_search_btn1') != null) {$('#caps_search_btn1').trigger('click');}
   }
 }
 
