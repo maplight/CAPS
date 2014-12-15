@@ -62,8 +62,9 @@ function fill_candidate_list_return(list_data) {
   }
 }
 
-function candidate_list_item_clicked(candidate_name) {
+function candidate_list_item_clicked() {
   var candidate_name = $('#found_candidates').val();
+alert(candidate_name);
   if (candidate_name != '') {
     $('#search_candidates').val(candidate_name);
     $('#match_candidate').val('yes');
@@ -73,7 +74,7 @@ function candidate_list_item_clicked(candidate_name) {
   }
 }
 
-function candidate_list_item_selected(event, candidate_name) {
+function candidate_list_item_selected(event) {
   var candidate_name = $('#found_candidates').val();
   var keycode = (event.keyCode ? event.keyCode : event.which);
   if (keycode == 13 && candidate_name != '') {
