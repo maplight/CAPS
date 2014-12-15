@@ -64,8 +64,7 @@ function fill_candidate_list_return(list_data) {
 
 function candidate_list_item_clicked() {
   var candidate_name = $('#found_candidates').val();
-alert(candidate_name);
-  if (candidate_name != '') {
+  if (candidate_name != '' && candidate_name != null) {
     $('#search_candidates').val(candidate_name);
     $('#match_candidate').val('yes');
     $('#candidates').hide();
