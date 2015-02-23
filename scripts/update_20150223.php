@@ -15,4 +15,7 @@ UPDATE `ca_process`.`cal_access_sessions` SET `run_cycle`='M' WHERE `session`='2
 UPDATE `ca_process`.`cal_access_sessions` SET `run_cycle`='W' WHERE `session`='2009';
 
 
+DELETE FROM ca_process.cal_access_elections;
+
+
 ?>
