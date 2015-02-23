@@ -26,12 +26,27 @@
       foreach ($html_page->find ("li") as $list_item) {
         $election_data = parse_election_data ($list_item->plaintext);
         if ($election_data["election_date"] != "") {
-          if ($election_data["election_id"] == 0) {script_query ("INSERT INTO cal_access_elections (date, description, special, election_type, office) VALUES ('{$election_data["election_date"]}', '{$election_data["title"]}', {$election_data["special"]}, '{$election_data["election_type"]}', '{$election_data["office"]}')");}
+          if ($election_data["election_id"] == 0) {
+            $query = "INSERT INTO cal_access_elections
+                        (date,
+                         description,
+                         special,
+                         election_type,
+                         office)
+                      VALUES
+                        ('{$election_data["election_date"]}',
+                         '{$election_data["title"]}',
+                          {$election_data["special"]},
+                         '{$election_data["election_type"]}',
+                         '{$election_data["office"]}')";
+            script_query ("INSERT INTO cal_access_elections (date, description, special, election_type, office) VALUES ('{$election_data["election_date"]}', '{$election_data["title"]}', {$election_data["special"]}, '{$election_data["election_type"]}', '{$election_data["office"]}')");
+          }
         }
       }
     }
 
     # Check prior statewide elections
+function a() {
     $html_page = get_html_file ("http://www.sos.ca.gov/elections/prior-elections/statewide-election-results");
     if (! $html_page) {} else {
       foreach ($html_page->find ("li") as $list_item) {
@@ -43,8 +58,10 @@
         }
       }
     }
+}
 
     # Check prior special elections
+function b() {
     $html_page = get_html_file ("http://www.sos.ca.gov/elections/special-elections/");
     if (! $html_page) {} else {
       $special_elections = explode ("<a href=", $html_page->innertext);                 # create an array of items by <a href=
@@ -71,6 +88,7 @@
         }
       }
     }
+}
   }
 
 

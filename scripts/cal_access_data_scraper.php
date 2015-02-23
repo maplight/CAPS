@@ -3,6 +3,7 @@
 
   get_elections_list ();
 
+function x() {
   $query = "SELECT session FROM cal_access_sessions ORDER BY session DESC LIMIT 1";
   $result = script_query ($query);
   while ($row = $result->fetch_assoc()) {
@@ -35,4 +36,5 @@
     $filer_id = $row["filer_id"];
     get_committee_information ($session, $filer_id, 1);
   }
+}
 ?>
