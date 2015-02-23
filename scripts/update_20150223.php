@@ -3,7 +3,6 @@ ALTER TABLE `ca_process`.`cal_access_sessions`
 ADD COLUMN `run_cycle` ENUM('D','W','M') NULL AFTER `session`,
 ADD COLUMN `last_ran` TIMESTAMP NULL AFTER `run_cycle`;
 
-
 INSERT INTO `ca_process`.`cal_access_sessions` (`session`, `run_cycle`) VALUES ('2015', 'D');
 UPDATE `ca_process`.`cal_access_sessions` SET `run_cycle`='D' WHERE `session`='2013';
 UPDATE `ca_process`.`cal_access_sessions` SET `run_cycle`='W' WHERE `session`='2011';
@@ -14,8 +13,5 @@ UPDATE `ca_process`.`cal_access_sessions` SET `run_cycle`='M' WHERE `session`='2
 UPDATE `ca_process`.`cal_access_sessions` SET `run_cycle`='M' WHERE `session`='2007';
 UPDATE `ca_process`.`cal_access_sessions` SET `run_cycle`='W' WHERE `session`='2009';
 
-
-DELETE FROM ca_process.cal_access_elections;
-
-
+DELETE cal_access_elections.* FROM cal_access_elections LEFT JOIN cal_access_candidates_races USING (election_id) WHERE ISNULL(cal_access_candidates_races.election_id)
 ?>
