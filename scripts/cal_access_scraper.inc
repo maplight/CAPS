@@ -159,19 +159,23 @@
     }
 
     $title = trim ($title_array["district"] . $title_array["special"] . $title_array["type"] . " Election");
-#    if ($special == 0) {
-#      $result = script_query ("SELECT election_id FROM cal_access_elections WHERE special = 0 AND office = 'ALL' AND election_type = '$election_type' AND YEAR(date) = '$election_year'");
-#      $row = $result->fetch_assoc();
-#      $election_id = $row["election_id"];
-#    } else {
-      if ($election_year == "") {$election_year = date ("Y", strtotime ($election_date));}
-      if ($election_type == "") {$election_type = "P";}
-      if ($election_year == "2013" AND $office == "S04" AND $election_type == "P") {$election_type = "G";} # correct for incorrect election name (should be runoff)
-      $result = script_query ("SELECT election_id FROM cal_access_elections WHERE special = {$special} AND office = '{$office}' AND election_type = '{$election_type}' AND YEAR(date) = '{$election_year}'");
+    if ($election_year == "") {$election_year = date ("Y", strtotime ($election_date));}
+    if ($election_type == "") {$election_type = "P";}
+    if ($election_year == "2013" AND $office == "S04" AND $election_type == "P") {$election_type = "G";} # correct for incorrect election name (should be runoff)
+
+    $result = script_query ("SELECT election_id FROM cal_access_elections WHERE special = {$special} AND office = '{$office}' AND election_type = '{$election_type}' AND YEAR(date) = '{$election_year}'");
+    $row = $result->fetch_assoc();
+    $election_id = $row["election_id"];
+
+    # If no specific election was found, check to see if this is the general election and use it.
+    if ($election_id == "" && $special == 0 && $election_type == "G") {
+      $result = script_query ("SELECT election_id FROM cal_access_elections WHERE special = 0 AND election_type = 'G' AND YEAR(date) = '{$election_year}'");
       $row = $result->fetch_assoc();
       $election_id = $row["election_id"];
-#    }
+    }
+
     if ($election_id == "") {$election_id = 0;}
+
     $election_array = array ("election_id" => $election_id, "special" => $special, "election_type" => $election_type, "office" => $office, "election_year" => $election_year, "election_date" => $election_date, "title" => $title, "election_parsed" => $election_string);
 
     return $election_array;
@@ -329,11 +333,11 @@
                             if ($office != "OFFICE") {
                               $result2 = script_query ("SELECT election_id, date, description FROM cal_access_elections WHERE IF(office = 'ALL', CONCAT(YEAR(date), IF(election_type = 'G', ' GENERAL', ' PRIMARY'), ' ELECTION'), '') = '$election';");
                               $election_info = $result2->fetch_object();
-                               if (! $election_info) {
-                                 $election_data = parse_election_data ($office . " " . $election);
-                               } else {
-                                 $election_data = parse_election_data (date ("F j, Y", strtotime ($election_info->date)) . " " . $election_info->description);
-                               }
+                              if (! $election_info) {
+                                $election_data = parse_election_data ($office . " " . $election);
+                              } else {
+                                $election_data = parse_election_data (date ("F j, Y", strtotime ($election_info->date)) . " " . $election_info->description);
+                              }
                               $races[] = array ("election_id" => $election_data["election_id"], "result" => trim ($tabledata->plaintext), "office" => $election_data["office"], "election_parsed" => $election_data["election_parsed"]);
                             }
                             break;
