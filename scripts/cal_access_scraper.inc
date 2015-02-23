@@ -21,7 +21,7 @@
 # update elections list
   function get_elections_list () {
     # Check upcoming elections
-    $html_page = get_html_file ("http://www.sos.ca.gov/elections/elections_cand.htm");
+    $html_page = get_html_file ("http://www.sos.ca.gov/elections/upcoming-elections");
     if (! $html_page) {} else {
       foreach ($html_page->find ("li") as $list_item) {
         $election_data = parse_election_data ($list_item->plaintext);
@@ -32,7 +32,7 @@
     }
 
     # Check prior statewide elections
-    $html_page = get_html_file ("http://www.sos.ca.gov/elections/statewide-elections/");
+    $html_page = get_html_file ("http://www.sos.ca.gov/elections/prior-elections/statewide-election-results");
     if (! $html_page) {} else {
       foreach ($html_page->find ("li") as $list_item) {
         $election_data = parse_election_data ($list_item->plaintext);
