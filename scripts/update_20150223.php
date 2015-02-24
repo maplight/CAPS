@@ -6,7 +6,7 @@
               ADD COLUMN last_ran DATETIME NOT NULL AFTER run_days;";
   script_query ($query);
 
-  script_query ("INSERT INTO cal_access_sessions (session, run_cycle) VALUES ('2015', '');");
+  script_query ("INSERT INTO cal_access_sessions (session, run_days) VALUES ('2015', '');");
   script_query ("UPDATE cal_access_sessions SET run_cycle = '' WHERE session = '2013';");
   script_query ("UPDATE cal_access_sessions SET run_cycle = 'S' WHERE session = '2011';");
   script_query ("UPDATE cal_access_sessions SET run_cycle = 'S' WHERE session = '2009';");
