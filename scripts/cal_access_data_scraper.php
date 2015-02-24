@@ -67,4 +67,13 @@
     $filer_id = $row["filer_id"];
     get_committee_information ($session, $filer_id, 1);
   }
+
+  # delete unused committees
+  $query = "DELETE cal_access_committees.* FROM cal_access_committees
+            LEFT JOIN (SELECT cal_access_propositions_committees.session, cal_access_propositions_committees.filer_id FROM cal_access_propositions_committees
+                       UNION SELECT cal_access_candidates_committees.session, cal_access_candidates_committees.filer_id FROM cal_access_candidates_committees) AS used_committees 
+                      ON (cal_access_committees.filer_id = used_committees.filer_id AND cal_access_committees.session = used_committees.session)
+            WHERE ISNULL(cal_access_committees.filer_id);";
+  script_query ($query);
 ?>
+
