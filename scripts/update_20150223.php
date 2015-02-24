@@ -3,7 +3,7 @@
 
   $query = "ALTER TABLE cal_access_sessions 
               ADD COLUMN run_days VARCHAR(100) NOT NULL AFTER session,
-              ADD COLUMN last_ran DATETIME NOT NULL AFTER run_cycle;";
+              ADD COLUMN last_ran DATETIME NOT NULL AFTER run_days;";
   script_query ($query);
 
   script_query ("INSERT INTO cal_access_sessions (session, run_cycle) VALUES ('2015', '');");
