@@ -5,45 +5,54 @@
   mysqli_options ($script_conn, MYSQLI_OPT_LOCAL_INFILE, true);
   mysqli_real_connect ($script_conn, $hostname, $script_login, $script_pwd, "ca_process");
 
- echo "Starting update... \n";
+  # check to see if script is running, do not run if it is
+  $ps_check = trim (shell_exec ("ps aux | grep 'php update_data.php' | grep -v grep | wc -l"));
+  # If nothing is returned then probably not running in LINUX
+  if ($ps_check == "") {$ps_check = 1;}
 
- echo "Update the most recent cal_access session \n";
-  # Update the most recent cal_access session
-  system ("php cal_access_data_scraper.php");
+  # If script isn't currently running, process the data
+  if ($ps_check == "1") {
+    echo "Starting update... \n";
 
-  echo "Get the ftp data \n";
-  # Get the ftp data
-  system ("php get_ftp_data.php");
+    echo "Update the most recent cal_access session \n";
+    # Update the most recent cal_access session
+    system ("php cal_access_data_scraper.php");
 
-  echo "Process data for contributions table - stage 1 \n";
-  # Process data for contributions table - stage 1
-  process_sql_file ("process_stage_1.sql");
+    echo "Get the ftp data \n";
+    # Get the ftp data
+    system ("php get_ftp_data.php");
 
-  echo "Clean up names \n";
-  # Clean up names
-  clean_candidate_names ();
+    echo "Process data for contributions table - stage 1 \n";
+    # Process data for contributions table - stage 1
+    process_sql_file ("process_stage_1.sql");
 
-  echo "Process data for contributions table - stage 2 \n";
-  # Process data for contributions table - stage 2
-  process_sql_file ("process_stage_2.sql");
+    echo "Clean up names \n";
+    # Clean up names
+    clean_candidate_names ();
 
-  echo "Process data for contributions table - stage 3 \n";
-  # Process data for contributions table - stage 3
-  process_sql_file ("process_stage_3.sql");
+    echo "Process data for contributions table - stage 2 \n";
+    # Process data for contributions table - stage 2
+    process_sql_file ("process_stage_2.sql");
 
-  echo "generate search words \n";
-  generate_search_words (); 
+    echo "Process data for contributions table - stage 3 \n";
+    # Process data for contributions table - stage 3
+    process_sql_file ("process_stage_3.sql");
 
-  echo "Reset last update file \n";
-  # Reset last update file
-  script_query ("TRUNCATE ca_search.smry_last_update");
-  script_query ("INSERT INTO ca_search.smry_last_update SELECT FiledDate FROM contributions_full WHERE FiledDate <= NOW() ORDER BY FiledDate DESC LIMIT 1");
+    echo "generate search words \n";
+    generate_search_words (); 
 
-  echo "Process data for contributions table - stage 4 \n";
-  # Process data for contributions table - stage 4
-  process_sql_file ("process_stage_4.sql");
+    echo "Reset last update file \n";
+    # Reset last update file
+    script_query ("TRUNCATE ca_search.smry_last_update");
+    script_query ("INSERT INTO ca_search.smry_last_update SELECT FiledDate FROM contributions_full WHERE FiledDate <= NOW() ORDER BY FiledDate DESC LIMIT 1");
 
-  echo "Update done... \n";
+    echo "Process data for contributions table - stage 4 \n";
+    # Process data for contributions table - stage 4
+    process_sql_file ("process_stage_4.sql");
+
+    echo "Update done... \n";
+  }
+
 
 #===============================================================================================
 # process script query
