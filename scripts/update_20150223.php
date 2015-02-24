@@ -10,11 +10,11 @@
   script_query ("UPDATE cal_access_sessions SET run_cycle = '' WHERE session = '2013';");
   script_query ("UPDATE cal_access_sessions SET run_cycle = 'S' WHERE session = '2011';");
   script_query ("UPDATE cal_access_sessions SET run_cycle = 'S' WHERE session = '2009';");
-  script_query ("UPDATE cal_access_sessions SET run_cycle = '1-S' WHERE session = '1999';");
-  script_query ("UPDATE cal_access_sessions SET run_cycle = '1-S' WHERE session = '2001';");
-  script_query ("UPDATE cal_access_sessions SET run_cycle = '1-S' WHERE session = '2003';");
-  script_query ("UPDATE cal_access_sessions SET run_cycle = '1-S' WHERE session = '2005';");
   script_query ("UPDATE cal_access_sessions SET run_cycle = '1-S' WHERE session = '2007';");
+  script_query ("UPDATE cal_access_sessions SET run_cycle = '1-S' WHERE session = '2005';");
+  script_query ("UPDATE cal_access_sessions SET run_cycle = '1-S' WHERE session = '2003';");
+  script_query ("UPDATE cal_access_sessions SET run_cycle = '2-S' WHERE session = '2001';");
+  script_query ("UPDATE cal_access_sessions SET run_cycle = '2-S' WHERE session = '1999';");
 
   $query = "DELETE cal_access_elections.* FROM cal_access_elections LEFT JOIN cal_access_candidates_races USING (election_id) WHERE ISNULL(cal_access_candidates_races.election_id);";
   script_query ($query);
