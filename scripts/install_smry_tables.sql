@@ -53,17 +53,6 @@ CREATE TABLE ca_search.smry_candidates (
   FULLTEXT CandidateWords(CandidateWords)
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS ca_search.smry_propositions;
-CREATE TABLE ca_search.smry_propositions (
-  PropositionID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  Election DATE NOT NULL,
-  Target VARCHAR(250) NOT NULL,
-  PropositionWords VARCHAR(250) NOT NULL,
-  KEY Election (Election),
-  KEY Target (Target(10)),
-  FULLTEXT PropositionWords(PropositionWords)
-) ENGINE=MyISAM;
-
 DROP TABLE IF EXISTS ca_search.smry_committees;
 CREATE TABLE ca_search.smry_committees (
   RecipientCommitteeID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -71,13 +60,6 @@ CREATE TABLE ca_search.smry_committees (
   CommitteeWords VARCHAR(200) NOT NULL,
   KEY RecipientCommitteeNameNormalized(RecipientCommitteeNameNormalized(10)),
   FULLTEXT CommitteeWords(CommitteeWords)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS ca_search.smry_offices;
-CREATE TABLE ca_search.smry_offices (
-  RecipientCandidateOfficeID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  RecipientCandidateOffice VARCHAR(50) NOT NULL,
-  KEY RecipientCandidateOffice(RecipientCandidateOffice(10))
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS ca_search.smry_cycles;
@@ -89,5 +71,23 @@ CREATE TABLE ca_search.smry_cycles (
 DROP TABLE IF EXISTS ca_search.smry_last_update;
 CREATE TABLE ca_search.smry_last_update (
   LastUpdate DATETIME NOT NULL
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS ca_search.smry_offices;
+CREATE TABLE ca_search.smry_offices (
+  RecipientCandidateOfficeID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  RecipientCandidateOffice VARCHAR(50) NOT NULL,
+  KEY RecipientCandidateOffice(RecipientCandidateOffice(10))
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS ca_search.smry_propositions;
+CREATE TABLE ca_search.smry_propositions (
+  PropositionID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  Election DATE NOT NULL,
+  Target VARCHAR(250) NOT NULL,
+  PropositionWords VARCHAR(250) NOT NULL,
+  KEY Election (Election),
+  KEY Target (Target(10)),
+  FULLTEXT PropositionWords(PropositionWords)
 ) ENGINE=MyISAM;
 
