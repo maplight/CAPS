@@ -660,6 +660,13 @@ set
   , a.RecipientCandidateOffice501Custom = b.office_501_custom
 ;
 
+update contributions_full_temp
+set IsEmployee = 'Y'
+where
+  Unitemized = 'Y'
+  or DonorCommitteeEntity = 'IND'
+;
+
 truncate table contribution_ids;
 insert contribution_ids (
     FilingID
@@ -1229,6 +1236,7 @@ insert ca_search.contributions_temp (
   , DonorOrganization
   , DonorCommitteeID
   , Unitemized
+  , IsEmployee
   , AlliedCommittee
   , CandidateContribution
   , BallotMeasureContribution
@@ -1258,6 +1266,7 @@ select
   , DonorOrganization
   , DonorCommitteeID
   , Unitemized
+  , IsEmployee
   , AlliedCommittee
   , CandidateContribution
   , BallotMeasureContribution
