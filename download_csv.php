@@ -5,7 +5,7 @@
   $filename = "data-" . date ("Y-m-d-H-i") . ".csv";
 
   $search_join = "";
-  if (strpos ($where, "smry_candidates") !== false) {$search_join .= "INNER JOIN smry_candidates USING (RecipientCandidateNameID) ";}
+  if (strpos ($where, "smry_candidates") !== false) {$search_join .= "INNER JOIN smry_candidates USING (MapLightCandidateNameID) ";}
   if (strpos ($where, "smry_offices") !== false) {$search_join .= "INNER JOIN smry_offices USING (RecipientCandidateOfficeID) ";}
   if (strpos ($where, "smry_committees") !== false) {$search_join .= "INNER JOIN smry_committees USING (RecipientCommitteeID) ";}
   if (strpos ($where, "smry_propositions") !== false) {$search_join .= "INNER JOIN smry_propositions USING (PropositionID) ";}
