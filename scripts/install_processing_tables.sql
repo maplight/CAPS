@@ -253,6 +253,7 @@ CREATE TABLE ca_search.contributions (
   PRIMARY KEY (id),
   KEY DonorNameNormalized (DonorNameNormalized(10) ASC),
   KEY DonorEmployerNormalized (DonorEmployerNormalized(10) ASC),
+  KEY DonorOccupationNormalized (DonorOccupationNormalized(10) ASC),
   KEY RecipientCandidateOffice (RecipientCandidateOffice(10) ASC),
   KEY RecipientCandidateDistrict (RecipientCandidateDistrict(10) ASC),
   KEY Election (Election ASC),
