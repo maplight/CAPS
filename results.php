@@ -276,8 +276,8 @@
       $search_join = "";
 
       if (strpos ($where, "smry_candidates") !== false) {$search_join .= "INNER JOIN smry_candidates USING (MapLightCandidateNameID) ";}
-      if (strpos ($where, "smry_offices") !== false) {$search_join .= "INNER JOIN smry_offices USING (RecipientCandidateOfficeID) ";}
-      if (strpos ($where, "smry_committees") !== false) {$search_join .= "INNER JOIN smry_committees USING (RecipientCommitteeID) ";}
+      if (strpos ($where, "smry_offices") !== false) {$search_join .= "INNER JOIN smry_offices USING (MapLightCandidateOfficeID) ";}
+      if (strpos ($where, "smry_committees") !== false) {$search_join .= "INNER JOIN smry_committees USING (MapLightCommitteeID) ";}
       if (strpos ($where, "smry_propositions") !== false) {$search_join .= "INNER JOIN smry_propositions USING (PropositionID) ";}
 
       $result = my_query ("SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM (SELECT DISTINCT ContributionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContribs");
@@ -387,7 +387,7 @@
                 echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
                 display_tooltip ($results_tooltip, -180, 10, 250, "");
                 echo "<div id=\"caps_breakdown_box\">";
-                $result2 = my_query ("SELECT RecipientCommitteeNameNormalized, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, RecipientCommitteeID, RecipientCommitteeNameNormalized, TransactionAmount FROM contributions_search INNER JOIN smry_committees USING (RecipientCommitteeID) INNER JOIN smry_candidates USING (MapLightCandidateNameID) {$where}) AS UniqueContributions GROUP BY RecipientCommitteeID ORDER BY RecipientCommitteeNameNormalized");
+                $result2 = my_query ("SELECT RecipientCommitteeNameNormalized, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, MapLightCommitteeID, RecipientCommitteeNameNormalized, TransactionAmount FROM contributions_search INNER JOIN smry_committees USING (MapLightCommitteeID) INNER JOIN smry_candidates USING (MapLightCandidateNameID) {$where}) AS UniqueContributions GROUP BY MapLightCommitteeID ORDER BY RecipientCommitteeNameNormalized");
                 while ($row2 = $result2->fetch_assoc()) {
                   echo "<b>{$row2["RecipientCommitteeNameNormalized"]}</b> has raised $" . number_format ($row2["TotalAmount"], 2, ".", ",") . " in " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
                 }

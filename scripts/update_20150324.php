@@ -14,17 +14,17 @@
               CHANGE COLUMN RecipientCandidateNameID MapLightCandidateNameID BIGINT NOT NULL";
   script_query ($query);
 
+  $query = "ALTER TABLE ca_search.smry_committees 
+              CHANGE COLUMN RecipientCommitteeID MapLightCommitteeID BIGINT NOT NULL";
+  script_query ($query);
+
+  $query = "ALTER TABLE ca_search.smry_offices 
+              CHANGE COLUMN RecipientCandidateOfficeID MapLightCandidateOfficeID BIGINT NOT NULL";
+  script_query ($query);
+
+  $query = "ALTER TABLE ca_search.contributions_search 
+              CHANGE COLUMN RecipientCandidateNameID MapLightCandidateNameID BIGINT NOT NULL,
+              CHANGE COLUMN RecipientCandidateOfficeID MapLightCandidateOfficeID BIGINT NOT NULL,
+              CHANGE COLUMN RecipientCommitteeID MapLightCommitteeID BIGINT NOT NULL";
+  script_query ($query);
 ?>
-
-
-ALTER TABLE `ca_search`.`contributions_search` 
-CHANGE COLUMN `RecipientCandidateNameID` `MapLightCandidateNameID` BIGINT(20) NOT NULL ,
-CHANGE COLUMN `RecipientCandidateOfficeID` `MapLightCandidateOfficeID` BIGINT(20) NOT NULL ,
-CHANGE COLUMN `RecipientCommitteeID` `MapLightCommitteeID` BIGINT(20) NOT NULL ;
-
-ALTER TABLE `ca_search`.`smry_committees` 
-CHANGE COLUMN `RecipientCommitteeID` `MapLightCommitteeID` BIGINT(20) NOT NULL ;
-
-ALTER TABLE `ca_search`.`smry_offices` 
-CHANGE COLUMN `RecipientCandidateOfficeID` `MapLightCandidateOfficeID` BIGINT(20) NOT NULL ;
-
