@@ -9,7 +9,7 @@
               ADD COLUMN IsEmployee ENUM('Y','N') DEFAULT 'N' AFTER Unitemized";
   script_query ($query);
 
-  $query = "ALTER TABLE ca_seartch.contributions
+  $query = "ALTER TABLE ca_search.contributions
               ADD INDEX DonorOccupationNormalized(DonorOccupationNormalized(10))";
   script_query ($query);
 ?>

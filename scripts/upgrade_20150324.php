@@ -11,15 +11,15 @@
   script_query ($query);
 
   $query = "ALTER TABLE ca_search.smry_candidates 
-              CHANGE COLUMN RecipientCandidateNameID MapLightCandidateNameID BIGINT NOT NULL";
+              CHANGE COLUMN RecipientCandidateNameID MapLightCandidateNameID BIGINT NOT NULL AUTO_INCREMENT";
   script_query ($query);
 
   $query = "ALTER TABLE ca_search.smry_committees 
-              CHANGE COLUMN RecipientCommitteeID MapLightCommitteeID BIGINT NOT NULL";
+              CHANGE COLUMN RecipientCommitteeID MapLightCommitteeID BIGINT NOT NULL AUTO_INCREMENT";
   script_query ($query);
 
   $query = "ALTER TABLE ca_search.smry_offices 
-              CHANGE COLUMN RecipientCandidateOfficeID MapLightCandidateOfficeID BIGINT NOT NULL";
+              CHANGE COLUMN RecipientCandidateOfficeID MapLightCandidateOfficeID BIGINT NOT NULL AUTO_INCREMENT";
   script_query ($query);
 
   $query = "ALTER TABLE ca_search.contributions_search 
