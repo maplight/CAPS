@@ -9,9 +9,9 @@ CREATE TABLE ca_search.contributions_search (
   ElectionCycle SMALLINT NOT NULL,
   CandidateContribution ENUM('Y','N'),
   BallotMeasureContribution ENUM('Y','N'),
-  RecipientCandidateNameID BIGINT NOT NULL,
-  RecipientCandidateOfficeID BIGINT NOT NULL,
-  RecipientCommitteeID BIGINT NOT NULL,
+  MapLightCandidateNameID BIGINT NOT NULL,
+  MapLightCandidateOfficeID BIGINT NOT NULL,
+  MapLightCommitteeID BIGINT NOT NULL,
   PropositionID BIGINT NOT NULL,
   PositionID BIGINT NOT NULL,
   ContributionID BIGINT NOT NULL,
@@ -23,9 +23,9 @@ CREATE TABLE ca_search.contributions_search (
   KEY ElectionCycle(ElectionCycle),
   KEY CandidateContribution(CandidateContribution),
   KEY BallotMeasureContribution(BallotMeasureContribution),
-  KEY RecipientCandidateNameID(RecipientCandidateNameID),
-  KEY RecipientCandidateOfficeID(RecipientCandidateOfficeID),
-  KEY RecipientCommitteeID(RecipientCommitteeID),
+  KEY MapLightCandidateNameID(MapLightCandidateNameID),
+  KEY MapLightCandidateOfficeID(MapLightCandidateOfficeID),
+  KEY MapLightCommitteeID(MapLightCommitteeID),
   KEY PropositionID(PropositionID),
   KEY PositionID(PositionID),
   KEY ContributionID(ContributionID),
@@ -44,7 +44,7 @@ CREATE TABLE ca_search.contributions_grouped (
 
 DROP TABLE IF EXISTS ca_search.smry_candidates;
 CREATE TABLE ca_search.smry_candidates (
-  RecipientCandidateNameID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  MapLightCandidateNameID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   RecipientCandidateNameNormalized VARCHAR(250) NOT NULL,
   LastCycle SMALLINT NOT NULL,
   CandidateWords VARCHAR(250) NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE ca_search.smry_candidates (
 
 DROP TABLE IF EXISTS ca_search.smry_committees;
 CREATE TABLE ca_search.smry_committees (
-  RecipientCommitteeID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  MapLightCommitteeID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   RecipientCommitteeNameNormalized VARCHAR(200) NOT NULL,
   CommitteeWords VARCHAR(200) NOT NULL,
   KEY RecipientCommitteeNameNormalized(RecipientCommitteeNameNormalized(10)),
@@ -75,7 +75,7 @@ CREATE TABLE ca_search.smry_last_update (
 
 DROP TABLE IF EXISTS ca_search.smry_offices;
 CREATE TABLE ca_search.smry_offices (
-  RecipientCandidateOfficeID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  MapLightCandidateOfficeID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   RecipientCandidateOffice VARCHAR(50) NOT NULL,
   KEY RecipientCandidateOffice(RecipientCandidateOffice(10))
 ) ENGINE=MyISAM;
