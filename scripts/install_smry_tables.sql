@@ -1,34 +1,41 @@
 DROP TABLE IF EXISTS ca_search.contributions_search;
 CREATE TABLE ca_search.contributions_search (
   id BIGINT NOT NULL PRIMARY KEY,
-  DonorState CHAR(2) NOT NULL,
-  AlliedCommittee ENUM('Y','N'),
+  AlliedCommittee ENUM('Y','N') NOT NULL,
   TransactionDateStart DATE NOT NULL,
   TransactionDateEnd DATE NOT NULL,
   TransactionAmount DOUBLE NOT NULL,
   ElectionCycle SMALLINT NOT NULL,
-  CandidateContribution ENUM('Y','N'),
-  BallotMeasureContribution ENUM('Y','N'),
+  CandidateContribution ENUM('Y','N') NOT NULL,
+  BallotMeasureContribution ENUM('Y','N') NOT NULL,
+  IsEmployee ENUM('Y','N') NOT NULL,
   MapLightCandidateNameID BIGINT NOT NULL,
   MapLightCandidateOfficeID BIGINT NOT NULL,
   MapLightCommitteeID BIGINT NOT NULL,
   PropositionID BIGINT NOT NULL,
   PositionID BIGINT NOT NULL,
   ContributionID BIGINT NOT NULL,
-  DonorWords VARCHAR(250) NOT NULL,
-  KEY DonorState(DonorState),
   KEY AlliedCommittee(AlliedCommittee),
   KEY TransactionDateStart(TransactionDateStart),
   KEY TransactionDateEnd(TransactionDateEnd),
   KEY ElectionCycle(ElectionCycle),
   KEY CandidateContribution(CandidateContribution),
   KEY BallotMeasureContribution(BallotMeasureContribution),
+  KEY IsEmployee(IsEmployee),
   KEY MapLightCandidateNameID(MapLightCandidateNameID),
   KEY MapLightCandidateOfficeID(MapLightCandidateOfficeID),
   KEY MapLightCommitteeID(MapLightCommitteeID),
   KEY PropositionID(PropositionID),
   KEY PositionID(PositionID),
-  KEY ContributionID(ContributionID),
+  KEY ContributionID(ContributionID)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS ca_search.contributions_search_donors;
+CREATE TABLE ca_search.contributions_search_donors (
+  id BIGINT NOT NULL PRIMARY KEY,
+  DonorState CHAR(2) NOT NULL,
+  DonorWords VARCHAR(250) NOT NULL,
+  KEY DonorState(DonorState),
   FULLTEXT DonorWords(DonorWords)
 ) ENGINE=MyISAM;
 
@@ -57,8 +64,12 @@ DROP TABLE IF EXISTS ca_search.smry_committees;
 CREATE TABLE ca_search.smry_committees (
   MapLightCommitteeID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   RecipientCommitteeNameNormalized VARCHAR(200) NOT NULL,
-  CommitteeWords VARCHAR(200) NOT NULL,
+  RecipientCommitteeID BIGINT NOT NULL,
+  DonorCommitteeID BIGINT NOT NULL,
+  CommitteeWords VARCHAR(250) NOT NULL,
   KEY RecipientCommitteeNameNormalized(RecipientCommitteeNameNormalized(10)),
+  KEY RecipientCommitteeID(RecipientCommitteeID),
+  KEY DonorCommitteeID(DonorCommitteeID),
   FULLTEXT CommitteeWords(CommitteeWords)
 ) ENGINE=MyISAM;
 
