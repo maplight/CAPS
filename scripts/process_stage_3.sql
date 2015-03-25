@@ -52,17 +52,17 @@ UPDATE ca_search.contributions_temp
 UPDATE ca_search.contributions_temp
   JOIN ca_search.contributions_search_temp USING (id)
   JOIN ca_search.smry_committees_temp USING (RecipientCommitteeNameNormalized) 
-  SET contributions_search_temp.RecipientCommitteeID = smry_committees_temp.RecipientCommitteeID;
+  SET contributions_search_temp.MapLightCommitteeID = smry_committees_temp.MapLightCommitteeID;
 
 UPDATE ca_search.contributions_temp
   JOIN ca_search.contributions_search_temp USING (id)
   JOIN ca_search.smry_offices_temp USING (RecipientCandidateOffice)
-  SET contributions_search_temp.RecipientCandidateOfficeID = smry_offices_temp.RecipientCandidateOfficeID;
+  SET contributions_search_temp.MapLightCandidateOfficeID = smry_offices_temp.MapLightCandidateOfficeID;
 
 UPDATE ca_search.contributions_temp
   JOIN ca_search.contributions_search_temp USING (id)
   JOIN ca_search.smry_candidates_temp USING (RecipientCandidateNameNormalized)
-  SET contributions_search_temp.RecipientCandidateNameID = smry_candidates_temp.RecipientCandidateNameID;
+  SET contributions_search_temp.MapLightCandidateNameID = smry_candidates_temp.MapLightCandidateNameID;
 
 DROP TABLE IF EXISTS ca_search.contributions_grouped_temp;
 CREATE TABLE ca_search.contributions_grouped_temp LIKE ca_search.contributions_grouped;

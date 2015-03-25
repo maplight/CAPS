@@ -1213,6 +1213,7 @@ insert ca_search.contributions_temp (
   , TransactionDateStart
   , TransactionDateEnd
   , TransactionAmount
+  , RecipientCommitteeID
   , RecipientCommitteeNameNormalized
   , RecipientCandidateNameNormalized
   , RecipientCandidateOffice
@@ -1226,6 +1227,7 @@ insert ca_search.contributions_temp (
   , DonorEmployerNormalized
   , DonorOccupationNormalized
   , DonorOrganization
+  , DonorCommitteeID
   , Unitemized
   , AlliedCommittee
   , CandidateContribution
@@ -1240,6 +1242,7 @@ select
   , TransactionDateStart
   , TransactionDateEnd
   , TransactionAmount
+  , RecipientCommitteeID
   , RecipientCommitteeNameNormalized
   , RecipientCandidateNameNormalized
   , RecipientCandidateOffice
@@ -1253,6 +1256,7 @@ select
   , DonorEmployerNormalized
   , DonorOccupationNormalized
   , DonorOrganization
+  , DonorCommitteeID
   , Unitemized
   , AlliedCommittee
   , CandidateContribution
