@@ -48,7 +48,7 @@
           $Donor .= "(" . trim ($word_str) . ") ";
         }
       }
-      if ($Donor != "") {$Donor = "MATCH (contributions_search.DonorWords) AGAINST ('" . substr ($Donor, 0, -1) . "' IN BOOLEAN MODE)";}
+      if ($Donor != "") {$Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST ('" . substr ($Donor, 0, -1) . "' IN BOOLEAN MODE) OR contributions_search_donors.DonorCommitteeID = '" .substr ($Donor, 2, -2) . "')";}
     }
   
     # build locations query
@@ -274,7 +274,7 @@
       echo "You have not entered any search data, please select a criteria on the side.";
     } else {
       $search_join = "";
-
+      if (strpos ($where, "contributions_search_donors") !== false) {$search_join .= "INNER JOIN contributions_search_donors  ON (contributions_search.id = contributions_search_donors.id) ";}
       if (strpos ($where, "smry_candidates") !== false) {$search_join .= "INNER JOIN smry_candidates USING (MapLightCandidateNameID) ";}
       if (strpos ($where, "smry_offices") !== false) {$search_join .= "INNER JOIN smry_offices USING (MapLightCandidateOfficeID) ";}
       if (strpos ($where, "smry_committees") !== false) {$search_join .= "INNER JOIN smry_committees USING (MapLightCommitteeID) ";}
@@ -322,6 +322,7 @@
                          "RecipientCandidateOffice|Office Sought|",
                          "ballot_measures|Ballot Measure(s)|MultiLine",
                          "DonorNameNormalized|Contributor Name|",
+                         "DonorCommitteeID|Contributor ID|",
                          "TransactionAmount|Amount|Currency",
                          "TransactionDateEnd|Date|Date",
                          "DonorEmployerNormalized|Contributor Employer|",
@@ -337,6 +338,7 @@
                            "RecipientCandidateDistrict|District|",
                            "ballot_measures|Ballot Measure(s)|MultiLine",
                            "DonorNameNormalized|Contributor Name|",
+                           "DonorCommitteeID|Contributor ID|",
                            "TransactionAmount|Amount|Currency",
                            "TransactionDateEnd|Date|Date",
                            "DonorEmployerNormalized|Contributor Employer|",
