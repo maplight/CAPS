@@ -110,7 +110,7 @@ function fill_committee_list_return(list_data) {
     $('#committees').hide();
   } else {
     var committees = '<select size=10 id="found_committees" style="min-width:190px;">'; 
-    for (var i = 0; i < list_data.length; i++) {committees = committees + '<option>' + list_data[i].RecipientCommitteeNameNormalized + '</option>';}
+    for (var i = 0; i < list_data.length; i++) {committees = committees + '<option value="' + list_data[i].RecipientCommitteeNameNormalized + '">' + list_data[i].RecipientCommitteeNameNormalized + ' (' + list_data[i].RecipientCommitteeID + ')</option>';}
     committees = committees + '</select>';
     $('#committees').html(committees);
     // ie8 event handler
