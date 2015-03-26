@@ -16,30 +16,30 @@
 
     echo "Update the most recent cal_access session \n";
     # Update the most recent cal_access session
-    system ("php cal_access_data_scraper.php");
+#    system ("php cal_access_data_scraper.php");
 
     echo "Get the ftp data \n";
     # Get the ftp data
-    system ("php get_ftp_data.php");
+#    system ("php get_ftp_data.php");
 
     echo "Process data for contributions table - stage 1 \n";
     # Process data for contributions table - stage 1
-    process_sql_file ("process_stage_1.sql");
+#    process_sql_file ("process_stage_1.sql");
 
     echo "Clean up names \n";
     # Clean up names
-    clean_candidate_names ();
+#    clean_candidate_names ();
 
     echo "Process data for contributions table - stage 2 \n";
     # Process data for contributions table - stage 2
-    process_sql_file ("process_stage_2.sql");
+#    process_sql_file ("process_stage_2.sql");
 
     echo "Process data for contributions table - stage 3 \n";
     # Process data for contributions table - stage 3
-    process_sql_file ("process_stage_3.sql");
+#    process_sql_file ("process_stage_3.sql");
 
     echo "generate search words \n";
-    generate_search_words (); 
+#    generate_search_words (); 
 
     echo "Reset last update file \n";
     # Reset last update file
@@ -48,7 +48,7 @@
 
     echo "Process data for contributions table - stage 4 \n";
     # Process data for contributions table - stage 4
-    process_sql_file ("process_stage_4.sql");
+#    process_sql_file ("process_stage_4.sql");
 
     echo "Update done... \n";
   }
@@ -156,14 +156,14 @@ function process_sql_file($filename)
 
 
   function generate_search_words () {
-    $query = "SELECT id, DonorNameNormalized, DonorEmployerNormalized, DonorOccupationNormalized FROM ca_search.contributions_temp";
+    $query = "SELECT id, DonorState, DonorCommitteeID, DonorNameNormalized, DonorEmployerNormalized, DonorOccupationNormalized FROM ca_search.contributions_temp";
     $result = script_query ($query);
     while ($row = $result->fetch_assoc()) {
       $word_str = " ";
-      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["DonorNameNormalized"] . " " . $row["DonorEmployerNormalized"] . " " . $row["DonorOccupationNormalized "]);
+      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["DonorNameNormalized"] . " " . $row["DonorEmployerNormalized"] . " " . $row["DonorOccupationNormalized"]);
       $words = explode (" ", $word_data);
       foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper (ltrim ($word, "0")) . " ";}}
-      script_query ("UPDATE ca_search.contributions_search_temp SET DonorWords = '{$word_str}' WHERE id = {$row["id"]}");
+      script_query ("INSERT INTO ca_search.contributions_search_donors_temp (id, DonorState, DonorCommitteeID, DonorWords) VALUES ({$row["id"]}, '{$row["DonorState"]}', {$row["DonorCommitteeID"]}, '{$word_str}')");
     }
     $result->close();
 
