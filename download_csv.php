@@ -5,6 +5,7 @@
   $filename = "data-" . date ("Y-m-d-H-i") . ".csv";
 
   $search_join = "";
+  if (strpos ($where, "contributions_search_donors") !== false) {$search_join .= "INNER JOIN contributions_search_donors  ON (contributions_search.id = contributions_search_donors.id) ";}
   if (strpos ($where, "smry_candidates") !== false) {$search_join .= "INNER JOIN smry_candidates USING (MapLightCandidateNameID) ";}
   if (strpos ($where, "smry_offices") !== false) {$search_join .= "INNER JOIN smry_offices USING (MapLightCandidateOfficeID) ";}
   if (strpos ($where, "smry_committees") !== false) {$search_join .= "INNER JOIN smry_committees USING (MapLightCommitteeID) ";}
@@ -16,12 +17,14 @@
                    "contributions.TransactionDateStart|Start Date",
                    "contributions.TransactionDateEnd|End Date",
                    "contributions.TransactionAmount|Amount",
-                   "contributions.RecipientCommitteeNameNormalized|Recipient Committee",
                    "contributions.RecipientCandidateNameNormalized|Recipient Name",
+                   "contributions.RecipientCommitteeNameNormalized|Recipient Committee",
+                   "contributions.RecipientCommitteeID|Recipient Committee ID",
                    "contributions.RecipientCandidateOffice|Office",
                    "contributions.RecipientCandidateDistrict|District",
                    "contributions_grouped.ballot_measures|Ballot Measure(s)",
                    "contributions.DonorNameNormalized|Contributor Name",
+                   "contributions.DonorCommitteeID|Contributor ID",
                    "contributions.DonorCity|Contributor City",
                    "contributions.DonorState|Contributor State",
                    "contributions.DonorZipCode|Contributor ZipCode",

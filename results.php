@@ -48,11 +48,17 @@
           $Donor .= "(" . trim ($word_str) . ") ";
         }
       }
-      if ($Donor != "") {$Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST ('" . substr ($Donor, 0, -1) . "' IN BOOLEAN MODE) OR contributions_search_donors.DonorCommitteeID = '" .substr ($Donor, 2, -2) . "')";}
+      if ($Donor != "") {
+        if (intval (substr ($Donor, 2, -2)) == 0) {
+          $Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST ('" . substr ($Donor, 0, -1) . "' IN BOOLEAN MODE))";
+        } else {
+          $Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST ('" . substr ($Donor, 0, -1) . "' IN BOOLEAN MODE) OR contributions_search_donors.DonorCommitteeID = " . intval (substr ($Donor, 2, -2)) . ")";
+        }
+      }
     }
   
     # build locations query
-    if ($search_data["state_list"] != "ALL") {$DonorState = "contributions_search.DonorState = '{$search_data["state_list"]}'";}
+    if ($search_data["state_list"] != "ALL") {$DonorState = "contributions_search_donors.DonorState = '{$search_data["state_list"]}'";}
 
     switch ($search_data["contrib_types"]) {
       case "candidates":
@@ -153,7 +159,13 @@
               $Committee .= "(" . trim ($word_str) . ") ";
             }
           }
-          if ($Committee != "") {$Committee = "MATCH (smry_committees.CommitteeWords) AGAINST ('" . substr ($Committee, 0, -1) . "' IN BOOLEAN MODE)";}
+          if ($Committee != "") {
+            if (intval (substr ($Committee, 2, -2)) == 0) {
+              $Committee = "MATCH (smry_committees.CommitteeWords) AGAINST ('" . substr ($Committee, 0, -1) . "' IN BOOLEAN MODE)";
+            } else {
+              $Committee = "(MATCH (smry_committees.CommitteeWords) AGAINST ('" . substr ($Committee, 0, -1) . "' IN BOOLEAN MODE) OR smry_committees.RecipientCommitteeID = " . intval (substr ($Committee, 2, -2)) . ")";
+            }
+          }
         } else {
           $Committee = "smry_committees.RecipientCommitteeNameNormalized = '" . addslashes ($search_data["search_committees"]) . "'";
         }
@@ -319,6 +331,7 @@
         $field_set = "";
         $fields = array ("RecipientCandidateNameNormalized|Recipient Name|",
                          "RecipientCommitteeNameNormalized|Recipient Committee|",
+                         "RecipientCommitteeID|Recipient Committee ID|",
                          "RecipientCandidateOffice|Office Sought|",
                          "ballot_measures|Ballot Measure(s)|MultiLine",
                          "DonorNameNormalized|Contributor Name|",
@@ -334,6 +347,7 @@
         if ($field_set == "Show more fields") {
           $fields = array ("RecipientCandidateNameNormalized|Recipient Name|",
                            "RecipientCommitteeNameNormalized|Recipient Committee|",
+                           "RecipientCommitteeID|Recipient Committee ID|",
                            "RecipientCandidateOffice|Office Sought|",
                            "RecipientCandidateDistrict|District|",
                            "ballot_measures|Ballot Measure(s)|MultiLine",
@@ -367,7 +381,6 @@
                               "contributions.RecipientCommitteeNameNormalized DESC|Recipient Committee Descending",
                               "contributions.RecipientCandidateNameNormalized|Recipient Name Ascending",
                               "contributions.RecipientCandidateNameNormalized DESC|Recipient Name Descending");
-
         $result = my_query ("SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING (ContributionID) INNER JOIN contributions_search ON (contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;
 
