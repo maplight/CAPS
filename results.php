@@ -341,8 +341,6 @@
     if ($date_where != "") {$where .= "{$date_where} AND ";}
     if ($where != "") {$where = "WHERE " . substr ($where, 0, -5);} # remove extra AND
 
-echo "<pre>"; print_r ($criteria); echo "</pre>";
-
     $parse_data = array ($where, $summary_type, $criteria);
     return $parse_data;
   }
