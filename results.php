@@ -142,26 +142,40 @@
         #------------------------------------------------------------------------------------------
         # Build ballot measure search query:
         $criteria["contributions.BallotMeasureContribution"] = 'Y';
+        $criteria["contributions_grouped.ballot_measures"] = "";
         $PropositionContribution = "contributions_search.BallotMeasureContribution = 'Y'";
 
-#contributions_grouped.ballot_measures
-
         # build support/oppose query
-        if ($search_data["position"] == "S") {$Position = "contributions_search.PositionID = 1";}
-        if ($search_data["position"] == "O") {$Position = "contributions_search.PositionID = 2";}
+        if ($search_data["position"] == "S") {
+          $Position = "contributions_search.PositionID = 1";
+          $criteria["contributions_grouped.ballot_measures"] .= "SUPPORT FOR ";
+        }
+        if ($search_data["position"] == "O") {
+          $Position = "contributions_search.PositionID = 2";
+          $criteria["contributions_grouped.ballot_measures"] .= "OPPOSE FOR ";
+        }
 
         if ($search_data["search_propositions"] != "Search ballot measures" && $search_data["proposition_list"] == "ALL") {
           # build proposition search query
           $PropositionSearch = "";
+          $search_proposition = "";
           foreach (explode (";", $search_data["search_propositions"]) as $search_item) {
             $word_str = "";
             foreach (explode (" ", $search_item) as $word) {
               $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-              $word_str .= "+{$word} ";
+              if (trim ($word) != "") {$word_str .= "+{$word} ";}
             }
             $PropositionSearch .= "(" . trim ($word_str) . ") ";
+            $search_proposition .= $word_str;
           }
-          if ($PropositionSearch != "") {$PropositionSearch = "MATCH (smry_propositions.PropositionWords) AGAINST ('" . substr ($PropositionSearch, 0, -1) . "' IN BOOLEAN MODE)";}
+          if ($PropositionSearch != "") {
+            $PropositionSearch = "MATCH (smry_propositions.PropositionWords) AGAINST ('" . substr ($PropositionSearch, 0, -1) . "' IN BOOLEAN MODE)";
+            if (strpos ($search_data["search_propositions"], ";") !== false) {
+              $criteria["contributions_grouped.ballot_measures"] .= trim (str_replace ("+", "OR ", substr ($search_proposition, 1)));
+            } else {
+              $criteria["contributions_grouped.ballot_measures"] .= trim (str_replace ("+", "", substr ($search_proposition, 1)));
+            }
+          } 
         } else {
           if ($search_data["proposition_list"] != "ALL") {
             if (substr ($search_data["proposition_list"], 0, 3) == "ALL") {
