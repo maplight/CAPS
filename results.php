@@ -224,7 +224,7 @@
           }
           if ($Committee != "") {
             if (intval (substr ($Committee, 2, -2)) == 0) {
-              if (strpos ($search_data["search_propositions"], ";") !== false) {
+              if (strpos ($search_data["search_committees"], ";") !== false) {
                 $criteria["contributions.RecipientCommitteeNameNormalized"] = trim (str_replace ("+", "OR ", substr ($search_committee, 1)));
               } else {
                 $criteria["contributions.RecipientCommitteeNameNormalized"] = trim (str_replace ("+", "", substr ($search_committee, 1)));
