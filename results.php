@@ -409,7 +409,7 @@
                 $result2 = my_query ("SELECT IsEmployee, CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, IsEmployee, CandidateContribution, BallotMeasureContribution, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContributions GROUP BY IsEmployee, CandidateContribution, BallotMeasureContribution ORDER BY IsEmployee, CandidateContribution, BallotMeasureContribution");
                 while ($row2 = $result2->fetch_assoc()) {
                   if ($row2["IsEmployee"] != $employee) {
-                    if ($row2["IsEmployee"] == "Y") {echo "Employee Contributions</b><br>";} else {if ($employee == "Y") {echo "<p>&nbsp;</p>";} echo "<b>Organizational Contributions</b><br>";}
+                    if ($row2["IsEmployee"] == "Y") {echo "<b>Employee Contributions</b><br>";} else {if ($employee == "Y") {echo "&nbsp;<br>";} echo "<b>Organizational Contributions</b><br>";}
                     $employee = $row2["IsEmployee"];
                   }
                   if ($row2["CandidateContribution"] == "Y" && $row2["BallotMeasureContribution"] == "N") {echo "&nbsp;&nbsp;&nbsp;<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>candidates</b><br>";}
