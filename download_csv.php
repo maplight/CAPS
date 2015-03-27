@@ -28,7 +28,7 @@
                    "contributions.DonorCommitteeID|Contributor ID",
                    "contributions.DonorCity|Contributor City",
                    "contributions.DonorState|Contributor State",
-                   "contributions.DonorZipCode|Contributor ZipCode",
+                   "contributions.DonorZipCode|Contributor Zip Code",
                    "contributions.DonorEmployerNormalized|Contributor Employer",
                    "contributions.DonorOccupationNormalized|Contributor Occupation",
                    "contributions.DonorOrganization|Contributor Organization",
@@ -36,19 +36,19 @@
                    "contributions.BallotMeasureContribution|Ballot Measure Contribution",
                    "contributions.AlliedCommittee|Allied Committee");
   
-  # Build the header and criteria line
+  # Build the header and criteria data
   $select_fields = "";
   $header_line = "";
-  $criteria_line = "";
+  $criteria_data = "\n";
   foreach ($fields as $field) {
     $field_info = explode ("|", $field);
     $select_fields .= $field_info[0] . ",";
     $header_line .= "\"" . $field_info[1] . "\",";
     if (isset ($criteria[$field_info[0]])) {
-      $criteria_line .= "\"" . $criteria[$field_info[0]] . "\",";
-    } else {
-      $criteria_line .= "\"\",";
-    } 
+      if (trim ($criteria[$field_info[0]]) != "") {
+        $criteria_data .= "\"" . trim ($field_info[1] . ": " . $criteria[$field_info[0]]) . "\"\n";
+      }
+    }
   }
   $select_fields = substr ($select_fields, 0, -1);
   $header_line = substr ($header_line, 0, -1);
@@ -70,5 +70,5 @@
   header("Content-Disposition: attachment; filename={$filename}");
   header("Pragma: no-cache");
   header("Expires: 0");
-  echo "$header_line\n$criteria_line\n$data";
+  echo "$header_line\n$data\n$criteria_data";
 ?>
