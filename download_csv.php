@@ -35,8 +35,6 @@
                    "contributions.CandidateContribution|Candidate Contribution",
                    "contributions.BallotMeasureContribution|Ballot Measure Contribution",
                    "contributions.AlliedCommittee|Allied Committee");
-
-  $criteria_data = array ();
   
   # Build the header and criteria line
   $select_fields = "";
