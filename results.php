@@ -182,19 +182,22 @@
               # build query for a specific election
               $selected_data = explode ("#", $search_data["proposition_list"]);
               $Election = "smry_propositions.Election = '" . $selected_data[1] . "'";
+              $criteria["contributions.Election"] = $selected_data[1];
             } else {
               # build query for a specific proposition
               $selected_data = explode ("#", $search_data["proposition_list"]);
               $Election = "smry_propositions.Election = '" . $selected_data[0] . "'";
               $Proposition = "smry_propositions.Target = '" . addslashes ($selected_data[1]) . "'";
+              $criteria["contributions.Election"] = $selected_data[0];
+              $criteria["contributions_grouped.ballot_measures"] .= $selected_data[1];
             }
           }
         }
 
         # exclude allied committees query
         if (isset ($search_data["exclude"])) {
-          $criteria["contributions.AlliedCommittee"] = 'N';
           $Allied = "contributions_search.AlliedCommittee = 'N'";
+          $criteria["contributions.AlliedCommittee"] = 'N';
         }
         break; # ballots
 
