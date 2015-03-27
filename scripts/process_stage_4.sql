@@ -1,3 +1,8 @@
+UPDATE ca_search.contributions_search_donors_temp SET DonorCommitteeID = NULL WHERE DonorCommitteeID = 0;
+UPDATE ca_search.smry_committees_temp SET RecipientCommitteeID = NULL WHERE RecipientCommitteeID = 0;
+UPDATE ca_search.contributions_temp SET DonorCommitteeID = NULL WHERE DonorCommitteeID = 0;
+UPDATE ca_search.contributions_temp SET RecipientCommitteeID = NULL WHERE RecipientCommitteeID = 0;
+
 OPTIMIZE TABLE ca_search.smry_candidates_temp;
 OPTIMIZE TABLE ca_search.smry_committees_temp;
 OPTIMIZE TABLE ca_search.smry_cycles_temp;
