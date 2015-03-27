@@ -1,6 +1,7 @@
 <?php
   require ("connect.php");
   $where = stripslashes ($web_conn->real_escape_string ($_GET["w"]));
+  $criteria = unserialize ($_GET["c"]);
 
   $filename = "data-" . date ("Y-m-d-H-i") . ".csv";
 
@@ -30,18 +31,29 @@
                    "contributions.DonorZipCode|Contributor ZipCode",
                    "contributions.DonorEmployerNormalized|Contributor Employer",
                    "contributions.DonorOccupationNormalized|Contributor Occupation",
-                   "contributions.DonorOrganization|Contributor Organization");
+                   "contributions.DonorOrganization|Contributor Organization",
+                   "contributions.CandidateContribution|Candidate Contribution");
 
+  $criteria_data = array ();
+  
+  # Build the header and criteria line
   $select_fields = "";
   $header_line = "";
+  $criteria_line = "";
   foreach ($fields as $field) {
     $field_info = explode ("|", $field);
     $select_fields .= $field_info[0] . ",";
     $header_line .= "\"" . $field_info[1] . "\",";
+    if (isset ($criteria[$field_info[0]])) {
+      $criteria_line .= "\"" . $criteria[$field_info[0]] . "\",";
+    } else {
+      $criteria_line .= "\"\",";
+    } 
   }
   $select_fields = substr ($select_fields, 0, -1);
   $header_line = substr ($header_line, 0, -1);
 
+  # Build the data
   $data = "";
   $query = "SELECT {$select_fields} FROM contributions LEFT JOIN contributions_grouped USING (ContributionID) INNER JOIN contributions_search ON (contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY contributions_grouped.ContributionID";
   $result = my_query ($query);
@@ -58,5 +70,5 @@
   header("Content-Disposition: attachment; filename={$filename}");
   header("Pragma: no-cache");
   header("Expires: 0");
-  echo "$header_line\n$data";
+  echo "$header_line\n$criteria_line\n$data";
 ?>

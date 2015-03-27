@@ -29,7 +29,7 @@
     $ElectionCycle = "";
     $CandidateContribution = "";
     $PropositionContribution = "";
-
+    $criteria = array ();
 
     #------------------------------------------------------------------------------------------
     # Build contributor search query:
@@ -52,36 +52,44 @@
         if (intval (substr ($Donor, 2, -2)) == 0) {
           $Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST ('" . substr ($Donor, 0, -1) . "' IN BOOLEAN MODE))";
         } else {
+          $criteria["contributions.DonorCommitteeID"] = intval (substr ($Donor, 2, -2));
           $Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST ('" . substr ($Donor, 0, -1) . "' IN BOOLEAN MODE) OR contributions_search_donors.DonorCommitteeID = " . intval (substr ($Donor, 2, -2)) . ")";
         }
       }
     }
   
     # build locations query
-    if ($search_data["state_list"] != "ALL") {$DonorState = "contributions_search_donors.DonorState = '{$search_data["state_list"]}'";}
+    if ($search_data["state_list"] != "ALL") {
+      $criteria["contributions.DonorState"] = $search_data["state_list"];
+      $DonorState = "contributions_search_donors.DonorState = '{$search_data["state_list"]}'";
+    }
 
     switch ($search_data["contrib_types"]) {
       case "candidates":
         #------------------------------------------------------------------------------------------
         # Build candidate search query:
+        $criteria["contributions.CandidateContribution"] = 'Y';
         $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
 
         # build office list query
         if ($search_data["office_list"] == "All Offices") {
           $OfficeList = "";
         } else {
+          $criteria["contributions.RecipientCandidateOffice"] = $search_data["office_list"];
           $OfficeList = "smry_offices.RecipientCandidateOffice = '" . addslashes ($search_data["office_list"]) . "'";
         }
         break;
 
       case "search_candidates":
         # build candidate search query
+        $criteria["contributions.CandidateContribution"] = 'Y';
         $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
 
         # build office list query
         if ($search_data["office_list"] == "All Offices") {
           $OfficeList = "";
         } else {
+          $criteria["contributions.RecipientCandidateOffice"] = $search_data["office_list"];
           $OfficeList = "smry_offices.RecipientCandidateOffice = '" . addslashes ($search_data["office_list"]) . "'";
         }
 
@@ -170,7 +178,7 @@
           $Committee = "smry_committees.RecipientCommitteeNameNormalized = '" . addslashes ($search_data["search_committees"]) . "'";
         }
         break; # committees
-      }
+    }
 
 
     #------------------------------------------------------------------------------------------
@@ -260,7 +268,9 @@
     if ($date_where != "") {$where .= "{$date_where} AND ";}
     if ($where != "") {$where = "WHERE " . substr ($where, 0, -5);} # remove extra AND
 
-    $parse_data = array ($where, $summary_type);
+echo "<pre>"; print_r ($criteria); echo "</pre>";
+
+    $parse_data = array ($where, $summary_type, $criteria);
     return $parse_data;
   }
 
@@ -472,6 +482,8 @@
           }
         }
 
+        $criteria = urlencode (serialize ($parse_data[2]));
+
         echo "<div id=\"caps_filter_box\">";
         echo "Show";
         echo "<select id=\"show\" name=\"return_rows\" class=\"font_input input_border caps_select4\" alt=\"Number of Rows to Display\">";
@@ -492,7 +504,7 @@
         # Do not display the download option if there are more records then allowed to download
         if ($totals_row["records"] <= $max_download_records) { 
           echo "<div class=\"right\">";
-          echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">Download CSV</a>&nbsp;";
+          echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "&c={$criteria}\" class=\"download_csv\">Download CSV</a>&nbsp;";
           display_tooltip ("Download the search results as a CSV file, which can be opened in most spreadsheet software.", -180, 10, 160, "");
           echo "</div> <!-- end download_box -->";
         }
@@ -581,7 +593,7 @@
         echo "<div class=\"font_input\"><p>This page will not display more than 1,000 entries.</p>";
 
         # Do not display the download option if there are more records then allowed to download
-        if ($totals_row["records"] <= $max_download_records) {echo "(To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "\" class=\"download_csv\">download the CSV</a> file.)";}
+        if ($totals_row["records"] <= $max_download_records) {echo "(To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "&c={$criteria}\" class=\"download_csv\">download the CSV</a> file.)";}
 
         echo "</div><br><div class=\"font_small\">Contributions data is current as of " . date ("F j, Y", strtotime ($last_update)) . ".</div><br>";
         echo "</center>";
