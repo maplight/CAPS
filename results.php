@@ -407,9 +407,11 @@
         if ($first_row > $record_count["records"]) {$first_row = 1;}
         if ($last_row > $record_count["records"]) {$last_row = $record_count["records"];}
 
-        $sort = "contributions_search.TransactionDateEnd DESC";
+        $sort = "contributions_search.TransactionDateEnd";
+        $sort_order = "DESC";
         if (isset ($_POST["sort"])) {
           $sort = $_POST["sort"];
+          $sort_order = $_POST["sort_order"];
         }
 
         $field_set = "";
@@ -449,23 +451,26 @@
                            "ElectionCycle|Cyle|");
         }
 
-        $sort_fields = array ("contributions_search.TransactionAmount|Amount Ascending",
-                              "contributions_search.TransactionAmount DESC|Amount Descending",
-                              "contributions.Target|Ballot Measures Ascending",
-                              "contributions.Target DESC|Ballot Measures Descending",
-                              "contributions.DonorEmployerNormalized|Contributor Employer Ascending",
-                              "contributions.DonorEmployerNormalized DESC|Contributor Employer Descending",
-                              "contributions.DonorNameNormalized|Contributor Name Ascending",
-                              "contributions.DonorNameNormalized DESC|Contributor Name Descending",
-                              "contributions_search.TransactionDateEnd|Date Ascending",
-                              "contributions_search.TransactionDateEnd DESC|Date Descending",
-                              "contributions.RecipientCandidateOffice, contributions.RecipientCandidateDistrict|Office Sought Ascending",
-                              "contributions.RecipientCandidateOffice DESC, contributions.RecipientCandidateDistrict DESC|Office Sought Descending",
-                              "contributions.RecipientCommitteeNameNormalized|Recipient Committee Ascending",
-                              "contributions.RecipientCommitteeNameNormalized DESC|Recipient Committee Descending",
-                              "contributions.RecipientCandidateNameNormalized|Recipient Name Ascending",
-                              "contributions.RecipientCandidateNameNormalized DESC|Recipient Name Descending");
-        $result = my_query ("SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING (ContributionID) INNER JOIN contributions_search ON (contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
+        $sort_fields = array ("RecipientCandidateNameNormalized|Recipient Name",
+                              "RecipientCommitteeNameNormalized|Recipient Committee",
+                              "RecipientCommitteeID|Recipient Committee ID",
+                              "RecipientCandidateOffice|Office Sought",
+                              "RecipientCandidateDistrict|District",
+                              "ballot_measures|Ballot Measure(s)",
+                              "DonorNameNormalized|Contributor Name",
+                              "DonorCommitteeID|Contributor ID",
+                              "TransactionAmount|Amount",
+                              "TransactionDateEnd|Date",
+                              "DonorEmployerNormalized|Contributor Employer",
+                              "DonorOccupationNormalized|Contributor Occupation",
+                              "DonorState|Contributor State",
+                              "DonorZipCode|Contributor Zip",
+                              "DonorCity|Contributor City",
+                              "TransactionType|Transaction Type",
+                              "Election|Election",
+                              "ElectionCycle|Cyle");
+
+        $result = my_query ("SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING (ContributionID) INNER JOIN contributions_search ON (contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} {$sort_order} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;
 
         echo "<div id=\"caps_results\">";
@@ -573,6 +578,12 @@
         foreach ($sort_fields as $sort_item) {
           $item_data = explode ("|", $sort_item); 
           if ($sort == $item_data[0]) {echo "<option value=\"{$item_data[0]}\" SELECTED>{$item_data[1]}</option>";} else {echo "<option value=\"{$item_data[0]}\">{$item_data[1]}</option>";}
+        }
+        echo "</select><select id=\"sort_order\" name=\"sort_order\" class=\"font_input input_border caps_select4\" alt=\"Sort Order\">";
+        if ($sort_order == "ASC") {
+          echo "<option value=\"ASC\" SELECTED>Ascending</option><option VALUE=\"DESC\">Descending<option>";
+        } else {
+          echo "<option value=\"ASC\">Ascending</option><option VALUE=\"DESC\" SELECTED>Descending<option>";
         }
         echo "</select>";
         echo "<input type=\"submit\" value=\"Update\" id=\"caps_update_btn\">";
