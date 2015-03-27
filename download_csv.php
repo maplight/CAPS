@@ -32,7 +32,9 @@
                    "contributions.DonorEmployerNormalized|Contributor Employer",
                    "contributions.DonorOccupationNormalized|Contributor Occupation",
                    "contributions.DonorOrganization|Contributor Organization",
-                   "contributions.CandidateContribution|Candidate Contribution");
+                   "contributions.CandidateContribution|Candidate Contribution",
+                   "contributions.BallotMeasureContribution|Ballot Measure Contribution",
+                   "contributions.AlliedCommittee|Allied Committee");
 
   $criteria_data = array ();
   
