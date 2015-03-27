@@ -275,7 +275,7 @@
           $criteria["contributions.ElectionCycle"] = "";
           foreach ($search_data["cycles"] as $cycle) {
             $ElectionCycle .= "contributions_search.ElectionCycle = $cycle OR ";
-            $criteria["contributions.ElectionCycle"] = $cycle . " OR ";
+            $criteria["contributions.ElectionCycle"] .= $cycle . " OR ";
           }
           $ElectionCycle = substr ($ElectionCycle, 0, -4); # Remove the final OR
           $criteria["contributions.ElectionCycle"] = substr ($criteria["contributions.ElectionCycle"], 0, -4);
