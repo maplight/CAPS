@@ -34,7 +34,7 @@ DROP TABLE IF EXISTS ca_search.contributions_search_donors;
 CREATE TABLE ca_search.contributions_search_donors (
   id BIGINT NOT NULL PRIMARY KEY,
   DonorState CHAR(2) NOT NULL,
-  DonorCommitteeID BIGINT NOT NULL,
+  DonorCommitteeID BIGINT NULL,
   DonorWords VARCHAR(250) NOT NULL,
   KEY DonorState(DonorState),
   KEY DonorCommitteeID(DonorCommitteeID),
@@ -66,7 +66,7 @@ DROP TABLE IF EXISTS ca_search.smry_committees;
 CREATE TABLE ca_search.smry_committees (
   MapLightCommitteeID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   RecipientCommitteeNameNormalized VARCHAR(200) NOT NULL,
-  RecipientCommitteeID BIGINT NOT NULL,
+  RecipientCommitteeID BIGINT NULL,
   CommitteeWords VARCHAR(250) NOT NULL,
   KEY RecipientCommitteeNameNormalized(RecipientCommitteeNameNormalized(20)),
   KEY RecipientCommitteeID(RecipientCommitteeID),
