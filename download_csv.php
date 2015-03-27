@@ -13,7 +13,7 @@
   if (strpos ($where, "smry_propositions") !== false) {$search_join .= "INNER JOIN smry_propositions USING (PropositionID) ";}
 
   $fields = array ("contributions.TransactionType|Transaction Type",
-                   "contributions.ElectionCycle|Cyle",
+                   "contributions.ElectionCycle|Cycle",
                    "contributions.Election|Election",
                    "contributions.TransactionDateStart|Start Date",
                    "contributions.TransactionDateEnd|End Date",

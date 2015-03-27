@@ -448,7 +448,7 @@
                            "DonorCity|Contributor City|",
                            "TransactionType|Transaction Type|",
                            "Election|Election|Date",
-                           "ElectionCycle|Cyle|");
+                           "ElectionCycle|Cycle|");
         }
 
         $sort_fields = array ("RecipientCandidateNameNormalized|Recipient Name",
@@ -468,7 +468,7 @@
                               "DonorCity|Contributor City",
                               "TransactionType|Transaction Type",
                               "Election|Election",
-                              "ElectionCycle|Cyle");
+                              "ElectionCycle|Cycle");
 
         $result = my_query ("SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING (ContributionID) INNER JOIN contributions_search ON (contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} {$sort_order} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
         $rows_returned = $result->num_rows;
