@@ -206,26 +206,36 @@
         # build committee search query
         if ($search_data["match_committee"] == "no") {
           $Committee = "";
+          $search_committee = "";
           foreach (explode (";", $search_data["search_committees"]) as $search_item) {
             $word_str = "";
             if (substr (trim ($search_item), 0, 1) == "\"") {$quoted = true;} else {$quoted = false;}
             foreach (explode (" ", $search_item) as $word) {
               $word = strtoupper (preg_replace ("/[^a-z0-9 ]+/i", "", $word));
-              $word_str .= "+{$word} ";
+              if (trim ($word) != "") {$word_str .= "+{$word} ";}
             }
             if ($quoted) {
               $Committee .= "(\"" . trim ($word_str) . "\") ";
+              $search_committee .= "\"" . $word_str . "\"";
             } else {
               $Committee .= "(" . trim ($word_str) . ") ";
+              $search_committee .= $word_str;
             }
           }
           if ($Committee != "") {
             if (intval (substr ($Committee, 2, -2)) == 0) {
-              $criteria["contributions.RecipientCommitteeNameNormalized"] = str_replace ("+", "", substr ($Committee, 1, -2));
+              if (strpos ($search_data["search_propositions"], ";") !== false) {
+                $criteria["contributions.RecipientCommitteeNameNormalized"] = trim (str_replace ("+", "OR ", substr ($search_committee, 1)));
+              } else {
+                $criteria["contributions.RecipientCommitteeNameNormalized"] = trim (str_replace ("+", "", substr ($search_committee, 1)));
+              }
               $Committee = "MATCH (smry_committees.CommitteeWords) AGAINST ('" . substr ($Committee, 0, -1) . "' IN BOOLEAN MODE)";
             } else {
-              $criteria["contributions.RecipientCommitteeNameNormalized"] = str_replace ("+", "", substr ($Committee, 1, -2));
-              $criteria["contributions.RecipientCommitteeNameNormalized"] = substr ($Committee, 1, -2);
+              if (strpos ($search_data["search_propositions"], ";") !== false) {
+                $criteria["contributions.RecipientCommitteeNameNormalized"] = trim (str_replace ("+", "OR ", substr ($search_committee, 1)));
+              } else {
+                $criteria["contributions.RecipientCommitteeNameNormalized"] = trim (str_replace ("+", "", substr ($search_committee, 1)));
+              }
               $criteria["contributions.RecipientCommitteeID"] = intval (substr ($Committee, 2, -2));
               $Committee = "(MATCH (smry_committees.CommitteeWords) AGAINST ('" . substr ($Committee, 0, -1) . "' IN BOOLEAN MODE) OR smry_committees.RecipientCommitteeID = " . intval (substr ($Committee, 2, -2)) . ")";
             }
@@ -237,7 +247,6 @@
         break; # committees
     }
 
-
     #------------------------------------------------------------------------------------------
     # Build dates / cycles query
     switch ($search_data["date_select"]) {
@@ -248,15 +257,15 @@
         if ($start_date == "" && $end_date == "") {
           $DateRange = "";
         } else if ($start_date == "") {
-          $criteria["contributions.TransactionDateEnd"] = date ("Y-m-d", $end_date);
           $DateRange = "contributions_search.TransactionDateEnd <= '" . date ("Y-m-d", $end_date) . "'";
+          $criteria["contributions.TransactionDateEnd"] = date ("Y-m-d", $end_date);
         } else if ($end_date == "") {
-          $criteria["contributions.TransactionDateStart"] = date ("Y-m-d", $start_date);
           $DateRange = "contributions_search.TransactionDateStart >= '" . date ("Y-m-d", $start_date) . "'";
+          $criteria["contributions.TransactionDateStart"] = date ("Y-m-d", $start_date);
         } else {
+          $DateRange = "contributions_search.TransactionDateStart >= '" . date ("Y-m-d", $start_date) . "' AND contributions_search.TransactionDateEnd <= '" . date ("Y-m-d", $end_date) . "'";
           $criteria["contributions.TransactionDateStart"] = date ("Y-m-d", $start_date);
           $criteria["contributions.TransactionDateEnd"] = date ("Y-m-d", $end_date);
-          $DateRange = "contributions_search.TransactionDateStart >= '" . date ("Y-m-d", $start_date) . "' AND contributions_search.TransactionDateEnd <= '" . date ("Y-m-d", $end_date) . "'";
         }
         break;
 
@@ -265,12 +274,11 @@
         if (isset ($search_data["cycles"])) {
           $criteria["contributions.ElectionCycle"] = "";
           foreach ($search_data["cycles"] as $cycle) {
-            $criteria["contributions.ElectionCycle"] = $cycle . "; ";
             $ElectionCycle .= "contributions_search.ElectionCycle = $cycle OR ";
+            $criteria["contributions.ElectionCycle"] = $cycle . " OR ";
           }
-          $criteria["contributions.ElectionCycle"] = substr ($criteria["contributions.ElectionCycle"], 0, -2);
           $ElectionCycle = substr ($ElectionCycle, 0, -4); # Remove the final OR
-
+          $criteria["contributions.ElectionCycle"] = substr ($criteria["contributions.ElectionCycle"], 0, -4);
         }
         break;
     }
