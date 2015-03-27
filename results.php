@@ -548,6 +548,11 @@
                 break;            
 
               case "M":
+                echo "<div class=\"font_results_header\"><strong>{$_POST["search_committees"]}</strong> received</div>";
+                echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
+                display_tooltip ($results_tooltip, -180, 10, 250, "");
+                echo "<h2 class=\"font_large_header caps_title1\">Contributions</h2>";
+                echo "<hr class=\"caps_hr1\">";
                 break;
             }
           }
