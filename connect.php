@@ -4,16 +4,8 @@
   $error_email = "mike@maplight.org";
   $hostname = "localhost";
 
-  $web_conn = mysqli_init ();
-  mysqli_options ($web_conn, MYSQLI_OPT_LOCAL_INFILE, true);
-  mysqli_real_connect ($web_conn, $hostname, $web_login, $web_pwd, "ca_search");
-
-
-#===============================================================================================
-# process query
-  function my_query ($query) {
-    global $web_conn;
-    $ret = $web_conn->query (str_replace (array ("\\'", "\\\"", "\\n", "\\\\"), array ("'", "\"", "\n", "\\"), mysqli_real_escape_string ($web_conn, $query)));
-    return $ret;
-  }
+  $web_db = new PDO("mysql:host={$hostname};dbname=ca_search;charset=utf8", $web_login, $web_pwd);
+  $web_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $web_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+  $web_db->setAttribute(PDO::MYSQL_ATTR_LOCAL_INFILE, true);
 ?>

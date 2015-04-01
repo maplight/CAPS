@@ -1,8 +1,8 @@
 <?php
   function fill_state_list ($selected) {
+    global $web_db;
     echo "<OPTION VALUE=\"ALL\">All states</OPTION>";
-    $result = my_query ("SELECT StateName, StateCode FROM smry_states WHERE InDropdown = 1 ORDER BY StateName");
-    while ($row = $result->fetch_assoc()) {
+    foreach ($web_db->query ("SELECT StateName, StateCode FROM smry_states WHERE InDropdown = 1 ORDER BY StateName") as $row) {
       if ($row["StateCode"] == $selected) {echo "<OPTION VALUE={$row["StateCode"]} SELECTED>{$row["StateName"]}</OPTION>";} else {echo "<OPTION VALUE={$row["StateCode"]}>{$row["StateName"]}</OPTION>";}
     }
   }
@@ -36,8 +36,8 @@
 
 
   function fill_qs_elections () {
-    $result = my_query ("SELECT DISTINCT Election FROM smry_propositions ORDER BY Election DESC, Target");
-    while ($row = $result->fetch_assoc()) {
+    global $web_db;
+    foreach ($web_db->query ("SELECT DISTINCT Election FROM smry_propositions ORDER BY Election DESC, Target") as $row) {
       echo "<OPTION VALUE=\"ALL#{$row["Election"]}\">" . date ("F j, Y", strtotime ($row["Election"])) . "</OPTION>";
     }
   }
