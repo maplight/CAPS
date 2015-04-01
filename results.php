@@ -542,8 +542,9 @@
                 echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
                 display_tooltip ($results_tooltip, -180, 10, 250, "");
                 echo "<div id=\"caps_breakdown_box\">";
-                $result2 = my_query ("SELECT RecipientCommitteeNameNormalized, RecipientCommitteeID, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, MapLightCommitteeID, RecipientCommitteeNameNormalized, RecipientCommitteeID, TransactionAmount FROM contributions_search INNER JOIN smry_committees USING (MapLightCommitteeID) {$search_join} {$where}) AS UniqueContributions GROUP BY MapLightCommitteeID ORDER BY RecipientCommitteeID, RecipientCommitteeNameNormalized");
-                while ($row2 = $result2->fetch_assoc()) {
+                $result2 = $web_db->prepare("SELECT RecipientCommitteeNameNormalized, RecipientCommitteeID, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, MapLightCommitteeID, RecipientCommitteeNameNormalized, RecipientCommitteeID, TransactionAmount FROM contributions_search INNER JOIN smry_committees USING (MapLightCommitteeID) {$search_join} {$where}) AS UniqueContributions GROUP BY MapLightCommitteeID ORDER BY RecipientCommitteeID, RecipientCommitteeNameNormalized");
+                $result2->execute($parse_data[3]);
+                foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
                   echo "<b>({$row2["RecipientCommitteeID"]}) {$row2["RecipientCommitteeNameNormalized"]}</b> has raised $" . number_format ($row2["TotalAmount"], 2, ".", ",") . " in " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
                 }
                 echo "</div> <!-- end caps_breakdown_box -->";
@@ -559,8 +560,9 @@
                   display_tooltip ($results_tooltip, -180, 10, 250, "");
                   echo "</div>";
                   echo "<div id=\"caps_breakdown_box\">";
-                  $result2 = my_query ("SELECT Target, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount, SUM(IF(PositionID = 1,1,0)) AS SupportCount, SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount, SUM(IF(PositionID = 2,1,0)) AS OpposeCount, SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount FROM (SELECT DISTINCT ContributionID, Target, PositionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContributions GROUP BY Target ORDER BY Target");
-                  while ($row2 = $result2->fetch_assoc()) {
+                  $result2 = $web_db->prepare("SELECT Target, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount, SUM(IF(PositionID = 1,1,0)) AS SupportCount, SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount, SUM(IF(PositionID = 2,1,0)) AS OpposeCount, SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount FROM (SELECT DISTINCT ContributionID, Target, PositionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContributions GROUP BY Target ORDER BY Target");
+                  $result2->execute($parse_data[3]);
+                  foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
                     if (strpos ($row2["Target"], "-") !== false) {
                       echo "<p><b>" . substr ($row2["Target"], 0, strrpos ($row2["Target"], " - ")) . "</b>" . substr ($row2["Target"], strrpos ($row2["Target"], " - ")) . "<br>";
                     } else {
