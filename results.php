@@ -405,10 +405,10 @@
 
       $result = $web_db->prepare("SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM (SELECT DISTINCT ContributionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContribs");
       $result->execute($parse_data[3]);
-      $total_rows = $result->fetchAll(PDO::FETCH_ASSOC);
+      $totals_row = $result->fetchAll(PDO::FETCH_ASSOC); $totals_row = $totals_row[0];
       $result = $web_db->prepare("SELECT COUNT(DISTINCT ContributionID) AS records FROM contributions_search {$search_join} {$where}");
-      $result->execute($parse_data[3]);
-      $record_count = $result->fetchAll(PDO::FETCH_ASSOC);
+      $result->execute($parse_data[3]); 
+      $record_count = $result->fetchAll(PDO::FETCH_ASSOC); $record_count = $record_count[0];
 
       if ($record_count["records"] == 0) {
         echo "Your search did not return any records.";
@@ -499,8 +499,9 @@
                               "Election|Election",
                               "ElectionCycle|Cycle");
 
-        $result = my_query ("SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING (ContributionID) INNER JOIN contributions_search ON (contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} {$sort_order} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
-        $rows_returned = $result->num_rows;
+        $result = $web_db->prepare("SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING (ContributionID) INNER JOIN contributions_search ON (contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} {$sort_order} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
+        $result->execute($parse_data[3]);
+        $rows_returned = $result->rowCount();
 
         echo "<div id=\"caps_results\">";
 
@@ -521,8 +522,9 @@
                 display_tooltip ($results_tooltip, -180, 10, 250, "");
                 echo "<div id=\"caps_breakdown_box\">";
                 $employee = "";
-                $result2 = my_query ("SELECT IsEmployee, CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, IsEmployee, CandidateContribution, BallotMeasureContribution, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContributions GROUP BY IsEmployee, CandidateContribution, BallotMeasureContribution ORDER BY IsEmployee, CandidateContribution, BallotMeasureContribution");
-                while ($row2 = $result2->fetch_assoc()) {
+                $result2 = $web_db->prepare("SELECT IsEmployee, CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, IsEmployee, CandidateContribution, BallotMeasureContribution, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContributions GROUP BY IsEmployee, CandidateContribution, BallotMeasureContribution ORDER BY IsEmployee, CandidateContribution, BallotMeasureContribution");
+                $result2->execute($parse_data[3]);
+                foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
                   if ($row2["IsEmployee"] != $employee) {
                     if ($row2["IsEmployee"] == "Y") {echo "<b>Employee Contributions</b><br>";} else {if ($employee == "Y") {echo "&nbsp;<br>";} echo "<b>Organizational Contributions</b><br>";}
                     $employee = $row2["IsEmployee"];
@@ -649,7 +651,7 @@
         echo "</thead>";
         echo "<tbody>";
 
-        while ($row = $result->fetch_assoc()) {
+        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
           echo "<tr>";
           $count = 1;
           foreach ($fields as $field) {
@@ -703,8 +705,7 @@
           }
           if ($page < $total_pages && $page < 10) {echo "<input type=\"submit\" name=\"page_button\" value=\"Next\" id=\"caps_next_btn\">";}
         }
-        $result = my_query ("SELECT * FROM smry_last_update"); $row = $result->fetch_assoc(); $last_update = $row["LastUpdate"];
-
+        $result = $web_db->query("SELECT * FROM smry_last_update"); $row = $result->fetchAll(PDO::FETCH_ASSOC); $last_update = $row[0]["LastUpdate"];
         echo "<p>&nbsp;</p>";
         echo "<div class=\"font_input\"><p>This page will not display more than 1,000 entries.</p>";
 
