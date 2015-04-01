@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS california_data_office_codes;
+﻿DROP TABLE IF EXISTS california_data_office_codes;
 CREATE TABLE california_data_office_codes (
   office_code_id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   office_cd_cvr CHAR(3) NULL,
@@ -54,9 +54,11 @@ CREATE TABLE contributions_full (
   TransactionID VARCHAR(32) NOT NULL DEFAULT '',
   LineItem INTEGER NOT NULL,
   RecType VARCHAR(5) NOT NULL DEFAULT '',
+  TranType VARCHAR(1) NOT NULL DEFAULT '',
   MemoRefNo VARCHAR(25) NOT NULL DEFAULT '',
   TransactionDateStart DATE NOT NULL,
   TransactionDateEnd DATE NOT NULL,
+  DateThru DATE DEFAULT NULL,
   TransactionAmount DOUBLE NOT NULL DEFAULT 0,
   LoanPreExistingBalance DOUBLE NOT NULL DEFAULT 0,
   FiledDate DATETIME DEFAULT NULL,
@@ -96,6 +98,7 @@ CREATE TABLE contributions_full (
   DonorCommitteeEntity VARCHAR(5) NOT NULL DEFAULT '',
   DonorCommitteeNameNormalized VARCHAR(100) NOT NULL DEFAULT '',
   DonorCommitteeType VARCHAR(1) NOT NULL DEFAULT '',
+  IntermediaryCommitteeID BIGINT NOT NULL DEFAULT 0,
   OriginTable VARCHAR(20) NOT NULL DEFAULT '',
   Unitemized ENUM('Y','N') DEFAULT 'N',
   IsEmployee ENUM('Y','N') DEFAULT 'N',
@@ -112,6 +115,7 @@ CREATE TABLE contributions_full (
   NoNewLoanAmount ENUM('Y','N') DEFAULT 'N',
   LateContributionCoveredByRegularFiling ENUM('Y','N') DEFAULT 'N',
   BadElectionCycle ENUM('Y','N') DEFAULT 'N',
+  TransferNotOriginal ENUM('Y','N') DEFAULT 'N',
   CandidateContribution ENUM('Y','N') DEFAULT 'N',
   BallotMeasureContribution ENUM('Y','N') DEFAULT 'N',
   ContributionID BIGINT NOT NULL DEFAULT 0,
