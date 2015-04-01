@@ -673,13 +673,6 @@ where
   or DonorCommitteeEntity = 'IND'
 ;
 
-update contributions_full_temp
-set TransferNotOriginal = 'Y'
-where
-  TranType = 'X'
-  and IntermediaryCommitteeID > 0
-;
-
 truncate table contribution_ids;
 insert contribution_ids (
     FilingID
@@ -1085,6 +1078,14 @@ where
   and Schedule = 'B1'
   and TransactionAmount = 0
   and LoanPreExistingBalance > 0
+;
+
+update contributions_full_temp
+set TransferNotOriginal = 'Y'
+where
+  TranType = 'X'
+  /* and IntermediaryCommitteeID > 0 */
+  and CandidateControlledCommittee = 'Y'
 ;
 
 update contributions_full_temp
