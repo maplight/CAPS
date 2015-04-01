@@ -9,20 +9,20 @@
 
 
   function fill_offices_sought ($selected) {
+    global $web_db;
     echo "<OPTION>All Offices</OPTION>";
-    $result = my_query ("SELECT DISTINCT RecipientCandidateOffice FROM smry_offices ORDER BY RecipientCandidateOffice");
-    while ($row = $result->fetch_assoc()) {
+    foreach ($web_db->query ("SELECT DISTINCT RecipientCandidateOffice FROM smry_offices ORDER BY RecipientCandidateOffice") as $row) {
       if ($row["RecipientCandidateOffice"] == $selected) {echo "<OPTION SELECTED>{$row["RecipientCandidateOffice"]}</OPTION>";} else {echo "<OPTION>{$row["RecipientCandidateOffice"]}</OPTION>";}
     }
   }
 
 
   function fill_propositions ($selected) {
+    global $web_db;
     echo "<OPTION VALUE=\"ALL\">All ballot measures</OPTION>";
     $javascript_array = "[\"ALL\",\"All ballot measures\"],";
     $last_election = "";
-    $result = my_query ("SELECT DISTINCT Election, Target FROM smry_propositions ORDER BY Election DESC, Target");
-    while ($row = $result->fetch_assoc()) {
+    foreach ($web_db->query ("SELECT DISTINCT Election, Target FROM smry_propositions ORDER BY Election DESC, Target") as $row) {
       if ($last_election != $row["Election"]) {
         if ("ALL#{$row["Election"]}" == $selected) {echo "<OPTION VALUE=\"ALL#{$row["Election"]}\" SELECTED>" . date ("M j, Y", strtotime ($row["Election"])) . " ballot measures</OPTION>";} else {echo "<OPTION VALUE=\"ALL#{$row["Election"]}\">" . date ("M j, Y", strtotime ($row["Election"])) . " ballot measures</OPTION>";}
         $javascript_array .= "[\"ALL#{$row["Election"]}\",\"" . date ("M j, Y", strtotime ($row["Election"])) . " ballot measures\"],";
@@ -44,8 +44,8 @@
 
 
   function fill_election_cycles ($cycles) {
-    $result = my_query ("SELECT ElectionCycle FROM smry_cycles ORDER BY ElectionCycle DESC");
-    while ($row = $result->fetch_assoc()) {
+    global $web_db;
+    foreach ($web_db->query ("SELECT ElectionCycle FROM smry_cycles ORDER BY ElectionCycle DESC") as $row) {
       $cycle_start = $row["ElectionCycle"];
       $cycle_end = $cycle_start + 1;
       echo "<div>";
