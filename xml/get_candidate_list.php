@@ -4,8 +4,10 @@
   $search_text = $_POST["search_text"];
   $candidates = array ();
 
-  $result = my_query ("SELECT RecipientCandidateNameNormalized FROM smry_candidates WHERE RecipientCandidateNameNormalized LIKE '%{$search_text}%' ORDER BY RecipientCandidateNameNormalized LIMIT 50;");
-  while ($row = $result->fetch_assoc()) {$candidates[] = $row;}
+  $result = $web_db->prepare("SELECT RecipientCandidateNameNormalized FROM smry_candidates WHERE RecipientCandidateNameNormalized LIKE ? ORDER BY RecipientCandidateNameNormalized LIMIT 50");
+  $result->bindValue(1, "%{$search_text}%", PDO::PARAM_STR);
+  $result->execute();
+  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {$candidates[] = $row;}
 
   echo json_encode ($candidates);
 ?>
