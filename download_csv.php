@@ -1,8 +1,9 @@
 <?php
   require ("connect.php");
-  $where = stripslashes ($web_conn->real_escape_string ($_GET["w"]));
-  $criteria = unserialize ($_GET["c"]);
-
+  $where = $_GET["w"];
+  $where_data = unserialize ($_GET["d"]);
+  $sidebar_criteria = unserialize ($_GET["c"]);
+  ksort ($sidebar_criteria);
   $filename = "data-" . date ("Y-m-d-H-i") . ".csv";
 
   $search_join = "";
@@ -39,25 +40,19 @@
   # Build the header and criteria data
   $select_fields = "";
   $header_line = "";
-  $criteria_data = "\n";
   foreach ($fields as $field) {
     $field_info = explode ("|", $field);
     $select_fields .= $field_info[0] . ",";
     $header_line .= "\"" . $field_info[1] . "\",";
-    if (isset ($criteria[$field_info[0]])) {
-      if (trim ($criteria[$field_info[0]]) != "") {
-        $criteria_data .= "\"" . trim ($field_info[1] . ": " . $criteria[$field_info[0]]) . "\"\n";
-      }
-    }
   }
   $select_fields = substr ($select_fields, 0, -1);
   $header_line = substr ($header_line, 0, -1);
 
   # Build the data
   $data = "";
-  $query = "SELECT {$select_fields} FROM contributions LEFT JOIN contributions_grouped USING (ContributionID) INNER JOIN contributions_search ON (contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY contributions_grouped.ContributionID";
-  $result = my_query ($query);
-  while ($row = $result->fetch_row()) {
+  $result = $web_db->prepare("SELECT {$select_fields} FROM contributions LEFT JOIN contributions_grouped USING (ContributionID) INNER JOIN contributions_search ON (contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY contributions_grouped.ContributionID");
+  $result->execute($where_data);
+  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
     $data_line = "";
     foreach ($row as $value) {
       $data_line .= "\"" . trim (str_replace ("\"", "\"\"", $value)) . "\",";
@@ -65,6 +60,11 @@
     $data .= substr ($data_line, 0, -1) . "\n";
   }
   $data = str_replace ("\r", "", $data);
+
+  $criteria_data = "\nSearch criteria used to create this report:\n";
+  foreach ($sidebar_criteria as $criteria=>$selection) {
+    $criteria_data .= substr (str_replace ("_", " ", $criteria), 2) . ": " . $selection . "\n";
+  }
 
   header("Content-type: application/octet-stream");
   header("Content-Disposition: attachment; filename={$filename}");

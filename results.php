@@ -29,8 +29,15 @@
     $ElectionCycle = "";
     $CandidateContribution = "";
     $PropositionContribution = "";
-    $criteria = array ();
     $PDO_data = array ();
+
+    # This is passed to the CSV file generation script to display the selected criteria
+    $criteria = array ();
+    $criteria["00All_Contributors"] = "Selected";
+    $criteria["04All_Recipients"] = "Selected";
+    $criteria["05All_Candidates"] = "Not Selected";
+    $criteria["12Exclude_Allied_Committees"] = "Not Selected";
+    $criteria["15All_Dates_and_Cycles"] = "Selected";
 
     #------------------------------------------------------------------------------------------
     # Build contributor search query:
@@ -55,37 +62,30 @@
       if ($Donor != "") {
         if (intval (substr ($Donor, 2, -2)) == 0) {
           if (strpos ($search_data["contributor"], ";") !== false) {
-            $criteria["contributions.DonorNameNormalized"] = trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
-            $criteria["contributions.DonorEmployerNormalized"] = trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
-            $criteria["contributions.DonorOrganization"] = trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
+            $criteria["01Search_Contributor"] = trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
           } else {
-            $criteria["contributions.DonorNameNormalized"] = trim (str_replace ("+", "", substr ($search_donor, 1)));
-            $criteria["contributions.DonorEmployerNormalized"] = trim (str_replace ("+", "", substr ($search_donor, 1)));
-            $criteria["contributions.DonorOrganization"] = trim (str_replace ("+", "", substr ($search_donor, 1)));
+            $criteria["01Search_Contributor"] = trim (str_replace ("+", "", substr ($search_donor, 1)));
           }
           $PDO_data[] = substr ($Donor, 0, -1);
           $Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST (? IN BOOLEAN MODE))";
         } else {
           if (strpos ($search_data["contributor"], ";") !== false) {
-            $criteria["contributions.DonorNameNormalized"] = trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
-            $criteria["contributions.DonorEmployerNormalized"] = trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
-            $criteria["contributions.DonorOrganization"] = trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
+            $criteria["01Search_Contributor"] = trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
           } else {
-            $criteria["contributions.DonorNameNormalized"] = trim (str_replace ("+", "", substr ($search_donor, 1)));
-            $criteria["contributions.DonorEmployerNormalized"] = trim (str_replace ("+", "", substr ($search_donor, 1)));
-            $criteria["contributions.DonorOrganization"] = trim (str_replace ("+", "", substr ($search_donor, 1)));
+            $criteria["01Search_Contributor"] = trim (str_replace ("+", "", substr ($search_donor, 1)));
           }
-          $criteria["contributions.DonorCommitteeID"] = intval (substr ($Donor, 2, -2));
+          $criteria["02DonorCommitteeID"] = intval (substr ($Donor, 2, -2));
           $PDO_data[] = substr ($Donor, 0, -1);
           $PDO_data[] = intval (substr ($Donor, 2, -2));
           $Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST (? IN BOOLEAN MODE) OR contributions_search_donors.DonorCommitteeID = ?)";
         }
       }
     }
+    if (isset ($criteria["01Search_Contributor"])) {$criteria["00All_Contributors"] = "Not Selected";}
   
     # build locations query
     if ($search_data["state_list"] != "ALL") {
-      $criteria["contributions.DonorState"] = $search_data["state_list"];
+      $criteria["03Contributor_State"] = $search_data["state_list"];
       $PDO_data[] = $search_data["state_list"];
       $DonorState = "contributions_search_donors.DonorState = ?";
     }
@@ -94,14 +94,16 @@
       case "candidates":
         #------------------------------------------------------------------------------------------
         # Build candidate search query:
-        $criteria["contributions.CandidateContribution"] = 'Y';
         $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
+        $criteria["04All_Recipients"] = "Not Selected";
+        $criteria["05All_Candidates"] = "Selected";
 
         # build office list query
         if ($search_data["office_list"] == "All Offices") {
           $OfficeList = "";
         } else {
-          $criteria["contributions.RecipientCandidateOffice"] = $search_data["office_list"];
+          $criteria["07Candidate_Office"] = $search_data["office_list"];
+          $criteria["04All_Recipients"] = "Not Selected";
           $PDO_data[] = $search_data["office_list"];
           $OfficeList = "smry_offices.RecipientCandidateOffice = ?";
         }
@@ -109,7 +111,6 @@
 
       case "search_candidates":
         # build candidate search query
-        $criteria["contributions.CandidateContribution"] = 'Y';
         $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
 
         if ($search_data["match_candidate"] == "no") {
@@ -125,16 +126,19 @@
             $search_candidate .= $word_str;
           }
           if (strpos ($search_data["search_candidates"], ";") !== false) {
-            $criteria["contributions.RecipientCandidateNameNormalized"] = trim (str_replace ("+", "OR ", substr ($search_candidate, 1)));
+            $criteria["06Search_Candidate"] = trim (str_replace ("+", "OR ", substr ($search_candidate, 1)));
+            $criteria["04All_Recipients"] = "Not Selected";
           } else {
-            $criteria["contributions.RecipientCandidateNameNormalized"] = trim (str_replace ("+", "", substr ($search_candidate, 1)));
+            $criteria["06Search_Candidate"] = trim (str_replace ("+", "", substr ($search_candidate, 1)));
+            $criteria["04All_Recipients"] = "Not Selected";
           }
           if ($Candidate != "") {
             $PDO_data[] = substr ($Candidate, 0, -1);
             $Candidate = "MATCH (smry_candidates.CandidateWords) AGAINST (? IN BOOLEAN MODE)";
           }
         } else {
-          $criteria["contributions.RecipientCandidateNameNormalized"] = $search_data["search_candidates"];
+          $criteria["06Search_Candidate"] = $search_data["search_candidates"];
+          $criteria["04All_Recipients"] = "Not Selected";
           $PDO_data[] = $search_data["search_candidates"];
           $CandidateList = "smry_candidates.RecipientCandidateNameNormalized = ?";
         }
@@ -143,7 +147,8 @@
         if ($search_data["office_list"] == "All Offices") {
           $OfficeList = "";
         } else {
-          $criteria["contributions.RecipientCandidateOffice"] = $search_data["office_list"];
+          $criteria["07Candidate_Office"] = $search_data["office_list"];
+          $criteria["04All_Recipients"] = "Not Selected";
           $PDO_data[] = $search_data["office_list"];
           $OfficeList = "smry_offices.RecipientCandidateOffice = ?";
         }
@@ -153,18 +158,18 @@
       case "ballots":
         #------------------------------------------------------------------------------------------
         # Build ballot measure search query:
-        $criteria["contributions.BallotMeasureContribution"] = 'Y';
-        $criteria["contributions_grouped.ballot_measures"] = "";
+        $criteria["04All_Recipients"] = "Not Selected";
+        $criteria["05All_Candidates"] = "Not Selected";
         $PropositionContribution = "contributions_search.BallotMeasureContribution = 'Y'";
 
         # build support/oppose query
         if ($search_data["position"] == "S") {
           $Position = "contributions_search.PositionID = 1";
-          $criteria["contributions_grouped.ballot_measures"] .= "SUPPORT FOR ";
+          $criteria["11Ballot_Support_or_Oppose"] = "SUPPORT";
         }
         if ($search_data["position"] == "O") {
           $Position = "contributions_search.PositionID = 2";
-          $criteria["contributions_grouped.ballot_measures"] .= "OPPOSE FOR ";
+          $criteria["11Ballot_Support_or_Oppose"] = "OPPOSE";
         }
 
         if ($search_data["search_propositions"] != "Search ballot measures" && $search_data["proposition_list"] == "ALL") {
@@ -184,9 +189,9 @@
             $PDO_data[] = substr ($PropositionSearch, 0, -1);
             $PropositionSearch = "MATCH (smry_propositions.PropositionWords) AGAINST (? IN BOOLEAN MODE)";
             if (strpos ($search_data["search_propositions"], ";") !== false) {
-              $criteria["contributions_grouped.ballot_measures"] .= trim (str_replace ("+", "OR ", substr ($search_proposition, 1)));
+              $criteria["08Search_Ballot_Measures"] .= trim (str_replace ("+", "OR ", substr ($search_proposition, 1)));
             } else {
-              $criteria["contributions_grouped.ballot_measures"] .= trim (str_replace ("+", "", substr ($search_proposition, 1)));
+              $criteria["08Search_Ballot_Measures"] .= trim (str_replace ("+", "", substr ($search_proposition, 1)));
             }
           } 
         } else {
@@ -196,7 +201,7 @@
               $selected_data = explode ("#", $search_data["proposition_list"]);
               $Election = "smry_propositions.Election = ?";
               $PDO_data[] = $selected_data[1];
-              $criteria["contributions.Election"] = $selected_data[1];
+              $criteria["09Ballot_Measures_Election"] = $selected_data[1];
             } else {
               # build query for a specific proposition
               $selected_data = explode ("#", $search_data["proposition_list"]);
@@ -204,8 +209,8 @@
               $PDO_data[] = $selected_data[0]; # Election
               $Proposition = "smry_propositions.Target = ?";
               $Election = "smry_propositions.Election = ?";
-              $criteria["contributions.Election"] = $selected_data[0];
-              $criteria["contributions_grouped.ballot_measures"] .= $selected_data[1];
+              $criteria["09Ballot_Measures_Election"] = $selected_data[0];
+              $criteria["10Ballot_Measure"] = $selected_data[1];
             }
           }
         }
@@ -213,7 +218,7 @@
         # exclude allied committees query
         if (isset ($search_data["exclude"])) {
           $Allied = "contributions_search.AlliedCommittee = 'N'";
-          $criteria["contributions.AlliedCommittee"] = 'N';
+          $criteria["12Exclude_Allied_Committees"] = "Selected";
         }
         break; # ballots
 
@@ -242,25 +247,29 @@
             if (intval (substr ($Committee, 2, -2)) == 0) {
               if (strpos ($search_data["search_committees"], ";") !== false) {
                 $criteria["contributions.RecipientCommitteeNameNormalized"] = trim (str_replace ("+", "OR ", substr ($search_committee, 1)));
+                $criteria["04All_Recipients"] = "Not Selected";
               } else {
                 $criteria["contributions.RecipientCommitteeNameNormalized"] = trim (str_replace ("+", "", substr ($search_committee, 1)));
+                $criteria["04All_Recipients"] = "Not Selected";
               }
               $PDO_data[] = substr ($Committee, 0, -1);
               $Committee = "MATCH (smry_committees.CommitteeWords) AGAINST (? IN BOOLEAN MODE)";
             } else {
               if (strpos ($search_data["search_propositions"], ";") !== false) {
-                $criteria["contributions.RecipientCommitteeNameNormalized"] = trim (str_replace ("+", "OR ", substr ($search_committee, 1)));
+                $criteria["13Search_Committees"] = trim (str_replace ("+", "OR ", substr ($search_committee, 1)));
+                $criteria["04All_Recipients"] = "Not Selected";
               } else {
-                $criteria["contributions.RecipientCommitteeNameNormalized"] = trim (str_replace ("+", "", substr ($search_committee, 1)));
+                $criteria["13Search_Committees"] = trim (str_replace ("+", "", substr ($search_committee, 1)));
+                $criteria["04All_Recipients"] = "Not Selected";
               }
-              $criteria["contributions.RecipientCommitteeID"] = intval (substr ($Committee, 2, -2));
+              $criteria["14RecipientCommitteeID"] = intval (substr ($Committee, 2, -2));
               $PDO_data[] = substr ($Committee, 0, -1);
               $PDO_data[] = intval (substr ($Committee, 2, -2));
               $Committee = "(MATCH (smry_committees.CommitteeWords) AGAINST (? IN BOOLEAN MODE) OR smry_committees.RecipientCommitteeID = ?)";
             }
           }
         } else {
-          $criteria["contributions.RecipientCommitteeNameNormalized"] = $search_data["search_committees"];
+          $criteria["13Search_Committees"] = $search_data["search_committees"];
           $PDO_data[] = $search_data["search_committees"];
           $Committee = "smry_committees.RecipientCommitteeNameNormalized = ?";
         }
@@ -279,31 +288,35 @@
         } else if ($start_date == "") {
           $PDO_data[] = date ("Y-m-d", $end_date);
           $DateRange = "contributions_search.TransactionDateEnd <= ?";
-          $criteria["contributions.TransactionDateEnd"] = date ("Y-m-d", $end_date);
+          $criteria["17End_Date"] = date ("Y-m-d", $end_date);
+          $criteria["15All_Dates_and_Cycles"] = "Not Selected";
         } else if ($end_date == "") {
           $PDO_data[] = date ("Y-m-d", $start_date);
           $DateRange = "contributions_search.TransactionDateStart >= ?";
-          $criteria["contributions.TransactionDateStart"] = date ("Y-m-d", $start_date);
+          $criteria["16Start_Date"] = date ("Y-m-d", $start_date);
+          $criteria["15All_Dates_and_Cycles"] = "Not Selected";
         } else {
           $PDO_data[] = date ("Y-m-d", $start_date);
           $PDO_data[] = date ("Y-m-d", $end_date);
           $DateRange = "contributions_search.TransactionDateStart >= ? AND contributions_search.TransactionDateEnd <= ?";
-          $criteria["contributions.TransactionDateStart"] = date ("Y-m-d", $start_date);
-          $criteria["contributions.TransactionDateEnd"] = date ("Y-m-d", $end_date);
+          $criteria["16Start_Date"] = date ("Y-m-d", $start_date);
+          $criteria["17End_Date"] = date ("Y-m-d", $end_date);
+          $criteria["15All_Dates_and_Cycles"] = "Not Selected";
         }
         break;
 
       case "cycle":
         # build election cycle query
         if (isset ($search_data["cycles"])) {
-          $criteria["contributions.ElectionCycle"] = "";
+          $criteria["18Election_Cycles"] = "";
           foreach ($search_data["cycles"] as $cycle) {
             $PDO_data[] = $cycle;
             $ElectionCycle .= "contributions_search.ElectionCycle = ? OR ";
-            $criteria["contributions.ElectionCycle"] .= $cycle . " OR ";
+            $criteria["18Election_Cycles"] .= $cycle . " OR ";
           }
           $ElectionCycle = substr ($ElectionCycle, 0, -4); # Remove the final OR
-          $criteria["contributions.ElectionCycle"] = substr ($criteria["contributions.ElectionCycle"], 0, -4);
+          $criteria["18Election_Cycles"] = substr ($criteria["18Election_Cycles"], 0, -4);
+          $criteria["15All_Dates_and_Cycles"] = "Not Selected";
         }
         break;
     }
@@ -597,6 +610,7 @@
         }
 
         $criteria = urlencode (serialize ($parse_data[2]));
+        $data = urlencode (serialize ($parse_data[3]));
 
         echo "<div id=\"caps_filter_box\">";
         echo "Show";
@@ -624,7 +638,7 @@
         # Do not display the download option if there are more records then allowed to download
         if ($totals_row["records"] <= $max_download_records) { 
           echo "<div class=\"right\">";
-          echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "&c={$criteria}\" class=\"download_csv\">Download CSV</a>&nbsp;";
+          echo "<a href=\"download_csv.php?w=" . urlencode ($where) . "&d={$data}&c={$criteria}\" class=\"download_csv\">Download CSV</a>&nbsp;";
           display_tooltip ("Download the search results as a CSV file, which can be opened in most spreadsheet software.", -180, 10, 160, "");
           echo "</div> <!-- end download_box -->";
         }
@@ -712,7 +726,7 @@
         echo "<div class=\"font_input\"><p>This page will not display more than 1,000 entries.</p>";
 
         # Do not display the download option if there are more records then allowed to download
-        if ($totals_row["records"] <= $max_download_records) {echo "(To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "&c={$criteria}\" class=\"download_csv\">download the CSV</a> file.)";}
+        if ($totals_row["records"] <= $max_download_records) {echo "(To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "&d={$data}&c={$criteria}\" class=\"download_csv\">download the CSV</a> file.)";}
 
         echo "</div><br><div class=\"font_small\">Contributions data is current as of " . date ("F j, Y", strtotime ($last_update)) . ".</div><br>";
         echo "</center>";
