@@ -30,6 +30,7 @@
     $CandidateContribution = "";
     $PropositionContribution = "";
     $criteria = array ();
+    $PDO_data = array ();
 
     #------------------------------------------------------------------------------------------
     # Build contributor search query:
@@ -62,7 +63,8 @@
             $criteria["contributions.DonorEmployerNormalized"] = trim (str_replace ("+", "", substr ($search_donor, 1)));
             $criteria["contributions.DonorOrganization"] = trim (str_replace ("+", "", substr ($search_donor, 1)));
           }
-          $Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST ('" . substr ($Donor, 0, -1) . "' IN BOOLEAN MODE))";
+          $PDO_data[] = substr ($Donor, 0, -1);
+          $Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST (? IN BOOLEAN MODE))";
         } else {
           if (strpos ($search_data["contributor"], ";") !== false) {
             $criteria["contributions.DonorNameNormalized"] = trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
@@ -74,7 +76,9 @@
             $criteria["contributions.DonorOrganization"] = trim (str_replace ("+", "", substr ($search_donor, 1)));
           }
           $criteria["contributions.DonorCommitteeID"] = intval (substr ($Donor, 2, -2));
-          $Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST ('" . substr ($Donor, 0, -1) . "' IN BOOLEAN MODE) OR contributions_search_donors.DonorCommitteeID = " . intval (substr ($Donor, 2, -2)) . ")";
+          $PDO_data[] = substr ($Donor, 0, -1);
+          $PDO_data[] = intval (substr ($Donor, 2, -2));
+          $Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST (? IN BOOLEAN MODE) OR contributions_search_donors.DonorCommitteeID = ?)";
         }
       }
     }
@@ -82,7 +86,8 @@
     # build locations query
     if ($search_data["state_list"] != "ALL") {
       $criteria["contributions.DonorState"] = $search_data["state_list"];
-      $DonorState = "contributions_search_donors.DonorState = '{$search_data["state_list"]}'";
+      $PDO_data[] = $search_data["state_list"];
+      $DonorState = "contributions_search_donors.DonorState = ?";
     }
 
     switch ($search_data["contrib_types"]) {
@@ -97,7 +102,8 @@
           $OfficeList = "";
         } else {
           $criteria["contributions.RecipientCandidateOffice"] = $search_data["office_list"];
-          $OfficeList = "smry_offices.RecipientCandidateOffice = '" . addslashes ($search_data["office_list"]) . "'";
+          $PDO_data[] = $search_data["office_list"];
+          $OfficeList = "smry_offices.RecipientCandidateOffice = ?";
         }
         break;
 
@@ -105,14 +111,6 @@
         # build candidate search query
         $criteria["contributions.CandidateContribution"] = 'Y';
         $CandidateContribution = "contributions_search.CandidateContribution = 'Y'";
-
-        # build office list query
-        if ($search_data["office_list"] == "All Offices") {
-          $OfficeList = "";
-        } else {
-          $criteria["contributions.RecipientCandidateOffice"] = $search_data["office_list"];
-          $OfficeList = "smry_offices.RecipientCandidateOffice = '" . addslashes ($search_data["office_list"]) . "'";
-        }
 
         if ($search_data["match_candidate"] == "no") {
           $Candidate = "";
@@ -131,11 +129,25 @@
           } else {
             $criteria["contributions.RecipientCandidateNameNormalized"] = trim (str_replace ("+", "", substr ($search_candidate, 1)));
           }
-          if ($Candidate != "") {$Candidate = "MATCH (smry_candidates.CandidateWords) AGAINST ('" . substr ($Candidate, 0, -1) . "' IN BOOLEAN MODE)";}
+          if ($Candidate != "") {
+            $PDO_data[] = substr ($Candidate, 0, -1);
+            $Candidate = "MATCH (smry_candidates.CandidateWords) AGAINST (? IN BOOLEAN MODE)";
+          }
         } else {
           $criteria["contributions.RecipientCandidateNameNormalized"] = $search_data["search_candidates"];
-          $CandidateList = "smry_candidates.RecipientCandidateNameNormalized = '" . addslashes ($search_data["search_candidates"]) . "'";
+          $PDO_data[] = $search_data["search_candidates"];
+          $CandidateList = "smry_candidates.RecipientCandidateNameNormalized = ?";
         }
+
+        # build office list query
+        if ($search_data["office_list"] == "All Offices") {
+          $OfficeList = "";
+        } else {
+          $criteria["contributions.RecipientCandidateOffice"] = $search_data["office_list"];
+          $PDO_data[] = $search_data["office_list"];
+          $OfficeList = "smry_offices.RecipientCandidateOffice = ?";
+        }
+
         break; # candidates
 
       case "ballots":
@@ -169,7 +181,8 @@
             $search_proposition .= $word_str;
           }
           if ($PropositionSearch != "") {
-            $PropositionSearch = "MATCH (smry_propositions.PropositionWords) AGAINST ('" . substr ($PropositionSearch, 0, -1) . "' IN BOOLEAN MODE)";
+            $PDO_data[] = substr ($PropositionSearch, 0, -1);
+            $PropositionSearch = "MATCH (smry_propositions.PropositionWords) AGAINST (? IN BOOLEAN MODE)";
             if (strpos ($search_data["search_propositions"], ";") !== false) {
               $criteria["contributions_grouped.ballot_measures"] .= trim (str_replace ("+", "OR ", substr ($search_proposition, 1)));
             } else {
@@ -181,13 +194,16 @@
             if (substr ($search_data["proposition_list"], 0, 3) == "ALL") {
               # build query for a specific election
               $selected_data = explode ("#", $search_data["proposition_list"]);
-              $Election = "smry_propositions.Election = '" . $selected_data[1] . "'";
+              $Election = "smry_propositions.Election = ?";
+              $PDO_data[] = $selected_data[1];
               $criteria["contributions.Election"] = $selected_data[1];
             } else {
               # build query for a specific proposition
               $selected_data = explode ("#", $search_data["proposition_list"]);
-              $Election = "smry_propositions.Election = '" . $selected_data[0] . "'";
-              $Proposition = "smry_propositions.Target = '" . addslashes ($selected_data[1]) . "'";
+              $PDO_data[] = $selected_data[1]; # Target
+              $PDO_data[] = $selected_data[0]; # Election
+              $Proposition = "smry_propositions.Target = ?";
+              $Election = "smry_propositions.Election = ?";
               $criteria["contributions.Election"] = $selected_data[0];
               $criteria["contributions_grouped.ballot_measures"] .= $selected_data[1];
             }
@@ -229,7 +245,8 @@
               } else {
                 $criteria["contributions.RecipientCommitteeNameNormalized"] = trim (str_replace ("+", "", substr ($search_committee, 1)));
               }
-              $Committee = "MATCH (smry_committees.CommitteeWords) AGAINST ('" . substr ($Committee, 0, -1) . "' IN BOOLEAN MODE)";
+              $PDO_data[] = substr ($Committee, 0, -1);
+              $Committee = "MATCH (smry_committees.CommitteeWords) AGAINST (? IN BOOLEAN MODE)";
             } else {
               if (strpos ($search_data["search_propositions"], ";") !== false) {
                 $criteria["contributions.RecipientCommitteeNameNormalized"] = trim (str_replace ("+", "OR ", substr ($search_committee, 1)));
@@ -237,12 +254,15 @@
                 $criteria["contributions.RecipientCommitteeNameNormalized"] = trim (str_replace ("+", "", substr ($search_committee, 1)));
               }
               $criteria["contributions.RecipientCommitteeID"] = intval (substr ($Committee, 2, -2));
-              $Committee = "(MATCH (smry_committees.CommitteeWords) AGAINST ('" . substr ($Committee, 0, -1) . "' IN BOOLEAN MODE) OR smry_committees.RecipientCommitteeID = " . intval (substr ($Committee, 2, -2)) . ")";
+              $PDO_data[] = substr ($Committee, 0, -1);
+              $PDO_data[] = intval (substr ($Committee, 2, -2));
+              $Committee = "(MATCH (smry_committees.CommitteeWords) AGAINST (? IN BOOLEAN MODE) OR smry_committees.RecipientCommitteeID = ?)";
             }
           }
         } else {
           $criteria["contributions.RecipientCommitteeNameNormalized"] = $search_data["search_committees"];
-          $Committee = "smry_committees.RecipientCommitteeNameNormalized = '" . addslashes ($search_data["search_committees"]) . "'";
+          $PDO_data[] = $search_data["search_committees"];
+          $Committee = "smry_committees.RecipientCommitteeNameNormalized = ?";
         }
         break; # committees
     }
@@ -257,13 +277,17 @@
         if ($start_date == "" && $end_date == "") {
           $DateRange = "";
         } else if ($start_date == "") {
-          $DateRange = "contributions_search.TransactionDateEnd <= '" . date ("Y-m-d", $end_date) . "'";
+          $PDO_data[] = date ("Y-m-d", $end_date);
+          $DateRange = "contributions_search.TransactionDateEnd <= ?";
           $criteria["contributions.TransactionDateEnd"] = date ("Y-m-d", $end_date);
         } else if ($end_date == "") {
-          $DateRange = "contributions_search.TransactionDateStart >= '" . date ("Y-m-d", $start_date) . "'";
+          $PDO_data[] = date ("Y-m-d", $start_date);
+          $DateRange = "contributions_search.TransactionDateStart >= ?";
           $criteria["contributions.TransactionDateStart"] = date ("Y-m-d", $start_date);
         } else {
-          $DateRange = "contributions_search.TransactionDateStart >= '" . date ("Y-m-d", $start_date) . "' AND contributions_search.TransactionDateEnd <= '" . date ("Y-m-d", $end_date) . "'";
+          $PDO_data[] = date ("Y-m-d", $start_date);
+          $PDO_data[] = date ("Y-m-d", $end_date);
+          $DateRange = "contributions_search.TransactionDateStart >= ? AND contributions_search.TransactionDateEnd <= ?";
           $criteria["contributions.TransactionDateStart"] = date ("Y-m-d", $start_date);
           $criteria["contributions.TransactionDateEnd"] = date ("Y-m-d", $end_date);
         }
@@ -274,7 +298,8 @@
         if (isset ($search_data["cycles"])) {
           $criteria["contributions.ElectionCycle"] = "";
           foreach ($search_data["cycles"] as $cycle) {
-            $ElectionCycle .= "contributions_search.ElectionCycle = $cycle OR ";
+            $PDO_data[] = $cycle;
+            $ElectionCycle .= "contributions_search.ElectionCycle = ? OR ";
             $criteria["contributions.ElectionCycle"] .= $cycle . " OR ";
           }
           $ElectionCycle = substr ($ElectionCycle, 0, -4); # Remove the final OR
@@ -341,12 +366,14 @@
     if ($date_where != "") {$where .= "{$date_where} AND ";}
     if ($where != "") {$where = "WHERE " . substr ($where, 0, -5);} # remove extra AND
 
-    $parse_data = array ($where, $summary_type, $criteria);
+    $parse_data = array ($where, $summary_type, $criteria, $PDO_data);
     return $parse_data;
   }
 
 
   function display_data ($parse_data) {
+    global $web_db;
+
     # Set this variable to control the maximum number of records that the download csv file is available.
     $max_download_records = 150000;
 
@@ -376,10 +403,12 @@
       if (strpos ($where, "smry_committees") !== false) {$search_join .= "INNER JOIN smry_committees USING (MapLightCommitteeID) ";}
       if (strpos ($where, "smry_propositions") !== false) {$search_join .= "INNER JOIN smry_propositions USING (PropositionID) ";}
 
-      $result = my_query ("SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM (SELECT DISTINCT ContributionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContribs");
-      $totals_row = $result->fetch_assoc();
-      $result = my_query ("SELECT COUNT(DISTINCT ContributionID) AS records FROM contributions_search {$search_join} {$where}");
-      $record_count = $result->fetch_assoc();
+      $result = $web_db->prepare("SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM (SELECT DISTINCT ContributionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContribs");
+      $result->execute($parse_data[3]);
+      $totals_row = $result->fetchAll(PDO::FETCH_ASSOC); $totals_row = $totals_row[0];
+      $result = $web_db->prepare("SELECT COUNT(DISTINCT ContributionID) AS records FROM contributions_search {$search_join} {$where}");
+      $result->execute($parse_data[3]); 
+      $record_count = $result->fetchAll(PDO::FETCH_ASSOC); $record_count = $record_count[0];
 
       if ($record_count["records"] == 0) {
         echo "Your search did not return any records.";
@@ -470,8 +499,9 @@
                               "Election|Election",
                               "ElectionCycle|Cycle");
 
-        $result = my_query ("SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING (ContributionID) INNER JOIN contributions_search ON (contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} {$sort_order} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
-        $rows_returned = $result->num_rows;
+        $result = $web_db->prepare("SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING (ContributionID) INNER JOIN contributions_search ON (contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} {$sort_order} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
+        $result->execute($parse_data[3]);
+        $rows_returned = $result->rowCount();
 
         echo "<div id=\"caps_results\">";
 
@@ -492,8 +522,9 @@
                 display_tooltip ($results_tooltip, -180, 10, 250, "");
                 echo "<div id=\"caps_breakdown_box\">";
                 $employee = "";
-                $result2 = my_query ("SELECT IsEmployee, CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, IsEmployee, CandidateContribution, BallotMeasureContribution, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContributions GROUP BY IsEmployee, CandidateContribution, BallotMeasureContribution ORDER BY IsEmployee, CandidateContribution, BallotMeasureContribution");
-                while ($row2 = $result2->fetch_assoc()) {
+                $result2 = $web_db->prepare("SELECT IsEmployee, CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, IsEmployee, CandidateContribution, BallotMeasureContribution, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContributions GROUP BY IsEmployee, CandidateContribution, BallotMeasureContribution ORDER BY IsEmployee, CandidateContribution, BallotMeasureContribution");
+                $result2->execute($parse_data[3]);
+                foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
                   if ($row2["IsEmployee"] != $employee) {
                     if ($row2["IsEmployee"] == "Y") {echo "<b>Employee Contributions</b><br>";} else {if ($employee == "Y") {echo "&nbsp;<br>";} echo "<b>Organizational Contributions</b><br>";}
                     $employee = $row2["IsEmployee"];
@@ -511,8 +542,9 @@
                 echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
                 display_tooltip ($results_tooltip, -180, 10, 250, "");
                 echo "<div id=\"caps_breakdown_box\">";
-                $result2 = my_query ("SELECT RecipientCommitteeNameNormalized, RecipientCommitteeID, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, MapLightCommitteeID, RecipientCommitteeNameNormalized, RecipientCommitteeID, TransactionAmount FROM contributions_search INNER JOIN smry_committees USING (MapLightCommitteeID) {$search_join} {$where}) AS UniqueContributions GROUP BY MapLightCommitteeID ORDER BY RecipientCommitteeID, RecipientCommitteeNameNormalized");
-                while ($row2 = $result2->fetch_assoc()) {
+                $result2 = $web_db->prepare("SELECT RecipientCommitteeNameNormalized, RecipientCommitteeID, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, MapLightCommitteeID, RecipientCommitteeNameNormalized, RecipientCommitteeID, TransactionAmount FROM contributions_search INNER JOIN smry_committees USING (MapLightCommitteeID) {$search_join} {$where}) AS UniqueContributions GROUP BY MapLightCommitteeID ORDER BY RecipientCommitteeID, RecipientCommitteeNameNormalized");
+                $result2->execute($parse_data[3]);
+                foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
                   echo "<b>({$row2["RecipientCommitteeID"]}) {$row2["RecipientCommitteeNameNormalized"]}</b> has raised $" . number_format ($row2["TotalAmount"], 2, ".", ",") . " in " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
                 }
                 echo "</div> <!-- end caps_breakdown_box -->";
@@ -528,8 +560,9 @@
                   display_tooltip ($results_tooltip, -180, 10, 250, "");
                   echo "</div>";
                   echo "<div id=\"caps_breakdown_box\">";
-                  $result2 = my_query ("SELECT Target, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount, SUM(IF(PositionID = 1,1,0)) AS SupportCount, SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount, SUM(IF(PositionID = 2,1,0)) AS OpposeCount, SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount FROM (SELECT DISTINCT ContributionID, Target, PositionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContributions GROUP BY Target ORDER BY Target");
-                  while ($row2 = $result2->fetch_assoc()) {
+                  $result2 = $web_db->prepare("SELECT Target, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount, SUM(IF(PositionID = 1,1,0)) AS SupportCount, SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount, SUM(IF(PositionID = 2,1,0)) AS OpposeCount, SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount FROM (SELECT DISTINCT ContributionID, Target, PositionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContributions GROUP BY Target ORDER BY Target");
+                  $result2->execute($parse_data[3]);
+                  foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
                     if (strpos ($row2["Target"], "-") !== false) {
                       echo "<p><b>" . substr ($row2["Target"], 0, strrpos ($row2["Target"], " - ")) . "</b>" . substr ($row2["Target"], strrpos ($row2["Target"], " - ")) . "<br>";
                     } else {
@@ -620,7 +653,7 @@
         echo "</thead>";
         echo "<tbody>";
 
-        while ($row = $result->fetch_assoc()) {
+        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
           echo "<tr>";
           $count = 1;
           foreach ($fields as $field) {
@@ -674,8 +707,7 @@
           }
           if ($page < $total_pages && $page < 10) {echo "<input type=\"submit\" name=\"page_button\" value=\"Next\" id=\"caps_next_btn\">";}
         }
-        $result = my_query ("SELECT * FROM smry_last_update"); $row = $result->fetch_assoc(); $last_update = $row["LastUpdate"];
-
+        $result = $web_db->query("SELECT * FROM smry_last_update"); $row = $result->fetchAll(PDO::FETCH_ASSOC); $last_update = $row[0]["LastUpdate"];
         echo "<p>&nbsp;</p>";
         echo "<div class=\"font_input\"><p>This page will not display more than 1,000 entries.</p>";
 
