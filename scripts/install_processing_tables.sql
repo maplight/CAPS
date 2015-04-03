@@ -1,4 +1,4 @@
-﻿DROP TABLE IF EXISTS california_data_office_codes;
+DROP TABLE IF EXISTS california_data_office_codes;
 CREATE TABLE california_data_office_codes (
   office_code_id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   office_cd_cvr CHAR(3) NULL,

@@ -1,4 +1,4 @@
-﻿truncate table prop_filer_session_name_forms;
+truncate table prop_filer_session_name_forms;
 insert into prop_filer_session_name_forms
 select
     ftp_filer_filings.filer_id
@@ -1084,7 +1084,6 @@ update contributions_full_temp
 set TransferNotOriginal = 'Y'
 where
   TranType = 'X'
-  /* and IntermediaryCommitteeID > 0 */
   and CandidateControlledCommittee = 'Y'
 ;
 
