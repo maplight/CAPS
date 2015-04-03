@@ -63,17 +63,17 @@
       if ($Donor != "") {
         if (intval (substr ($Donor, 2, -2)) == 0) {
           if (strpos ($search_data["contributor"], ";") !== false) {
-            $criteria["00Contributors"] = "Contributor contains: \"" . trim (str_replace ("+", "OR ", substr ($search_donor, 1))) . "\"";
+            $criteria["00Contributors"] = "Contributor contains: " . trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
           } else {
-            $criteria["00Contributors"] = "Contributor contains: \"" . trim (str_replace ("+", "", substr ($search_donor, 1))) . "\"";
+            $criteria["00Contributors"] = "Contributor contains: " . trim (str_replace ("+", "", substr ($search_donor, 1)));
           }
           $PDO_data[] = substr ($Donor, 0, -1);
           $Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST (? IN BOOLEAN MODE))";
         } else {
           if (strpos ($search_data["contributor"], ";") !== false) {
-            $criteria["00Contributors"] = "Contributor contains: \"" . trim (str_replace ("+", "OR ", substr ($search_donor, 1))) . "\"";
+            $criteria["00Contributors"] = "Contributor contains: " . trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
           } else {
-            $criteria["00Contributors"] = "Contributor contains: \"" . trim (str_replace ("+", "", substr ($search_donor, 1))) . "\"";
+            $criteria["00Contributors"] = "Contributor contains: " . trim (str_replace ("+", "", substr ($search_donor, 1)));
           }
           $PDO_data[] = substr ($Donor, 0, -1);
           $PDO_data[] = intval (substr ($Donor, 2, -2));
@@ -124,9 +124,9 @@
             $search_candidate .= $word_str;
           }
           if (strpos ($search_data["search_candidates"], ";") !== false) {
-            $criteria["02Recipient(s)"] = "Candidate contains: \"" . trim (str_replace ("+", "OR ", substr ($search_candidate, 1))) . "\"";
+            $criteria["02Recipient(s)"] = "Candidate contains: " . trim (str_replace ("+", "OR ", substr ($search_candidate, 1)));
           } else {
-            $criteria["02Recipient(s)"] = "Candidate contains: \"" . trim (str_replace ("+", "", substr ($search_candidate, 1))) . "\"";
+            $criteria["02Recipient(s)"] = "Candidate contains: " . trim (str_replace ("+", "", substr ($search_candidate, 1)));
           }
           if ($Candidate != "") {
             $PDO_data[] = substr ($Candidate, 0, -1);
@@ -181,9 +181,9 @@
             $PDO_data[] = substr ($PropositionSearch, 0, -1);
             $PropositionSearch = "MATCH (smry_propositions.PropositionWords) AGAINST (? IN BOOLEAN MODE)";
             if (strpos ($search_data["search_propositions"], ";") !== false) {
-              $criteria["02Recipient(s)"] = "Ballot measure contains: \"" . trim (str_replace ("+", "OR ", substr ($search_proposition, 1))) . "\"";
+              $criteria["02Recipient(s)"] = "Ballot measure contains: " . trim (str_replace ("+", "OR ", substr ($search_proposition, 1)));
             } else {
-              $criteria["02Recipient(s)"] = "Ballot measure contains: \"" . trim (str_replace ("+", "", substr ($search_proposition, 1))) . "\"";
+              $criteria["02Recipient(s)"] = "Ballot measure contains: " . trim (str_replace ("+", "", substr ($search_proposition, 1)));
             }
           } 
         } else {
@@ -238,17 +238,17 @@
           if ($Committee != "") {
             if (intval (substr ($Committee, 2, -2)) == 0) {
               if (strpos ($search_data["search_committees"], ";") !== false) {
-                $criteria["02Recipient(s)"] = "Committee contains: \"" . trim (str_replace ("+", "OR ", substr ($search_committee, 1))) . "\"";
+                $criteria["02Recipient(s)"] = "Committee contains: " . trim (str_replace ("+", "OR ", substr ($search_committee, 1)));
               } else {
-                $criteria["02Recipient(s)"] = "Committee contains: \"" . trim (str_replace ("+", "", substr ($search_committee, 1))) . "\"";
+                $criteria["02Recipient(s)"] = "Committee contains: " . trim (str_replace ("+", "", substr ($search_committee, 1)));
               }
               $PDO_data[] = substr ($Committee, 0, -1);
               $Committee = "MATCH (smry_committees.CommitteeWords) AGAINST (? IN BOOLEAN MODE)";
             } else {
               if (strpos ($search_data["search_propositions"], ";") !== false) {
-                $criteria["02Recipient(s)"] = "Committee contains: \"" . trim (str_replace ("+", "OR ", substr ($search_committee, 1))) . "\"";
+                $criteria["02Recipient(s)"] = "Committee contains: " . trim (str_replace ("+", "OR ", substr ($search_committee, 1)));
               } else {
-                $criteria["02Recipient(s)"] = "Committee contains: \"" . trim (str_replace ("+", "", substr ($search_committee, 1))) . "\"";
+                $criteria["02Recipient(s)"] = "Committee contains: " . trim (str_replace ("+", "", substr ($search_committee, 1)));
               }
               $criteria["02Recipient(s)"] .= " or RecipientCommitteeID is " . intval (substr ($Committee, 2, -2));
               $PDO_data[] = substr ($Committee, 0, -1);
