@@ -597,23 +597,23 @@
 
         echo "<div id=\"caps_filter_box\">";
         echo "Show";
-        echo "<select id=\"show\" name=\"return_rows\" class=\"font_input input_border caps_select4\" alt=\"Number of Rows to Display\">";
+        echo "<select id=\"show\" name=\"return_rows\" class=\"font_input input_border caps_select4\">";
         if ($limit == 10) {echo "<option selected>10</option>";} else {echo "<option>10</option>";}
         if ($limit == 25) {echo "<option selected>25</option>";} else {echo "<option>25</option>";}
         if ($limit == 50) {echo "<option selected>50</option>";} else {echo "<option>50</option>";}
         if ($limit == 100) {echo "<option selected>100</option>";} else {echo "<option>100</option>";}
         echo "</select>";
         echo "rows&nbsp;&nbsp;&nbsp;&nbsp;Sort by";
-        echo "<select id=\"sort\" name=\"sort\" class=\"font_input input_border caps_select4\" alt=\"Sort By\">";
+        echo "<select id=\"sort\" name=\"sort\" class=\"font_input input_border caps_select4\">";
         foreach ($sort_fields as $sort_item) {
           $item_data = explode ("|", $sort_item); 
           if ($sort == $item_data[0]) {echo "<option value=\"{$item_data[0]}\" SELECTED>{$item_data[1]}</option>";} else {echo "<option value=\"{$item_data[0]}\">{$item_data[1]}</option>";}
         }
-        echo "</select><select id=\"sort_order\" name=\"sort_order\" class=\"font_input input_border caps_select4\" alt=\"Sort Order\">";
+        echo "</select><select id=\"sort_order\" name=\"sort_order\" class=\"font_input input_border caps_select4\">";
         if ($sort_order == "ASC") {
-          echo "<option value=\"ASC\" SELECTED>Ascending</option><option VALUE=\"DESC\">Descending<option>";
+          echo "<option value=\"ASC\" SELECTED>Ascending</option><option VALUE=\"DESC\">Descending</option>";
         } else {
-          echo "<option value=\"ASC\">Ascending</option><option VALUE=\"DESC\" SELECTED>Descending<option>";
+          echo "<option value=\"ASC\">Ascending</option><option VALUE=\"DESC\" SELECTED>Descending</option>";
         }
         echo "</select>";
         echo "<input type=\"submit\" value=\"Update\" id=\"caps_update_btn\">";
@@ -697,7 +697,7 @@
               if ($page == $page_btn) {
                 echo "<input type=\"submit\" name=\"page_button\" value=\"{$page_btn}\" id=\"caps_current_page_btn\">";
               } else {
-                echo "<input type=\"submit\" name=\"page_button\" value=\"{$page_btn}\" id=\"caps_page_btn\">";
+                echo "<input type=\"submit\" name=\"page_button\" value=\"{$page_btn}\" class=\"caps_page_btn\">";
               }
               if ($page_btn == 10) {break;}
             }
@@ -712,8 +712,8 @@
         if ($totals_row["records"] <= $max_download_records) {echo "(To view the entire set of search results, <a href=\"download_csv.php?w=" . urlencode ($where) . "&d={$data}&c={$criteria}\" class=\"download_csv\">download the CSV</a> file.)";}
 
         echo "</div><br><div class=\"font_small\">Contributions data is current as of " . date ("F j, Y", strtotime ($last_update)) . ".</div><br>";
-        echo "</div> <!-- end center";
-        echo "</div> <!-- end caps_results ->";
+        echo "</div> <!-- end center -->";
+        echo "</div> <!-- end caps_results -->";
       }
     }
   }

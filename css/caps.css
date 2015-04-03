@@ -280,7 +280,7 @@ body{
   background:#124161;
 }
 
-#caps_page_btn{
+.caps_page_btn{
   background:#fff;
   color:#124161;
   border:0;
@@ -289,7 +289,7 @@ body{
   padding:2px;
 }
 
-#caps_page_btn:hover{
+.caps_page_btn:hover{
   color:#fff;
   background:#124161;
 }
