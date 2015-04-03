@@ -53,7 +53,7 @@
 
 <!-- default header, replace with a custom header -->
 <div id="caps_header">
-  <div><img id="maplight_logo" src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;"></div>
+  <div><img id="maplight_logo" src="img/MapLight_Demo.jpg" style="margin-left:10px; margin-bottom:6px;" alt="MapLight Logo"></div>
   <div id="caps_menu"><ul>
     <li><b>Campaign Finance Power Search</b></li>
     <li><a href="index.php">Quick Search</a></li>
@@ -93,7 +93,7 @@
 
             echo "<label for=\"select_location\" class=\"clear_both left font_input caps_label2\">Contributor Location</label>";
             display_tooltip ("Search contributions from a particular state.", 20, -20, 160, "right");
-            echo "<select id=\"select_location\" name=\"state_list\" class=\"clear_both left font_input input_border caps_select1\" alt=\"Contributor Location\">";
+            echo "<select id=\"select_location\" name=\"state_list\" class=\"clear_both left font_input input_border caps_select1\">";
             $selected = "";
             if (isset ($_POST["state_list"])) {$selected = $_POST["state_list"];}
             fill_state_list ($selected);
@@ -107,8 +107,8 @@
             # Contributions To Everything
             $checked = "";
             if (isset ($_POST["contrib_types"])) {if ($_POST["contrib_types"] == "all") {$checked= "checked";}} else {$checked = "checked";}  
-            echo "<input type=\"radio\" id=\"comms_to\" name=\"contrib_types\" value=\"all\" class=\"clear_both left caps_radio1\" {$checked} alt=\"Everything (Candidates, Ballot Measures & Other Committees)\">";
-            echo "<div class=\"font_input caps_everything_box\">Everything (Candidates, Ballot Measures & Other Committees)</div>";
+            echo "<input type=\"radio\" id=\"comms_to\" name=\"contrib_types\" value=\"all\" class=\"clear_both left caps_radio1\" {$checked} alt=\"Everything (Candidates, Ballot Measures &amp; Other Committees)\">";
+            echo "<div class=\"font_input caps_everything_box\">Everything (Candidates, Ballot Measures &amp; Other Committees)</div>";
             echo "<hr class=\"clear_both caps_hr2\">";
 
             # Contributions To Candidates
@@ -133,7 +133,7 @@
             echo "</div>";
             display_tooltip ("Search contributions to a particular candidate\'s campaign committee(s).", 20, -20, 160, "right");
 
-            echo "<select id=\"office_list\" name=\"office_list\" onFocus=\"if(!document.getElementById('all_cands').checked && !document.getElementById('search_cands').checked) {document.getElementById('all_cands').checked=true;}\" class=\"clear_both left font_input input_border caps_select3\" alt=\"Select Office\">";
+            echo "<select id=\"office_list\" name=\"office_list\" onFocus=\"if(!document.getElementById('all_cands').checked && !document.getElementById('search_cands').checked) {document.getElementById('all_cands').checked=true;}\" class=\"clear_both left font_input input_border caps_select3\">";
             $selected = "";
             if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
             fill_offices_sought ($selected);
@@ -152,13 +152,13 @@
             $text = "Search ballot measures";
             if (isset ($_POST["search_propositions"])) {$text = $_POST["search_propositions"];}
             echo "<input type=\"text\" id=\"search_propositions\" name=\"search_propositions\" value=\"{$text}\" onFocus=\"document.getElementById('props_to').checked=true; if(this.value == 'Search ballot measures') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Search ballot measures';}\" class=\"font_input input_border caps_text1\" alt=\"Search ballot measures text\">";
-            echo "<select id=\"propositions_list\" name=\"proposition_list\" onFocus=\"document.getElementById('props_to').checked=true;\" class=\"left font_input input_border caps_select3\" alt=\"Select ballot measure or election\">";
+            echo "<select id=\"propositions_list\" name=\"proposition_list\" onFocus=\"document.getElementById('props_to').checked=true;\" class=\"left font_input input_border caps_select3\">";
             $selected = "";
             if (isset ($_POST["proposition_list"])) {$selected = $_POST["proposition_list"];}
             fill_propositions ($selected);
             echo "</select>";
 
-            echo "<select id=\"position\" name=\"position\" onFocus=\"document.getElementById('props_to').checked=true;\" class=\"left font_input input_border caps_select3\" alt=\"Select Proposition or Election\">";
+            echo "<select id=\"position\" name=\"position\" onFocus=\"document.getElementById('props_to').checked=true;\" class=\"left font_input input_border caps_select3\">";
             echo "<option value=\"B\">Both support &amp; oppose</option>";
             if ($_POST["position"] == "S") {echo "<option value=\"S\" SELECTED>Support</option>";} else {echo "<option value=\"S\">Support</option>";}
             if ($_POST["position"] == "O") {echo "<option value=\"O\" SELECTED>Oppose</option>";} else {echo "<option value=\"O\">Oppose</option>";}
@@ -231,7 +231,7 @@
     </div> <!-- end caps_columns -->
   </div> <!-- end caps_containter -->
 
-  <div id="maplight_info">Power Search software by <a href="http://www.maplight.org">MapLight</a><br><center><img src="img/MapLight_Logo.png" width="80"></center></div>
+  <div id="maplight_info">Power Search software by <a href="http://www.maplight.org">MapLight</a><br><div class="center"><img src="img/MapLight_Logo.png" width="80" alt="MapLight Logo"></div></div>
 
 </div> <!-- end caps_wrapper-->
 
