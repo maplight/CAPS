@@ -133,7 +133,7 @@
             echo "</div>";
             display_tooltip ("Search contributions to a particular candidate\'s campaign committee(s).", 20, -20, 160, "right");
 
-            echo "<select id=\"office_list\" name=\"office_list\" onFocus=\"if(!document.getElementById('all_cands').checked && !document.getElementById('search_cands').checked) {document.getElementById('all_cands').checked=true;}\" class=\"clear_both left font_input input_border caps_select3\">";
+            echo "<select id=\"office_list\" name=\"office_list\" onFocus=\"if(!document.getElementById('all_cands').checked &amp;&amp; !document.getElementById('search_cands').checked) {document.getElementById('all_cands').checked=true;}\" class=\"clear_both left font_input input_border caps_select3\">";
             $selected = "";
             if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
             fill_offices_sought ($selected);
