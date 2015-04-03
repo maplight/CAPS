@@ -68,10 +68,12 @@ insert into contributions_full_temp (
   , AmendID
   , LineItem
   , RecType
+  , TranType
   , MemoRefNo
   , TransactionID
   , TransactionDateStart
   , TransactionDateEnd
+  , DateThru
   , TransactionAmount
   , FiledDate
   , RecipientCommitteeNameNormalized
@@ -94,6 +96,7 @@ insert into contributions_full_temp (
   , DonorOrganization
   , DonorCommitteeEntity
   , DonorCommitteeID
+  , IntermediaryCommitteeID
   , RecipientCommitteeID
   , RecipientCommitteeEntity
   , OriginTable
@@ -110,15 +113,17 @@ select
   , contributions.amend_id as AmendID
   , contributions.line_item as LineItem
   , contributions.rec_type as RecType
+  , contributions.tran_type as TranType
   , contributions.memo_refno as MemoRefNo
   , concat(contributions.filing_id, ' - ', contributions.tran_id) as TransactionID
   , str_to_date(left(contributions.rcpt_date,locate(' ',contributions.rcpt_date)-1),'%m/%d/%Y') as TransactionDateStart
   , str_to_date(left(contributions.rcpt_date,locate(' ',contributions.rcpt_date)-1),'%m/%d/%Y') as TransactionDateEnd
+  , str_to_date(left(contributions.date_thru,locate(' ',contributions.date_thru)-1),'%m/%d/%Y') as DateThru
   , contributions.amount as TransactionAmount
   , str_to_date(ftp_filer_filings.filing_date,'%m/%d/%Y %h:%i:%s %p') as FiledDate
   , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
   , if(isnull(filing_amends.filing_id),'N','Y') as HasCandidateName
-  , ifnull(filing_amends.candidate_id,'') as RecipientCandidateID
+  , ifnull(filing_amends.candidate_id,0) as RecipientCandidateID
   , ifnull(filing_amends.display_name,'') as RecipientCandidateNameNormalized
   , ftp_cvr_campaign_disclosure.office_cd as RecipientCandidateOfficeCvrCode
   , ftp_cvr_campaign_disclosure.off_s_h_cd as RecipientCandidateOfficeCvrSoughtOrHeld
@@ -145,6 +150,7 @@ select
   , if(contributions.entity_cd = 'IND', contributions.ctrib_emp, contributions.ctrib_naml) as DonorOrganization
   , contributions.entity_cd as DonorCommitteeEntity
   , contributions.cmte_id as DonorCommitteeID
+  , contributions.intr_cmteid as IntermediaryCommitteeID
   , ftp_filer_filings.filer_id as RecipientCommitteeID
   , ftp_cvr_campaign_disclosure.entity_cd as RecipientCommitteeEntity
   , 'rcpt' as OriginTable
@@ -240,7 +246,7 @@ select
   , str_to_date(ftp_filer_filings.filing_date,'%m/%d/%Y %h:%i:%s %p') as FiledDate
   , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
   , if(isnull(filing_amends.filing_id),'N','Y') as HasCandidateName
-  , ifnull(filing_amends.candidate_id,'') as RecipientCandidateID
+  , ifnull(filing_amends.candidate_id,0) as RecipientCandidateID
   , ifnull(filing_amends.display_name,'') as RecipientCandidateNameNormalized
   , ftp_cvr_campaign_disclosure.office_cd as RecipientCandidateOfficeCvrCode
   , ftp_cvr_campaign_disclosure.off_s_h_cd as RecipientCandidateOfficeCvrSoughtOrHeld
@@ -361,7 +367,7 @@ select
   , str_to_date(ftp_filer_filings.filing_date,'%m/%d/%Y %h:%i:%s %p') as FiledDate
   , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
   , if(isnull(filing_amends.filing_id),'N','Y') as HasCandidateName
-  , ifnull(filing_amends.candidate_id,'') as RecipientCandidateID
+  , ifnull(filing_amends.candidate_id,0) as RecipientCandidateID
   , ifnull(filing_amends.display_name,'') as RecipientCandidateNameNormalized
   , ftp_cvr_campaign_disclosure.office_cd as RecipientCandidateOfficeCvrCode
   , ftp_cvr_campaign_disclosure.off_s_h_cd as RecipientCandidateOfficeCvrSoughtOrHeld
@@ -482,7 +488,7 @@ select
   , str_to_date(ftp_filer_filings.filing_date,'%m/%d/%Y %h:%i:%s %p') as FiledDate
   , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
   , if(isnull(filing_amends.filing_id),'N','Y') as HasCandidateName
-  , ifnull(filing_amends.candidate_id,'') as RecipientCandidateID
+  , ifnull(filing_amends.candidate_id,0) as RecipientCandidateID
   , ifnull(filing_amends.display_name,'') as RecipientCandidateNameNormalized
   , ftp_cvr_campaign_disclosure.office_cd as RecipientCandidateOfficeCvrCode
   , ftp_cvr_campaign_disclosure.off_s_h_cd as RecipientCandidateOfficeCvrSoughtOrHeld
@@ -603,7 +609,7 @@ select
   , str_to_date(ftp_filer_filings.filing_date,'%m/%d/%Y %h:%i:%s %p') as FiledDate
   , ifnull(prop_filer_sessions.committee_name_to_use, ftp_cvr_campaign_disclosure.filer_naml) as RecipientCommitteeNameNormalized
   , if(isnull(filing_amends.filing_id),'N','Y') as HasCandidateName
-  , ifnull(filing_amends.candidate_id,'') as RecipientCandidateID
+  , ifnull(filing_amends.candidate_id,0) as RecipientCandidateID
   , ifnull(filing_amends.display_name,'') as RecipientCandidateNameNormalized
   , ftp_cvr_campaign_disclosure.office_cd as RecipientCandidateOfficeCvrCode
   , ftp_cvr_campaign_disclosure.off_s_h_cd as RecipientCandidateOfficeCvrSoughtOrHeld
@@ -649,7 +655,7 @@ where
   and round(ifnull(filing_ids.loan_total_from_summary,0)) - round(ifnull(filing_ids.loan_total_from_itemized,0)) > 0
   and ifnull(filing_ids.loan_total_from_summary,0) <> 0
 ;
-  
+
 update 
   contributions_full_temp a
   join candidate_sessions b
@@ -1029,7 +1035,6 @@ where
     OriginTable = 'rcpt' 
     and Form = 'F460' 
     and Schedule in ('A','A-1','C')
-
     )
   and not (
     OriginTable = 'loan' 
@@ -1073,6 +1078,13 @@ where
   and Schedule = 'B1'
   and TransactionAmount = 0
   and LoanPreExistingBalance > 0
+;
+
+update contributions_full_temp
+set TransferNotOriginal = 'Y'
+where
+  TranType = 'X'
+  and CandidateControlledCommittee = 'Y'
 ;
 
 update contributions_full_temp
@@ -1279,6 +1291,7 @@ where
   and NoNewLoanAmount = 'N'
   and BadElectionCycle = 'N'
   and LateContributionCoveredByRegularFiling = 'N'
+  and TransferNotOriginal = 'N'
   and (StateOffice = 'Y' or LocalOffice = 'N')
   and not (Unitemized = 'Y' and TransactionAmount = 0)
 ;
