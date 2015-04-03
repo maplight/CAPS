@@ -6,8 +6,6 @@
   ksort ($sidebar_criteria);
   $filename = "data-" . date ("Y-m-d-H-i") . ".csv";
 
-echo "<pre>"; print_r($sidebar_criteria); echo "</pre>"; exit;
-
   $search_join = "";
   if (strpos ($where, "contributions_search_donors") !== false) {$search_join .= "INNER JOIN contributions_search_donors  ON (contributions_search.id = contributions_search_donors.id) ";}
   if (strpos ($where, "smry_candidates") !== false) {$search_join .= "INNER JOIN smry_candidates USING (MapLightCandidateNameID) ";}
