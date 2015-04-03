@@ -686,7 +686,7 @@
         echo "</div> <!-- end caps_table_box -->";
 
         # Pagination section
-        echo "<center>";
+        echo "<div class=\"center\">";
         echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
         echo "<input type=\"hidden\" name=\"field_list\" value=\"{$field_set}\">";
         echo "<input type=\"hidden\" name=\"show_summary\" value=\"{$show_summary}\">";
@@ -713,7 +713,7 @@
 
         echo "</div><br><div class=\"font_small\">Contributions data is current as of " . date ("F j, Y", strtotime ($last_update)) . ".</div><br>";
         echo "</center>";
-
+        echo "</div> <!-- end center";
         echo "</div> <!-- end caps_results ->";
       }
     }
