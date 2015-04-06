@@ -63,7 +63,7 @@
 
   $criteria_data = "\n\"Search criteria used to create this report:\"\n";
   foreach ($sidebar_criteria as $criteria=>$selection) {
-    $criteria_data .= "\"" . substr (str_replace ("_", " ", $criteria), 2) . ": " . $selection . "\"\n";
+    if ($selection != "") {$criteria_data .= "\"" . substr (str_replace ("_", " ", $criteria), 2) . ": " . $selection . "\"\n";}
   }
 
   header("Content-type: application/octet-stream");

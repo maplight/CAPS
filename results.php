@@ -36,9 +36,7 @@
     $criteria["00Contributor(s)"] = "All";
     $criteria["01Contributor_State"] = "All";
     $criteria["02Recipient(s)"] = "All";
-    $criteria["06Exclude_Allied_Committees"] = "No";
-    $criteria["07Contribution_Dates"] = "All";
-    $criteria["08Cycles"] = "All";
+    $criteria["07Contribution_Dates_and_Cycles"] = "All";
 
     #------------------------------------------------------------------------------------------
     # Build contributor search query:
@@ -63,21 +61,21 @@
       if ($Donor != "") {
         if (intval (substr ($Donor, 2, -2)) == 0) {
           if (strpos ($search_data["contributor"], ";") !== false) {
-            $criteria["00Contributors"] = "Contributor contains: " . trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
+            $criteria["00Contributor(s)"] = "Contributor contains: " . trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
           } else {
-            $criteria["00Contributors"] = "Contributor contains: " . trim (str_replace ("+", "", substr ($search_donor, 1)));
+            $criteria["00Contributor(s)"] = "Contributor contains: " . trim (str_replace ("+", "", substr ($search_donor, 1)));
           }
           $PDO_data[] = substr ($Donor, 0, -1);
           $Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST (? IN BOOLEAN MODE))";
         } else {
           if (strpos ($search_data["contributor"], ";") !== false) {
-            $criteria["00Contributors"] = "Contributor contains: " . trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
+            $criteria["00Contributor(s)"] = "Contributor contains: " . trim (str_replace ("+", "OR ", substr ($search_donor, 1)));
           } else {
-            $criteria["00Contributors"] = "Contributor contains: " . trim (str_replace ("+", "", substr ($search_donor, 1)));
+            $criteria["00Contributor(s)"] = "Contributor contains: " . trim (str_replace ("+", "", substr ($search_donor, 1)));
           }
           $PDO_data[] = substr ($Donor, 0, -1);
           $PDO_data[] = intval (substr ($Donor, 2, -2));
-          $criteria["00Contributors"] .= " or DonorCommitteeID is " . intval (substr ($Donor, 2, -2)); 
+          $criteria["00Contributor(s)"] .= " or DonorCommitteeID is " . intval (substr ($Donor, 2, -2)); 
           $Donor = "(MATCH (contributions_search_donors.DonorWords) AGAINST (? IN BOOLEAN MODE) OR contributions_search_donors.DonorCommitteeID = ?)";
         }
       }
@@ -152,6 +150,7 @@
         #------------------------------------------------------------------------------------------
         # Build ballot measure search query:
         $criteria["02Recipient(s)"] = "All ballot measures";
+        $criteria["06Exclude_Allied_Committees"] = "No";
         $PropositionContribution = "contributions_search.BallotMeasureContribution = 'Y'";
 
         # build support/oppose query
@@ -276,30 +275,34 @@
         } else if ($start_date == "") {
           $PDO_data[] = date ("Y-m-d", $end_date);
           $DateRange = "contributions_search.TransactionDateEnd <= ?";
-          $criteria["07Contribution_Dates"] = "Ending: " . date ("Y-m-d", $end_date);
+          $criteria["07Contribution_Dates_and_Cycles"] = "";
+          $criteria["08Contribution_Dates"] = "Ending: " . date ("Y-m-d", $end_date);
         } else if ($end_date == "") {
           $PDO_data[] = date ("Y-m-d", $start_date);
           $DateRange = "contributions_search.TransactionDateStart >= ?";
-          $criteria["07Contribution_Dates"] = "Starting: " . date ("Y-m-d", $start_date);
+          $criteria["07Contribution_Dates_and_Cycles"] = "";
+          $criteria["08Contribution_Dates"] = "Starting: " . date ("Y-m-d", $start_date);
         } else {
           $PDO_data[] = date ("Y-m-d", $start_date);
           $PDO_data[] = date ("Y-m-d", $end_date);
           $DateRange = "contributions_search.TransactionDateStart >= ? AND contributions_search.TransactionDateEnd <= ?";
-          $criteria["07Contribution_Dates"] = date ("Y-m-d", $start_date) . " - " . date ("Y-m-d", $end_date);
+          $criteria["07Contribution_Dates_and_Cycles"] = "";
+          $criteria["08Contribution_Dates"] = date ("Y-m-d", $start_date) . " - " . date ("Y-m-d", $end_date);
         }
         break;
 
       case "cycle":
         # build election cycle query
         if (isset ($search_data["cycles"])) {
-          $criteria["08Cycles"] = "";
+          $criteria["07Contribution_Dates_and_Cycles"] = "";
+          $criteria["09Contribution_Cycles"] = "";
           foreach ($search_data["cycles"] as $cycle) {
             $PDO_data[] = $cycle;
             $ElectionCycle .= "contributions_search.ElectionCycle = ? OR ";
-            $criteria["08Cycles"] .= $cycle . ", ";
+            $criteria["09Contribution_Cycles"] .= $cycle . ", ";
           }
           $ElectionCycle = substr ($ElectionCycle, 0, -4); # Remove the final OR
-          $criteria["08Cycles"] = substr ($criteria["08Cycles"], 0, -2); # Remove the final ,
+          $criteria["09Contribution_Cycles"] = substr ($criteria["09Contribution_Cycles"], 0, -2); # Remove the final ,
         }
         break;
     }
