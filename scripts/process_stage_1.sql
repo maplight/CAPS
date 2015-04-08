@@ -35,7 +35,7 @@ select 'OTH', 'Other', 'Miscellaneous/Other'
 
 drop table if exists temp_501_codes;
 create table temp_501_codes
-select 
+select
     code_id
   , code_desc
   , case
@@ -49,8 +49,8 @@ select
       else code_desc
       end
       'code_desc_new'
-from ftp_lookup_codes 
-where 
+from ftp_lookup_codes
+where
   code_type = 30000
   and code_id > 30000
 ;
@@ -70,32 +70,37 @@ drop table if exists temp_501_codes;
 
 truncate table filer_ids;
 insert filer_ids (filer_id, max_rpt_end)
-select filer_id
+select ftp_filer_filings.filer_id
   , max(str_to_date(
       case
-        when (form_id = 'F460' and rpt_end <> '' and str_to_date(rpt_end,'%m/%d/%Y') <= curdate()) then rpt_end
+        when (ftp_filer_filings.form_id = 'F460' and ftp_filer_filings.rpt_end <> '' and str_to_date(ftp_filer_filings.rpt_end,'%m/%d/%Y') <= curdate()) then ftp_filer_filings.rpt_end
         else null
         end
     ,'%m/%d/%Y'
     )) 'max_rpt_end'
-from ftp_filer_filings 
-group by filer_id
+from
+  ftp_cvr_campaign_disclosure
+  inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
+  inner join ftp_filer_filings
+    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
+    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
+group by ftp_filer_filings.filer_id
 ;
 
 truncate table table_filing_ids;
 insert table_filing_ids (OriginTable, filing_id, amend_id)
-select 'rcpt', filing_id, max(amend_id) 
-from ftp_rcpt 
+select 'rcpt', filing_id, max(amend_id)
+from ftp_rcpt
 group by filing_id
 ;
 insert table_filing_ids (OriginTable, filing_id, amend_id)
-select 'loan', filing_id, max(amend_id) 
-from ftp_loan 
+select 'loan', filing_id, max(amend_id)
+from ftp_loan
 group by filing_id
 ;
 insert table_filing_ids (OriginTable, filing_id, amend_id)
-select 's497', filing_id, max(amend_id) 
-from ftp_s497 
+select 's497', filing_id, max(amend_id)
+from ftp_s497
 group by filing_id
 ;
 insert table_filing_ids (OriginTable, filing_id, amend_id)
@@ -119,7 +124,7 @@ insert filing_ids (
   , smry_amend_id
   , cvr_amend_id
   )
-select 
+select
     filing_id
   , max(amend_id)
   , max(if(OriginTable='rcpt',amend_id,null))
@@ -127,7 +132,7 @@ select
   , max(if(OriginTable='s497',amend_id,null))
   , max(if(OriginTable='smry',amend_id,null))
   , max(if(OriginTable='cvr',amend_id,null))
-from table_filing_ids 
+from table_filing_ids
 group by filing_id
 ;
 
@@ -136,10 +141,10 @@ insert disclosure_filer_ids (disclosure_filer_id, filer_id)
 select
     ftp_cvr_campaign_disclosure.filer_id as disclosure_filer_id
   , max(ifnull(ftp_filer_xref.filer_id, ftp_cvr_campaign_disclosure.filer_id)) as filer_id
-from 
+from
   ftp_cvr_campaign_disclosure
-  left join ftp_filer_xref 
-    on ftp_cvr_campaign_disclosure.filer_id = ftp_filer_xref.xref_id 
+  left join ftp_filer_xref
+    on ftp_cvr_campaign_disclosure.filer_id = ftp_filer_xref.xref_id
     and ftp_filer_xref.xref_id <> 0
 group by ftp_cvr_campaign_disclosure.filer_id
 ;
@@ -176,7 +181,7 @@ set @CurrentYear = year(current_date);
 delete from f501_502_cleaned
 where
   form_type <> 'F501'
-  or session < 2000 
+  or session < 2000
   or session > @CurrentYear + 10
   or filer_id <= 0
 ;
@@ -199,27 +204,27 @@ select
   , aa.office_cd
   , max(aa.offic_dscr) as offic_dscr
   , max(concat(aa.cand_naml,', ',aa.cand_namf)) as candidate_name
-from 
+from
   f501_502_cleaned aa
   join (
-    select 
+    select
         a.filer_id
       , a.session
       , a.rpt_date
       , min(a.office_cd) as office_cd
-    from 
+    from
       f501_502_cleaned a
       join (
-        select 
+        select
             filer_id
           , session
           , max(rpt_date) as rpt_date
         from f501_502_cleaned
-        group by 
+        group by
             filer_id
           , session
         ) b using (filer_id, session, rpt_date)
-    group by 
+    group by
         a.filer_id
       , a.session
       , a.rpt_date
@@ -233,7 +238,7 @@ group by
 /* get candidates from scraped table */
 truncate table candidate_ids;
 insert candidate_ids (candidate_id, number_of_names, last_session)
-select 
+select
     id as candidate_id
   , count(distinct name) as number_of_names
   , max(session) as last_session
@@ -242,7 +247,7 @@ group by id
 ;
 
 /* updated those candidates with their name from their most recent session */
-update 
+update
   candidate_ids a
   join cal_access_candidates b on a.candidate_id = b.id and a.last_session = b.session
 set a.candidate_name = b.name
@@ -287,10 +292,10 @@ select
   , ftp_cvr_campaign_disclosure.cand_nams
   , filer_ids.candidate_id
   , ifnull(filer_ids.candidate_name,'')
-from 
+from
   ftp_cvr_campaign_disclosure
   join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
-  left join ftp_filer_filings 
+  left join ftp_filer_filings
     on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
     and ftp_cvr_campaign_disclosure.filing_id = ftp_filer_filings.filing_id
     and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
