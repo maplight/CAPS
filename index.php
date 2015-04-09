@@ -15,9 +15,9 @@
 # Written by Mike Krejci for MapLight
 
 # Load required libraries
-require ("connect.php");
-require ("sidebar.php");
-require ("results.php");
+require("connect.php");
+require("sidebar.php");
+require("results.php");
 ?>
 
 <!-- default header, replace with a custom header -->
