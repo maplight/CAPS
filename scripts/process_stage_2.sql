@@ -5,30 +5,30 @@ select
   , ftp_filer_filings.session_id
   , ftp_cvr_campaign_disclosure.filer_naml
   , ftp_cvr_campaign_disclosure.form_type
-  , group_concat( 
-      distinct concat(cal_access_propositions_committees.position, ' ', left(cal_access_propositions.name, 20)) 
-      order by concat(cal_access_propositions_committees.position, ' ', left(cal_access_propositions.name, 20)) 
+  , group_concat(
+      distinct concat(cal_access_propositions_committees.position, ' ', left(cal_access_propositions.name, 20))
+      order by concat(cal_access_propositions_committees.position, ' ', left(cal_access_propositions.name, 20))
       separator '; '
       ) as positions
   , max(str_to_date(ftp_filer_filings.filing_date, '%m/%d/%Y %h:%i:%s %p')) as last_filing
-from 
+from
   ftp_cvr_campaign_disclosure
   inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
-  inner join ftp_filer_filings 
+  inner join ftp_filer_filings
     on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
     and ftp_cvr_campaign_disclosure.filing_id = ftp_filer_filings.filing_id
     and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
     and ftp_cvr_campaign_disclosure.amend_id = ftp_filer_filings.filing_sequence
-  inner join cal_access_propositions_committees 
+  inner join cal_access_propositions_committees
     on ftp_cvr_campaign_disclosure.filer_id = cal_access_propositions_committees.filer_id
     and ftp_filer_filings.session_id = cal_access_propositions_committees.session
-  inner join cal_access_propositions 
+  inner join cal_access_propositions
     on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
     and cal_access_propositions.session = cal_access_propositions_committees.session
-  inner join filing_ids 
+  inner join filing_ids
     on ftp_cvr_campaign_disclosure.filing_id = filing_ids.filing_id
     and ftp_cvr_campaign_disclosure.amend_id = filing_ids.amend_id_to_use
-group by 
+group by
     ftp_filer_filings.filer_id
   , ftp_filer_filings.session_id
   , ftp_cvr_campaign_disclosure.filer_naml
@@ -41,14 +41,14 @@ select
     prop_filer_session_name_forms.filer_id
   , prop_filer_session_name_forms.session_id
   , max(prop_filer_session_name_forms.filer_naml) as committee_name_to_use
-from 
+from
   prop_filer_session_name_forms
   inner join (
     select filer_id, session_id, max(last_filing) as last_filing
     from prop_filer_session_name_forms
     group by filer_id, session_id
     ) as max_last_filing using (filer_id, session_id, last_filing)
-group by 
+group by
     prop_filer_session_name_forms.filer_id
   , prop_filer_session_name_forms.session_id
 ;
@@ -100,7 +100,7 @@ insert into contributions_full_temp (
   , RecipientCommitteeID
   , RecipientCommitteeEntity
   , OriginTable
-  )  
+  )
 select
     ftp_cvr_campaign_disclosure.form_type as Form
   , ftp_cvr_campaign_disclosure.cmtte_type as RecipientCommitteeType
@@ -134,8 +134,8 @@ select
   , ifnull(cal_access_propositions_committees.`position`,'') as `Position`
   , concat(
       contributions.ctrib_naml
-    , if(contributions.ctrib_nams = '', '', concat(', ',contributions.ctrib_nams)) 
-    , if(contributions.ctrib_namt = '', '', concat(', ',contributions.ctrib_namt)) 
+    , if(contributions.ctrib_nams = '', '', concat(', ',contributions.ctrib_nams))
+    , if(contributions.ctrib_namt = '', '', concat(', ',contributions.ctrib_namt))
     , case
         when contributions.ctrib_namf = '' then ''
         when contributions.ctrib_namf <> '' and contributions.ctrib_namt <> '' then concat(' ',contributions.ctrib_namf)
@@ -154,22 +154,22 @@ select
   , ftp_filer_filings.filer_id as RecipientCommitteeID
   , ftp_cvr_campaign_disclosure.entity_cd as RecipientCommitteeEntity
   , 'rcpt' as OriginTable
-from 
+from
   ftp_rcpt as contributions
   inner join filing_ids
     on contributions.filing_id = filing_ids.filing_id
     and contributions.amend_id = filing_ids.amend_id_to_use
-  inner join ftp_cvr_campaign_disclosure 
+  inner join ftp_cvr_campaign_disclosure
     on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id
     and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
   inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
-  inner join ftp_filer_filings 
+  inner join ftp_filer_filings
     on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
     and contributions.filing_id = ftp_filer_filings.filing_id
     and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
     and contributions.amend_id = ftp_filer_filings.filing_sequence
-  left join filing_amends 
-    on contributions.filing_id = filing_amends.filing_id 
+  left join filing_amends
+    on contributions.filing_id = filing_amends.filing_id
     and contributions.amend_id = filing_amends.amend_id
   left join cal_access_propositions_committees
     on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id
@@ -178,7 +178,7 @@ from
     on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
     and cal_access_propositions.session = cal_access_propositions_committees.session
   left join prop_filer_sessions
-    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
+    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
 ;
 
@@ -257,8 +257,8 @@ select
   , ifnull(cal_access_propositions_committees.`position`,'') as `Position`
   , concat(
       contributions.lndr_naml
-    , if(contributions.lndr_nams = '', '', concat(', ',contributions.lndr_nams)) 
-    , if(contributions.lndr_namt = '', '', concat(', ',contributions.lndr_namt)) 
+    , if(contributions.lndr_nams = '', '', concat(', ',contributions.lndr_nams))
+    , if(contributions.lndr_namt = '', '', concat(', ',contributions.lndr_namt))
     , case
         when contributions.lndr_namf = '' then ''
         when contributions.lndr_namf <> '' and contributions.lndr_namt <> '' then concat(' ',contributions.lndr_namf)
@@ -276,31 +276,31 @@ select
   , ftp_filer_filings.filer_id as RecipientCommitteeID
   , ftp_cvr_campaign_disclosure.entity_cd as RecipientCommitteeEntity
   , 'loan' as OriginTable
-from 
+from
   ftp_loan as contributions
   inner join filing_ids
-    on contributions.filing_id = filing_ids.filing_id 
+    on contributions.filing_id = filing_ids.filing_id
     and contributions.amend_id = filing_ids.amend_id_to_use
-  inner join ftp_cvr_campaign_disclosure 
-    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id 
+  inner join ftp_cvr_campaign_disclosure
+    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id
     and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
   inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
-  inner join ftp_filer_filings 
-    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id 
-    and contributions.filing_id = ftp_filer_filings.filing_id 
-    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id 
+  inner join ftp_filer_filings
+    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
+    and contributions.filing_id = ftp_filer_filings.filing_id
+    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
     and contributions.amend_id = ftp_filer_filings.filing_sequence
-  left join filing_amends 
-    on contributions.filing_id = filing_amends.filing_id 
+  left join filing_amends
+    on contributions.filing_id = filing_amends.filing_id
     and contributions.amend_id = filing_amends.amend_id
-  left join cal_access_propositions_committees 
-    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id 
+  left join cal_access_propositions_committees
+    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id
     and ftp_filer_filings.session_id = cal_access_propositions_committees.session
-  left join cal_access_propositions 
-    on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id 
+  left join cal_access_propositions
+    on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
     and cal_access_propositions.session = cal_access_propositions_committees.session
-  left join prop_filer_sessions 
-    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
+  left join prop_filer_sessions
+    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
 ;
 
@@ -378,8 +378,8 @@ select
   , ifnull(cal_access_propositions_committees.`position`,'') as `Position`
   , concat(
       contributions.enty_naml
-    , if(contributions.enty_nams = '', '', concat(', ',contributions.enty_nams)) 
-    , if(contributions.enty_namt = '', '', concat(', ',contributions.enty_namt)) 
+    , if(contributions.enty_nams = '', '', concat(', ',contributions.enty_nams))
+    , if(contributions.enty_namt = '', '', concat(', ',contributions.enty_namt))
     , case
         when contributions.enty_namf = '' then ''
         when contributions.enty_namf <> '' and contributions.enty_namt <> '' then concat(' ',contributions.enty_namf)
@@ -399,7 +399,7 @@ select
   , 's497' as OriginTable
   , if(
         (
-          ( 
+          (
             str_to_date(ftp_filer_filings.rpt_end,'%m/%d/%Y') > filer_ids.max_rpt_end
             AND str_to_date(contributions.ctrib_date, '%m/%d/%Y') > filer_ids.max_rpt_end
             )
@@ -408,31 +408,31 @@ select
       , 'N'
       , 'Y'
       ) as LateContributionCoveredByRegularFiling
-FROM 
+FROM
   ftp_s497 as contributions
   inner join filing_ids
-    on contributions.filing_id = filing_ids.filing_id 
+    on contributions.filing_id = filing_ids.filing_id
     and contributions.amend_id = filing_ids.amend_id_to_use
-  inner join ftp_cvr_campaign_disclosure 
-    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id 
+  inner join ftp_cvr_campaign_disclosure
+    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id
     and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
   inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
-  inner join ftp_filer_filings 
-    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id 
-    and contributions.filing_id = ftp_filer_filings.filing_id 
-    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id 
+  inner join ftp_filer_filings
+    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
+    and contributions.filing_id = ftp_filer_filings.filing_id
+    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
     and contributions.amend_id = ftp_filer_filings.filing_sequence
   left join filing_amends
-    on contributions.filing_id = filing_amends.filing_id 
+    on contributions.filing_id = filing_amends.filing_id
     and contributions.amend_id = filing_amends.amend_id
-  left join cal_access_propositions_committees 
-    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id 
+  left join cal_access_propositions_committees
+    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id
     and ftp_filer_filings.session_id = cal_access_propositions_committees.session
-  left join cal_access_propositions 
+  left join cal_access_propositions
     on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
     and cal_access_propositions.session = cal_access_propositions_committees.session
   left join prop_filer_sessions
-    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
+    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
   left join filer_ids on ftp_filer_filings.filer_id = filer_ids.filer_id
 ;
@@ -505,51 +505,51 @@ select
 from
   ftp_smry as contributions
   inner join filing_ids
-    on contributions.filing_id = filing_ids.filing_id 
+    on contributions.filing_id = filing_ids.filing_id
     and contributions.amend_id = filing_ids.amend_id_to_use
   inner join ftp_cvr_campaign_disclosure
-    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id 
+    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id
     and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
   inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
   inner join ftp_filer_filings
-    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id 
-    and contributions.filing_id = ftp_filer_filings.filing_id 
-    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id 
+    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
+    and contributions.filing_id = ftp_filer_filings.filing_id
+    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
     and contributions.amend_id = ftp_filer_filings.filing_sequence
   left join filing_amends
-    on contributions.filing_id = filing_amends.filing_id 
+    on contributions.filing_id = filing_amends.filing_id
     and contributions.amend_id = filing_amends.amend_id
   left join cal_access_propositions_committees
-    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id 
+    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id
     and ftp_filer_filings.session_id = cal_access_propositions_committees.session
   left join cal_access_propositions
     on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
     and cal_access_propositions.session = cal_access_propositions_committees.session
   left join prop_filer_sessions
-    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
+    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
 where
-  contributions.form_type in ('A','C') 
+  contributions.form_type in ('A','C')
   and contributions.line_item = 2
 ;
 
-update 
+update
   filing_ids a
   join (
     select FilingID, AmendID, Target, sum(TransactionAmount) 'Amount'
     from contributions_full_temp
-    where 
-      Form = 'F460' 
+    where
+      Form = 'F460'
       and Schedule = 'B1'
     group by FilingID, AmendID, Target
-    ) b 
+    ) b
       on a.filing_id = b.FilingID
       and a.amend_id_to_use = b.AmendID
 set a.loan_total_from_itemized = b.Amount
 ;
-update 
+update
   filing_ids a
-  join ftp_smry b 
+  join ftp_smry b
     on a.filing_id = b.filing_id
     and a.amend_id_to_use = b.amend_id
 set a.loan_total_from_summary = b.amount_a
@@ -626,37 +626,37 @@ select
 from
   ftp_smry as contributions
   inner join filing_ids
-    on contributions.filing_id = filing_ids.filing_id 
+    on contributions.filing_id = filing_ids.filing_id
     and contributions.amend_id = filing_ids.amend_id_to_use
   inner join ftp_cvr_campaign_disclosure
-    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id 
+    on contributions.filing_id = ftp_cvr_campaign_disclosure.filing_id
     and contributions.amend_id = ftp_cvr_campaign_disclosure.amend_id
   inner join disclosure_filer_ids on ftp_cvr_campaign_disclosure.filer_id = disclosure_filer_ids.disclosure_filer_id
   inner join ftp_filer_filings
-    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id 
-    and contributions.filing_id = ftp_filer_filings.filing_id 
-    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id 
+    on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
+    and contributions.filing_id = ftp_filer_filings.filing_id
+    and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
     and contributions.amend_id = ftp_filer_filings.filing_sequence
   left join filing_amends
-    on contributions.filing_id = filing_amends.filing_id 
+    on contributions.filing_id = filing_amends.filing_id
     and contributions.amend_id = filing_amends.amend_id
   left join cal_access_propositions_committees
-    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id 
+    on ftp_filer_filings.filer_id = cal_access_propositions_committees.filer_id
     and ftp_filer_filings.session_id = cal_access_propositions_committees.session
   left join cal_access_propositions
     on cal_access_propositions.proposition_id = cal_access_propositions_committees.proposition_id
     and cal_access_propositions.session = cal_access_propositions_committees.session
   left join prop_filer_sessions
-    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id 
+    on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
 where
-  contributions.form_type = 'B1' 
+  contributions.form_type = 'B1'
   and contributions.line_item = 1
   and round(ifnull(filing_ids.loan_total_from_summary,0)) - round(ifnull(filing_ids.loan_total_from_itemized,0)) > 0
   and ifnull(filing_ids.loan_total_from_summary,0) <> 0
 ;
 
-update 
+update
   contributions_full_temp a
   join candidate_sessions b
     on a.RecipientCandidateID = b.candidate_id
@@ -699,7 +699,7 @@ set a.ContributionID = b.ContributionID
 set @CurrentYear = year(current_date);
 update contributions_full_temp
 set BadElectionCycle = 'Y'
-where 
+where
   ElectionCycle < 2000
   or ElectionCycle > @CurrentYear + 10
 ;
@@ -722,7 +722,7 @@ update
   contributions_full_temp a
   join california_data_office_codes b on a.RecipientCandidateOfficeCvrCode = b.office_cd_cvr
 set a.RecipientCandidateOffice = b.description
-where 
+where
   a.RecipientCandidateOffice = ''
   and a.RecipientCandidateOfficeCvrCode <> 'OTH'
   and (
@@ -734,7 +734,7 @@ where
 ;
 
 update contributions_full_temp
-set 
+set
     RecipientCandidateOffice = RecipientCandidateOfficeCvrCustom
   , RecipientCandidateOfficeNeedsCleanup = 'Y'
 where
@@ -749,39 +749,39 @@ where
 ;
 
 update contributions_full_temp
-set 
+set
     RecipientCandidateOfficeNeedsCleanup = 'N'
   , RecipientCandidateOffice = case
       when RecipientCandidateOffice like '%office held%' then ''
-      when RecipientCandidateOffice like '%Govern_r%' and RecipientCandidateOffice not like '%Lieuten_nt%' then 'Governor' 
-      when RecipientCandidateOffice like '%Lieuten_nt%Govern_r%' then 'Lieutenant Governor' 
-      when RecipientCandidateOffice like '%Secretary%' then 'Secretary of State' 
-      when RecipientCandidateOffice like '%state%Controll_r%' then 'State Controller' 
-      when RecipientCandidateOffice like '%Attorn%y gen%' then 'Attorney General' 
-      when RecipientCandidateOffice like '%state%Treasur_r%' then 'State Treasurer' 
-      when RecipientCandidateOffice like '%Insur_nce Com%' then 'Insurance Commissioner' 
-      when RecipientCandidateOffice like '%Superintend_nt%' then 'Superintendent of Public Instruction' 
-      when RecipientCandidateOffice like '%supreme court%' or RecipientCandidateOffice like '%supreme%justice%' then 'Supreme Court Justice' 
-      when RecipientCandidateOffice like '%Senate%' or RecipientCandidateOffice like '%Senat_r%' then 'State Senate' 
-      when RecipientCandidateOffice like '%Assem%b%y%' or RecipientCandidateOffice like '%ASM%' then 'State Assembly' 
-      when RecipientCandidateOffice like '%board of eq%' or RecipientCandidateOffice like '%boe%' then 'Board of Equalization' 
-      when RecipientCandidateOffice like '%public%emp%ret%sys%' or RecipientCandidateOffice like 'pers%' or RecipientCandidateOffice like '%calpers%' then 'Public Employees Retirement System' 
-      when RecipientCandidateOffice like '%appel%te%court%' or RecipientCandidateOffice like '%appel%te%justice%' then 'State Appellate Court Justice' 
-      when RecipientCandidateOffice like '%asses%r%' then 'Assessor' 
-      when RecipientCandidateOffice like '%board of ed%' then 'Board of Education' 
-      when RecipientCandidateOffice like '%board of super%' or RecipientCandidateOffice like '%supervis_r%' then 'Board of Supervisors' 
-      when RecipientCandidateOffice like '%city atto%rn%y%' then 'City Attorney' 
-      when RecipientCandidateOffice like '%com%college%' then 'Community College Board' 
-      when RecipientCandidateOffice like '%city%council%' or RecipientCandidateOffice like '%council%mem%' then 'City Council Member' 
-      when RecipientCandidateOffice like '%county coun__l%' then 'County Counsel' 
-      when RecipientCandidateOffice like '%county supervis_r%' then 'County Supervisor' 
-      when RecipientCandidateOffice like '%local%cont%' then 'Local Controller' 
-      when RecipientCandidateOffice like '%dist% atto%rn%y%' then 'District Attorney' 
-      when RecipientCandidateOffice like '%mayor%' then 'Mayor' 
-      when RecipientCandidateOffice like '%public%def%' then 'Public Defender' 
-      when RecipientCandidateOffice like '%planning%com%' then 'Planning Commissioner' 
-      when RecipientCandidateOffice like '%sher%iff%' then 'Sheriff-Coroner' 
-      when RecipientCandidateOffice like '%superior court%' or RecipientCandidateOffice like '%judge%' then 'Superior Court Judge' 
+      when RecipientCandidateOffice like '%Govern_r%' and RecipientCandidateOffice not like '%Lieuten_nt%' then 'Governor'
+      when RecipientCandidateOffice like '%Lieuten_nt%Govern_r%' then 'Lieutenant Governor'
+      when RecipientCandidateOffice like '%Secretary%' then 'Secretary of State'
+      when RecipientCandidateOffice like '%state%Controll_r%' then 'State Controller'
+      when RecipientCandidateOffice like '%Attorn%y gen%' then 'Attorney General'
+      when RecipientCandidateOffice like '%state%Treasur_r%' then 'State Treasurer'
+      when RecipientCandidateOffice like '%Insur_nce Com%' then 'Insurance Commissioner'
+      when RecipientCandidateOffice like '%Superintend_nt%' then 'Superintendent of Public Instruction'
+      when RecipientCandidateOffice like '%supreme court%' or RecipientCandidateOffice like '%supreme%justice%' then 'Supreme Court Justice'
+      when RecipientCandidateOffice like '%Senate%' or RecipientCandidateOffice like '%Senat_r%' then 'State Senate'
+      when RecipientCandidateOffice like '%Assem%b%y%' or RecipientCandidateOffice like '%ASM%' then 'State Assembly'
+      when RecipientCandidateOffice like '%board of eq%' or RecipientCandidateOffice like '%boe%' then 'Board of Equalization'
+      when RecipientCandidateOffice like '%public%emp%ret%sys%' or RecipientCandidateOffice like 'pers%' or RecipientCandidateOffice like '%calpers%' then 'Public Employees Retirement System'
+      when RecipientCandidateOffice like '%appel%te%court%' or RecipientCandidateOffice like '%appel%te%justice%' then 'State Appellate Court Justice'
+      when RecipientCandidateOffice like '%asses%r%' then 'Assessor'
+      when RecipientCandidateOffice like '%board of ed%' then 'Board of Education'
+      when RecipientCandidateOffice like '%board of super%' or RecipientCandidateOffice like '%supervis_r%' then 'Board of Supervisors'
+      when RecipientCandidateOffice like '%city atto%rn%y%' then 'City Attorney'
+      when RecipientCandidateOffice like '%com%college%' then 'Community College Board'
+      when RecipientCandidateOffice like '%city%council%' or RecipientCandidateOffice like '%council%mem%' then 'City Council Member'
+      when RecipientCandidateOffice like '%county coun__l%' then 'County Counsel'
+      when RecipientCandidateOffice like '%county supervis_r%' then 'County Supervisor'
+      when RecipientCandidateOffice like '%local%cont%' then 'Local Controller'
+      when RecipientCandidateOffice like '%dist% atto%rn%y%' then 'District Attorney'
+      when RecipientCandidateOffice like '%mayor%' then 'Mayor'
+      when RecipientCandidateOffice like '%public%def%' then 'Public Defender'
+      when RecipientCandidateOffice like '%planning%com%' then 'Planning Commissioner'
+      when RecipientCandidateOffice like '%sher%iff%' then 'Sheriff-Coroner'
+      when RecipientCandidateOffice like '%superior court%' or RecipientCandidateOffice like '%judge%' then 'Superior Court Judge'
       when RecipientCandidateOffice like '%Treasur_r%' and RecipientCandidateOffice not like '%state Treasur_r%' then 'Local Treasurer'
       else ''
       end
@@ -798,48 +798,48 @@ where
 ;
 
 update contributions_full_temp
-set 
+set
     RecipientCandidateOffice = RecipientCandidateOffice501Custom
   , RecipientCandidateOfficeNeedsCleanup = 'Y'
-where 
+where
   RecipientCandidateOffice = ''
   and RecipientCandidateOffice501Custom <> ''
 ;
 
 update contributions_full_temp
-set 
+set
     RecipientCandidateOfficeNeedsCleanup = 'N'
   , RecipientCandidateOffice = case
       when RecipientCandidateOffice like '%office held%' then ''
-      when RecipientCandidateOffice like '%Govern_r%' and RecipientCandidateOffice not like '%Lieuten_nt%' then 'Governor' 
-      when RecipientCandidateOffice like '%Lieuten_nt%Govern_r%' then 'Lieutenant Governor' 
-      when RecipientCandidateOffice like '%Secretary%' then 'Secretary of State' 
-      when RecipientCandidateOffice like '%state%Controll_r%' then 'State Controller' 
-      when RecipientCandidateOffice like '%Attorn%y gen%' then 'Attorney General' 
-      when RecipientCandidateOffice like '%state%Treasur_r%' then 'State Treasurer' 
-      when RecipientCandidateOffice like '%Insur_nce Com%' then 'Insurance Commissioner' 
-      when RecipientCandidateOffice like '%Superintend_nt%' then 'Superintendent of Public Instruction' 
-      when RecipientCandidateOffice like '%supreme court%' or RecipientCandidateOffice like '%supreme%justice%' then 'Supreme Court Justice' 
-      when RecipientCandidateOffice like '%Senate%' or RecipientCandidateOffice like '%Senat_r%' then 'State Senate' 
-      when RecipientCandidateOffice like '%Assem%b%y%' or RecipientCandidateOffice like '%ASM%' then 'State Assembly' 
-      when RecipientCandidateOffice like '%board of eq%' or RecipientCandidateOffice like '%boe%' then 'Board of Equalization' 
-      when RecipientCandidateOffice like '%public%emp%ret%sys%' or RecipientCandidateOffice like 'pers%' or RecipientCandidateOffice like '%calpers%' then 'Public Employees Retirement System' 
-      when RecipientCandidateOffice like '%appel%te%court%' or RecipientCandidateOffice like '%appel%te%justice%' then 'State Appellate Court Justice' 
-      when RecipientCandidateOffice like '%asses%r%' then 'Assessor' 
-      when RecipientCandidateOffice like '%board of ed%' then 'Board of Education' 
-      when RecipientCandidateOffice like '%board of super%' or RecipientCandidateOffice like '%supervis_r%' then 'Board of Supervisors' 
-      when RecipientCandidateOffice like '%city atto%rn%y%' then 'City Attorney' 
-      when RecipientCandidateOffice like '%com%college%' then 'Community College Board' 
-      when RecipientCandidateOffice like '%city%council%' or RecipientCandidateOffice like '%council%mem%' then 'City Council Member' 
-      when RecipientCandidateOffice like '%county coun__l%' then 'County Counsel' 
-      when RecipientCandidateOffice like '%county supervis_r%' then 'County Supervisor' 
-      when RecipientCandidateOffice like '%local%cont%' then 'Local Controller' 
-      when RecipientCandidateOffice like '%dist% atto%rn%y%' then 'District Attorney' 
-      when RecipientCandidateOffice like '%mayor%' then 'Mayor' 
-      when RecipientCandidateOffice like '%public%def%' then 'Public Defender' 
-      when RecipientCandidateOffice like '%planning%com%' then 'Planning Commissioner' 
-      when RecipientCandidateOffice like '%sher%iff%' then 'Sheriff-Coroner' 
-      when RecipientCandidateOffice like '%superior court%' or RecipientCandidateOffice like '%judge%' then 'Superior Court Judge' 
+      when RecipientCandidateOffice like '%Govern_r%' and RecipientCandidateOffice not like '%Lieuten_nt%' then 'Governor'
+      when RecipientCandidateOffice like '%Lieuten_nt%Govern_r%' then 'Lieutenant Governor'
+      when RecipientCandidateOffice like '%Secretary%' then 'Secretary of State'
+      when RecipientCandidateOffice like '%state%Controll_r%' then 'State Controller'
+      when RecipientCandidateOffice like '%Attorn%y gen%' then 'Attorney General'
+      when RecipientCandidateOffice like '%state%Treasur_r%' then 'State Treasurer'
+      when RecipientCandidateOffice like '%Insur_nce Com%' then 'Insurance Commissioner'
+      when RecipientCandidateOffice like '%Superintend_nt%' then 'Superintendent of Public Instruction'
+      when RecipientCandidateOffice like '%supreme court%' or RecipientCandidateOffice like '%supreme%justice%' then 'Supreme Court Justice'
+      when RecipientCandidateOffice like '%Senate%' or RecipientCandidateOffice like '%Senat_r%' then 'State Senate'
+      when RecipientCandidateOffice like '%Assem%b%y%' or RecipientCandidateOffice like '%ASM%' then 'State Assembly'
+      when RecipientCandidateOffice like '%board of eq%' or RecipientCandidateOffice like '%boe%' then 'Board of Equalization'
+      when RecipientCandidateOffice like '%public%emp%ret%sys%' or RecipientCandidateOffice like 'pers%' or RecipientCandidateOffice like '%calpers%' then 'Public Employees Retirement System'
+      when RecipientCandidateOffice like '%appel%te%court%' or RecipientCandidateOffice like '%appel%te%justice%' then 'State Appellate Court Justice'
+      when RecipientCandidateOffice like '%asses%r%' then 'Assessor'
+      when RecipientCandidateOffice like '%board of ed%' then 'Board of Education'
+      when RecipientCandidateOffice like '%board of super%' or RecipientCandidateOffice like '%supervis_r%' then 'Board of Supervisors'
+      when RecipientCandidateOffice like '%city atto%rn%y%' then 'City Attorney'
+      when RecipientCandidateOffice like '%com%college%' then 'Community College Board'
+      when RecipientCandidateOffice like '%city%council%' or RecipientCandidateOffice like '%council%mem%' then 'City Council Member'
+      when RecipientCandidateOffice like '%county coun__l%' then 'County Counsel'
+      when RecipientCandidateOffice like '%county supervis_r%' then 'County Supervisor'
+      when RecipientCandidateOffice like '%local%cont%' then 'Local Controller'
+      when RecipientCandidateOffice like '%dist% atto%rn%y%' then 'District Attorney'
+      when RecipientCandidateOffice like '%mayor%' then 'Mayor'
+      when RecipientCandidateOffice like '%public%def%' then 'Public Defender'
+      when RecipientCandidateOffice like '%planning%com%' then 'Planning Commissioner'
+      when RecipientCandidateOffice like '%sher%iff%' then 'Sheriff-Coroner'
+      when RecipientCandidateOffice like '%superior court%' or RecipientCandidateOffice like '%judge%' then 'Superior Court Judge'
       when RecipientCandidateOffice like '%Treasur_r%' and RecipientCandidateOffice not like '%state Treasur_r%' then 'Local Treasurer'
       else ''
       end
@@ -850,14 +850,14 @@ update
   contributions_full_temp a
   join california_data_office_codes b on a.RecipientCandidateOfficeCvrCode = b.office_cd_cvr
 set a.RecipientCandidateOffice = b.description
-where 
+where
   a.RecipientCandidateOffice = ''
   and a.RecipientCandidateOfficeCvrSoughtOrHeld = 'H'
   and a.RecipientCandidateOfficeCvrCode <> 'OTH'
 ;
 
 update contributions_full_temp
-set 
+set
     RecipientCandidateOffice = RecipientCandidateOfficeCvrCustom
   , RecipientCandidateOfficeNeedsCleanup = 'Y'
 where
@@ -867,39 +867,39 @@ where
 ;
 
 update contributions_full_temp
-set 
+set
     RecipientCandidateOfficeNeedsCleanup = 'N'
   , RecipientCandidateOffice = case
       when RecipientCandidateOffice like '%office held%' then ''
-      when RecipientCandidateOffice like '%Govern_r%' and RecipientCandidateOffice not like '%Lieuten_nt%' then 'Governor' 
-      when RecipientCandidateOffice like '%Lieuten_nt%Govern_r%' then 'Lieutenant Governor' 
-      when RecipientCandidateOffice like '%Secretary%' then 'Secretary of State' 
-      when RecipientCandidateOffice like '%state%Controll_r%' then 'State Controller' 
-      when RecipientCandidateOffice like '%Attorn%y gen%' then 'Attorney General' 
-      when RecipientCandidateOffice like '%state%Treasur_r%' then 'State Treasurer' 
-      when RecipientCandidateOffice like '%Insur_nce Com%' then 'Insurance Commissioner' 
-      when RecipientCandidateOffice like '%Superintend_nt%' then 'Superintendent of Public Instruction' 
-      when RecipientCandidateOffice like '%supreme court%' or RecipientCandidateOffice like '%supreme%justice%' then 'Supreme Court Justice' 
-      when RecipientCandidateOffice like '%Senate%' or RecipientCandidateOffice like '%Senat_r%' then 'State Senate' 
-      when RecipientCandidateOffice like '%Assem%b%y%' or RecipientCandidateOffice like '%ASM%' then 'State Assembly' 
-      when RecipientCandidateOffice like '%board of eq%' or RecipientCandidateOffice like '%boe%' then 'Board of Equalization' 
-      when RecipientCandidateOffice like '%public%emp%ret%sys%' or RecipientCandidateOffice like 'pers%' or RecipientCandidateOffice like '%calpers%' then 'Public Employees Retirement System' 
-      when RecipientCandidateOffice like '%appel%te%court%' or RecipientCandidateOffice like '%appel%te%justice%' then 'State Appellate Court Justice' 
-      when RecipientCandidateOffice like '%asses%r%' then 'Assessor' 
-      when RecipientCandidateOffice like '%board of ed%' then 'Board of Education' 
-      when RecipientCandidateOffice like '%board of super%' or RecipientCandidateOffice like '%supervis_r%' then 'Board of Supervisors' 
-      when RecipientCandidateOffice like '%city atto%rn%y%' then 'City Attorney' 
-      when RecipientCandidateOffice like '%com%college%' then 'Community College Board' 
-      when RecipientCandidateOffice like '%city%council%' or RecipientCandidateOffice like '%council%mem%' then 'City Council Member' 
-      when RecipientCandidateOffice like '%county coun__l%' then 'County Counsel' 
-      when RecipientCandidateOffice like '%county supervis_r%' then 'County Supervisor' 
-      when RecipientCandidateOffice like '%local%cont%' then 'Local Controller' 
-      when RecipientCandidateOffice like '%dist% atto%rn%y%' then 'District Attorney' 
-      when RecipientCandidateOffice like '%mayor%' then 'Mayor' 
-      when RecipientCandidateOffice like '%public%def%' then 'Public Defender' 
-      when RecipientCandidateOffice like '%planning%com%' then 'Planning Commissioner' 
-      when RecipientCandidateOffice like '%sher%iff%' then 'Sheriff-Coroner' 
-      when RecipientCandidateOffice like '%superior court%' or RecipientCandidateOffice like '%judge%' then 'Superior Court Judge' 
+      when RecipientCandidateOffice like '%Govern_r%' and RecipientCandidateOffice not like '%Lieuten_nt%' then 'Governor'
+      when RecipientCandidateOffice like '%Lieuten_nt%Govern_r%' then 'Lieutenant Governor'
+      when RecipientCandidateOffice like '%Secretary%' then 'Secretary of State'
+      when RecipientCandidateOffice like '%state%Controll_r%' then 'State Controller'
+      when RecipientCandidateOffice like '%Attorn%y gen%' then 'Attorney General'
+      when RecipientCandidateOffice like '%state%Treasur_r%' then 'State Treasurer'
+      when RecipientCandidateOffice like '%Insur_nce Com%' then 'Insurance Commissioner'
+      when RecipientCandidateOffice like '%Superintend_nt%' then 'Superintendent of Public Instruction'
+      when RecipientCandidateOffice like '%supreme court%' or RecipientCandidateOffice like '%supreme%justice%' then 'Supreme Court Justice'
+      when RecipientCandidateOffice like '%Senate%' or RecipientCandidateOffice like '%Senat_r%' then 'State Senate'
+      when RecipientCandidateOffice like '%Assem%b%y%' or RecipientCandidateOffice like '%ASM%' then 'State Assembly'
+      when RecipientCandidateOffice like '%board of eq%' or RecipientCandidateOffice like '%boe%' then 'Board of Equalization'
+      when RecipientCandidateOffice like '%public%emp%ret%sys%' or RecipientCandidateOffice like 'pers%' or RecipientCandidateOffice like '%calpers%' then 'Public Employees Retirement System'
+      when RecipientCandidateOffice like '%appel%te%court%' or RecipientCandidateOffice like '%appel%te%justice%' then 'State Appellate Court Justice'
+      when RecipientCandidateOffice like '%asses%r%' then 'Assessor'
+      when RecipientCandidateOffice like '%board of ed%' then 'Board of Education'
+      when RecipientCandidateOffice like '%board of super%' or RecipientCandidateOffice like '%supervis_r%' then 'Board of Supervisors'
+      when RecipientCandidateOffice like '%city atto%rn%y%' then 'City Attorney'
+      when RecipientCandidateOffice like '%com%college%' then 'Community College Board'
+      when RecipientCandidateOffice like '%city%council%' or RecipientCandidateOffice like '%council%mem%' then 'City Council Member'
+      when RecipientCandidateOffice like '%county coun__l%' then 'County Counsel'
+      when RecipientCandidateOffice like '%county supervis_r%' then 'County Supervisor'
+      when RecipientCandidateOffice like '%local%cont%' then 'Local Controller'
+      when RecipientCandidateOffice like '%dist% atto%rn%y%' then 'District Attorney'
+      when RecipientCandidateOffice like '%mayor%' then 'Mayor'
+      when RecipientCandidateOffice like '%public%def%' then 'Public Defender'
+      when RecipientCandidateOffice like '%planning%com%' then 'Planning Commissioner'
+      when RecipientCandidateOffice like '%sher%iff%' then 'Sheriff-Coroner'
+      when RecipientCandidateOffice like '%superior court%' or RecipientCandidateOffice like '%judge%' then 'Superior Court Judge'
       when RecipientCandidateOffice like '%Treasur_r%' and RecipientCandidateOffice not like '%state Treasur_r%' then 'Local Treasurer'
       else ''
       end
@@ -908,7 +908,7 @@ where RecipientCandidateOfficeNeedsCleanup = 'Y'
 
 drop table if exists tmp_committees_with_multiple_types;
 create table tmp_committees_with_multiple_types
-select 
+select
     RecipientCommitteeID
   , group_concat(distinct RecipientCommitteeType order by RecipientCommitteeType separator ', ') 'RecipientCommitteeTypes'
   , group_concat(distinct ElectionCycle order by ElectionCycle separator ', ') 'ElectionCycles'
@@ -925,13 +925,13 @@ alter table tmp_committees_with_multiple_types
 
 drop table if exists tmp_committee_types_with_multiple_types;
 create table tmp_committee_types_with_multiple_types
-select 
+select
     a.RecipientCommitteeID
   , b.Amount 'TotalAmount'
   , a.RecipientCommitteeType
   , group_concat(distinct a.ElectionCycle order by a.ElectionCycle separator ', ') 'ElectionCycles'
   , sum(a.TransactionAmount) 'Amount'
-from 
+from
   contributions_full_temp a
   join tmp_committees_with_multiple_types b using (RecipientCommitteeID)
 group by
@@ -948,7 +948,7 @@ update tmp_committees_with_multiple_types a
 set a.BiggestNonBlankType = (
   select b.RecipientCommitteeType
   from tmp_committee_types_with_multiple_types b
-  where 
+  where
     a.RecipientCommitteeID = b.RecipientCommitteeID
     and b.RecipientCommitteeType <> ''
   order by b.Amount desc, b.RecipientCommitteeType
@@ -976,10 +976,10 @@ update
   contributions_full_temp a
   join tmp_committees_with_multiple_types b using (RecipientCommitteeID)
 set a.RecipientCommitteeType = case
-  when b.RecipientCommitteeTypes like '%B%C%' then 'B' 
-  when (b.RecipientCommitteeTypes like '%C%G%' and a.RecipientCommitteeType = 'C') then 'G' 
-  when b.RecipientCommitteeTypes = 'C, P' then b.BiggestNonBlankType 
-  when b.RecipientCommitteeTypes = 'G, P' then a.RecipientCommitteeType 
+  when b.RecipientCommitteeTypes like '%B%C%' then 'B'
+  when (b.RecipientCommitteeTypes like '%C%G%' and a.RecipientCommitteeType = 'C') then 'G'
+  when b.RecipientCommitteeTypes = 'C, P' then b.BiggestNonBlankType
+  when b.RecipientCommitteeTypes = 'G, P' then a.RecipientCommitteeType
   else a.RecipientCommitteeType
   end
 ;
@@ -1016,12 +1016,12 @@ where HasProposition = 'Y'
 ;
 
 update contributions_full_temp
-set CandidateControlledCommittee = 'N' 
+set CandidateControlledCommittee = 'N'
 where RecipientCommitteeType in ('P','G','B')
 ;
 
 update contributions_full_temp
-set CandidateElectionCommittee = 'N' 
+set CandidateElectionCommittee = 'N'
 where
   LegalDefenseCommittee = 'Y'
   or OfficeHolderCommittee = 'Y'
@@ -1032,28 +1032,28 @@ update contributions_full_temp
 set IncludedSchedule = 'N'
 where
   not (
-    OriginTable = 'rcpt' 
-    and Form = 'F460' 
+    OriginTable = 'rcpt'
+    and Form = 'F460'
     and Schedule in ('A','A-1','C')
     )
   and not (
-    OriginTable = 'loan' 
-    and Form = 'F460' 
+    OriginTable = 'loan'
+    and Form = 'F460'
     and Schedule = 'B1'
     )
   and not (
-    OriginTable = 's497' 
+    OriginTable = 's497'
     and Form = 'F497'
-    and Schedule = 'F497P1' 
+    and Schedule = 'F497P1'
     )
   and not (
-    OriginTable = 'smry' 
+    OriginTable = 'smry'
     and Form = 'F460'
-    and Schedule in ('A','B1','C') 
+    and Schedule in ('A','B1','C')
     )
 ;
 
-update 
+update
   contributions_full_temp a
   join ftp_text_memo b
     on a.FilingID = b.filing_id
@@ -1073,8 +1073,8 @@ where
 update contributions_full_temp
 set NoNewLoanAmount = 'Y'
 where
-  OriginTable = 'loan' 
-  and Form = 'F460' 
+  OriginTable = 'loan'
+  and Form = 'F460'
   and Schedule = 'B1'
   and TransactionAmount = 0
   and LoanPreExistingBalance > 0
@@ -1101,7 +1101,7 @@ where
 
 update contributions_full_temp
 set BallotMeasureContribution = 'Y'
-where 
+where
   IncludedSchedule = 'Y'
   and HasProposition = 'Y'
 ;
@@ -1116,9 +1116,9 @@ alter table tmp_prop_committees
 add primary key (RecipientCommitteeID, ElectionCycle, Election, Target, `Position`)
 ;
 update
-  contributions_full_temp a 
+  contributions_full_temp a
   join tmp_prop_committees b
-    on a.DonorCommitteeID = b.RecipientCommitteeID 
+    on a.DonorCommitteeID = b.RecipientCommitteeID
     and a.ElectionCycle = b.ElectionCycle
     and a.Election = b.Election
     and a.Target = b.Target
@@ -1130,10 +1130,10 @@ drop table if exists tmp_prop_committees;
 
 update contributions_full_temp
 set StateOffice = 'Y'
-where 
+where
   CandidateContribution = 'Y'
   and (
-       RecipientCandidateOffice like '%Assembl%y%' 
+       RecipientCandidateOffice like '%Assembl%y%'
     or RecipientCandidateOffice like '%Senate%'
     or RecipientCandidateOffice like '%Govern_r%'
     or RecipientCandidateOffice like '%Controll_r%'
@@ -1144,9 +1144,9 @@ where
     or RecipientCandidateOffice like '%Insur_nce Com%'
     or RecipientCandidateOffice like '%Lieuten_nt%'
     or RecipientCandidateOffice like '%Secretary%'
-    or RecipientCandidateOffice like '%Superintend%nt%' 
+    or RecipientCandidateOffice like '%Superintend%nt%'
     or RecipientCandidateOffice like '%Attorney gen%'
-    or RecipientCandidateOffice like '%board of eq%' 
+    or RecipientCandidateOffice like '%board of eq%'
     or RecipientCandidateOffice like '%boe%'
     )
 ;
@@ -1174,12 +1174,12 @@ where
 
 update contributions_full_temp
 set StateOffice = 'Y'
-where 
+where
   CandidateContribution = 'Y'
   and StateOffice = 'N'
   and LocalOffice = 'N'
   and (
-    RecipientCommitteeNameNormalized like '%Assembl%y%' 
+    RecipientCommitteeNameNormalized like '%Assembl%y%'
     or RecipientCommitteeNameNormalized like '%Senate%'
     or RecipientCommitteeNameNormalized like '%Govern_r%'
     or RecipientCommitteeNameNormalized like '%Controll_r%'
@@ -1190,9 +1190,9 @@ where
     or RecipientCommitteeNameNormalized like '%Insur_nce Com%'
     or RecipientCommitteeNameNormalized like '%Lieuten_nt%'
     or RecipientCommitteeNameNormalized like '%Secretary%'
-    or RecipientCommitteeNameNormalized like '%Superintend_nt%' 
+    or RecipientCommitteeNameNormalized like '%Superintend_nt%'
     or RecipientCommitteeNameNormalized like '%Attorn%y gen%'
-    or RecipientCommitteeNameNormalized like '%board of eq%' 
+    or RecipientCommitteeNameNormalized like '%board of eq%'
     or RecipientCommitteeNameNormalized like '%boe%'
     )
 ;

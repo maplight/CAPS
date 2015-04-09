@@ -141,12 +141,12 @@ body{
   margin-top:28px;
 }
 
-#qs_box{
+.qs_box{
   float:left;
   margin-left:14px;
 }
 
-#qs_btn{
+.qs_btn{
   clear:both;
   float:left;
   font:bold 14px Arial, Helvetica, sans-serif;
@@ -280,7 +280,7 @@ body{
   background:#124161;
 }
 
-#caps_page_btn{
+.caps_page_btn{
   background:#fff;
   color:#124161;
   border:0;
@@ -289,7 +289,7 @@ body{
   padding:2px;
 }
 
-#caps_page_btn:hover{
+.caps_page_btn:hover{
   color:#fff;
   background:#124161;
 }
@@ -611,6 +611,14 @@ body{
   border:1px solid #b8b8b8;
 }
 
+.center {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.strong {
+    font-weight: bold;
+}
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen
