@@ -327,7 +327,7 @@
     } else {
       $candidate_where .= "{$CandidateList} AND "; $summary_type .= "C";
     }
-    if ($OfficeList != "") {$candidate_where .= "{$OfficeList} AND "; $summary_type .= "O";}
+    if ($OfficeList != "") {$candidate_where .= "{$OfficeList} AND "; if (strpos("C", $summary_type) === false) {$summary_type .= "O";}}
     if ($CandidateContribution != "") {$candidate_where .= "$CandidateContribution AND ";}
     if ($candidate_where != "") {$candidate_where = substr ($candidate_where, 0, -5);} # Remove the final AND
 
@@ -378,19 +378,6 @@
 
     $where = $parse_data[0];
     $summary_type = $parse_data[1];
-
-# This code was used to only show the summaries from the quicksearch, they will now always be shown.
-#    if (isset ($_POST["search_btn"])) {
-#      $show_summary = "no";
-#    } else {
-#      if (isset ($_POST["show_summary"])) {
-#        $show_summary = $_POST["show_summary"];
-#      } else {
-#        $show_summary = "yes";
-#      }
-#    }
-
-    $show_summary = "yes";
 
     if ($where == "") {
       echo "You have not entered any search data, please select a criteria on the side.";
@@ -526,36 +513,50 @@
         echo "<div id=\"caps_results\">";
 
         $results_tooltip = "This is the total amount received, including both itemized and unitemized contributions. If you searched for contributions to multiple ballot measures, please note that a single contribution to a multi-measure committee may be counted multiple times toward each measure supported/opposed by that committee.";
-        if ($show_summary == "no") {
-          echo "<h1 class=\"font_large_header\">Search Results</h1>";
-          echo "<hr class=\"caps_hr1\">";
-          echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-          display_tooltip ($results_tooltip, -180, 10, 250, "");
-          echo "<h2 class=\"font_large_header caps_title1\">Contributions</h2>";
-          echo "<hr class=\"caps_hr1\">";
-        } else {
-          for ($i = 0; $i < strlen ($summary_type); $i++) {
-            switch (substr ($summary_type, $i, 1)) {
-              case "D":
-                echo "<div class=\"font_results_header\"><strong>" . strtoupper ($_POST["contributor"]) . "</strong> has contributed</div>";
-                echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                display_tooltip ($results_tooltip, -180, 10, 250, "");
-                echo "<div id=\"caps_breakdown_box\">";
-                $employee = "";
-                $result2 = $web_db->prepare("SELECT IsEmployee, CandidateContribution, BallotMeasureContribution, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, IsEmployee, CandidateContribution, BallotMeasureContribution, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContributions GROUP BY IsEmployee, CandidateContribution, BallotMeasureContribution ORDER BY IsEmployee, CandidateContribution, BallotMeasureContribution");
-                $result2->execute($parse_data[3]);
-                foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
-                  if ($row2["IsEmployee"] != $employee) {
-                    if ($row2["IsEmployee"] == "Y") {echo "<b>Employee Contributions</b><br>";} else {if ($employee == "Y") {echo "&nbsp;<br>";} echo "<b>Organizational Contributions</b><br>";}
-                    $employee = $row2["IsEmployee"];
-                  }
-                  if ($row2["CandidateContribution"] == "Y" && $row2["BallotMeasureContribution"] == "N") {echo "&nbsp;&nbsp;&nbsp;<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>candidates</b><br>";}
-                  if ($row2["CandidateContribution"] == "N" && $row2["BallotMeasureContribution"] == "Y") {echo "&nbsp;&nbsp;&nbsp;<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>ballot measures</b><br>";}
-                  if ($row2["CandidateContribution"] == "N" && $row2["BallotMeasureContribution"] == "N") {echo "&nbsp;&nbsp;&nbsp;<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>other committees</b><br>";}
+
+        echo "<div class=\"font_results_header\"><strong>Search Results</strong></div>";
+        echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
+        display_tooltip ($results_tooltip, -180, 10, 250, "");
+        echo "</div><hr class=\"caps_hr1\">";
+
+        # display summary breakdowns for different criteria
+        for ($i = 0; $i < strlen ($summary_type); $i++) {
+          switch (substr ($summary_type, $i, 1)) {
+            case "D": # Donor (Contributor) summary
+              echo "<div class=\"font_results_header\"><strong>" . strtoupper ($_POST["contributor"]) . "</strong> has contributed</div>";
+              echo "<div id=\"caps_breakdown_box\">";
+              $employee = "";
+              $query = "SELECT
+                          IsEmployee,
+                          CandidateContribution,
+                          BallotMeasureContribution,
+                          SUM(TransactionAmount) AS TotalAmount
+                        FROM (SELECT DISTINCT
+                                contributions.ContributionID,
+                                contributions.IsEmployee,
+                                contributions.CandidateContribution,
+                                contributions.BallotMeasureContribution,
+                                contributions.TransactionAmount
+                              FROM contributions
+                                LEFT JOIN contributions_grouped USING (ContributionID)
+                                INNER JOIN contributions_search ON (contributions.id = contributions_search.id)
+                                {$search_join}
+                              {$where}) AS UniqueContributions
+                        GROUP BY IsEmployee, CandidateContribution, BallotMeasureContribution
+                        ORDER BY IsEmployee, CandidateContribution, BallotMeasureContribution";
+              $result2 = $web_db->prepare($query);
+              $result2->execute($parse_data[3]);
+              foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
+                if ($row2["IsEmployee"] != $employee) {
+                  if ($row2["IsEmployee"] == "Y") {echo "<b>Employee Contributions</b><br>";} else {if ($employee == "Y") {echo "&nbsp;<br>";} echo "<b>Organizational Contributions</b><br>";}
+                  $employee = $row2["IsEmployee"];
                 }
-                echo "</div>";
-                echo "<hr class=\"caps_hr1\">";
-                break;
+                if ($row2["CandidateContribution"] == "Y" && $row2["BallotMeasureContribution"] == "N") {echo "&nbsp;&nbsp;&nbsp;<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>candidates</b><br>";}
+                if ($row2["CandidateContribution"] == "N" && $row2["BallotMeasureContribution"] == "Y") {echo "&nbsp;&nbsp;&nbsp;<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>ballot measures</b><br>";}
+                if ($row2["CandidateContribution"] == "N" && $row2["BallotMeasureContribution"] == "N") {echo "&nbsp;&nbsp;&nbsp;<b>$" . number_format ($row2["TotalAmount"], 2, ".", ",") . "</b> to <b>other committees</b><br>";}
+              }
+              echo "</div><hr class=\"caps_hr1\">";
+              break;
 
               case "C":
                 echo "<div class=\"font_results_header\"><strong>" . strtoupper ($_POST["search_candidates"]) . "</strong> has received</div>";
@@ -626,13 +627,13 @@
                 echo "<h2 class=\"font_large_header caps_title1\">Contributions</h2>";
                 echo "<hr class=\"caps_hr1\">";
                 break;
-            }
           }
         }
 
         $criteria = urlencode (serialize ($parse_data[2]));
         $data = urlencode (serialize ($parse_data[3]));
 
+        echo "<h2 class=\"font_large_header caps_title1\">Contributions</h2>";
         echo "<div id=\"caps_filter_box\">";
         echo "Show";
         echo "<select id=\"show\" name=\"return_rows\" class=\"font_input input_border caps_select4\">";
