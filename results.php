@@ -435,7 +435,7 @@
         if ($first_row > $record_count["records"]) {$first_row = 1;}
         if ($last_row > $record_count["records"]) {$last_row = $record_count["records"];}
 
-        $sort = "contributions_search.TransactionDateEnd";
+        $sort = "TransactionDateEnd";
         $sort_order = "DESC";
         if (isset ($_POST["sort"])) {
           $sort = $_POST["sort"];
@@ -497,6 +497,27 @@
                               "TransactionType|Transaction Type",
                               "Election|Election",
                               "ElectionCycle|Cycle");
+
+        # make sure the sort value is in the expected set of values in case of SQL injection
+        $sort_validate = array ("RecipientCandidateNameNormalized",
+                                "RecipientCommitteeNameNormalized",
+                                "RecipientCommitteeID",
+                                "RecipientCandidateOffice",
+                                "RecipientCandidateDistrict",
+                                "ballot_measures",
+                                "DonorNameNormalized",
+                                "DonorCommitteeID",
+                                "TransactionAmount",
+                                "TransactionDateEnd",
+                                "DonorEmployerNormalized",
+                                "DonorOccupationNormalized",
+                                "DonorState",
+                                "DonorZipCode",
+                                "DonorCity",
+                                "TransactionType",
+                                "Election",
+                                "ElectionCycle");
+        if (! in_array($sort, $sort_validate)) {$sort = "TransactionDateEnd";}
 
         $result = $web_db->prepare("SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING (ContributionID) INNER JOIN contributions_search ON (contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} {$sort_order} LIMIT " . (($page - 1) * $limit) . ",{$limit}");
         $result->execute($parse_data[3]);
