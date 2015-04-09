@@ -15,12 +15,15 @@
     # Written by Mike Krejci for MapLight
 
     # Load required libraries
-    require ("connect.php");
-    require ("sidebar.php");
-    require ("results.php");
+    require("connect.php");
+    require("sidebar.php");
+    require("results.php");
+
+    # remove any potential XSS exploits
+    if (isset($_POST)) {$_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);}
 
     # Check for quick search entry
-    if (isset ($_POST["quick_search"])) {
+    if (isset($_POST["quick_search"])) {
       $_POST["state_list"] = "ALL";
       $_POST["date_select"] = "all";
       $_POST["show_summary"] = "yes";
