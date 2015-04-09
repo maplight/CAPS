@@ -327,7 +327,7 @@
     } else {
       $candidate_where .= "{$CandidateList} AND "; $summary_type .= "C";
     }
-    if ($OfficeList != "") {$candidate_where .= "{$OfficeList} AND ";}
+    if ($OfficeList != "") {$candidate_where .= "{$OfficeList} AND "; $summary_type .= "O";}
     if ($CandidateContribution != "") {$candidate_where .= "$CandidateContribution AND ";}
     if ($candidate_where != "") {$candidate_where = substr ($candidate_where, 0, -5);} # Remove the final AND
 
@@ -570,6 +570,20 @@
                 echo "</div> <!-- end caps_breakdown_box -->";
                 echo "<hr class=\"caps_hr1\">";
                 break;            
+
+              case "O":
+                echo "<div class=\"font_results_header\"><strong>Candidate(s) for " . strtoupper ($_POST["office_list"]) . "</strong> have received</div>";
+                echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
+                display_tooltip ($results_tooltip, -180, 10, 250, "");
+                echo "<div id=\"caps_breakdown_box\">(<b>Top 5 Candidates:)</b><br>";
+                $result2 = $web_db->prepare("SELECT contributions.RecipientCandidateNameNormalized, contributions_search.ElectionCycle, COUNT(DISTINCT id) AS TotalCount, SUM(contributions_search.TransactionAmount) AS TotalAmount FROM contributions_search INNER JOIN contributions USING (id) {$search_join} {$where} GROUP BY contributions.RecipientCandidateNameNormalized, contributions_search.ElectionCycle ORDER BY TotalAmount DESC LIMIT 5");
+                $result2->execute($parse_data[3]);
+                foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
+                  echo "<b>{$row2["RecipientCandidateNameNormalized"]} in {$row2["ElectionCycle"]}</b> has raised $" . number_format ($row2["TotalAmount"], 2, ".", ",") . " in " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
+                }
+                echo "</div> <!-- end caps_breakdown_box -->";
+                echo "<hr class=\"caps_hr1\">";
+                break;
 
               case "E":
                 $election = substr ($_POST["proposition_list"], 4);
