@@ -32,7 +32,6 @@
                    "contributions.DonorZipCode|Contributor Zip Code",
                    "contributions.DonorEmployerNormalized|Contributor Employer",
                    "contributions.DonorOccupationNormalized|Contributor Occupation",
-                   "contributions.DonorOrganization|Contributor Organization",
                    "contributions.CandidateContribution|Candidate Contribution",
                    "contributions.BallotMeasureContribution|Ballot Measure Contribution",
                    "contributions.AlliedCommittee|Allied Committee");
