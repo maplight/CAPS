@@ -327,7 +327,7 @@
     } else {
       $candidate_where .= "{$CandidateList} AND "; $summary_type .= "C";
     }
-    if ($OfficeList != "") {$candidate_where .= "{$OfficeList} AND "; if (strpos("C", $summary_type) === false) {$summary_type .= "O";}}
+    if ($OfficeList != "") {$candidate_where .= "{$OfficeList} AND "; if (strpos($summary_type, "C") === false) {$summary_type .= "O";}}
     if ($CandidateContribution != "") {$candidate_where .= "$CandidateContribution AND ";}
     if ($candidate_where != "") {$candidate_where = substr ($candidate_where, 0, -5);} # Remove the final AND
 
@@ -558,75 +558,105 @@
               echo "</div><hr class=\"caps_hr1\">";
               break;
 
-              case "C":
-                echo "<div class=\"font_results_header\"><strong>" . strtoupper ($_POST["search_candidates"]) . "</strong> has received</div>";
-                echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                display_tooltip ($results_tooltip, -180, 10, 250, "");
+            case "C": # Candidates summary 
+              echo "<div class=\"font_results_header\"><strong>" . strtoupper ($_POST["search_candidates"]) . "</strong> has received</div>";
+              echo "<div id=\"caps_breakdown_box\">";
+              $query = "SELECT
+                          RecipientCommitteeNameNormalized,
+                          RecipientCommitteeID,
+                          COUNT(*) AS TotalCount, 
+                          SUM(TransactionAmount) AS TotalAmount
+                        FROM (SELECT DISTINCT
+                                contributions.ContributionID,
+                                contributions.RecipientCommitteeNameNormalized,
+                                contributions.RecipientCommitteeID,
+                                contributions.TransactionAmount
+                              FROM contributions
+                                LEFT JOIN contributions_grouped USING (ContributionID)
+                                INNER JOIN contributions_search ON (contributions.id = contributions_search.id)
+                                {$search_join}
+                              {$where}) AS UniqueContributions
+                        GROUP BY RecipientCommitteeID, RecipientCommitteeNameNormalized
+                        ORDER BY RecipientCommitteeID, RecipientCommitteeNameNormalized";
+              $result2 = $web_db->prepare($query);
+              $result2->execute($parse_data[3]);
+              foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
+                echo "<b>({$row2["RecipientCommitteeID"]}) {$row2["RecipientCommitteeNameNormalized"]}</b> has raised $" . number_format ($row2["TotalAmount"], 2, ".", ",") . " in " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
+              }
+              echo "</div><hr class=\"caps_hr1\">";
+              break;            
+
+            case "O": # Offices summary
+              echo "<div class=\"font_results_header\"><strong>Top 5 Candidates for " . strtoupper ($_POST["office_list"]) . "</strong> have received</div>";
+              echo "<div id=\"caps_breakdown_box\">";
+              $query = "SELECT
+                          RecipientCandidateNameNormalized,
+                          ElectionCycle,
+                          COUNT(*) AS TotalCount, 
+                          SUM(TransactionAmount) AS TotalAmount
+                        FROM (SELECT DISTINCT
+                                contributions.ContributionID,
+                                contributions.RecipientCandidateNameNormalized,
+                                contributions.ElectionCycle,
+                                contributions.TransactionAmount
+                              FROM contributions
+                                LEFT JOIN contributions_grouped USING (ContributionID)
+                                INNER JOIN contributions_search ON (contributions.id = contributions_search.id)
+                                {$search_join}
+                              {$where}) AS UniqueContributions
+                        GROUP BY ElectionCycle, RecipientCandidateNameNormalized
+                        ORDER BY TotalAmount DESC
+                        LIMIT 5";
+              $result2 = $web_db->prepare($query);
+              $result2->execute($parse_data[3]);
+              foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
+                echo "<b>{$row2["RecipientCandidateNameNormalized"]} in {$row2["ElectionCycle"]}</b> has raised $" . number_format ($row2["TotalAmount"], 2, ".", ",") . " in " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
+              }
+              echo "</div><hr class=\"caps_hr1\">";
+              break;
+
+            case "E": # Ballots Election summary
+              $election = substr ($_POST["proposition_list"], 4);
+              if (intval (strtotime ($election)) > 0) {
+                $election_date = date ("F Y", strtotime ($election));
+                echo "<div class=\"font_results_header\"><strong>Ballot Measures</strong> on the {$election_date} ballot have received</div>";
                 echo "<div id=\"caps_breakdown_box\">";
-                $result2 = $web_db->prepare("SELECT RecipientCommitteeNameNormalized, RecipientCommitteeID, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount FROM (SELECT DISTINCT ContributionID, MapLightCommitteeID, RecipientCommitteeNameNormalized, RecipientCommitteeID, TransactionAmount FROM contributions_search INNER JOIN smry_committees USING (MapLightCommitteeID) {$search_join} {$where}) AS UniqueContributions GROUP BY MapLightCommitteeID ORDER BY RecipientCommitteeID, RecipientCommitteeNameNormalized");
+                $query = "SELECT
+                            Target,
+                            COUNT(*) AS TotalCount, 
+                            SUM(TransactionAmount) AS TotalAmount,
+                            SUM(IF(PositionID = 1,1,0)) AS SupportCount,
+                            SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount,
+                            SUM(IF(PositionID = 2,1,0)) AS OpposeCount,
+                            SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount
+                          FROM (SELECT DISTINCT
+                                  contributions.ContributionID,
+                                  contributions.Target,
+                                  PositionID,
+                                  contributions.TransactionAmount
+                                FROM contributions
+                                  LEFT JOIN contributions_grouped USING (ContributionID)
+                                  INNER JOIN contributions_search ON (contributions.id = contributions_search.id)
+                                  {$search_join}
+                                {$where}) AS UniqueContributions
+                          GROUP BY Target
+                          ORDER BY Target";
+                $result2 = $web_db->prepare($query);
                 $result2->execute($parse_data[3]);
                 foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
-                  echo "<b>({$row2["RecipientCommitteeID"]}) {$row2["RecipientCommitteeNameNormalized"]}</b> has raised $" . number_format ($row2["TotalAmount"], 2, ".", ",") . " in " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
-                }
-                echo "</div> <!-- end caps_breakdown_box -->";
-                echo "<hr class=\"caps_hr1\">";
-                break;            
-
-              case "O":
-                echo "<div class=\"font_results_header\"><strong>Candidate(s) for " . strtoupper ($_POST["office_list"]) . "</strong> have received</div>";
-                echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                display_tooltip ($results_tooltip, -180, 10, 250, "");
-                echo "<div id=\"caps_breakdown_box\">(<b>Top 5 Candidates:)</b><br>";
-                $result2 = $web_db->prepare("SELECT contributions.RecipientCandidateNameNormalized, contributions_search.ElectionCycle, COUNT(DISTINCT id) AS TotalCount, SUM(contributions_search.TransactionAmount) AS TotalAmount FROM contributions_search INNER JOIN contributions USING (id) {$search_join} {$where} GROUP BY contributions.RecipientCandidateNameNormalized, contributions_search.ElectionCycle ORDER BY TotalAmount DESC LIMIT 5");
-                $result2->execute($parse_data[3]);
-                foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
-                  echo "<b>{$row2["RecipientCandidateNameNormalized"]} in {$row2["ElectionCycle"]}</b> has raised $" . number_format ($row2["TotalAmount"], 2, ".", ",") . " in " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
-                }
-                echo "</div> <!-- end caps_breakdown_box -->";
-                echo "<hr class=\"caps_hr1\">";
-                break;
-
-              case "E":
-                $election = substr ($_POST["proposition_list"], 4);
-                if (intval (strtotime ($election)) > 0) {
-                  $election_date = date ("F Y", strtotime ($election));
-                  echo "<div class=\"font_results_header\"><strong>Ballot Measures</strong> on the {$election_date} ballot have received ";
-                  echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                  display_tooltip ($results_tooltip, -180, 10, 250, "");
-                  echo "</div>";
-                  echo "<div id=\"caps_breakdown_box\">";
-                  $result2 = $web_db->prepare("SELECT Target, COUNT(*) AS TotalCount, SUM(TransactionAmount) AS TotalAmount, SUM(IF(PositionID = 1,1,0)) AS SupportCount, SUM(IF(PositionID=1,TransactionAmount,0)) AS SupportAmount, SUM(IF(PositionID = 2,1,0)) AS OpposeCount, SUM(IF(PositionID=2,TransactionAmount,0)) AS OpposeAmount FROM (SELECT DISTINCT ContributionID, Target, PositionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContributions GROUP BY Target ORDER BY Target");
-                  $result2->execute($parse_data[3]);
-                  foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
-                    if (strpos ($row2["Target"], "-") !== false) {
-                      echo "<p><b>" . substr ($row2["Target"], 0, strrpos ($row2["Target"], " - ")) . "</b>" . substr ($row2["Target"], strrpos ($row2["Target"], " - ")) . "<br>";
-                    } else {
-                      echo "<p><b>{$row2["Target"]}</b><br>";
-                    }
-                    echo "&nbsp;&nbsp;&nbsp;$" . number_format ($row2["TotalAmount"], 2, ".", ",") . " total raised - " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
-                    echo "&nbsp;&nbsp;&nbsp;- Support: $" . number_format ($row2["SupportAmount"], 2, ".", ",") . " raised - " . number_format ($row2["SupportCount"], 0, ".", ",") . " contributions<br>";
-                    echo "&nbsp;&nbsp;&nbsp;- Oppose: $" . number_format ($row2["OpposeAmount"], 2, ".", ",") . " raised - " . number_format ($row2["OpposeCount"], 0, ".", ",") . " contributions";
-                    echo "</p>";
+                  if (strpos ($row2["Target"], "-") !== false) {
+                    echo "<p><b>" . substr ($row2["Target"], 0, strrpos ($row2["Target"], " - ")) . "</b>" . substr ($row2["Target"], strrpos ($row2["Target"], " - ")) . "<br>";
+                  } else {
+                    echo "<p><b>{$row2["Target"]}</b><br>";
                   }
-                  echo "</div>";
-                  echo "<hr class=\"caps_hr1\">";
-                } else {
-                  $election_date = date ("F Y", strtotime (substr ($_POST["proposition_list"], 0, 10)));
-                  echo "<div class=\"font_results_header\"><strong>" . substr ($_POST["proposition_list"], 11) . "</strong> on the {$election_date} ballot has received</div>";
-                  echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                  display_tooltip ($results_tooltip, -180, 10, 250, "");
-                  echo "<h2 class=\"font_large_header caps_title1\">Contributions</h2>";
-                  echo "<hr class=\"caps_hr1\">";
+                  echo "&nbsp;&nbsp;&nbsp;$" . number_format ($row2["TotalAmount"], 2, ".", ",") . " total raised - " . number_format ($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
+                  echo "&nbsp;&nbsp;&nbsp;- Support: $" . number_format ($row2["SupportAmount"], 2, ".", ",") . " raised - " . number_format ($row2["SupportCount"], 0, ".", ",") . " contributions<br>";
+                  echo "&nbsp;&nbsp;&nbsp;- Oppose: $" . number_format ($row2["OpposeAmount"], 2, ".", ",") . " raised - " . number_format ($row2["OpposeCount"], 0, ".", ",") . " contributions";
+                  echo "</p>";
                 }
-                break;            
-
-              case "M":
-                echo "<div class=\"font_results_header\"><strong>{$_POST["search_committees"]}</strong> received</div>";
-                echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
-                display_tooltip ($results_tooltip, -180, 10, 250, "");
-                echo "<h2 class=\"font_large_header caps_title1\">Contributions</h2>";
-                echo "<hr class=\"caps_hr1\">";
-                break;
+                echo "</div><hr class=\"caps_hr1\">";
+              }
+              break;            
           }
         }
 

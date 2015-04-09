@@ -28,7 +28,7 @@
         $javascript_array .= "[\"ALL#{$row["Election"]}\",\"" . date ("M j, Y", strtotime ($row["Election"])) . " ballot measures\"],";
         $last_election = $row["Election"];
       }
-      if ("{$row["Election"]}#" . str_replace ("\"", "&quot;", $row["Target"]) == $selected) {echo "<OPTION VALUE=\"{$row["Election"]}#" . htmlentities ($row["Target"]) . "\" SELECTED>&nbsp;&nbsp;&nbsp;&nbsp;{$row["Target"]}</OPTION>";} else {echo "<OPTION VALUE=\"{$row["Election"]}#" . htmlentities ($row["Target"]) . "\">&nbsp;&nbsp;&nbsp;&nbsp;{". htmlentities ($row["Target"]) . "}</OPTION>";}
+      if ("{$row["Election"]}#" . str_replace ("\"", "&quot;", $row["Target"]) == $selected) {echo "<OPTION VALUE=\"{$row["Election"]}#" . htmlentities ($row["Target"]) . "\" SELECTED>&nbsp;&nbsp;&nbsp;&nbsp;" . htmlentities ($row["Target"]) . "</OPTION>";} else {echo "<OPTION VALUE=\"{$row["Election"]}#" . htmlentities ($row["Target"]) . "\">&nbsp;&nbsp;&nbsp;&nbsp;". htmlentities ($row["Target"]) . "</OPTION>";}
       $javascript_array .= "[\"" . str_replace ("\"", "'", $row["Election"] . "#" . $row["Target"]) . "\",\"" . str_replace ("\"", "'", "\u00a0\u00a0\u00a0\u00a0" . $row["Target"]) . "\"],";
     }
     return $javascript_array;
