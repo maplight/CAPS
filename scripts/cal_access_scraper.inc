@@ -1,7 +1,7 @@
 <?php
-  require ("simple_html_dom.php");
-  require ("../connect.php");
-  require ("script_connect.php");
+  require("simple_html_dom.php");
+  require("../connect.php");
+  require("script_connect.php");
 
 
 #===============================================================================================
@@ -27,115 +27,106 @@ function process_sql_file($filename)
 
 #===============================================================================================
 # update elections list
-  function get_elections_list () {
-    # Check upcoming elections
-    $html_page = get_html_file ("http://www.sos.ca.gov/elections/upcoming-elections");
-    if (! $html_page) {} else {
-      foreach ($html_page->find ("li") as $list_item) {
-        $election_data = parse_election_data ($list_item->plaintext);
-        if ($election_data["election_date"] != "") {
-          if ($election_data["election_id"] == 0) {
-            $query = "INSERT INTO cal_access_elections
-                        (date,
-                         description,
-                         special,
-                         election_type,
-                         office)
-                      VALUES
-                        ('{$election_data["election_date"]}',
-                         '{$election_data["title"]}',
-                         {$election_data["special"]},
-                         '{$election_data["election_type"]}',
-                         '{$election_data["office"]}')";
-            script_query ($query);
-          }
-        }
-      }
-    }
+function get_elections_list()
+{
+  global $script_db;
 
-    # Check prior statewide elections
-    $html_page = get_html_file ("http://www.sos.ca.gov/elections/prior-elections/statewide-election-results");
-    if (! $html_page) {} else {
-      foreach ($html_page->find ("li") as $list_item) {
-        $election_data = parse_election_data ($list_item->plaintext);
-        if ($election_data["election_date"] != "") {
-          if ($election_data["election_id"] == 0) {
-            $query = "INSERT INTO cal_access_elections
-                        (date,
-                         description,
-                         special,
-                         election_type,
-                         office)
-                       VALUES
-                         ('{$election_data["election_date"]}',
-                          '{$election_data["title"]}',
-                          {$election_data["special"]},
-                          '{$election_data["election_type"]}',
-                          '{$election_data["office"]}')";
-            script_query ($query);
-          }
-        }
-      }
-    }
-
-    # Check prior special elections
-    $html_page = get_html_file ("http://www.sos.ca.gov/elections/prior-elections/special-elections");
-    if (! $html_page) {} else {
-      $special_elections = explode ("<a href=", $html_page->innertext);                 # create an array of items by <a href=
-      foreach ($special_elections as $election) {                                       # cycle through each of the array items
-        $t_start = strpos ($election, "/\">");                                          # find the end of the href
-        $t_end = strpos ($election, "</a>");                                            # find the close of the anchor
-        $title = substr ($election, $t_start + 3, $t_end - $t_start - 3);               # get the text of the anchor, the district for the special elections
-        $election_dates = explode ("<li>", $election);                                  # seperate the items by <li>
-        foreach ($election_dates as $election_date) {                                   # cycle through each list item
-          if (strpos ($election_date, "</li>") !== false) {                             # if there is an </li> try parsing the date
-            $election_data = parse_election_data ($title . " Special " . substr ($election_date, 0, strpos ($election_date, "</li>")));
-            if ($election_data["election_date"] != "") {
-              if ($election_data["election_id"] == 0) {
-                $query = "INSERT INTO cal_access_elections
-                            (date,
-                             description,
-                             special,
-                             election_type,
-                             office)
-                          VALUES
-                            ('{$election_data["election_date"]}',
-                             '{$election_data["title"]}',
-                             {$election_data["special"]},
-                             '{$election_data["election_type"]}',
-                             '{$election_data["office"]}')";
-                script_query ($query);
-              }
-            }
-          }
-        }
-        $election_data = parse_election_data ($title);                                  # parse the title alone
-        if ($election_data["election_date"] != "") {
-          if ($election_data["election_id"] == 0) {
-            $query = "INSERT INTO cal_access_elections
-                        (date,
-                         description,
-                         special,
-                         election_type,
-                         office)
-                      VALUES
-                        ('{$election_data["election_date"]}',
-                         '{$election_data["title"]}',
-                         {$election_data["special"]},
-                         '{$election_data["election_type"]}',
-                         '{$election_data["office"]}')";
-            script_query ($query);
-          }
+  # Check upcoming elections
+  $html_page = get_html_file("http://www.sos.ca.gov/elections/upcoming-elections");
+  if (! $html_page) {} else {
+    foreach ($html_page->find("li") as $list_item) {
+      $election_data = parse_election_data($list_item->plaintext);
+      if ($election_data["election_date"] != "") {
+        if ($election_data["election_id"] == 0) {
+          $query = "INSERT INTO cal_access_elections
+                      (date,
+                       description,
+                       special,
+                       election_type,
+                       office)
+                    VALUES
+                      (?, ?, ?, ?, ?)";
+          $result = $script_db->prepare($query);
+          $result->execute(array($election_data["election_date"], $election_data["title"], $election_data["special"], $election_data["election_type"], $election_data["office"]));
         }
       }
     }
   }
 
+  # Check prior statewide elections
+  $html_page = get_html_file("http://www.sos.ca.gov/elections/prior-elections/statewide-election-results");
+  if (! $html_page) {} else {
+    foreach ($html_page->find("li") as $list_item) {
+      $election_data = parse_election_data($list_item->plaintext);
+      if ($election_data["election_date"] != "") {
+        if ($election_data["election_id"] == 0) {
+          $query = "INSERT INTO cal_access_elections
+                      (date,
+                       description,
+                       special,
+                       election_type,
+                       office)
+                    VALUES
+                      (?, ?, ?, ?, ?)";
+          $result = $script_db->prepare($query);
+          $result->execute(array($election_data["election_date"], $election_data["title"], $election_data["special"], $election_data["election_type"], $election_data["office"]));
+        }
+      }
+    }
+  }
+
+  # Check prior special elections
+  $html_page = get_html_file("http://www.sos.ca.gov/elections/prior-elections/special-elections");
+  if (! $html_page) {} else {
+    $special_elections = explode("<a href=", $html_page->innertext);                 # create an array of items by <a href=
+    foreach ($special_elections as $election) {                                       # cycle through each of the array items
+      $t_start = strpos($election, "/\">");                                          # find the end of the href
+      $t_end = strpos($election, "</a>");                                            # find the close of the anchor
+      $title = substr($election, $t_start + 3, $t_end - $t_start - 3);               # get the text of the anchor, the district for the special elections
+      $election_dates = explode("<li>", $election);                                  # seperate the items by <li>
+      foreach ($election_dates as $election_date) {                                   # cycle through each list item
+        if (strpos($election_date, "</li>") !== false) {                             # if there is an </li> try parsing the date
+          $election_data = parse_election_data($title . " Special " . substr($election_date, 0, strpos($election_date, "</li>")));
+          if ($election_data["election_date"] != "") {
+            if ($election_data["election_id"] == 0) {
+              $query = "INSERT INTO cal_access_elections
+                          (date,
+                           description,
+                           special,
+                           election_type,
+                           office)
+                        VALUES
+                          (?, ?, ?, ?, ?)";
+              $result = $script_db->prepare($query);
+              $result->execute(array($election_data["election_date"], $election_data["title"], $election_data["special"], $election_data["election_type"], $election_data["office"]));
+            }
+          }
+        }
+      }
+      $election_data = parse_election_data($title);                                  # parse the title alone
+      if ($election_data["election_date"] != "") {
+        if ($election_data["election_id"] == 0) {
+          $query = "INSERT INTO cal_access_elections
+                      (date,
+                       description,
+                       special,
+                       election_type,
+                       office)
+                    VALUES
+                      (?, ?, ?, ?, ?)";
+          $result = $script_db->prepare($query);
+          $result->execute(array($election_data["election_date"], $election_data["title"], $election_data["special"], $election_data["election_type"], $election_data["office"]));
+        }
+      }
+    }
+  }
+}
+
 
 #===============================================================================================
 # gets the election information from the string
-  function parse_election_data ($election_string) {
-    $election_string = preg_replace ("/[^A-Za-z0-9 ]/", '', $election_string);
+  function parse_election_data($election_string) {
+    $election_string = preg_replace("/[^A-Za-z0-9 ]/", '', $election_string);
     $special = 0;
     $election_type = "";
     $election_date = "";
@@ -145,7 +136,7 @@ function process_sql_file($filename)
     $title_array["district"] = ""; $title_array["special"] = ""; $title_array["type"] = "";
     $election_array = NULL;
 
-    $str_words = explode (" ", strtolower ($election_string));
+    $str_words = explode(" ", strtolower($election_string));
     $word_idx = 0;
     foreach ($str_words as $word) {
       switch ($word) {
@@ -153,7 +144,7 @@ function process_sql_file($filename)
         case "primary": $election_type = "P"; $title_array ["type"] = " Primary"; break;
         case "general": case "runoff": $election_type = "G"; $title_array ["type"] = " General"; break;
         case "january": case "february": case "march": case "april": case "may": case "june": case "july": case "august": case "september": case "october": case "november": case "december":
-          if (sizeof ($str_words) > $word_idx + 2) {$election_date = date ("Y-m-d", strtotime ($word . " " . $str_words[$word_idx + 1] . ", " . $str_words[$word_idx + 2]));}
+          if (sizeof($str_words) > $word_idx + 2) {$election_date = date("Y-m-d", strtotime($word . " " . $str_words[$word_idx + 1] . ", " . $str_words[$word_idx + 2]));}
           break;
         case "1996": case "1997": case "1998": case "1999": case "2000": case "2001": case "2002": case "2003": case "2004": case "2005": case "2006": case "2007": case "2008": case "2009": case "2010": case "2011": case "2012": case "2013": case "2014": case "2015":
           $election_year = $word; break;
@@ -163,33 +154,42 @@ function process_sql_file($filename)
         case "congressional": $office = "C"; $title_array["district"] = "Congressional"; break;
         case "senate": $office = "S"; $title_array["district"] = "Senate"; break;
         case "assembly": $office = "A"; $title_array["district"] = "Assembly"; break;
-        case "district": $office .= substr ("00" . trim ($str_words[$word_idx + 1]), -2); $title_array["district"] .= " District " . substr ("00" . trim ($str_words[$word_idx + 1]), -2); break;
+        case "district": $office .= substr("00" . trim($str_words[$word_idx + 1]), -2); $title_array["district"] .= " District " . substr("00" . trim($str_words[$word_idx + 1]), -2); break;
       }
       $word_idx++;
     }
 
-    $title = trim ($title_array["district"] . $title_array["special"] . $title_array["type"] . " Election");
-    if ($election_year == "") {$election_year = date ("Y", strtotime ($election_date));}
+    $title = trim($title_array["district"] . $title_array["special"] . $title_array["type"] . " Election");
+    if ($election_year == "") {$election_year = date("Y", strtotime($election_date));}
     if ($election_type == "") {$election_type = "P";}
     if ($election_year == "2013" AND $office == "S04" AND $election_type == "P") {$election_type = "G";} # correct for incorrect election name (should be runoff)
 
-    $result = script_query ("SELECT election_id FROM cal_access_elections WHERE special = {$special} AND office = '{$office}' AND election_type = '{$election_type}' AND YEAR(date) = '{$election_year}'");
-    $row = $result->fetch_assoc();
+    $result = $script_db->prepare("SELECT election_id FROM cal_access_elections WHERE special = ? AND office = ? AND election_type = ? AND YEAR(date) = ?");
+    $result->execute(array($special, $office, $election_type, $election_year));
+    $row = $result->fetchAll(PDO::FETCH_ASSOC);
     $election_id = $row["election_id"];
 
     # If no specific election was found, check to see if this is the general election and use it.
     if ($election_id == "" && $special == 0 && $election_type == "G") {
-      $result = script_query ("SELECT election_id FROM cal_access_elections WHERE special = 0 AND election_type = 'G' AND YEAR(date) = '{$election_year}'");
-      $row = $result->fetch_assoc();
+      $result = $script_db->prepare("SELECT election_id FROM cal_access_elections WHERE special = 0 AND election_type = 'G' AND YEAR(date) = ?");
+      $result->execute(array($election_year));
+      $row = $result->fetchAll(PDO::FETCH_ASSOC);
       $election_id = $row["election_id"];
     }
 
     if ($election_id == "") {$election_id = 0;}
 
-    $election_array = array ("election_id" => $election_id, "special" => $special, "election_type" => $election_type, "office" => $office, "election_year" => $election_year, "election_date" => $election_date, "title" => $title, "election_parsed" => $election_string);
+    $election_array = array("election_id" => $election_id, "special" => $special, "election_type" => $election_type, "office" => $office, "election_year" => $election_year, "election_date" => $election_date, "title" => $title, "election_parsed" => $election_string);
 
     return $election_array;
  }
+
+
+
+
+
+
+
 
 
 #===============================================================================================
