@@ -19,8 +19,8 @@
     require("sidebar.php");
     require("results.php");
 
-    # remove any potential XSS exploits
-    if (isset($_POST)) {$_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);}
+    # remove any potential XSS exploits\
+    if (isset($_POST)) {foreach ($_POST as $key => $value) {$_POST[$key] = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);}}
 
     # Check for quick search entry
     if (isset($_POST["quick_search"])) {
@@ -160,13 +160,11 @@
             if (isset ($_POST["proposition_list"])) {$selected = $_POST["proposition_list"];}
             fill_propositions ($selected);
             echo "</select>";
-
             echo "<select id=\"position\" name=\"position\" onFocus=\"document.getElementById('props_to').checked=true;\" class=\"left font_input input_border caps_select3\">";
             echo "<option value=\"B\">Both support &amp; oppose</option>";
             if ($_POST["position"] == "S") {echo "<option value=\"S\" SELECTED>Support</option>";} else {echo "<option value=\"S\">Support</option>";}
             if ($_POST["position"] == "O") {echo "<option value=\"O\" SELECTED>Oppose</option>";} else {echo "<option value=\"O\">Oppose</option>";}
             echo "</select>";
-
             $checked = "";
             if (isset ($_POST["exclude"])) {if ($_POST["exclude"] == "on") {$checked = "checked";}}
             echo "<input type=\"checkbox\" id=\"exclude\" name=\"exclude\" onFocus=\"document.getElementById('props_to').checked=true;\" {$checked} class=\"clear_both left caps_radio4\" alt=\"Exclude contributions between allied committees\">";
