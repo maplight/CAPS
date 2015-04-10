@@ -125,64 +125,65 @@ function get_elections_list()
 
 #===============================================================================================
 # gets the election information from the string
-  function parse_election_data($election_string) {
-    $election_string = preg_replace("/[^A-Za-z0-9 ]/", '', $election_string);
-    $special = 0;
-    $election_type = "";
-    $election_date = "";
-    $election_year = "";
-    $office = "";
-    $election_id = 0;
-    $title_array["district"] = ""; $title_array["special"] = ""; $title_array["type"] = "";
-    $election_array = NULL;
+function parse_election_data($election_string)
+{
+  global $script_db;
 
-    $str_words = explode(" ", strtolower($election_string));
-    $word_idx = 0;
-    foreach ($str_words as $word) {
-      switch ($word) {
-        case "special": $special = 1; $title_array["special"] = " Special"; break;
-        case "primary": $election_type = "P"; $title_array ["type"] = " Primary"; break;
-        case "general": case "runoff": $election_type = "G"; $title_array ["type"] = " General"; break;
-        case "january": case "february": case "march": case "april": case "may": case "june": case "july": case "august": case "september": case "october": case "november": case "december":
-          if (sizeof($str_words) > $word_idx + 2) {$election_date = date("Y-m-d", strtotime($word . " " . $str_words[$word_idx + 1] . ", " . $str_words[$word_idx + 2]));}
-          break;
-        case "1996": case "1997": case "1998": case "1999": case "2000": case "2001": case "2002": case "2003": case "2004": case "2005": case "2006": case "2007": case "2008": case "2009": case "2010": case "2011": case "2012": case "2013": case "2014": case "2015":
-          $election_year = $word; break;
-        case "statewide": $office = "ALL"; $title_array["district"] = "Statewide"; break;
-        case "presidential": $office = "P"; $title_array["district"] = "Presidential"; break;
-        case "gubernatorial": $office = "G"; $title_array["district"] = "Gubernatorial"; break;
-        case "congressional": $office = "C"; $title_array["district"] = "Congressional"; break;
-        case "senate": $office = "S"; $title_array["district"] = "Senate"; break;
-        case "assembly": $office = "A"; $title_array["district"] = "Assembly"; break;
-        case "district": $office .= substr("00" . trim($str_words[$word_idx + 1]), -2); $title_array["district"] .= " District " . substr("00" . trim($str_words[$word_idx + 1]), -2); break;
-      }
-      $word_idx++;
+  $election_string = preg_replace("/[^A-Za-z0-9 ]/", '', $election_string);
+  $special = 0;
+  $election_type = "";
+  $election_date = "";
+  $election_year = "";
+  $office = "";
+  $election_id = 0;
+  $title_array["district"] = ""; $title_array["special"] = ""; $title_array["type"] = "";
+  $election_array = NULL;
+
+  $str_words = explode(" ", strtolower($election_string));
+  $word_idx = 0;
+  foreach ($str_words as $word) {
+    switch ($word) {
+      case "special": $special = 1; $title_array["special"] = " Special"; break;
+      case "primary": $election_type = "P"; $title_array ["type"] = " Primary"; break;
+      case "general": case "runoff": $election_type = "G"; $title_array ["type"] = " General"; break;
+      case "january": case "february": case "march": case "april": case "may": case "june": case "july": case "august": case "september": case "october": case "november": case "december":
+        if (sizeof($str_words) > $word_idx + 2) {$election_date = date("Y-m-d", strtotime($word . " " . $str_words[$word_idx + 1] . ", " . $str_words[$word_idx + 2]));}
+        break;
+      case "1995": case "1994": case "1996": case "1997": case "1998": case "1999": case "2000": case "2001": case "2002": case "2003": case "2004": case "2005": case "2006": case "2007": case "2008": case "2009": case "2010": case "2011": case "2012": case "2013": case "2014": case "2015": case "2016": case "2017": case "2018": case "2019": case "2020":
+        $election_year = $word; break;
+      case "statewide": $office = "ALL"; $title_array["district"] = "Statewide"; break;
+      case "presidential": $office = "P"; $title_array["district"] = "Presidential"; break;
+      case "gubernatorial": $office = "G"; $title_array["district"] = "Gubernatorial"; break;
+      case "congressional": $office = "C"; $title_array["district"] = "Congressional"; break;
+      case "senate": $office = "S"; $title_array["district"] = "Senate"; break;
+      case "assembly": $office = "A"; $title_array["district"] = "Assembly"; break;
+      case "district": $office .= substr("00" . trim($str_words[$word_idx + 1]), -2); $title_array["district"] .= " District " . substr("00" . trim($str_words[$word_idx + 1]), -2); break;
     }
+    $word_idx++;
+  }
 
-    $title = trim($title_array["district"] . $title_array["special"] . $title_array["type"] . " Election");
-    if ($election_year == "") {$election_year = date("Y", strtotime($election_date));}
-    if ($election_type == "") {$election_type = "P";}
-    if ($election_year == "2013" AND $office == "S04" AND $election_type == "P") {$election_type = "G";} # correct for incorrect election name (should be runoff)
+  $title = trim($title_array["district"] . $title_array["special"] . $title_array["type"] . " Election");
+  if ($election_year == "") {$election_year = date("Y", strtotime($election_date));}
+  if ($election_type == "") {$election_type = "P";}
+  if ($election_year == "2013" AND $office == "S04" AND $election_type == "P") {$election_type = "G";} # correct for incorrect election name (should be runoff)
 
-    $result = $script_db->prepare("SELECT election_id FROM cal_access_elections WHERE special = ? AND office = ? AND election_type = ? AND YEAR(date) = ?");
-    $result->execute(array($special, $office, $election_type, $election_year));
+  $result = $script_db->prepare("SELECT election_id FROM cal_access_elections WHERE special = ? AND office = ? AND election_type = ? AND YEAR(date) = ?");
+  $result->execute(array($special, $office, $election_type, $election_year));
+  $row = $result->fetchAll(PDO::FETCH_ASSOC);
+  $election_id = $row["election_id"];
+
+  # If no specific election was found, check to see if this is the general election and use it.
+  if ($election_id == "" && $special == 0 && $election_type == "G") {
+    $result = $script_db->prepare("SELECT election_id FROM cal_access_elections WHERE special = 0 AND election_type = 'G' AND YEAR(date) = ?");
+    $result->execute(array($election_year));
     $row = $result->fetchAll(PDO::FETCH_ASSOC);
     $election_id = $row["election_id"];
+  }
 
-    # If no specific election was found, check to see if this is the general election and use it.
-    if ($election_id == "" && $special == 0 && $election_type == "G") {
-      $result = $script_db->prepare("SELECT election_id FROM cal_access_elections WHERE special = 0 AND election_type = 'G' AND YEAR(date) = ?");
-      $result->execute(array($election_year));
-      $row = $result->fetchAll(PDO::FETCH_ASSOC);
-      $election_id = $row["election_id"];
-    }
-
-    if ($election_id == "") {$election_id = 0;}
-
-    $election_array = array("election_id" => $election_id, "special" => $special, "election_type" => $election_type, "office" => $office, "election_year" => $election_year, "election_date" => $election_date, "title" => $title, "election_parsed" => $election_string);
-
-    return $election_array;
- }
+  if ($election_id == "") {$election_id = 0;}
+  $election_array = array("election_id" => $election_id, "special" => $special, "election_type" => $election_type, "office" => $office, "election_year" => $election_year, "election_date" => $election_date, "title" => $title, "election_parsed" => $election_string);
+  return $election_array;
+}
 
 
 
