@@ -84,7 +84,7 @@
             if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "all") {$checked = "checked";}} else {$checked = "checked";} # This is the default option for this radio button
             echo "<input type=\"radio\" id=\"all_contribs\" name=\"contrib_select\" value=\"all\" class=\"clear_both left caps_radio1\" {$checked}>";
             echo "<label for=\"all_contribs\" class=\"font_input caps_label1\">All contributors</label>";
-            display_tooltip ("Search contributions from all contributors.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions from all contributors (organizations and individuals).", 20, -20, 160, "right");
 
             $checked = "";
             if (isset ($_POST["contrib_select"])) {if ($_POST["contrib_select"] == "search") {$checked = "checked";}}  
@@ -92,7 +92,7 @@
             $text = "Just these contributors";
             if (isset ($_POST["contributor"])) {$text = htmlspecialchars($_POST["contributor"]);}
             echo "<input type=\"text\" id=\"search_contribs\" name=\"contributor\" value=\"{$text}\" onFocus=\"document.getElementById('select_contribs').checked=true; if(this.value == 'Just these contributors') {this.value = '';}\" onBlur=\"if(this.value == '') {this.value = 'Just these contributors';}\" class=\"left font_input input_border caps_text1\" alt=\"Just These Contributors\">";
-            display_tooltip ("Search for a contributor name. Multiple terms can be separated by semicolons.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions from any contributor by name or CAL-ACCESS ID number. Multiple search terms can be separated by semicolons.", 20, -20, 160, "right");
 
             echo "<label for=\"select_location\" class=\"clear_both left font_input caps_label2\">Contributor Location</label>";
             display_tooltip ("Search contributions from a particular state.", 20, -20, 160, "right");
@@ -116,7 +116,7 @@
 
             # Contributions To Candidates
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Candidates";
-            display_tooltip ("Search contributions to candidate-controlled campaign committees at the state level.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to candidate-controlled campaign committees for state-level offices.", 20, -20, 160, "right");
             echo "</div>";
 
             $checked = "";
@@ -141,12 +141,12 @@
             if (isset ($_POST["office_list"])) {$selected = $_POST["office_list"];}
             fill_offices_sought ($selected);
             echo "</select>";
-            display_tooltip ("Search contributions to a candidate(s) running for a particular office.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to candidate(s) running for a particular office.", 20, -20, 160, "right");
             echo "<hr class=\"clear_both caps_hr2\">";
 
             # Contributions To Ballot Measures
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Ballot Measures";
-            display_tooltip ("Search contributions to committees formed to support or oppose ballot measures.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to recipient committees formed to support or oppose ballot measures. A single contribution to a multi-measure committee may be counted toward each measure supported/opposed by that committee.", 20, -20, 160, "right");
             echo "</div>";
 
             $checked = "";
@@ -173,7 +173,7 @@
 
             # Contributions To Committees
             echo "<div class=\"clear_both input_font caps_sidebar_title\">Committees";
-            display_tooltip ("Search contributions to any recipient committee.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions to any recipient committee by its name or CAL-ACCESS ID number.", 20, -20, 160, "right");
             echo "</div>";
 
             $checked = "";
@@ -192,7 +192,7 @@
           <!-- Dates -->
           <h2 class="clear_both font_title caps_option_title">Dates:
           <?php
-            display_tooltip ("Search contributions by the date range in which they were made.", 20, -20, 160, "right");
+            display_tooltip ("Search contributions by the date range or election cycle in which they were made.", 20, -20, 160, "right");
             echo "</h2>";
 
             $checked = "";

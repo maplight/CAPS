@@ -512,7 +512,7 @@
 
         echo "<div id=\"caps_results\">";
 
-        $results_tooltip = "This is the total amount received, including both itemized and unitemized contributions. If you searched for contributions to multiple ballot measures, please note that a single contribution to a multi-measure committee may be counted multiple times toward each measure supported/opposed by that committee.";
+        $results_tooltip = "This is the total amount received in the specified date range.";
 
         echo "<div class=\"font_results_header\"><strong>Search Results</strong></div>";
         echo "<div class=\"font_results_header\"><strong>\$" . number_format ($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format ($totals_row["records"], 0, ".", ",") . " contributions ";
