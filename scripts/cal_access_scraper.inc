@@ -308,7 +308,104 @@ function get_candidate_names($session, $err_chk)
           }
         }
       }
-      $html_page->clear ();
+      $html_page->clear();
+    }
+  }
+}
+
+
+#===============================================================================================
+# get all candidate data for a specific session and candidate
+function get_candidate_data ($session, $err_chk) {
+  global $script_db;
+
+  $result = $script_db->prepare("SELECT id, link FROM cal_access_candidates WHERE session = ?");
+  $result->execute(array($session));
+  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+    $html_page = get_html_file($row["link"]);
+    if (! $html_page && $err_chk == 1) {} else {
+      $data_in_process = "";
+      $historical_names = array();
+      $party = "";
+      $limit_election = "";
+      $spending_limits = array();
+      $races = array();
+      $committees = array();
+
+      foreach ($html_page->find("table") as $table) {
+        if (strpos($table->innertext, "category side nav starts here") === false) {
+          $tr_count = 0;
+          foreach ($table->find("tr") as $tablerow) {
+            $td_count = 0;
+            foreach ($tablerow->find("td") as $tabledata) {
+              switch ($data_in_process) {
+                case "HISTORICAL": if (trim($tabledata->plaintext) != "PARTY") {$historical_names[] = addslashes(trim($tabledata->plaintext));} break;
+                case "PARTY": $party = addslashes(trim($tabledata->plaintext)); $data_in_process = ""; break;
+                case "LIMITS":
+                    switch ($td_count) {
+                      case 0: $limit_election = trim($tabledata->plaintext); break;
+                      case 1: if ($limit_election != "") {$spending_limits[$limit_election] = trim($tabledata->plaintext);} break;
+                    }
+                    break;
+                case "RACES":
+                    switch ($td_count) {
+                      case 0: $office = trim($tabledata->plaintext); break;
+                      case 1: $election = trim($tabledata->plaintext); break;
+                      case 2:
+                          if ($office != "OFFICE") {
+                            $result2 = $script_db->prepare("SELECT election_id, date, description FROM cal_access_elections WHERE IF(office = 'ALL', CONCAT(YEAR(date), IF(election_type = 'G', ' GENERAL', ' PRIMARY'), ' ELECTION'), '') = ?;");
+                            $result2->execute(array($election));
+                            $election_info = $result2->fetch(PDO::FETCH_ASSOC);
+                            if (! $election_info) {
+                              $election_data = parse_election_data($office . " " . $election);
+                            } else {
+                              $election_data = parse_election_data(date("F j, Y", strtotime($election_info->date)) . " " . $election_info->description);
+                            }
+                            $races[] = array("election_id" => $election_data["election_id"], "result" => trim($tabledata->plaintext), "office" => $election_data["office"], "election_parsed" => $election_data["election_parsed"]);
+                          }
+                          break;
+                    }
+                    break;
+              }
+
+              switch (trim(substr($tabledata->plaintext, 0, 5))) {
+                case "HISTO": $data_in_process = "HISTORICAL"; break;
+                case "PARTY": $data_in_process = "PARTY"; break;
+                case "ELECT": if ($data_in_process != "RACES") {$data_in_process = "LIMITS";} break;
+                case "RACES": $data_in_process = "RACES"; break;
+              }
+
+              if (strpos($tabledata->innertext, "/Misc/redirector.aspx?session=$session") !== false) {
+                $anchor = $tabledata->find("a");
+                $committees[] = substr($anchor[0]->href, strrpos($anchor[0]->href, "id=") + 3);
+              }
+
+              $td_count++;
+            }
+            $tr_count++;
+          }
+        }
+      }
+      $html_page->clear();
+
+      $result = $script_db->prepare("UPDATE cal_access_candidates SET party = ? WHERE session = ? AND id = ?");
+      $result->execute(array($party, $session, $row["id"]));
+      foreach ($historical_names as $name) {if ($name != "") {
+        $result = $script_db->prepare("INSERT INTO cal_access_candidates_names (session, id, name) VALUES (?, ?, ?)");
+        $result->execute(array($session, $row["id"], $name));
+      }
+      foreach ($spending_limits as $election => $accepted) {if ($election != "") {
+        $result = $script_db->prepare("INSERT INTO cal_access_candidates_spending_limits (session, id, election, accepted) VALUES (?, ?, ?, ?)");
+        $result->execute(array($session, $row["id"], $election, $accepted));
+      }
+      foreach ($races as $race_data) {
+        $result = $script_db->prepare("INSERT INTO cal_access_candidates_races (session, id, election_id, office, result, parsed) VALUES (?, ?, ?, ?, ?, ?)");
+        $result->execute(array($session, $row["id"], $race_data["election_id"], $race_data["office"], $race_data["result"], $race_data["election_parsed"]));
+      }
+      foreach ($committees as $filer_id) {
+        $result = $script_db->prepare("INSERT INTO cal_access_candidates_committees (session, id, filer_id) VALUES (?, ?, ?)");
+        $result->execute(array($session, $row["id"], $filer_id));
+      }
     }
   }
 }
@@ -316,90 +413,6 @@ function get_candidate_names($session, $err_chk)
 
 
 
-
-
-
-
-#===============================================================================================
-# get all candidate data for a specific session and candidate
-  function get_candidate_data ($session, $err_chk) {
-  global $script_db;
-    $query = "SELECT id, link FROM cal_access_candidates WHERE session = $session";
-    $result = script_query ($query);
-    while ($row = $result->fetch_assoc()) {
-      $html_page = get_html_file ($row["link"]);
-      if (! $html_page && $err_chk == 1) {} else {
-        $data_in_process = "";
-        $historical_names = array ();
-        $party = "";
-        $limit_election = "";
-        $spending_limits = array ();
-        $races = array ();
-        $committees = array ();
-
-        foreach ($html_page->find ("table") as $table) {
-          if (strpos ($table->innertext, "category side nav starts here") === false) {
-            $tr_count = 0;
-            foreach ($table->find ("tr") as $tablerow) {
-              $td_count = 0;
-              foreach ($tablerow->find ("td") as $tabledata) {
-                switch ($data_in_process) {
-                  case "HISTORICAL": if (trim ($tabledata->plaintext) != "PARTY") {$historical_names[] = addslashes (trim ($tabledata->plaintext));} break;
-                  case "PARTY": $party = addslashes (trim ($tabledata->plaintext)); $data_in_process = ""; break;
-                  case "LIMITS":
-                      switch ($td_count) {
-                        case 0: $limit_election = trim ($tabledata->plaintext); break;
-                        case 1: if ($limit_election != "") {$spending_limits[$limit_election] = trim ($tabledata->plaintext);} break;
-                      }
-                      break;
-                  case "RACES":
-                      switch ($td_count) {
-                        case 0: $office = trim ($tabledata->plaintext); break;
-                        case 1: $election = trim ($tabledata->plaintext); break;
-                        case 2:
-                            if ($office != "OFFICE") {
-                              $result2 = script_query ("SELECT election_id, date, description FROM cal_access_elections WHERE IF(office = 'ALL', CONCAT(YEAR(date), IF(election_type = 'G', ' GENERAL', ' PRIMARY'), ' ELECTION'), '') = '$election';");
-                              $election_info = $result2->fetch_object();
-                              if (! $election_info) {
-                                $election_data = parse_election_data ($office . " " . $election);
-                              } else {
-                                $election_data = parse_election_data (date ("F j, Y", strtotime ($election_info->date)) . " " . $election_info->description);
-                              }
-                              $races[] = array ("election_id" => $election_data["election_id"], "result" => trim ($tabledata->plaintext), "office" => $election_data["office"], "election_parsed" => $election_data["election_parsed"]);
-                            }
-                            break;
-                      }
-                      break;
-                }
-
-                switch (trim (substr ($tabledata->plaintext, 0, 5))) {
-                  case "HISTO": $data_in_process = "HISTORICAL"; break;
-                  case "PARTY": $data_in_process = "PARTY"; break;
-                  case "ELECT": if ($data_in_process != "RACES") {$data_in_process = "LIMITS";} break;
-                  case "RACES": $data_in_process = "RACES"; break;
-                }
-
-                if (strpos ($tabledata->innertext, "/Misc/redirector.aspx?session=$session") !== false) {
-                  $anchor = $tabledata->find ("a");
-                  $committees[] = substr ($anchor[0]->href, strrpos ($anchor[0]->href, "id=") + 3);
-                }
-
-                $td_count++;
-              }
-              $tr_count++;
-            }
-          }
-        }
-        $html_page->clear ();
-
-        script_query ("UPDATE cal_access_candidates SET party = '$party' WHERE session = $session AND id = {$row["id"]}");
-        foreach ($historical_names as $name) {if ($name != "") {script_query ("INSERT INTO cal_access_candidates_names (session, id, name) VALUES ($session, {$row["id"]}, '$name')");}}
-        foreach ($spending_limits as $election => $accepted) {if ($election != "") {script_query ("INSERT INTO cal_access_candidates_spending_limits (session, id, election, accepted) VALUES ($session, {$row["id"]}, '$election', '$accepted')");}}
-        foreach ($races as $race_data) {script_query ("INSERT INTO cal_access_candidates_races (session, id, election_id, office, result, parsed) VALUES ($session, {$row["id"]}, {$race_data["election_id"]}, '{$race_data["office"]}', '{$race_data["result"]}', '{$race_data["election_parsed"]}')");}
-        foreach ($committees as $filer_id) {script_query ("INSERT INTO cal_access_candidates_committees (session, id, filer_id) VALUES ($session, {$row["id"]}, $filer_id)");}
-      }
-    }
-  }
 
 
 
