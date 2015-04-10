@@ -618,9 +618,9 @@ function clean_candidate_names()
                           display_name = '" . addslashes ($display_name) . "'
                         WHERE id = {$row["id"]}";
     }
-$result = $script_db->prepare("SELECT * FROM cal_access_sessions ORDER BY session DESC");
-$result->execute();
-foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+#$result = $script_db->prepare("SELECT * FROM cal_access_sessions ORDER BY session DESC");
+#$result->execute();
+#foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
     script_query ($query);
   }
 }
