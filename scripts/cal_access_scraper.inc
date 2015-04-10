@@ -360,7 +360,7 @@ function get_candidate_data($session, $err_chk)
                             if (empty($election_info)) {
                               $election_data = parse_election_data($office . " " . $election);
                             } else {
-                              $election_data = parse_election_data(date("F j, Y", strtotime($election_info->date)) . " " . $election_info->description);
+                              $election_data = parse_election_data(date("F j, Y", strtotime($election_info["date"])) . " " . $election_info["description"]);
                             }
                             $races[] = array("election_id" => $election_data["election_id"], "result" => trim($tabledata->plaintext), "office" => $election_data["office"], "election_parsed" => $election_data["election_parsed"]);
                           }
