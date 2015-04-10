@@ -11,8 +11,7 @@ $good_files = array();
 # get a list of all the ftp_* tables in the database
 $db_tables = array();
   
-$result = $script_db->prepare("SHOW TABLES");
-$result->execute();
+$result = $script_db->query("SHOW TABLES");
 foreach ($result->fetchAll() as $row) {if (substr($row[0], 0, 4) == "ftp_") {$db_tables[] = $row[0];}}
 
 # download the file and unzip it
@@ -23,8 +22,7 @@ exec("unzip files/dbwebexport.zip -d files");
 foreach ($db_tables as $db_table) {
   # get array of table field names
   $table_fields = array();
-  $result = $script_db->prepare("DESCRIBE $db_table");
-  $result->execute();
+  $result = $script_db->query("DESCRIBE $db_table");
   foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {$table_fields[] = $row["Field"];}
 
   $tab_file = $data_directory . "/" . strtoupper(substr($db_table, 4)) . "_CD.TSV";
@@ -65,10 +63,8 @@ if ($error_text != "") {
 } else {
   # Process good data
   for ($i = 0; $i < count($good_tables); $i++) {
-    $result = $script_db->prepare("TRUNCATE TABLE $good_tables[$i]");
-    $result->execute();
-    $result = $script_db->prepare("LOAD DATA LOCAL INFILE '" . str_replace('\\', '/', getcwd()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
-    $result->execute();
+    $result = $script_db->query("TRUNCATE TABLE $good_tables[$i]");
+    $result = $script_db->query("LOAD DATA LOCAL INFILE '" . str_replace('\\', '/', getcwd()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
     unlink($good_files[$i]);
   }
 }

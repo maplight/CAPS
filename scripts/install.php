@@ -13,7 +13,6 @@ if (!file_exists("files")) {
     mkdir("files", 0777, true);
 }
 
-
 echo "Installing cal_access.sql... \n";
 # Create empty cal_access tables (used to store data scraped)
 process_sql_file("install_cal_access.sql");
