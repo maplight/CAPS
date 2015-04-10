@@ -43,16 +43,16 @@ echo "Scraping the cal-access data for all sessions (this process can take up to
 $result = $script_db->prepare("SELECT session FROM cal_access_sessions ORDER BY session DESC LIMIT 1");
 $result->execute();
 foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-  $session = $row["session"];
-
-  echo "Retrieving data for session " . $session . "\n";
-  get_propositions($session, 1);
-  get_propositions_committees($session, 1);
-  get_candidate_names($session, 1);
-  get_candidate_data($session, 1);
+  echo "Retrieving data for session " . $row["session"] . "\n";
+  get_propositions($row["session"], 1);
+  get_propositions_committees($row["session"], 1);
+  get_candidate_names($row["session"], 1);
+  get_candidate_data($row["session"], 1);
+  $result = $script_db->prepare("UPDATE cal_access_sessions SET last_ran = NOW() WHERE session = ?");
+  $result->execute(array($row["session"]));
 }
 
-echo "check for missing proposition committes";
+echo "check for missing proposition committes \n";
 $query = "SELECT cal_access_propositions_committees.session, cal_access_propositions_committees.filer_id FROM cal_access_propositions_committees
             LEFT JOIN cal_access_committees ON (cal_access_committees.filer_id = cal_access_propositions_committees.filer_id AND cal_access_committees.session = cal_access_propositions_committees.session)
             WHERE ISNULL(cal_access_committees.filer_id)";
@@ -64,7 +64,7 @@ foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
   get_committee_information($session, $filer_id, 1);
 }
 
-echo "check for missing candidate committes";
+echo "check for missing candidate committes \n";
 $query = "SELECT cal_access_candidates_committees.session, cal_access_candidates_committees.filer_id FROM cal_access_candidates_committees
             LEFT JOIN cal_access_committees ON (cal_access_committees.filer_id = cal_access_candidates_committees.filer_id AND cal_access_committees.session = cal_access_candidates_committees.session)
             WHERE ISNULL(cal_access_committees.filer_id)";
@@ -79,5 +79,5 @@ foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
 # Process an update - the processes the ftp data
 system("php update_data.php");
 
-echo "Install complete....";
+echo "Install complete.... \n";
 

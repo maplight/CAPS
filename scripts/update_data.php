@@ -13,11 +13,11 @@ if ($ps_check == "1") {
   echo "Starting update... \n";
 
   echo "Update the most recent cal_access session \n";
-  system("php cal_access_data_scraper.php");
+#  system("php cal_access_data_scraper.php");
 
   echo "Get the ftp data \n";
   # Get the ftp data
-#  system("php get_ftp_data.php");
+  system("php get_ftp_data.php");
 
   echo "Process data for contributions table - stage 1 \n";
   # Process data for contributions table - stage 1
