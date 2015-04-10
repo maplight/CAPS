@@ -71,9 +71,9 @@ $query = "SELECT cal_access_candidates_committees.session, cal_access_candidates
 $result = $script_db->prepare($query);
 $result->execute();
 foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-    $session = $row["session"];
-    $filer_id = $row["filer_id"];
-    get_committee_information($session, $filer_id, 1);
+  $session = $row["session"];
+  $filer_id = $row["filer_id"];
+  get_committee_information($session, $filer_id, 1);
 }
 
 # Process an update - the processes the ftp data
