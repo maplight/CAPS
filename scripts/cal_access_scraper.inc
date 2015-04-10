@@ -169,14 +169,14 @@ function parse_election_data($election_string)
 
   $result = $script_db->prepare("SELECT election_id FROM cal_access_elections WHERE special = ? AND office = ? AND election_type = ? AND YEAR(date) = ?");
   $result->execute(array($special, $office, $election_type, $election_year));
-  $row = $result->fetchAll(PDO::FETCH_ASSOC);
+  $row = $result->fetch(PDO::FETCH_ASSOC);
   $election_id = $row["election_id"];
 
   # If no specific election was found, check to see if this is the general election and use it.
   if ($election_id == "" && $special == 0 && $election_type == "G") {
     $result = $script_db->prepare("SELECT election_id FROM cal_access_elections WHERE special = 0 AND election_type = 'G' AND YEAR(date) = ?");
     $result->execute(array($election_year));
-    $row = $result->fetchAll(PDO::FETCH_ASSOC);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
     $election_id = $row["election_id"];
   }
 
