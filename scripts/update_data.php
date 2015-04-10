@@ -17,11 +17,11 @@ if ($ps_check == "1") {
 
   echo "Get the ftp data \n";
   # Get the ftp data
-  system("php get_ftp_data.php");
+#  system("php get_ftp_data.php");
 
   echo "Process data for contributions table - stage 1 \n";
   # Process data for contributions table - stage 1
-#  process_sql_file("process_stage_1.sql");
+  process_sql_file("process_stage_1.sql");
 
   echo "Clean up names \n";
   # Clean up names
