@@ -494,7 +494,7 @@ function get_committee_general_information ($session, $filer_id, $err_chk)
                                case "CURRENT ST": $status = trim($tabledata->plaintext); break;
                                case "LAST REPOR": $last_date = date("Y-m-d", strtotime($tabledata->plaintext)); break;
                                case "REPORTING ": $report_start = date("Y-m-d", strtotime(substr(trim($tabledata->plaintext), 0, 10)));
-                                                                       $report_end = dat ("Y-m-d", strtotime(substr(trim($tabledata->plaintext), -10))); break;
+                                                                       $report_end = date("Y-m-d", strtotime(substr(trim($tabledata->plaintext), -10))); break;
                                case "CONTRIBUTI": $report_contributions = get_amount($tabledata->plaintext); break;
                                case "EXPENDITUR": $report_expenditures = get_amount($tabledata->plaintext); break;
                                case "TOTAL CONT": $total_contributions = get_amount($tabledata->plaintext);

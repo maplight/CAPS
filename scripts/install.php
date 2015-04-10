@@ -16,27 +16,27 @@ if (!file_exists("files")) {
 
 echo "Installing cal_access.sql... \n";
 # Create empty cal_access tables (used to store data scraped)
-#process_sql_file("install_cal_access.sql");
+process_sql_file("install_cal_access.sql");
 
 echo "Installing ftp_tables.sql... \n";
 # Create empty ftp tables (used to store the data from ftp)
-#process_sql_file("install_ftp_tables.sql");
+process_sql_file("install_ftp_tables.sql");
 
 echo "Installing processing_tables.sql... \n";
 # Create tables used to process the data
-#process_sql_file("install_processing_tables.sql");
+process_sql_file("install_processing_tables.sql");
 
 echo "Installing smry_tables.sql... \n";
 # Create tables used for fast web searches
-#process_sql_file("install_smry_tables.sql");
+process_sql_file("install_smry_tables.sql");
 
 echo "Installing populated.sql... \n";
 # Create populated tables (name parse tables and state name table)
-#process_sql_file("install_populated.sql");
+process_sql_file("install_populated.sql");
 
 echo "Populating all cal_access sessions from http://www.sos.ca.gov/elections/elections_cand.htm \n";
 # Populate all cal_access sessions
-#get_elections_list();
+get_elections_list();
 
 echo "Scraping the cal-access data for all sessions (this process can take up to 8 - 10 hours) \n";
 # Scrape the cal-access data for all sessions (this process can take up to 8 - 10 hours)
@@ -46,10 +46,10 @@ foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
   $session = $row["session"];
 
   echo "Retrieving data for session " . $session . "\n";
-#  get_propositions($session, 1);
-#  get_propositions_committees($session, 1);
-#  get_candidate_names($session, 1);
-#  get_candidate_data($session, 1);
+  get_propositions($session, 1);
+  get_propositions_committees($session, 1);
+  get_candidate_names($session, 1);
+  get_candidate_data($session, 1);
 }
 
 echo "check for missing proposition committes";
@@ -77,7 +77,7 @@ foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
 }
 
 # Process an update - the processes the ftp data
-#system("php update_data.php");
+system("php update_data.php");
 
 echo "Install complete....";
-?>
+
