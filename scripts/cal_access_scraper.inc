@@ -190,6 +190,8 @@ function parse_election_data($election_string)
 # get propositions list for specific session
 function get_propositions($session, $err_chk)
 {
+  global $script_db;
+
   $html_page = get_html_file("http://cal-access.sos.ca.gov/Campaign/Measures/list.aspx?session=$session");
   if (! $html_page && $err_chk == 1) {} else {
     $result = $script_db->prepare("DELETE FROM cal_access_propositions WHERE session = ?");
@@ -243,6 +245,7 @@ function get_propositions($session, $err_chk)
 #===============================================================================================
 # get proposition committes for specific session
   function get_propositions_committees ($session, $err_chk) {
+  global $script_db;
     script_query ("DELETE FROM cal_access_propositions_committees WHERE session = $session");
 
     $query = "SELECT proposition_id, link FROM cal_access_propositions WHERE session = $session";
@@ -278,6 +281,7 @@ function get_propositions($session, $err_chk)
 #===============================================================================================
 # get all candidate names for a specific session
   function get_candidate_names ($session, $err_chk) {
+  global $script_db;
     $alphabet = array ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
 
     $query = "DELETE FROM cal_access_candidates WHERE session = $session"; script_query ($query);
@@ -311,6 +315,7 @@ function get_propositions($session, $err_chk)
 #===============================================================================================
 # get all candidate data for a specific session and candidate
   function get_candidate_data ($session, $err_chk) {
+  global $script_db;
     $query = "SELECT id, link FROM cal_access_candidates WHERE session = $session";
     $result = script_query ($query);
     while ($row = $result->fetch_assoc()) {
@@ -392,6 +397,7 @@ function get_propositions($session, $err_chk)
 #===============================================================================================
 # get specific committee information
   function get_committee_information ($session, $filer_id, $err_chk) {
+  global $script_db;
     $link = "http://cal-access.sos.ca.gov/Campaign/Committees/Detail.aspx?id={$filer_id}&session={$session}";
     $type = "UNKNOWN";
     
@@ -412,6 +418,7 @@ function get_propositions($session, $err_chk)
 #===============================================================================================
 # get general information for a specific committee
   function get_committee_general_information ($session, $filer_id, $err_chk) {
+  global $script_db;
     $query = "SELECT link FROM cal_access_committees WHERE session = $session AND filer_id = $filer_id";
     $result = script_query ($query); $row = $result->fetch_assoc();
 
