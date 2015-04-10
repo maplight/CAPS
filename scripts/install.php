@@ -47,8 +47,8 @@ foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
 
    echo "Retrieving data for session " . $session . "\n";
 #   get_propositions($session, 1);
-    get_propositions_committees($session, 1);
-#    get_candidate_names($session, 1);
+#    get_propositions_committees($session, 1);
+    get_candidate_names($session, 1);
 #    get_candidate_data($session, 1);
 }
 

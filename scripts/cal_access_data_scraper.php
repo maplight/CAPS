@@ -75,5 +75,4 @@
                       ON (cal_access_committees.filer_id = used_committees.filer_id AND cal_access_committees.session = used_committees.session)
             WHERE ISNULL(cal_access_committees.filer_id);";
   script_query ($query);
-?>
 

@@ -278,42 +278,46 @@ function get_propositions_committees($session, $err_chk)
 }
 
 
-
-
-
-
 #===============================================================================================
 # get all candidate names for a specific session
-  function get_candidate_names ($session, $err_chk) {
+function get_candidate_names($session, $err_chk)
+{
   global $script_db;
-    $alphabet = array ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
 
-    $query = "DELETE FROM cal_access_candidates WHERE session = $session"; script_query ($query);
-    $query = "DELETE FROM cal_access_candidates_names WHERE session = $session"; script_query ($query);
-    $query = "DELETE FROM cal_access_candidates_spending_limits WHERE session = $session"; script_query ($query);
-    $query = "DELETE FROM cal_access_candidates_races WHERE session = $session"; script_query ($query);
-    $query = "DELETE FROM cal_access_candidates_committees WHERE session = $session"; script_query ($query);
+  $alphabet = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
+  $result = $script_db->prepare("DELETE FROM cal_access_candidates WHERE session = ?"); $result->execute(array($session));
+  $result = $script_db->prepare("DELETE FROM cal_access_candidates_names WHERE session = ?"); $result->execute(array($session));
+  $result = $script_db->prepare("DELETE FROM cal_access_candidates_spending_limits WHERE session = ?"); $result->execute(array($session));
+  $result = $script_db->prepare("DELETE FROM cal_access_candidates_races WHERE session = ?"); $result->execute(array($session));
+  $result = $script_db->prepare("DELETE FROM cal_access_candidates_committees WHERE session = ?"); $result->execute(array($session));
 
-    foreach ($alphabet as $letter) {
-      $html_page = get_html_file ("http://cal-access.sos.ca.gov/Campaign/Candidates/list.aspx?view=name&letter=$letter&session=$session");
-      if (! $html_page && $err_chk == 1) {} else {
-        foreach ($html_page->find ("table[id=_ctl3_candidates]") as $table) {
-          foreach ($table->find ("tr") as $tablerow) {
-            foreach ($tablerow->find ("td") as $tabledata) {
-              $name = addslashes ($tabledata->plaintext);
-              if ($name != "NAME") {
-                $link_element = $tabledata->find ("a");
-                $link = addslashes (trim ("http://cal-access.sos.ca.gov/Campaign/Candidates/" . htmlspecialchars_decode ($link_element[0]->href)));
-                $id = substr (substr ($link, 0, strpos ($link, "&")), strpos (substr ($link, 0, strpos ($link, "&")), "id=") + 3);
-                script_query ("INSERT INTO cal_access_candidates (session, name, id, link) VALUES ($session, '$name', $id, '$link')");
-              }
+  foreach ($alphabet as $letter) {
+    $html_page = get_html_file("http://cal-access.sos.ca.gov/Campaign/Candidates/list.aspx?view=name&letter=$letter&session=$session");
+    if (! $html_page && $err_chk == 1) {} else {
+      foreach ($html_page->find("table[id=_ctl3_candidates]") as $table) {
+        foreach ($table->find("tr") as $tablerow) {
+          foreach ($tablerow->find("td") as $tabledata) {
+            $name = addslashes($tabledata->plaintext);
+            if ($name != "NAME") {
+              $link_element = $tabledata->find("a");
+              $link = addslashes(trim ("http://cal-access.sos.ca.gov/Campaign/Candidates/" . htmlspecialchars_decode($link_element[0]->href)));
+              $id = substr(substr($link, 0, strpos($link, "&")), strpos(substr($link, 0, strpos($link, "&")), "id=") + 3);
+              $result = $script_db->prepare("INSERT INTO cal_access_candidates (session, name, id, link) VALUES (?, ?, ?, ?)");
+              $result->execute(array($session, $name, $id, $link));
             }
           }
         }
-        $html_page->clear ();
       }
+      $html_page->clear ();
     }
   }
+}
+
+
+
+
+
+
 
 
 #===============================================================================================
@@ -396,6 +400,9 @@ function get_propositions_committees($session, $err_chk)
       }
     }
   }
+
+
+
 
 
 #===============================================================================================
