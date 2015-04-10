@@ -1,18 +1,7 @@
 <?php
   require ("simple_html_dom.php");
   require ("../connect.php");
-  $script_conn = mysqli_init ();
-  mysqli_options ($script_conn, MYSQLI_OPT_LOCAL_INFILE, true);
-  mysqli_real_connect ($script_conn, $hostname, $script_login, $script_pwd, "ca_process");
-
-
-#===============================================================================================
-# process script query
-  function script_query ($query) {
-    global $script_conn;
-    $ret = $script_conn->query (str_replace (array ("\\'", "\\\"", "\\n", "\\\\", "\\r"), array ("'", "\"", "\n", "\\", "\r"), mysqli_real_escape_string ($script_conn, $query)));
-    return $ret;
-  }
+  require ("script_connect.php");
 
 
 #===============================================================================================
@@ -497,4 +486,23 @@
     $cleaned_amount = str_replace (array ("(", ")", "-"), "", $cleaned_amount);
     return floatval ($cleaned_amount) * $multiplier;
   }
-?>
+
+
+#===============================================================================================
+# load an sql file
+function process_sql_file($filename)
+{
+    $sql_contents = file_get_contents($filename);
+    $sql_contents = rtrim(rtrim($sql_contents), ";");
+    $sql_contents = preg_split("/;(\n|\r)/", $sql_contents);
+
+    foreach ($sql_contents as $query) {
+        if($query){
+            $result = script_query (trim($query));
+            if (!$result)
+                echo "Error on import of " . $query . "\n";
+        }
+    }
+}
+
+
