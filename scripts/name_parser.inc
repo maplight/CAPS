@@ -51,24 +51,16 @@ function split_names($name)
     for ($i = 0; $i < count($name_split); $i++) {
       $tmp_name = trim(strtoupper(str_replace(".", "", $name_split[$i])));
 
-      $result = script_query ("SELECT COUNT(*) AS count FROM nparser_titles WHERE Title = '" . str_replace("'", "", $tmp_name) . "'");
-      $row = $result->fetch_assoc();
-
-    $result = $script_db->prepare("UPDATE cal_access_committees SET phone = ?, status = ?, last_date = ?, report_start = ?, report_end = ?, total_start = ?, total_end = ?, report_contributions = ?, report_expenditures = ?, total_contributions = ?, total_expenditures = ?, ending_cash = ?, general_information = 1 WHERE session = ? AND filer_id = ?");
-    $result->execute(array($phone, $status, $last_date, $report_start, $report_end, $total_start, $total_end, $report_contributions, $report_expenditures, $total_contributions, $total_expenditures, $ending_cash, $session, $filer_id));
-$result->fetchAll()
-
+      $result = $script_db->prepare("SELECT COUNT(*) AS count FROM nparser_titles WHERE Title = ?");
+      $result->execute(array($tmp_name));
+      $row = $result->fetch(PDO::FETCH_ASSOC);
       if ($row["count"] != 0) {
         $prefix = $prefix . " " . $name_split[$i];
         $unset[] = $i;
      } else {
-        $result = script_query ("SELECT COUNT(*) AS count FROM nparser_suffixes WHERE Suffix = '" . str_replace("'", "", $tmp_name) . "'");
-        $row = $result->fetch_assoc();
-
-    $result = $script_db->prepare("UPDATE cal_access_committees SET phone = ?, status = ?, last_date = ?, report_start = ?, report_end = ?, total_start = ?, total_end = ?, report_contributions = ?, report_expenditures = ?, total_contributions = ?, total_expenditures = ?, ending_cash = ?, general_information = 1 WHERE session = ? AND filer_id = ?");
-    $result->execute(array($phone, $status, $last_date, $report_start, $report_end, $total_start, $total_end, $report_contributions, $report_expenditures, $total_contributions, $total_expenditures, $ending_cash, $session, $filer_id));
-$result->fetchAll()
-
+        $result = $script_db->prepare("SELECT COUNT(*) AS count FROM nparser_suffixes WHERE Suffix = ?");
+        $result->execute(array($tmp_name));
+        $row = $result->fetch(PDO::FETCH_ASSOC);
         if ($row["count"] != 0) {
           $suffix = $name_split[$i] . " " . $suffix;
           $unset[] = $i;
@@ -98,14 +90,9 @@ $result->fetchAll()
     $last_name = $name_split[$end_name];
     for ($i = $end_name; $i >= 0; $i--) {
       $tmp_name = trim(strtoupper(str_replace(".", "", $name_split[$i])));
-
-      $result = script_query ("SELECT COUNT(*) AS count FROM nparser_surname_prefixes WHERE SurnamePrefix = '" . str_replace("'", "", $tmp_name) . "'");
-      $row = $result->fetch_assoc();
-
-    $result = $script_db->prepare("UPDATE cal_access_committees SET phone = ?, status = ?, last_date = ?, report_start = ?, report_end = ?, total_start = ?, total_end = ?, report_contributions = ?, report_expenditures = ?, total_contributions = ?, total_expenditures = ?, ending_cash = ?, general_information = 1 WHERE session = ? AND filer_id = ?");
-    $result->execute(array($phone, $status, $last_date, $report_start, $report_end, $total_start, $total_end, $report_contributions, $report_expenditures, $total_contributions, $total_expenditures, $ending_cash, $session, $filer_id));
-$result->fetchAll()
-
+      $result = $script_db->prepare("SELECT COUNT(*) AS count FROM nparser_surname_prefixes WHERE SurnamePrefix = ?");
+      $result->execute(array($tmp_name));
+      $row = $result->fetch(PDO::FETCH_ASSOC);
       if ($row["count"] != 0) {
         $last_name = $name_split[$i] . " " . $last_name; $end_name = $i - 1;
       } else {
@@ -114,33 +101,19 @@ $result->fetchAll()
     }
     if ($end_name > 0) {for ($i = 1; $i < $end_name; $i++) {$middle_name .= $name_split[$i] . " ";}}
   }
-
-  $result = script_query ("SELECT Gender, Rank FROM nparser_names WHERE Name = '" . str_replace("'", "", $first_name) . "'");
-  $row = $result->fetch_assoc();
-
-    $result = $script_db->prepare("UPDATE cal_access_committees SET phone = ?, status = ?, last_date = ?, report_start = ?, report_end = ?, total_start = ?, total_end = ?, report_contributions = ?, report_expenditures = ?, total_contributions = ?, total_expenditures = ?, ending_cash = ?, general_information = 1 WHERE session = ? AND filer_id = ?");
-    $result->execute(array($phone, $status, $last_date, $report_start, $report_end, $total_start, $total_end, $report_contributions, $report_expenditures, $total_contributions, $total_expenditures, $ending_cash, $session, $filer_id));
-$result->fetchAll()
-
+  $result = $script_db->prepare("SELECT Gender, Rank FROM nparser_names WHERE Name = ?");
+  $result->execute(array($first_name));
+  $row = $result->fetch(PDO::FETCH_ASSOC);
   $gender = $row["Gender"]; $name_rank = $row["Rank"];
   if ($gender == "") {
-    $result = script_query ("SELECT Gender FROM nparser_names WHERE Name = '" . str_replace("'", "", $middle_name) . "'");
-    $row = $result->fetch_assoc();
-
-    $result = $script_db->prepare("UPDATE cal_access_committees SET phone = ?, status = ?, last_date = ?, report_start = ?, report_end = ?, total_start = ?, total_end = ?, report_contributions = ?, report_expenditures = ?, total_contributions = ?, total_expenditures = ?, ending_cash = ?, general_information = 1 WHERE session = ? AND filer_id = ?");
-    $result->execute(array($phone, $status, $last_date, $report_start, $report_end, $total_start, $total_end, $report_contributions, $report_expenditures, $total_contributions, $total_expenditures, $ending_cash, $session, $filer_id));
-$result->fetchAll()
-
+    $result = $script_db->prepare("SELECT Gender FROM nparser_names WHERE Name = ?");
+    $result->execute(array($middle_name));
+    $row = $result->fetch(PDO::FETCH_ASSOC);
     $gender = $row["Gender"];
   }
-
-  $result = script_query ("SELECT Rank FROM nparser_surnames WHERE Surname = REPLACE('" . str_replace("'", "", $last_name) . "', ' ', '')");
-  $row = $result->fetch_assoc();
-
-    $result = $script_db->prepare("UPDATE cal_access_committees SET phone = ?, status = ?, last_date = ?, report_start = ?, report_end = ?, total_start = ?, total_end = ?, report_contributions = ?, report_expenditures = ?, total_contributions = ?, total_expenditures = ?, ending_cash = ?, general_information = 1 WHERE session = ? AND filer_id = ?");
-    $result->execute(array($phone, $status, $last_date, $report_start, $report_end, $total_start, $total_end, $report_contributions, $report_expenditures, $total_contributions, $total_expenditures, $ending_cash, $session, $filer_id));
-$result->fetchAll()
-
+  $result = $script_db->prepare("SELECT Rank FROM nparser_surnames WHERE Surname = REPLACE(?, ' ', '')");
+  $result->execute(array($last_name));
+  $row = $result->fetch(PDO::FETCH_ASSOC);
   $surname_rank = $row["Rank"];
 
   $names = array();

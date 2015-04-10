@@ -7,3 +7,4 @@
   $web_db = new PDO("mysql:host={$hostname};dbname=ca_search;charset=utf8", $web_login, $web_pwd);
   $web_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   $web_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+

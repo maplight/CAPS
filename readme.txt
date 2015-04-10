@@ -10,8 +10,13 @@ This system will use 2 MySQL databases, one called ca_process and the other call
 
 Installation:
 Step 1: Make sure the following configuration files are in your MySQL server configuration file:
+Under [client]
+local-infile = 1
+
+Under [mysqld]
 ft_min_word_len = 1
 ft_stopword_file = ""
+
 
 Step 2: Make sure your SQL server can process LOAD DATA LOCAL files, as this is used to load in the files downloaded via FTP.
 
