@@ -207,7 +207,7 @@ function get_propositions($session, $err_chk)
         foreach ($table->find("a") as $anchor) {
           # Get id# from html link
           $id = substr(substr($anchor->href, 0, strpos($anchor->href, "&")), strpos(substr($anchor->href, 0, strpos($anchor->href, "&")), "id=") + 3);
-          $name = addslashes(trim($anchor->plaintext));
+          $name = trim($anchor->plaintext);
           $link = "http://cal-access.sos.ca.gov/Campaign/Measures/". trim($anchor->href);
           $result = $script_db->prepare("INSERT INTO cal_access_propositions (session, proposition_id, election_date, name, link) VALUES (?, ?, ?, ?, ?)");
           $result->execute(array($session, $id, $election_date, $name, $link));
@@ -225,7 +225,7 @@ function get_propositions($session, $err_chk)
         foreach ($table->find ("a") as $anchor) {
           # Get id# from html link
           $id = substr(substr($anchor->href, 0, strpos($anchor->href, "&")), strpos(substr($anchor->href, 0, strpos($anchor->href, "&")), "id=") + 3);
-          $name = addslashes(trim($anchor->plaintext));
+          $name = trim($anchor->plaintext);
           $link = "http://cal-access.sos.ca.gov/Campaign/Measures/". trim($anchor->href);
           $result = $script_db->prepare("INSERT INTO cal_access_propositions (session, proposition_id, election_date, name, link) VALUES (?, ?, ?, ?, ?)");
           $result->execute(array($session, $id, $election_date, $name, $link));
@@ -248,19 +248,19 @@ function get_propositions_committees($session, $err_chk)
   $result = $script_db->prepare("SELECT proposition_id, link FROM cal_access_propositions WHERE session = ?");
   $result->execute(array($session));
   foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-    $html_page = get_html_file ($row["link"]);
+    $html_page = get_html_file($row["link"]);
     if (! $html_page && $err_chk == 1) {} else {
-      foreach ($html_page->find ("table") as $table) {
-        if (strpos ($table->innertext, "COMMITTEE ID") !== false && strpos ($table->innertext, "category side nav starts here") === false) {
+      foreach ($html_page->find("table") as $table) {
+        if (strpos($table->innertext, "COMMITTEE ID") !== false && strpos($table->innertext, "category side nav starts here") === false) {
           $tr_count = 0; $filer_id = 0; $position = "";
-          foreach ($table->find ("tr") as $tablerow) {
+          foreach ($table->find("tr") as $tablerow) {
             $td_count = 0;
-            foreach ($tablerow->find ("td") as $tabledata) {
+            foreach ($tablerow->find("td") as $tabledata) {
               if ($tr_count > 0) {
                 switch ($td_count) {
-                  case 0: $filer_id = trim ($tabledata->plaintext);
-                  case 1: foreach ($tabledata->find("a") as $anchor) {$id = substr (substr ($anchor->href, 0, strpos ($anchor->href, "&")), strpos (substr ($anchor->href, 0, strpos ($anchor->href, "&")), "id=") + 3);}
-                  case 2: $position = addslashes (trim ($tabledata->plaintext));
+                  case 0: $filer_id = trim($tabledata->plaintext);
+                  case 1: foreach ($tabledata->find("a") as $anchor) {$id = substr(substr($anchor->href, 0, strpos($anchor->href, "&")), strpos(substr($anchor->href, 0, strpos($anchor->href, "&")), "id=") + 3);}
+                  case 2: $position = trim($tabledata->plaintext);
                 }
               }
               $td_count++;
@@ -297,10 +297,10 @@ function get_candidate_names($session, $err_chk)
       foreach ($html_page->find("table[id=_ctl3_candidates]") as $table) {
         foreach ($table->find("tr") as $tablerow) {
           foreach ($tablerow->find("td") as $tabledata) {
-            $name = addslashes($tabledata->plaintext);
+            $name = $tabledata->plaintext;
             if ($name != "NAME") {
               $link_element = $tabledata->find("a");
-              $link = addslashes(trim ("http://cal-access.sos.ca.gov/Campaign/Candidates/" . htmlspecialchars_decode($link_element[0]->href)));
+              $link = trim("http://cal-access.sos.ca.gov/Campaign/Candidates/" . htmlspecialchars_decode($link_element[0]->href));
               $id = substr(substr($link, 0, strpos($link, "&")), strpos(substr($link, 0, strpos($link, "&")), "id=") + 3);
               $result = $script_db->prepare("INSERT INTO cal_access_candidates (session, name, id, link) VALUES (?, ?, ?, ?)");
               $result->execute(array($session, $name, $id, $link));
@@ -340,8 +340,8 @@ function get_candidate_data($session, $err_chk)
             $td_count = 0;
             foreach ($tablerow->find("td") as $tabledata) {
               switch ($data_in_process) {
-                case "HISTORICAL": if (trim($tabledata->plaintext) != "PARTY") {$historical_names[] = addslashes(trim($tabledata->plaintext));} break;
-                case "PARTY": $party = addslashes(trim($tabledata->plaintext)); $data_in_process = ""; break;
+                case "HISTORICAL": if (trim($tabledata->plaintext) != "PARTY") {$historical_names[] = trim($tabledata->plaintext);} break;
+                case "PARTY": $party = trim($tabledata->plaintext); $data_in_process = ""; break;
                 case "LIMITS":
                     switch ($td_count) {
                       case 0: $limit_election = trim($tabledata->plaintext); break;
@@ -416,112 +416,110 @@ function get_candidate_data($session, $err_chk)
 }
 
 
-
-
-
-
-
-
-
 #===============================================================================================
 # get specific committee information
-  function get_committee_information ($session, $filer_id, $err_chk) {
+function get_committee_information($session, $filer_id, $err_chk)
+{
   global $script_db;
-    $link = "http://cal-access.sos.ca.gov/Campaign/Committees/Detail.aspx?id={$filer_id}&session={$session}";
-    $type = "UNKNOWN";
-    
-    $html_page = get_html_file ($link);
-    if (! $html_page && $err_chk == 1) {} else {
-      $name_span = $html_page->find ("span[id=lblFilerName]");
-      $name = addslashes ($name_span[0]->innertext);
 
-      if ($name != "NAME") {
-        $query = "INSERT INTO cal_access_committees (session, name, link, type, filer_id) VALUES ($session, '$name', '$link', '$type', $filer_id)";
-        script_query ($query);
-        get_committee_general_information ($session, $filer_id, $err_chk);
-      }
+  $link = "http://cal-access.sos.ca.gov/Campaign/Committees/Detail.aspx?id={$filer_id}&session={$session}";
+  $type = "UNKNOWN";
+    
+  $html_page = get_html_file($link);
+  if (! $html_page && $err_chk == 1) {} else {
+    $name_span = $html_page->find("span[id=lblFilerName]");
+    $name = $name_span[0]->innertext;
+
+    if ($name != "NAME") {
+      $result = $script_db->prepare("INSERT INTO cal_access_committees (session, name, link, type, filer_id) VALUES (?, ?, ?, ?, ?)");
+      $result->execute(array($session, $name, $link, $type, $filer_id));
+      get_committee_general_information($session, $filer_id, $err_chk);
     }
   }
+}
 
 
 #===============================================================================================
 # get general information for a specific committee
-  function get_committee_general_information ($session, $filer_id, $err_chk) {
+function get_committee_general_information ($session, $filer_id, $err_chk)
+{
   global $script_db;
-    $query = "SELECT link FROM cal_access_committees WHERE session = $session AND filer_id = $filer_id";
-    $result = script_query ($query); $row = $result->fetch_assoc();
 
-    $html_page = get_html_file ($row["link"]); # load the page in
-    if (! $html_page && $err_chk == 1) {} else {
-      # get historical names
-      foreach ($html_page->find ("table[id=_ctl3_names]") as $table) {
-        foreach ($table->find ("tr") as $tablerow) {
-          foreach ($tablerow->find ("td") as $tabledata) {
-            if ($tabledata->plaintext != "HISTORICAL NAMES FOR THIS COMMITTEE") {
-              $name = addslashes (trim ($tabledata->plaintext));
-              $query = "INSERT INTO cal_access_committees_names (session, filer_id, name) VALUES ($session, $filer_id, '$name')"; script_query ($query);
-            }
+  $result = $script_db->prepare("SELECT link FROM cal_access_committees WHERE session = ? AND filer_id = ?");
+  $result->execute(array($session, $filer_id));
+  $row = $result->fetch(PDO::FETCH_ASSOC);
+
+  $html_page = get_html_file($row["link"]); # load the page in
+  if (! $html_page && $err_chk == 1) {} else {
+    # get historical names
+    foreach ($html_page->find("table[id=_ctl3_names]") as $table) {
+      foreach ($table->find("tr") as $tablerow) {
+        foreach ($tablerow->find("td") as $tabledata) {
+          if ($tabledata->plaintext != "HISTORICAL NAMES FOR THIS COMMITTEE") {
+            $name = trim($tabledata->plaintext);
+            $result = $script_db->prepare("INSERT INTO cal_access_committees_names (session, filer_id, name) VALUES (?, ?, ?)");
+            $result->execute(array($session, $filer_id, $name));
           }
         }
       }
-
-      # reset values to empty
-      $phone = "";
-      $status = "";
-      $last_date = "";
-      $report_start = "";
-      $report_end = "";
-      $total_start = "";
-      $total_end = "";
-      $report_contributions = "NULL";
-      $report_expenditures = "NULL";
-      $total_contributions = "NULL";
-      $total_expenditures = "NULL";
-      $ending_cash = "NULL";
-
-      # get phone from the page
-      $page_phone = $html_page->find ("span[id=_ctl3_lblFilerAddress]");
-      if (array_key_exists (0, $page_phone)) {$phone = addslashes (trim ($page_phone[0]->plaintext));}
-
-      # get summary information from page - cycle through each table, but only use the one that has "SUMMARY INFORMATION"  and is not the full page table
-      foreach ($html_page->find ("table") as $table) {
-        if (strpos ($table->innertext, "SUMMARY INFORMATION") !== false && strpos ($table->innertext, "category side nav starts here") === false) {
-          foreach ($table->find ("tr") as $tablerow) {
-            $count = 0;
-            foreach ($tablerow->find ("td") as $tabledata) {
-              switch ($count) {
-                case 0: $title = substr (trim ($tabledata->plaintext), 0, 10); $full_title = trim ($tabledata->plaintext); break;
-                case 1: switch ($title) {
-                                 case "CURRENT ST": $status = addslashes (trim ($tabledata->plaintext)); break;
-                                 case "LAST REPOR": $last_date = date ("Y-m-d", strtotime ($tabledata->plaintext)); break;
-                                 case "REPORTING ": $report_start = date ("Y-m-d", strtotime (substr (trim ($tabledata->plaintext), 0, 10)));
-                                                                         $report_end = date ("Y-m-d", strtotime (substr (trim ($tabledata->plaintext), -10))); break;
-                                 case "CONTRIBUTI": $report_contributions = get_amount ($tabledata->plaintext); break;
-                                 case "EXPENDITUR": $report_expenditures = get_amount ($tabledata->plaintext); break;
-                                 case "TOTAL CONT": $total_contributions = get_amount ($tabledata->plaintext);
-                                                                         $title_words = explode (" ", $full_title);
-                                                                         $total_start = date ("Y-m-d", strtotime ($title_words[2]));
-                                                                         $total_end = date ("Y-m-d", strtotime ($title_words[4])); break;
-                                 case "TOTAL EXPE": $total_expenditures = get_amount ($tabledata->plaintext);
-                                                                         $title_words = explode (" ", $full_title);
-                                                                         $total_start = date ("Y-m-d", strtotime ($title_words[2]));
-                                                                         $total_end = date ("Y-m-d", strtotime ($title_words[4])); break;
-                                 case "ENDING CAS": $ending_cash = get_amount ($tabledata->plaintext); break;
-                               }
-                               break;
-              }
-              $count++;
-            }
-          }
-        }
-      }
-
-      $query = "UPDATE cal_access_committees SET phone = '$phone', status = '$status', last_date = '$last_date', report_start = '$report_start', report_end = '$report_end', total_start = '$total_start', total_end = '$total_end', report_contributions = $report_contributions, report_expenditures = $report_expenditures, total_contributions = $total_contributions, total_expenditures = $total_expenditures, ending_cash = $ending_cash, general_information = 1 WHERE session = $session AND filer_id = $filer_id";
-      script_query ($query);
-
-      $html_page->clear ();
     }
+
+    # reset values to empty
+    $phone = "";
+    $status = "";
+    $last_date = "";
+    $report_start = "";
+    $report_end = "";
+    $total_start = "";
+    $total_end = "";
+    $report_contributions = "NULL";
+    $report_expenditures = "NULL";
+    $total_contributions = "NULL";
+    $total_expenditures = "NULL";
+    $ending_cash = "NULL";
+
+    # get phone from the page
+    $page_phone = $html_page->find("span[id=_ctl3_lblFilerAddress]");
+    if (array_key_exists(0, $page_phone)) {$phone = trim($page_phone[0]->plaintext);}
+
+    # get summary information from page - cycle through each table, but only use the one that has "SUMMARY INFORMATION"  and is not the full page table
+    foreach ($html_page->find("table") as $table) {
+      if (strpos ($table->innertext, "SUMMARY INFORMATION") !== false && strpos($table->innertext, "category side nav starts here") === false) {
+        foreach ($table->find ("tr") as $tablerow) {
+          $count = 0;
+          foreach ($tablerow->find ("td") as $tabledata) {
+            switch ($count) {
+              case 0: $title = substr(trim($tabledata->plaintext), 0, 10); $full_title = trim($tabledata->plaintext); break;
+              case 1: switch ($title) {
+                               case "CURRENT ST": $status = trim($tabledata->plaintext); break;
+                               case "LAST REPOR": $last_date = date("Y-m-d", strtotime($tabledata->plaintext)); break;
+                               case "REPORTING ": $report_start = date("Y-m-d", strtotime(substr(trim($tabledata->plaintext), 0, 10)));
+                                                                       $report_end = dat ("Y-m-d", strtotime(substr(trim($tabledata->plaintext), -10))); break;
+                               case "CONTRIBUTI": $report_contributions = get_amount($tabledata->plaintext); break;
+                               case "EXPENDITUR": $report_expenditures = get_amount($tabledata->plaintext); break;
+                               case "TOTAL CONT": $total_contributions = get_amount($tabledata->plaintext);
+                                                                       $title_words = explode(" ", $full_title);
+                                                                       $total_start = date("Y-m-d", strtotime($title_words[2]));
+                                                                       $total_end = date("Y-m-d", strtotime($title_words[4])); break;
+                               case "TOTAL EXPE": $total_expenditures = get_amount($tabledata->plaintext);
+                                                                       $title_words = explode(" ", $full_title);
+                                                                       $total_start = date("Y-m-d", strtotime($title_words[2]));
+                                                                       $total_end = date("Y-m-d", strtotime($title_words[4])); break;
+                               case "ENDING CAS": $ending_cash = get_amount($tabledata->plaintext); break;
+                             }
+                             break;
+            }
+            $count++;
+          }
+        }
+      }
+    }
+    $result = $script_db->prepare("UPDATE cal_access_committees SET phone = ?, status = ?, last_date = ?, report_start = ?, report_end = ?, total_start = ?, total_end = ?, report_contributions = ?, report_expenditures = ?, total_contributions = ?, total_expenditures = ?, ending_cash = ?, general_information = 1 WHERE session = ? AND filer_id = ?");
+    $result->execute(array($phone, $status, $last_date, $report_start, $report_end, $total_start, $total_end, $report_contributions, $report_expenditures, $total_contributions, $total_expenditures, $ending_cash, $session, $filer_id));
+
+    $html_page->clear();
   }
+}
 
 
 #===============================================================================================
