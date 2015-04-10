@@ -1053,6 +1053,11 @@ where
     )
 ;
 
+update contributions_full_temp
+set ForgivenLoan = 'Y'
+where TranType = 'F'
+;
+
 update
   contributions_full_temp a
   join ftp_text_memo b
