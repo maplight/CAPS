@@ -316,7 +316,8 @@ function get_candidate_names($session, $err_chk)
 
 #===============================================================================================
 # get all candidate data for a specific session and candidate
-function get_candidate_data ($session, $err_chk) {
+function get_candidate_data($session, $err_chk)
+{
   global $script_db;
 
   $result = $script_db->prepare("SELECT id, link FROM cal_access_candidates WHERE session = ?");
@@ -390,13 +391,17 @@ function get_candidate_data ($session, $err_chk) {
 
       $result = $script_db->prepare("UPDATE cal_access_candidates SET party = ? WHERE session = ? AND id = ?");
       $result->execute(array($party, $session, $row["id"]));
-      foreach ($historical_names as $name) {if ($name != "") {
-        $result = $script_db->prepare("INSERT INTO cal_access_candidates_names (session, id, name) VALUES (?, ?, ?)");
-        $result->execute(array($session, $row["id"], $name));
+      foreach ($historical_names as $name) {
+        if ($name != "") {
+          $result = $script_db->prepare("INSERT INTO cal_access_candidates_names (session, id, name) VALUES (?, ?, ?)");
+          $result->execute(array($session, $row["id"], $name));
+        }
       }
-      foreach ($spending_limits as $election => $accepted) {if ($election != "") {
-        $result = $script_db->prepare("INSERT INTO cal_access_candidates_spending_limits (session, id, election, accepted) VALUES (?, ?, ?, ?)");
-        $result->execute(array($session, $row["id"], $election, $accepted));
+      foreach ($spending_limits as $election => $accepted) {
+        if ($election != "") {
+          $result = $script_db->prepare("INSERT INTO cal_access_candidates_spending_limits (session, id, election, accepted) VALUES (?, ?, ?, ?)");
+          $result->execute(array($session, $row["id"], $election, $accepted));
+        }
       }
       foreach ($races as $race_data) {
         $result = $script_db->prepare("INSERT INTO cal_access_candidates_races (session, id, election_id, office, result, parsed) VALUES (?, ?, ?, ?, ?, ?)");
