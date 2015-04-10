@@ -236,46 +236,50 @@ function get_propositions($session, $err_chk)
 }
 
 
-
-
-
-
-
-
 #===============================================================================================
 # get proposition committes for specific session
-  function get_propositions_committees ($session, $err_chk) {
+function get_propositions_committees($session, $err_chk)
+{
   global $script_db;
-    script_query ("DELETE FROM cal_access_propositions_committees WHERE session = $session");
 
-    $query = "SELECT proposition_id, link FROM cal_access_propositions WHERE session = $session";
-    $result = script_query ($query);
-    while ($row = $result->fetch_assoc()) {
-      $html_page = get_html_file ($row["link"]);
-      if (! $html_page && $err_chk == 1) {} else {
-        foreach ($html_page->find ("table") as $table) {
-          if (strpos ($table->innertext, "COMMITTEE ID") !== false && strpos ($table->innertext, "category side nav starts here") === false) {
-            $tr_count = 0; $filer_id = 0; $position = "";
-            foreach ($table->find ("tr") as $tablerow) {
-              $td_count = 0;
-              foreach ($tablerow->find ("td") as $tabledata) {
-                if ($tr_count > 0) {
-                  switch ($td_count) {
-                    case 0: $filer_id = trim ($tabledata->plaintext);
-                    case 1: foreach ($tabledata->find("a") as $anchor) {$id = substr (substr ($anchor->href, 0, strpos ($anchor->href, "&")), strpos (substr ($anchor->href, 0, strpos ($anchor->href, "&")), "id=") + 3);}
-                    case 2: $position = addslashes (trim ($tabledata->plaintext));
-                  }
+  $result = $script_db->prepare("DELETE FROM cal_access_propositions_committees WHERE session = ?");
+  $result->execute(array($session));
+
+  $result = $script_db->prepare("SELECT proposition_id, link FROM cal_access_propositions WHERE session = ?");
+  $result->execute(array($session));
+  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+    $html_page = get_html_file ($row["link"]);
+    if (! $html_page && $err_chk == 1) {} else {
+      foreach ($html_page->find ("table") as $table) {
+        if (strpos ($table->innertext, "COMMITTEE ID") !== false && strpos ($table->innertext, "category side nav starts here") === false) {
+          $tr_count = 0; $filer_id = 0; $position = "";
+          foreach ($table->find ("tr") as $tablerow) {
+            $td_count = 0;
+            foreach ($tablerow->find ("td") as $tabledata) {
+              if ($tr_count > 0) {
+                switch ($td_count) {
+                  case 0: $filer_id = trim ($tabledata->plaintext);
+                  case 1: foreach ($tabledata->find("a") as $anchor) {$id = substr (substr ($anchor->href, 0, strpos ($anchor->href, "&")), strpos (substr ($anchor->href, 0, strpos ($anchor->href, "&")), "id=") + 3);}
+                  case 2: $position = addslashes (trim ($tabledata->plaintext));
                 }
-                $td_count++;
               }
-              if ($tr_count > 0) {script_query ("INSERT INTO cal_access_propositions_committees (session, proposition_id, filer_id, position) VALUES ($session, {$row["proposition_id"]}, $id, '$position')");}
-              $tr_count++;
+              $td_count++;
             }
+            if ($tr_count > 0) {
+              $result = $script_db->prepare("INSERT INTO cal_access_propositions_committees (session, proposition_id, filer_id, position) VALUES (?, ?, ?, ?)");
+              $result->execute(array($session, $row["proposition_id"], $id, $position));
+            }
+            $tr_count++;
           }
         }
       }
     }
   }
+}
+
+
+
+
 
 
 #===============================================================================================
@@ -497,25 +501,27 @@ function get_propositions($session, $err_chk)
 
 #===============================================================================================
 # get html file with repeat before fail
-  function get_html_file ($url) {
-    $retries = 5;
-    $loop_count = 0;
+function get_html_file($url)
+{
+  $retries = 10;
+  $loop_count = 0;
 
-    do {
-      $html = file_get_html ($url);
-      $loop_count++;
-    } while ($loop_count < $retries && $html == "");
+  do {
+    $html = file_get_html($url);
+    $loop_count++;
+  } while ($loop_count < $retries && $html == "");
 
-    return $html; 
-  }
+  return $html; 
+}
 
 
 #===============================================================================================
 # process amount values and set them correctly
-  function get_amount ($str_amount) {
-    $cleaned_amount = str_replace (array ("$", ","), "", $str_amount);
-    if (substr ($cleaned_amount, 0, 1) == "(" || substr ($cleaned_amount, 0, 1) == "-") {$multiplier = -1;} else {$multiplier = 1;}
-    $cleaned_amount = str_replace (array ("(", ")", "-"), "", $cleaned_amount);
-    return floatval ($cleaned_amount) * $multiplier;
-  }
+function get_amount($str_amount)
+{
+  $cleaned_amount = str_replace(array("$", ","), "", $str_amount);
+  if (substr($cleaned_amount, 0, 1) == "(" || substr($cleaned_amount, 0, 1) == "-") {$multiplier = -1;} else {$multiplier = 1;}
+  $cleaned_amount = str_replace(array("(", ")", "-"), "", $cleaned_amount);
+  return floatval($cleaned_amount) * $multiplier;
+}
 
