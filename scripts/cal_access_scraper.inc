@@ -186,55 +186,58 @@ function parse_election_data($election_string)
 }
 
 
-
-
-
-
-
-
-
 #===============================================================================================
 # get propositions list for specific session
-  function get_propositions ($session, $err_chk) {
-    $html_page = get_html_file ("http://cal-access.sos.ca.gov/Campaign/Measures/list.aspx?session=$session");
-    if (! $html_page && $err_chk == 1) {} else {
-      script_query ("DELETE FROM cal_access_propositions WHERE session = $session");
+function get_propositions($session, $err_chk)
+{
+  $html_page = get_html_file("http://cal-access.sos.ca.gov/Campaign/Measures/list.aspx?session=$session");
+  if (! $html_page && $err_chk == 1) {} else {
+    $result = $script_db->prepare("DELETE FROM cal_access_propositions WHERE session = ?");
+    $result->execute(array($session));
 
-      # look for upcoming elections
-      foreach ($html_page->find ("table[id=ListElections1_Panel1]") as $main_table) {
-        foreach ($main_table->find ("table") as $table) {
-          $caption = $table->find ("caption");
-          $election_words = explode (" ", trim($caption[0]->plaintext));
-          $election_date = date ("Y-m-d", strtotime ($election_words[0] . " " . $election_words[1] . " " . $election_words[2]));
+    # look for upcoming elections
+    foreach ($html_page->find("table[id=ListElections1_Panel1]") as $main_table) {
+      foreach ($main_table->find("table") as $table) {
+        $caption = $table->find("caption");
+        $election_words = explode(" ", trim($caption[0]->plaintext));
+        $election_date = date("Y-m-d", strtotime($election_words[0] . " " . $election_words[1] . " " . $election_words[2]));
 
-          foreach ($table->find ("a") as $anchor) {
-            # Get id# from html link
-            $id = substr (substr ($anchor->href, 0, strpos ($anchor->href, "&")), strpos (substr ($anchor->href, 0, strpos ($anchor->href, "&")), "id=") + 3);
-            $name = addslashes (trim ($anchor->plaintext));
-            $link = "http://cal-access.sos.ca.gov/Campaign/Measures/". trim ($anchor->href);
-            script_query ("INSERT INTO cal_access_propositions (session, proposition_id, election_date, name, link) VALUES ($session, $id, '$election_date', '$name', '$link')");
-          }
+        foreach ($table->find("a") as $anchor) {
+          # Get id# from html link
+          $id = substr(substr($anchor->href, 0, strpos($anchor->href, "&")), strpos(substr($anchor->href, 0, strpos($anchor->href, "&")), "id=") + 3);
+          $name = addslashes(trim($anchor->plaintext));
+          $link = "http://cal-access.sos.ca.gov/Campaign/Measures/". trim($anchor->href);
+          $result = $script_db->prepare("INSERT INTO cal_access_propositions (session, proposition_id, election_date, name, link) VALUES (?, ?, ?, ?, ?)");
+          $result->execute(array($session, $id, $election_date, $name, $link));
         }
       }
+    }
 
-      # look for prior elections
-      foreach ($html_page->find ("table[id=ListElections1_Panel2]") as $main_table) {
-        foreach ($main_table->find ("table") as $table) {
-          $caption = $table->find ("caption");
-          $election_words = explode (" ", trim($caption[0]->plaintext));
-          $election_date = date ("Y-m-d", strtotime ($election_words[0] . " " . $election_words[1] . " " . $election_words[2]));
+    # look for prior elections
+    foreach ($html_page->find("table[id=ListElections1_Panel2]") as $main_table) {
+      foreach ($main_table->find("table") as $table) {
+        $caption = $table->find("caption");
+        $election_words = explode(" ", trim($caption[0]->plaintext));
+        $election_date = date("Y-m-d", strtotime($election_words[0] . " " . $election_words[1] . " " . $election_words[2]));
 
-          foreach ($table->find ("a") as $anchor) {
-            # Get id# from html link
-            $id = substr (substr ($anchor->href, 0, strpos ($anchor->href, "&")), strpos (substr ($anchor->href, 0, strpos ($anchor->href, "&")), "id=") + 3);
-            $name = addslashes (trim ($anchor->plaintext));
-            $link = "http://cal-access.sos.ca.gov/Campaign/Measures/". trim ($anchor->href);
-            script_query ("INSERT INTO cal_access_propositions (session, proposition_id, election_date, name, link) VALUES ($session, $id, '$election_date', '$name', '$link')");
-          }
+        foreach ($table->find ("a") as $anchor) {
+          # Get id# from html link
+          $id = substr(substr($anchor->href, 0, strpos($anchor->href, "&")), strpos(substr($anchor->href, 0, strpos($anchor->href, "&")), "id=") + 3);
+          $name = addslashes(trim($anchor->plaintext));
+          $link = "http://cal-access.sos.ca.gov/Campaign/Measures/". trim($anchor->href);
+          $result = $script_db->prepare("INSERT INTO cal_access_propositions (session, proposition_id, election_date, name, link) VALUES (?, ?, ?, ?, ?)");
+          $result->execute(array($session, $id, $election_date, $name, $link));
         }
       }
     }
   }
+}
+
+
+
+
+
+
 
 
 #===============================================================================================

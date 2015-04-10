@@ -45,10 +45,10 @@ function parse_search_form($search_data)
   if($search_data["contrib_select"] == "search") {
     $Donor = "";
     $search_donor = "";
-    foreach(explode(";", $search_data["contributor"]) as $search_item) {
+    foreach (explode(";", $search_data["contributor"]) as $search_item) {
       $word_str = "";
       if(substr(trim($search_item), 0, 1) == "\"") {$quoted = true;} else {$quoted = false;}
-      foreach(explode(" ", $search_item) as $word) {
+      foreach (explode(" ", $search_item) as $word) {
         $word = strtoupper(ltrim(preg_replace("/[^a-z0-9 ]+/i", "", $word), "0"));
         if(trim($word) != "") {$word_str .= "+{$word} ";}
       }
@@ -114,9 +114,9 @@ function parse_search_form($search_data)
       if($search_data["match_candidate"] == "no") {
         $Candidate = "";
         $search_candidate = "";
-        foreach(explode(";", $search_data["search_candidates"]) as $search_item) {
+        foreach (explode(";", $search_data["search_candidates"]) as $search_item) {
           $word_str = "";
-          foreach(explode(" ", $search_item) as $word) {
+          foreach (explode(" ", $search_item) as $word) {
             $word = strtoupper(preg_replace("/[^a-z0-9 ]+/i", "", $word));
             if(trim($word) != "") {$word_str .= "+{$word} ";}
           }
@@ -169,9 +169,9 @@ function parse_search_form($search_data)
         # build proposition search query
         $PropositionSearch = "";
         $search_proposition = "";
-        foreach(explode(";", $search_data["search_propositions"]) as $search_item) {
+        foreach (explode(";", $search_data["search_propositions"]) as $search_item) {
           $word_str = "";
-          foreach(explode(" ", $search_item) as $word) {
+          foreach (explode(" ", $search_item) as $word) {
             $word = strtoupper(preg_replace("/[^a-z0-9 ]+/i", "", $word));
             if(trim($word) != "") {$word_str .= "+{$word} ";}
           }
@@ -221,10 +221,10 @@ function parse_search_form($search_data)
       if($search_data["match_committee"] == "no") {
         $Committee = "";
         $search_committee = "";
-        foreach(explode(";", $search_data["search_committees"]) as $search_item) {
+        foreach (explode(";", $search_data["search_committees"]) as $search_item) {
           $word_str = "";
           if(substr(trim($search_item), 0, 1) == "\"") {$quoted = true;} else {$quoted = false;}
-          foreach(explode(" ", $search_item) as $word) {
+          foreach (explode(" ", $search_item) as $word) {
             $word = strtoupper(preg_replace("/[^a-z0-9 ]+/i", "", $word));
             if(trim($word) != "") {$word_str .= "+{$word} ";}
           }
@@ -298,7 +298,7 @@ function parse_search_form($search_data)
       if(isset($search_data["cycles"])) {
         $criteria["07Contribution_Dates_and_Cycles"] = "";
         $criteria["09Contribution_Cycles"] = "";
-        foreach($search_data["cycles"] as $cycle) {
+        foreach ($search_data["cycles"] as $cycle) {
           $PDO_data[] = $cycle;
           $ElectionCycle .= "contributions_search.ElectionCycle = ? OR ";
           $criteria["09Contribution_Cycles"] .= $cycle . ", ";
@@ -547,7 +547,7 @@ function display_data($parse_data)
                       ORDER BY IsEmployee, CandidateContribution, BallotMeasureContribution";
             $result2 = $web_db->prepare($query);
             $result2->execute($parse_data[3]);
-            foreach($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
+            foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
               if($row2["IsEmployee"] != $employee) {
                 if($row2["IsEmployee"] == "Y") {echo "<b>Employee Contributions</b><br>";} else {if($employee == "Y") {echo "&nbsp;<br>";} echo "<b>Organizational Contributions</b><br>";}
                 $employee = $row2["IsEmployee"];
@@ -581,7 +581,7 @@ function display_data($parse_data)
                       ORDER BY RecipientCommitteeID, RecipientCommitteeNameNormalized";
             $result2 = $web_db->prepare($query);
             $result2->execute($parse_data[3]);
-            foreach($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
+            foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
               echo "<b>({$row2["RecipientCommitteeID"]}) {$row2["RecipientCommitteeNameNormalized"]}</b> has raised $" . number_format($row2["TotalAmount"], 2, ".", ",") . " in " . number_format($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
             }
             echo "</div><hr class=\"caps_hr1\">";
@@ -610,7 +610,7 @@ function display_data($parse_data)
                       LIMIT 5";
             $result2 = $web_db->prepare($query);
             $result2->execute($parse_data[3]);
-            foreach($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
+            foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
               echo "<b>{$row2["RecipientCandidateNameNormalized"]} in {$row2["ElectionCycle"]}</b> has raised $" . number_format($row2["TotalAmount"], 2, ".", ",") . " in " . number_format($row2["TotalCount"], 0, ".", ",") . " contributions<br>";
             }
             echo "</div><hr class=\"caps_hr1\">";
@@ -644,7 +644,7 @@ function display_data($parse_data)
                         ORDER BY Target";
               $result2 = $web_db->prepare($query);
               $result2->execute($parse_data[3]);
-              foreach($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
+              foreach ($result2->fetchAll(PDO::FETCH_ASSOC) as $row2) {
                 if(strpos($row2["Target"], "-") !== false) {
                   echo "<p><b>" . substr($row2["Target"], 0, strrpos($row2["Target"], " - ")) . "</b>" . substr($row2["Target"], strrpos($row2["Target"], " - ")) . "<br>";
                 } else {
@@ -675,7 +675,7 @@ function display_data($parse_data)
       echo "</select>";
       echo "rows&nbsp;&nbsp;&nbsp;&nbsp;Sort by";
       echo "<select id=\"sort\" name=\"sort\" class=\"font_input input_border caps_select4\">";
-      foreach($sort_fields as $sort_item) {
+      foreach ($sort_fields as $sort_item) {
         $item_data = explode("|", $sort_item); 
         if($sort == $item_data[0]) {echo "<option value=\"{$item_data[0]}\" SELECTED>{$item_data[1]}</option>";} else {echo "<option value=\"{$item_data[0]}\">{$item_data[1]}</option>";}
       }
@@ -711,7 +711,7 @@ function display_data($parse_data)
       echo "<tr>";
 
       $count = 1;
-      foreach($fields as $field) {
+      foreach ($fields as $field) {
         $field_data = explode("|", $field);
         echo "<th id=\"c{$count}\">{$field_data[1]}</th>";
         $count++;
@@ -720,10 +720,10 @@ function display_data($parse_data)
       echo "</thead>";
       echo "<tbody>";
 
-      foreach($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+      foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
         echo "<tr>";
         $count = 1;
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
           $field_data = explode("|", $field);
           switch($field_data[2]) {
             case "Date":
