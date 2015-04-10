@@ -23,7 +23,6 @@ exec("unzip files/dbwebexport.zip -d files");
 foreach ($db_tables as $db_table) {
   # get array of table field names
   $table_fields = array();
-  $result = script_query ();
   $result = $script_db->prepare("DESCRIBE $db_table");
   $result->execute();
   foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {$table_fields[] = $row["Field"];}
