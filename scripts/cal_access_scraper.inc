@@ -5,6 +5,24 @@
 
 
 #===============================================================================================
+# load an sql file
+function process_sql_file($filename)
+{
+    $sql_contents = file_get_contents($filename);
+    $sql_contents = rtrim(rtrim($sql_contents), ";");
+    $sql_contents = preg_split("/;(\n|\r)/", $sql_contents);
+
+    foreach ($sql_contents as $query) {
+        if($query){
+            $result = script_query (trim($query));
+            if (!$result)
+                echo "Error on import of " . $query . "\n";
+        }
+    }
+}
+
+
+#===============================================================================================
 # update elections list
   function get_elections_list () {
     # Check upcoming elections
@@ -486,23 +504,4 @@
     $cleaned_amount = str_replace (array ("(", ")", "-"), "", $cleaned_amount);
     return floatval ($cleaned_amount) * $multiplier;
   }
-
-
-#===============================================================================================
-# load an sql file
-function process_sql_file($filename)
-{
-    $sql_contents = file_get_contents($filename);
-    $sql_contents = rtrim(rtrim($sql_contents), ";");
-    $sql_contents = preg_split("/;(\n|\r)/", $sql_contents);
-
-    foreach ($sql_contents as $query) {
-        if($query){
-            $result = script_query (trim($query));
-            if (!$result)
-                echo "Error on import of " . $query . "\n";
-        }
-    }
-}
-
 
