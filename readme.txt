@@ -14,7 +14,6 @@ Under [mysqld]
 ft_min_word_len = 1
 ft_stopword_file = ""
 
-
 Step 2: Make sure your SQL server can process LOAD DATA LOCAL files, as this is used to load in the files downloaded via FTP.
 
 Step 3: You will need to create 2 databases on your master SQL server.  Call one ca_process and the other ca_search

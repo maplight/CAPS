@@ -64,9 +64,12 @@ if ($error_text != "") {
   # Process good data
   for ($i = 0; $i < count($good_tables); $i++) {
     $result = $script_db->query("TRUNCATE TABLE $good_tables[$i]");
+
+# change this to use the old style php connections - make a function for it
     $script_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, true); # allow for load data and don't try to prepare it
-    $result = $script_db->query("LOAD DATA LOCAL INFILE '" . str_replace('\\', '/', getcwd()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
+    $result = $script_db->query("LOAD DATA INFILE '" . str_replace('\\', '/', getcwd()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
     $script_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); # reset back to forcing prepared statements
+
     unlink($good_files[$i]);
   }
 }
