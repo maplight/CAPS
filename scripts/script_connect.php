@@ -3,5 +3,4 @@
   $script_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   $script_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
   $script_db->setAttribute(PDO::MYSQL_ATTR_LOCAL_INFILE, true);
-  $script_db->setAttribute(PDO::MYSQL_ATTR_READ_DEFAULT_GROUP, "client");
 

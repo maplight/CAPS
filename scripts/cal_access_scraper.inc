@@ -2,6 +2,7 @@
   require("simple_html_dom.php");
   require("../connect.php");
   require("script_connect.php");
+  require("name_parser.inc");
 
 
 #===============================================================================================
@@ -549,90 +550,86 @@ function get_amount($str_amount)
 }
 
 
+#===============================================================================================
+function clean_candidate_names()
+{
+  global $script_db;
 
+  $words_to_remove = array();
+  $result = $script_db->query("SELECT * FROM names_to_remove");
+  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {$words_to_remove[] = $row["removal_word"];}
 
+  $result = $script_db->query("SELECT * FROM filing_amends WHERE cand_naml <> '' OR cand_nams <> '' OR cand_namt <> '' OR cand_namf <> '' OR candidate_name <> ''");
+  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+    if ($row["candidate_name"] == "") {
+      $name = $row["cand_naml"] . " " . $row["cand_nams"] . ", " . $row["cand_namt"] . " " . $row["cand_namf"];
+    } else {
+      $name = $row["candidate_name"];
+    }
 
+    $name = trim(str_replace(array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"), "", $name));
+    $parsed_name = parse_name($name);
+    $first_name = strtoupper($parsed_name["first_name"]);
+    $last_name = strtoupper($parsed_name["last_name"]);
+    $middle_name = strtoupper($parsed_name["middle_name"]);
+    $nick_name = strtoupper($parsed_name["nick_name"]);
+    $name_suffix = strtoupper($parsed_name["suffix"]);
+    $name_prefix = strtoupper($parsed_name["prefix"]);
 
+    if ($middle_name . " " . $last_name == strtoupper($row["cand_naml"])) {
+      $last_name = $middle_name . " " . $last_name;
+      $middle_name = "";
+    }
 
+    if ($last_name <> "") {$ln = "$last_name";} else {$ln = "";}
+    if ($name_suffix <> "") {$ns = " $name_suffix";} else {$ns = "";}
+    if ($first_name <> "") {$fn = ", $first_name";} else {$fn = "";}
+    if ($middle_name <> "") {$mn = " $middle_name";} else {$mn = "";}
+    $display_name = trim($ln . $ns . $fn . $mn);
+    $gender = $parsed_name["gender"];
+    if ($row["display_name"] != "") {$display_name = $name;}
+    if ($row["candidate_name"] != "") {$display_name = $row["candidate_name"];}
 
+    $removal_word_found = false;
+    foreach ($words_to_remove as $removal_word) {
+      if (strpos(" " . strtoupper($name) . " ", " " . $removal_word . " ") !== false) {$removal_word_found = true;}
+    }
+
+    if ($removal_word_found && $row["candidate_name"] == "") {
+      $query = "UPDATE filing_amends
+                          SET gender = '',
+                          first_name = '',
+                          middle_name = '',
+                          last_name = '',
+                          name_suffix = '',
+                          name_prefix = '',
+                          nick_name = '',
+                          display_name = ''
+                        WHERE id = {$row["id"]}";
+    } else {
+      $query = "UPDATE filing_amends
+                          SET gender = '$gender',
+                          first_name = '" . addslashes ($first_name) . "',
+                          middle_name = '" . addslashes ($middle_name) . "',
+                          last_name = '" . addslashes ($last_name) . "',
+                          name_suffix = '" . addslashes ($name_suffix) . "',
+                          name_prefix = '" . addslashes ($name_prefix) . "',
+                          nick_name = '" . addslashes ($nick_name) . "',
+                          display_name = '" . addslashes ($display_name) . "'
+                        WHERE id = {$row["id"]}";
+    }
+$result = $script_db->prepare("SELECT * FROM cal_access_sessions ORDER BY session DESC");
+$result->execute();
+foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+    script_query ($query);
+  }
+}
 
 
 
 
 
 #===============================================================================================
-# Update special grouping tables
-  function clean_candidate_names () {
-    require_once ("name_parser.inc");
-
-    $words_to_remove = array ();
-    $result = script_query ("SELECT * FROM names_to_remove");
-    while ($row = $result->fetch_assoc()) {$words_to_remove[] = $row["removal_word"];}
-
-    $result = script_query ("SELECT * FROM filing_amends WHERE cand_naml <> '' OR cand_nams <> '' OR cand_namt <> '' OR cand_namf <> '' OR candidate_name <> ''");
-    while ($row = $result->fetch_assoc()) {
-      if ($row["candidate_name"] == "") {
-        $name = $row["cand_naml"] . " " . $row["cand_nams"] . ", " . $row["cand_namt"] . " " . $row["cand_namf"];
-      } else {
-        $name = $row["candidate_name"];
-      }
-
-      $name = trim (str_replace (array ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"), "", $name));
-      $parsed_name = parse_name ($name);
-      $first_name = strtoupper ($parsed_name["first_name"]);
-      $last_name = strtoupper ($parsed_name["last_name"]);
-      $middle_name = strtoupper ($parsed_name["middle_name"]);
-      $nick_name = strtoupper ($parsed_name["nick_name"]);
-      $name_suffix = strtoupper ($parsed_name["suffix"]);
-      $name_prefix = strtoupper ($parsed_name["prefix"]);
-
-      if ($middle_name . " " . $last_name == strtoupper ($row["cand_naml"])) {
-        $last_name = $middle_name . " " . $last_name;
-        $middle_name = "";
-      }
-
-      if ($last_name <> "") {$ln = "$last_name";} else {$ln = "";}
-      if ($name_suffix <> "") {$ns = " $name_suffix";} else {$ns = "";}
-      if ($first_name <> "") {$fn = ", $first_name";} else {$fn = "";}
-      if ($middle_name <> "") {$mn = " $middle_name";} else {$mn = "";}
-      $display_name = trim ($ln . $ns . $fn . $mn);
-      $gender = $parsed_name["gender"];
-      if ($row["display_name"] != "") {$display_name = $name;}
-      if ($row["candidate_name"] != "") {$display_name = $row["candidate_name"];}
-
-      $removal_word_found = false;
-      foreach ($words_to_remove as $removal_word) {
-        if (strpos (" " . strtoupper ($name) . " ", " " . $removal_word . " ") !== false) {$removal_word_found = true;}
-      }
-
-      if ($removal_word_found && $row["candidate_name"] == "") {
-        $query = "UPDATE filing_amends
-                            SET gender = '',
-                            first_name = '',
-                            middle_name = '',
-                            last_name = '',
-                            name_suffix = '',
-                            name_prefix = '',
-                            nick_name = '',
-                            display_name = ''
-                          WHERE id = {$row["id"]}";
-      } else {
-        $query = "UPDATE filing_amends
-                            SET gender = '$gender',
-                            first_name = '" . addslashes ($first_name) . "',
-                            middle_name = '" . addslashes ($middle_name) . "',
-                            last_name = '" . addslashes ($last_name) . "',
-                            name_suffix = '" . addslashes ($name_suffix) . "',
-                            name_prefix = '" . addslashes ($name_prefix) . "',
-                            nick_name = '" . addslashes ($nick_name) . "',
-                            display_name = '" . addslashes ($display_name) . "'
-                          WHERE id = {$row["id"]}";
-      }
-      script_query ($query);
-    }
-  }
-
-
   function generate_search_words () {
     $query = "SELECT id, DonorState, DonorCommitteeID, DonorNameNormalized, DonorEmployerNormalized, DonorOccupationNormalized FROM ca_search.contributions_temp";
     $result = script_query ($query);
