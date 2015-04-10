@@ -36,14 +36,16 @@ foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
     }
   }
 
+echo "$day_of_month - $day_of_week - $week_of_month - {$row["session"]} - {$row["run_days"]}\n";
+
   # Scrape the session if the schedule is met
   if ($process_session) {
-    get_propositions($session, 1);
-    get_propositions_committees($session, 1);
-    get_candidate_names($session, 1);
-    get_candidate_data($session, 1);
-    $result = $script_db->prepare("UPDATE cal_access_sessions SET last_ran = NOW() WHERE session = ?");
-    $result->execute(array($session));
+#    get_propositions($session, 1);
+#    get_propositions_committees($session, 1);
+#    get_candidate_names($session, 1);
+#    get_candidate_data($session, 1);
+#    $result = $script_db->prepare("UPDATE cal_access_sessions SET last_ran = NOW() WHERE session = ?");
+#    $result->execute(array($session));
   }
 }
 
