@@ -16,23 +16,23 @@ if (!file_exists("files")) {
 
 echo "Installing cal_access.sql... \n";
 # Create empty cal_access tables (used to store data scraped)
-#process_sql_file("install_cal_access.sql");
+process_sql_file("install_cal_access.sql");
 
 echo "Installing ftp_tables.sql... \n";
 # Create empty ftp tables (used to store the data from ftp)
-#process_sql_file("install_ftp_tables.sql");
+process_sql_file("install_ftp_tables.sql");
 
 echo "Installing processing_tables.sql... \n";
 # Create tables used to process the data
-#process_sql_file("install_processing_tables.sql");
+process_sql_file("install_processing_tables.sql");
 
 echo "Installing smry_tables.sql... \n";
 # Create tables used for fast web searches
-#process_sql_file("install_smry_tables.sql");
+process_sql_file("install_smry_tables.sql");
 
 echo "Installing populated.sql... \n";
 # Create populated tables (name parse tables and state name table)
-#process_sql_file("install_populated.sql");
+process_sql_file("install_populated.sql");
 
 echo "Populating all cal_access sessions from http://www.sos.ca.gov/elections/elections_cand.htm \n";
 # Populate all cal_access sessions
