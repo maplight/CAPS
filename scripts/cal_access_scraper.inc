@@ -357,7 +357,7 @@ function get_candidate_data($session, $err_chk)
                             $result2 = $script_db->prepare("SELECT election_id, date, description FROM cal_access_elections WHERE IF(office = 'ALL', CONCAT(YEAR(date), IF(election_type = 'G', ' GENERAL', ' PRIMARY'), ' ELECTION'), '') = ?;");
                             $result2->execute(array($election));
                             $election_info = $result2->fetch(PDO::FETCH_ASSOC);
-                            if (! $election_info) {
+                            if (empty($election_info)) {
                               $election_data = parse_election_data($office . " " . $election);
                             } else {
                               $election_data = parse_election_data(date("F j, Y", strtotime($election_info->date)) . " " . $election_info->description);
