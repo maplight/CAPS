@@ -31,11 +31,7 @@ foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
       if (intval($day) == $day_of_month || $day == $day_of_week || $day == "") {$process_session = true;}
     } else {
       $week = substr($day, 0, strpos($day, "-"));
-      $dow = substr($day, strpos($day, "-") + 1, 1);
-
-echo "$day_of_month - $day_of_week - $week_of_month - {$row["session"]} - {$row["run_days"]} - $week - $dow\n";
-
-      if ($week == $week_of_month && $dow = $day_of_week) {$process_session = true;}
+      if ($week == $week_of_month && $dow == $day_of_week) {$process_session = true;}
     }
   }
 
