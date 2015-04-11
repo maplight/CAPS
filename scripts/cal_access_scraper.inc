@@ -560,7 +560,6 @@ function process_mysqli_query($query)
   mysqli_options($script_conn, MYSQLI_OPT_LOCAL_INFILE, true);
   mysqli_real_connect($script_conn, $hostname, $script_login, $script_pwd, "ca_process");
   $ret = $script_conn->query($query);
-echo $query . " " . $ret . "\n";
   $script_conn->close();
 }
 
