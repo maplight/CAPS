@@ -562,7 +562,7 @@ function mysqli_query($query)
   mysqli_real_connect($script_conn, $hostname, $script_login, $script_pwd, "ca_process");
 
   $script_conn->query($query);
-  $script_conn->close()
+  $script_conn->close();
 }
 
 
