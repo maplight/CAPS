@@ -66,7 +66,7 @@ if ($error_text != "") {
     $result = $script_db->query("TRUNCATE TABLE $good_tables[$i]");
 
     # the PDO functions don't handle load data infile, so these are ran via that mysqli system
-    mysqli_query("LOAD DATA INFILE '" . str_replace('\\', '/', getcwd()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
+    process_mysqli_query("LOAD DATA INFILE '" . str_replace('\\', '/', getcwd()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
 
     unlink($good_files[$i]);
   }

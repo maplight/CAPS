@@ -551,7 +551,7 @@ function get_amount($str_amount)
 
 
 #===============================================================================================
-function mysqli_query($query)
+function process_mysqli_query($query)
 {
   global $hostname;
   global $script_login;
