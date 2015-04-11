@@ -61,7 +61,7 @@ require("results.php");
                         </div>
                         <div class="left">&nbsp;received?</div><br>
                         <input type="submit" class="qs_btn" name="qs_button" value="Search Candidates">
-                    </div> <!-- end qs_box (Candidates) -->
+                    </div> <!-- end qs_box(Candidates) -->
                     <hr class="caps_hr1">
 
                     <img src="img/qs_ballot.jpg" width="50" class="caps_img" alt="Ballot Measures Option Icon">
@@ -70,7 +70,7 @@ require("results.php");
                         How much has been raised for all measures on the <select id="propositions_list" name="proposition_list" class="font_input input_border qs_select">
                             <?php
                             # Fill election dates dropdown
-                            fill_qs_elections ();
+                            fill_qs_elections();
                             ?>
                         </select> ballot?<br>
                         <input type="submit" class="qs_btn" name="qs_button" value="Search Ballot Measures">
@@ -103,3 +103,4 @@ require("results.php");
 -->
 </body>
 </html>
+

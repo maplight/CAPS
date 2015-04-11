@@ -13,7 +13,6 @@ if (!file_exists("files")) {
     mkdir("files", 0777, true);
 }
 
-
 echo "Installing cal_access.sql... \n";
 # Create empty cal_access tables (used to store data scraped)
 process_sql_file("install_cal_access.sql");
@@ -34,69 +33,50 @@ echo "Installing populated.sql... \n";
 # Create populated tables (name parse tables and state name table)
 process_sql_file("install_populated.sql");
 
-# Make the files directory if it doesn't exist
-
 echo "Populating all cal_access sessions from http://www.sos.ca.gov/elections/elections_cand.htm \n";
 # Populate all cal_access sessions
 get_elections_list();
 
 echo "Scraping the cal-access data for all sessions (this process can take up to 8 - 10 hours) \n";
 # Scrape the cal-access data for all sessions (this process can take up to 8 - 10 hours)
-$query = "SELECT session FROM cal_access_sessions ORDER BY session";
-$result = script_query($query);
-while ($row = $result->fetch_assoc()) {
-    $session = $row["session"];
-
-    echo "Retrieving data for session " . $session . "\n";
-    get_propositions($session, 1);
-    get_propositions_committees($session, 1);
-    get_candidate_names($session, 1);
-    get_candidate_data($session, 1);
+$result = $script_db->prepare("SELECT session FROM cal_access_sessions ORDER BY session DESC");
+$result->execute();
+foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+  echo "Retrieving data for session " . $row["session"] . "\n";
+  get_propositions($row["session"], 1);
+  get_propositions_committees($row["session"], 1);
+  get_candidate_names($row["session"], 1);
+  get_candidate_data($row["session"], 1);
+  $result = $script_db->prepare("UPDATE cal_access_sessions SET last_ran = NOW() WHERE session = ?");
+  $result->execute(array($row["session"]));
 }
 
-echo "check for missing proposition committes";
-# check for missing proposition committes
+echo "check for missing proposition committes \n";
 $query = "SELECT cal_access_propositions_committees.session, cal_access_propositions_committees.filer_id FROM cal_access_propositions_committees
             LEFT JOIN cal_access_committees ON (cal_access_committees.filer_id = cal_access_propositions_committees.filer_id AND cal_access_committees.session = cal_access_propositions_committees.session)
             WHERE ISNULL(cal_access_committees.filer_id)";
-$result = script_query($query);
-while ($row = $result->fetch_assoc()) {
-    $session = $row["session"];
-    $filer_id = $row["filer_id"];
-    get_committee_information($session, $filer_id, 1);
+$result = $script_db->prepare($query);
+$result->execute();
+foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+  $session = $row["session"];
+  $filer_id = $row["filer_id"];
+  get_committee_information($session, $filer_id, 1);
 }
 
-echo "check for missing candidate committes";
-# check for missing candidate committes
+echo "check for missing candidate committes \n";
 $query = "SELECT cal_access_candidates_committees.session, cal_access_candidates_committees.filer_id FROM cal_access_candidates_committees
             LEFT JOIN cal_access_committees ON (cal_access_committees.filer_id = cal_access_candidates_committees.filer_id AND cal_access_committees.session = cal_access_candidates_committees.session)
             WHERE ISNULL(cal_access_committees.filer_id)";
-$result = script_query($query);
-while ($row = $result->fetch_assoc()) {
-    $session = $row["session"];
-    $filer_id = $row["filer_id"];
-    get_committee_information($session, $filer_id, 1);
+$result = $script_db->prepare($query);
+$result->execute();
+foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+  $session = $row["session"];
+  $filer_id = $row["filer_id"];
+  get_committee_information($session, $filer_id, 1);
 }
 
 # Process an update - the processes the ftp data
 system("php update_data.php");
 
-echo "Install complete....";
-#===============================================================================================
-# load an sql file
-function process_sql_file($filename)
-{
-    $sql_contents = file_get_contents($filename);
-    $sql_contents = rtrim(rtrim($sql_contents), ";");
-    $sql_contents = preg_split("/;(\n|\r)/", $sql_contents);
+echo "Install complete.... \n";
 
-    foreach ($sql_contents as $query) {
-        if($query){
-            $result = script_query (trim($query));
-            if (!$result)
-                echo "Error on import of " . $query . "\n";
-        }
-    }
-}
-
-?>
