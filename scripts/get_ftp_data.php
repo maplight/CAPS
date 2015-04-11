@@ -65,10 +65,8 @@ if ($error_text != "") {
   for ($i = 0; $i < count($good_tables); $i++) {
     $result = $script_db->query("TRUNCATE TABLE $good_tables[$i]");
 
-# change this to use the old style php connections - make a function for it
-    $script_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, true); # allow for load data and don't try to prepare it
-    $result = $script_db->query("LOAD DATA INFILE '" . str_replace('\\', '/', getcwd()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
-    $script_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); # reset back to forcing prepared statements
+    # the PDO functions don't handle load data infile, so these are ran via that mysqli system
+    mysqli_query("LOAD DATA INFILE '" . str_replace('\\', '/', getcwd()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
 
     unlink($good_files[$i]);
   }

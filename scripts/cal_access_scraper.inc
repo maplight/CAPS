@@ -551,6 +551,22 @@ function get_amount($str_amount)
 
 
 #===============================================================================================
+function mysqli_query($query)
+{
+  global $hostname;
+  global $script_login;
+  global $script_pwd;
+
+  $script_conn = mysqli_init();
+  mysqli_options($script_conn, MYSQLI_OPT_LOCAL_INFILE, true);
+  mysqli_real_connect($script_conn, $hostname, $script_login, $script_pwd, "ca_process");
+
+  $script_conn->query($query);
+  $script_conn->close()
+}
+
+
+#===============================================================================================
 function clean_candidate_names()
 {
   global $script_db;
@@ -624,9 +640,6 @@ function clean_candidate_names()
     script_query ($query);
   }
 }
-
-
-
 
 
 #===============================================================================================
