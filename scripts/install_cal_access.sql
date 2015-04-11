@@ -5,7 +5,6 @@ CREATE TABLE cal_access_candidates (
   id bigint(20) NOT NULL,
   link varchar(250) NOT NULL,
   party varchar(100) NOT NULL,
-  PRIMARY KEY (session,id),
   KEY session (session),
   KEY name (name(10)),
   KEY id (id),
@@ -147,4 +146,3 @@ CREATE TABLE cal_access_propositions_committees (
   KEY proposition_id (proposition_id),
   KEY filer_id (filer_id)
 );
-
