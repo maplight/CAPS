@@ -29,11 +29,11 @@ if ($ps_check == "1") {
 
   echo "Process data for contributions table - stage 2 \n";
   # Process data for contributions table - stage 2
-#  process_sql_file("process_stage_2.sql");
+  process_sql_file("process_stage_2.sql");
 
   echo "Process data for contributions table - stage 3 \n";
   # Process data for contributions table - stage 3
-#  process_sql_file("process_stage_3.sql");
+  process_sql_file("process_stage_3.sql");
 
   echo "generate search words \n";
 #  generate_search_words(); 

@@ -514,10 +514,9 @@ function display_data($parse_data)
       $rows_returned = $result->rowCount();
 
       echo "<div id=\"caps_results\">";
-      $results_tooltip = "This is the total amount received in the specified date range.";
       echo "<div class=\"font_results_header\"><strong>Search Results</strong></div>";
       echo "<div class=\"font_results_header\"><strong>\$" . number_format($totals_row["total"], 2, ".", ",") . "</strong> in " . number_format($totals_row["records"], 0, ".", ",") . " contributions ";
-      display_tooltip($results_tooltip, -180, 10, 250, "");
+      display_tooltip("This is the total amount received using the specified search criteria.", -160, 10, 180, "");
       echo "</div><hr class=\"caps_hr1\">";
 
       # display summary breakdowns for different criteria
