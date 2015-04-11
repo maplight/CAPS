@@ -572,6 +572,7 @@ function clean_candidate_names()
   $words_to_remove = array();
   $result = $script_db->query("SELECT * FROM names_to_remove");
   foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {$words_to_remove[] = $row["removal_word"];}
+  $update_qry = $script_db->prepare("UPDATE filing_amends SET gender = '', first_name = '', middle_name = '', last_name = '', name_suffix = '', name_prefix = '', nick_name = '', display_name = '' WHERE id = ?");
 
   $result = $script_db->query("SELECT * FROM filing_amends WHERE cand_naml <> '' OR cand_nams <> '' OR cand_namt <> '' OR cand_namf <> '' OR candidate_name <> ''");
   foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
@@ -610,71 +611,57 @@ function clean_candidate_names()
     }
 
     if ($removal_word_found && $row["candidate_name"] == "") {
-      $query = "UPDATE filing_amends SET gender = '', first_name = '', middle_name = '', last_name = '', name_suffix = '', name_prefix = '', nick_name = '', display_name = '' WHERE id = ?";
-      $result = $script_db->prepare($query);
-      $result->execute(array($row["id"]));
+      $update_qry->execute(array('', '', '', '', '', '', '', '', $row["id"]));
     } else {
-      $query = "UPDATE filing_amends SET gender = ?, first_name = ?, middle_name = ?, last_name = ?, name_suffix = ?, name_prefix = ?, nick_name = ?, display_name = ? WHERE id = ?";
-      $result = $script_db->prepare($query);
-      $result->execute(array($gender, $first_name, $middle_name, $last_name, $name_suffix, $name_prefix, $nick_name, $display_name, $row["id"]));
+      $update_qry->execute(array($gender, $first_name, $middle_name, $last_name, $name_suffix, $name_prefix, $nick_name, $display_name, $row["id"]));
     }
   }
 }
 
 
-
-
-
-
-
-
-
-
-
 #===============================================================================================
-  function generate_search_words () {
-    $query = "SELECT id, DonorState, DonorCommitteeID, DonorNameNormalized, DonorEmployerNormalized, DonorOccupationNormalized FROM ca_search.contributions_temp";
-    $result = script_query ($query);
-    while ($row = $result->fetch_assoc()) {
-      $word_str = " ";
-      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["DonorNameNormalized"] . " " . $row["DonorEmployerNormalized"] . " " . $row["DonorOccupationNormalized"]);
-      $words = explode (" ", $word_data);
-      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper (ltrim ($word, "0")) . " ";}}
-      script_query ("INSERT INTO ca_search.contributions_search_donors_temp (id, DonorState, DonorCommitteeID, DonorWords) VALUES ({$row["id"]}, '{$row["DonorState"]}', {$row["DonorCommitteeID"]}, '{$word_str}')");
-    }
-    $result->close();
+function generate_search_words()
+{
+  global $script_db;
 
-    $query = "SELECT * FROM ca_search.smry_candidates_temp";
-    $result = script_query ($query);
-    while ($row = $result->fetch_assoc()) {
-      $word_str = " ";
-      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["RecipientCandidateNameNormalized"]);
-      $words = explode (" ", $word_data);
-      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper (ltrim ($word, "0")) . " ";}}
-      script_query ("UPDATE ca_search.smry_candidates_temp SET CandidateWords = '{$word_str}' WHERE MapLightCandidateNameID = {$row["MapLightCandidateNameID"]}");
-    }
-    $result->close();
+  $update_qry = $script_db->prepare("UPDATE ca_search.smry_candidates_temp SET CandidateWords = ? WHERE MapLightCandidateNameID = ?");
+  $result = $script_db->query("SELECT * FROM ca_search.smry_candidates_temp");
+  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+    $word_str = " ";
+    $word_data = preg_replace("/[^a-z0-9 ]+/i", "", $row["RecipientCandidateNameNormalized"]);
+    $words = explode(" ", $word_data);
+    foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper(ltrim($word, "0")) . " ";}}
+    $update_qry->execute(array($word_str, $row["MapLightCandidateNameID"]));
+  }
 
-    $query = "SELECT * FROM ca_search.smry_committees_temp";
-    $result = script_query ($query);
-    while ($row = $result->fetch_assoc()) {
-      $word_str = " ";
-      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["RecipientCommitteeNameNormalized"]);
-      $words = explode (" ", $word_data);
-      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper (ltrim ($word, "0")) . " ";}}
-      script_query ("UPDATE ca_search.smry_committees_temp SET CommitteeWords = '{$word_str}' WHERE MapLightCommitteeID = {$row["MapLightCommitteeID"]}");
-    }
-    $result->close();
+  $update_qry = $script_db->prepare("UPDATE ca_search.smry_committees_temp SET CommitteeWords = ? WHERE MapLightCommitteeID = ?");
+  $result = $script_db->query("SELECT * FROM ca_search.smry_committees_temp");
+  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+    $word_str = " ";
+    $word_data = preg_replace("/[^a-z0-9 ]+/i", "", $row["RecipientCommitteeNameNormalized"]);
+    $words = explode(" ", $word_data);
+    foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper(ltrim($word, "0")) . " ";}}
+    $update_qry->execute(array($word_str, $row["MapLightCommitteeID"]));
+  }
 
-    $query = "SELECT * FROM ca_search.smry_propositions_temp";
-    $result = script_query ($query);
-    while ($row = $result->fetch_assoc()) {
-      $word_str = " ";
-      $word_data = preg_replace ("/[^a-z0-9 ]+/i", "", $row["Target"]);
-      $words = explode (" ", $word_data);
-      foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper (ltrim ($word, "0")) . " ";}}
-      script_query ("UPDATE ca_search.smry_propositions_temp SET PropositionWords = '{$word_str}' WHERE PropositionID = {$row["PropositionID"]}");
-    }
-    $result->close();
-  } 
+  $update_qry = $script_db->prepare("UPDATE ca_search.smry_propositions_temp SET PropositionWords = ? WHERE PropositionID = ?");
+  $result = $script_db->query("SELECT * FROM ca_search.smry_propositions_temp");
+  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+    $word_str = " ";
+    $word_data = preg_replace("/[^a-z0-9 ]+/i", "", $row["Target"]);
+    $words = explode(" ", $word_data);
+    foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper(ltrim($word, "0")) . " ";}}
+    $update_qrys->execute(array($word_str, $row["PropositionID"]));
+  }
+
+  $update_qry = $script_db->prepare("INSERT INTO ca_search.contributions_search_donors_temp (id, DonorState, DonorCommitteeID, DonorWords) VALUES (?, ?, ?, ?)");
+  $result = $script_db->query("SELECT id, DonorState, DonorCommitteeID, DonorNameNormalized, DonorEmployerNormalized, DonorOccupationNormalized FROM ca_search.contributions_temp");
+  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+    $word_str = " ";
+    $word_data = preg_replace("/[^a-z0-9 ]+/i", "", $row["DonorNameNormalized"] . " " . $row["DonorEmployerNormalized"] . " " . $row["DonorOccupationNormalized"]);
+    $words = explode(" ", $word_data);
+    foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper(ltrim($word, "0")) . " ";}}
+    $update_qry->execute(array($row["id"], $row["DonorState"], $row["DonorCommitteeID"], $word_str));
+  }
+} 
 
