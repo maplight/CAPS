@@ -612,7 +612,7 @@ function clean_candidate_names()
     if ($removal_word_found && $row["candidate_name"] == "") {
       $query = "UPDATE filing_amends SET gender = '', first_name = '', middle_name = '', last_name = '', name_suffix = '', name_prefix = '', nick_name = '', display_name = '' WHERE id = ?";
       $result = $script_db->prepare($query);
-      $result->execute($row["id"]);
+      $result->execute(array($row["id"]));
     } else {
       $query = "UPDATE filing_amends SET gender = ?, first_name = ?, middle_name = ?, last_name = ?, name_suffix = ?, name_prefix = ?, nick_name = ?, display_name = ? WHERE id = ?";
       $result = $script_db->prepare($query);
