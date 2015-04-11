@@ -67,7 +67,9 @@ if ($error_text != "") {
     # the PDO functions don't handle load data infile, so these are ran via that mysqli system
 #process_mysqli_query("LOAD DATA LOCAL INFILE '" . str_replace('\\', '/', getcwd()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
 
+$script_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 $script_db->query("LOAD DATA LOCAL INFILE '" . str_replace('\\', '/', getcwd()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
+$script_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
 #    unlink($good_files[$i]);
   }
