@@ -21,11 +21,11 @@ if ($ps_check == "1") {
 
   echo "Process data for contributions table - stage 1 \n";
   # Process data for contributions table - stage 1
-  process_sql_file("process_stage_1.sql");
+#  process_sql_file("process_stage_1.sql");
 
   echo "Clean up names \n";
   # Clean up names
-#  clean_candidate_names();
+  clean_candidate_names();
 
   echo "Process data for contributions table - stage 2 \n";
   # Process data for contributions table - stage 2
