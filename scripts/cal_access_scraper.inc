@@ -616,9 +616,11 @@ function clean_candidate_names()
     }
 
     if ($removal_word_found && $row["candidate_name"] == "") {
-      echo $update_qry->execute(array('', '', '', '', '', '', '', '', $row["id"]));
+echo "blank\n";
+      $update_qry->execute(array('', '', '', '', '', '', '', '', $row["id"]));
     } else {
-      echo $update_qry->execute(array($gender, $first_name, $middle_name, $last_name, $name_suffix, $name_prefix, $nick_name, $display_name, $row["id"]));
+echo "non-blank\n";
+      $update_qry->execute(array($gender, $first_name, $middle_name, $last_name, $name_suffix, $name_prefix, $nick_name, $display_name, $row["id"]));
     }
   }
 
