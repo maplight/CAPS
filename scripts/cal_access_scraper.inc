@@ -556,12 +556,11 @@ function process_mysqli_query($query)
   global $hostname;
   global $script_login;
   global $script_pwd;
-
   $script_conn = mysqli_init();
   mysqli_options($script_conn, MYSQLI_OPT_LOCAL_INFILE, true);
   mysqli_real_connect($script_conn, $hostname, $script_login, $script_pwd, "ca_process");
-
-  $script_conn->query($query);
+  $ret = $script_conn->query($query);
+echo $query . " " . $ret . "\n";
   $script_conn->close();
 }
 
@@ -612,34 +611,25 @@ function clean_candidate_names()
     }
 
     if ($removal_word_found && $row["candidate_name"] == "") {
-      $query = "UPDATE filing_amends
-                          SET gender = '',
-                          first_name = '',
-                          middle_name = '',
-                          last_name = '',
-                          name_suffix = '',
-                          name_prefix = '',
-                          nick_name = '',
-                          display_name = ''
-                        WHERE id = {$row["id"]}";
+      $query = "UPDATE filing_amends SET gender = '', first_name = '', middle_name = '', last_name = '', name_suffix = '', name_prefix = '', nick_name = '', display_name = '' WHERE id = ?";
+      $result = $script_db->prepare($query);
+      $result->execute($row["id"]);
     } else {
-      $query = "UPDATE filing_amends
-                          SET gender = '$gender',
-                          first_name = '" . addslashes ($first_name) . "',
-                          middle_name = '" . addslashes ($middle_name) . "',
-                          last_name = '" . addslashes ($last_name) . "',
-                          name_suffix = '" . addslashes ($name_suffix) . "',
-                          name_prefix = '" . addslashes ($name_prefix) . "',
-                          nick_name = '" . addslashes ($nick_name) . "',
-                          display_name = '" . addslashes ($display_name) . "'
-                        WHERE id = {$row["id"]}";
+      $query = "UPDATE filing_amends SET gender = ?, first_name = ?, middle_name = ?, last_name = ?, name_suffix = ?, name_prefix = ?, nick_name = ?, display_name = ? WHERE id = ?";
+      $result = $script_db->prepare($query);
+      $result->execute(array($gender, $first_name, $middle_name, $last_name, $name_suffix, $name_prefix, $nick_name, $display_name, $row["id"]));
     }
-#$result = $script_db->prepare("SELECT * FROM cal_access_sessions ORDER BY session DESC");
-#$result->execute();
-#foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-    script_query ($query);
   }
 }
+
+
+
+
+
+
+
+
+
 
 
 #===============================================================================================
