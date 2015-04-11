@@ -71,5 +71,5 @@ if ($error_text != "") {
 }
 
 # remove all downloaded files
-exec("rm -rf files/*");
+#exec("rm -rf files/*");
 
