@@ -15,8 +15,8 @@ $result = $script_db->query("SHOW TABLES");
 foreach ($result->fetchAll() as $row) {if (substr($row[0], 0, 4) == "ftp_") {$db_tables[] = $row[0];}}
 
 # download the file and unzip it
-#file_put_contents("files/dbwebexport.zip", fopen("http://campaignfinance.cdn.sos.ca.gov/dbwebexport.zip", "r"));
-#exec("unzip files/dbwebexport.zip -d files");
+file_put_contents("files/dbwebexport.zip", fopen("http://campaignfinance.cdn.sos.ca.gov/dbwebexport.zip", "r"));
+exec("unzip files/dbwebexport.zip -d files");
 
 # process each table
 foreach ($db_tables as $db_table) {
@@ -65,16 +65,11 @@ if ($error_text != "") {
   for ($i = 0; $i < count($good_tables); $i++) {
     $result = $script_db->query("TRUNCATE TABLE $good_tables[$i]");
     # the PDO functions don't handle load data infile, so these are ran via that mysqli system
-#process_mysqli_query("LOAD DATA LOCAL INFILE '" . str_replace('\\', '/', getcwd()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
-
-$script_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-$script_db->query("LOAD DATA LOCAL INFILE '" . str_replace('\\', '/', getcwd()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
-$script_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-
-#    unlink($good_files[$i]);
+    process_mysqli_query("LOAD DATA LOCAL INFILE '" . str_replace('\\', '/', getcwd()) . "/{$good_files[$i]}' INTO TABLE {$good_tables[$i]} FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\r\n' IGNORE 1 LINES");
+    unlink($good_files[$i]);
   }
 }
 
 # remove all downloaded files
-#exec("rm -rf files/*");
+exec("rm -rf files/*");
 
