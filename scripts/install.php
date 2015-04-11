@@ -39,7 +39,7 @@ get_elections_list();
 
 echo "Scraping the cal-access data for all sessions (this process can take up to 8 - 10 hours) \n";
 # Scrape the cal-access data for all sessions (this process can take up to 8 - 10 hours)
-$result = $script_db->prepare("SELECT session FROM cal_access_sessions ORDER BY session DESC LIMIT 1");
+$result = $script_db->prepare("SELECT session FROM cal_access_sessions ORDER BY session DESC");
 $result->execute();
 foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
   echo "Retrieving data for session " . $row["session"] . "\n";

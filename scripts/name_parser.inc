@@ -6,7 +6,6 @@ function parse_name($name)
   return $name;
 }
 
-
 function eexplode($separator, $string)
 {
   $in_array = explode($separator, $string);
@@ -14,7 +13,6 @@ function eexplode($separator, $string)
   foreach ($in_array as $val) {if (! empty($val)) {$out_array[] = $val;}}
   return $out_array;
 }
-
 
 function clean_names ($name)
 {
@@ -38,7 +36,6 @@ function clean_names ($name)
   $name = trim($cleaned_name);
   return $name;
 }
-
 
 function split_names($name)
 {

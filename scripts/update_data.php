@@ -19,7 +19,7 @@ if ($ps_check == "1") {
 #  system("php get_ftp_data.php");
 
   echo "Process data for contributions table - stage 1 \n";
-  process_sql_file("process_stage_1.sql");
+#  process_sql_file("process_stage_1.sql");
 
   echo "Clean up names \n";
   # Clean up names
@@ -32,14 +32,14 @@ if ($ps_check == "1") {
 #  process_sql_file("process_stage_3.sql");
 
   echo "generate search words \n";
-  generate_search_words(); 
+#  generate_search_words(); 
 
   echo "Reset last update file \n";
-  $script_db->query("TRUNCATE ca_search.smry_last_update");
-  $script_db->query("INSERT INTO ca_search.smry_last_update SELECT FiledDate FROM contributions_full WHERE FiledDate <= NOW() ORDER BY FiledDate DESC LIMIT 1");
+#  $script_db->query("TRUNCATE ca_search.smry_last_update");
+#  $script_db->query("INSERT INTO ca_search.smry_last_update SELECT FiledDate FROM contributions_full WHERE FiledDate <= NOW() ORDER BY FiledDate DESC LIMIT 1");
 
   echo "Process data for contributions table - stage 4 \n";
-  process_sql_file("process_stage_4.sql");
+#  process_sql_file("process_stage_4.sql");
 
   echo "Update done... \n";
 }
