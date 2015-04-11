@@ -15,8 +15,8 @@ $result = $script_db->query("SHOW TABLES");
 foreach ($result->fetchAll() as $row) {if (substr($row[0], 0, 4) == "ftp_") {$db_tables[] = $row[0];}}
 
 # download the file and unzip it
-file_put_contents("files/dbwebexport.zip", fopen("http://campaignfinance.cdn.sos.ca.gov/dbwebexport.zip", "r"));
-exec("unzip files/dbwebexport.zip -d files");
+#file_put_contents("files/dbwebexport.zip", fopen("http://campaignfinance.cdn.sos.ca.gov/dbwebexport.zip", "r"));
+#exec("unzip files/dbwebexport.zip -d files");
 
 # process each table
 foreach ($db_tables as $db_table) {
