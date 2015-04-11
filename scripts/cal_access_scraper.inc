@@ -573,7 +573,8 @@ function clean_candidate_names()
   global $script_db;
   global $script_names_db;
 
-  $update_qry = $script_names_db->prepare("UPDATE filing_amends SET gender = '', first_name = '', middle_name = '', last_name = '', name_suffix = '', name_prefix = '', nick_name = '', display_name = '' WHERE id = ?");
+#  $update_qry = $script_names_db->prepare("UPDATE filing_amends SET gender = ?, first_name = ?, middle_name = ?, last_name = ?, name_suffix = ?, name_prefix = ?, nick_name = ?, display_name = ? WHERE id = ?");
+  $update_qry = $script_db->prepare("UPDATE filing_amends SET gender = ?, first_name = ?, middle_name = ?, last_name = ?, name_suffix = ?, name_prefix = ?, nick_name = ?, display_name = ? WHERE id = ?");
 
   $words_to_remove = array();
   $result = $script_db->query("SELECT * FROM names_to_remove");
@@ -620,7 +621,6 @@ function clean_candidate_names()
     } else {
       $update_qry->execute(array($gender, $first_name, $middle_name, $last_name, $name_suffix, $name_prefix, $nick_name, $display_name, $row["id"]));
     }
-    $update_qry->closeCursor();
   }
 }
 
