@@ -17,4 +17,4 @@
   foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {$committees[] = $row;}
 
   echo json_encode ($committees);
-?>
+
