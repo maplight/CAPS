@@ -21,6 +21,7 @@ function display_tooltip(event, tip_text, pos_x, pos_y, width) {
 
 //==============================================================================================================
 function fill_candidate_list(event) {
+alert('candidates');
   var keycode = (event.keyCode ? event.keyCode : event.which);
   if (keycode == 40) {
     // Down arrow pressed
