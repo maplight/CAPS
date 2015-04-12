@@ -655,7 +655,7 @@ function generate_search_words()
     $word_data = preg_replace("/[^a-z0-9 ]+/i", "", $row["Target"]);
     $words = explode(" ", $word_data);
     foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper(ltrim($word, "0")) . " ";}}
-    $update_qrys->execute(array($word_str, $row["PropositionID"]));
+    $update_qry->execute(array($word_str, $row["PropositionID"]));
   }
 
   $update_qry = $script_db->prepare("INSERT INTO ca_search.contributions_search_donors_temp (id, DonorState, DonorCommitteeID, DonorWords) VALUES (?, ?, ?, ?)");
