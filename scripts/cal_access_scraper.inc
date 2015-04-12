@@ -635,6 +635,7 @@ function generate_search_words()
     $word_data = preg_replace("/[^a-z0-9 ]+/i", "", $row["DonorNameNormalized"] . " " . $row["DonorEmployerNormalized"] . " " . $row["DonorOccupationNormalized"]);
     $words = explode(" ", $word_data);
     foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper(ltrim($word, "0")) . " ";}}
+echo "{$row["id"]} - $word_str\n";
     $update_qry->execute(array($row["id"], $row["DonorState"], $row["DonorCommitteeID"], $word_str));
   }
 
