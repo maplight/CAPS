@@ -1,3 +1,9 @@
+DROP DATABASE IF EXISTS ca_process;
+CREATE DATABASE ca_process CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+
+DROP DATABASE IF EXISTS ca_search;
+CREATE DATABASE ca_search CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+
 DROP TABLE IF EXISTS cal_access_candidates;
 CREATE TABLE cal_access_candidates (
   session smallint(6) NOT NULL,
