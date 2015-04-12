@@ -758,7 +758,6 @@ function display_data($parse_data)
       echo "<div class=\"center\">";
       echo "<input type=\"hidden\" name=\"page\" value=\"{$page}\">";
       echo "<input type=\"hidden\" name=\"field_list\" value=\"{$field_set}\">";
-      echo "<input type=\"hidden\" name=\"show_summary\" value=\"{$show_summary}\">";
       if($total_pages > 1) {
         if($page > 1) {echo "<input type=\"submit\" name=\"page_button\" value=\"Previous\" id=\"caps_previous_btn\">";}
         if($total_pages >= 3) {
