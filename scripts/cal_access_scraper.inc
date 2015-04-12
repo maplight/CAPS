@@ -628,6 +628,16 @@ function generate_search_words()
 {
   global $script_db;
 
+  $update_qry = $script_db->prepare("INSERT INTO ca_search.contributions_search_donors_temp (id, DonorState, DonorCommitteeID, DonorWords) VALUES (?, ?, ?, ?)");
+  $result = $script_db->query("SELECT id, DonorState, DonorCommitteeID, DonorNameNormalized, DonorEmployerNormalized, DonorOccupationNormalized FROM ca_search.contributions_temp");
+  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+    $word_str = " ";
+    $word_data = preg_replace("/[^a-z0-9 ]+/i", "", $row["DonorNameNormalized"] . " " . $row["DonorEmployerNormalized"] . " " . $row["DonorOccupationNormalized"]);
+    $words = explode(" ", $word_data);
+    foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper(ltrim($word, "0")) . " ";}}
+    $update_qry->execute(array($row["id"], $row["DonorState"], $row["DonorCommitteeID"], $word_str));
+  }
+
   $update_qry = $script_db->prepare("UPDATE ca_search.smry_candidates_temp SET CandidateWords = ? WHERE MapLightCandidateNameID = ?");
   $result = $script_db->query("SELECT * FROM ca_search.smry_candidates_temp");
   foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
@@ -656,16 +666,6 @@ function generate_search_words()
     $words = explode(" ", $word_data);
     foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper(ltrim($word, "0")) . " ";}}
     $update_qry->execute(array($word_str, $row["PropositionID"]));
-  }
-
-  $update_qry = $script_db->prepare("INSERT INTO ca_search.contributions_search_donors_temp (id, DonorState, DonorCommitteeID, DonorWords) VALUES (?, ?, ?, ?)");
-  $result = $script_db->query("SELECT id, DonorState, DonorCommitteeID, DonorNameNormalized, DonorEmployerNormalized, DonorOccupationNormalized FROM ca_search.contributions_temp");
-  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-    $word_str = " ";
-    $word_data = preg_replace("/[^a-z0-9 ]+/i", "", $row["DonorNameNormalized"] . " " . $row["DonorEmployerNormalized"] . " " . $row["DonorOccupationNormalized"]);
-    $words = explode(" ", $word_data);
-    foreach ($words as $word) {if ($word != "") {$word_str .= strtoupper(ltrim($word, "0")) . " ";}}
-    $update_qry->execute(array($row["id"], $row["DonorState"], $row["DonorCommitteeID"], $word_str));
   }
 } 
 
