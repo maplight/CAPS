@@ -576,7 +576,7 @@ function clean_candidate_names()
 
   $words_to_remove = array();
   $result = $script_db->query("SELECT * FROM names_to_remove");
-  while ($row = result->fetch(PDO::FETCH_ASSOC)) {$words_to_remove[] = $row["removal_word"];}
+  while ($row = $result->fetch(PDO::FETCH_ASSOC)) {$words_to_remove[] = $row["removal_word"];}
 
   $result = $script_db->query("SELECT * FROM filing_amends WHERE cand_naml <> '' OR cand_nams <> '' OR cand_namt <> '' OR cand_namf <> '' OR candidate_name <> ''");
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
