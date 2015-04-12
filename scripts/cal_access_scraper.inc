@@ -576,10 +576,10 @@ function clean_candidate_names()
 
   $words_to_remove = array();
   $result = $script_db->query("SELECT * FROM names_to_remove");
-  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {$words_to_remove[] = $row["removal_word"];}
+  while ($row = result->fetch(PDO::FETCH_ASSOC)) {$words_to_remove[] = $row["removal_word"];}
 
   $result = $script_db->query("SELECT * FROM filing_amends WHERE cand_naml <> '' OR cand_nams <> '' OR cand_namt <> '' OR cand_namf <> '' OR candidate_name <> ''");
-  foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+  while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     if ($row["candidate_name"] == "") {
       $name = $row["cand_naml"] . " " . $row["cand_nams"] . ", " . $row["cand_namt"] . " " . $row["cand_namf"];
     } else {
