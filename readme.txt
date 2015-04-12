@@ -19,6 +19,10 @@ ft_stopword_file = ""
 Step 2: Make sure your SQL server can process LOAD DATA LOCAL files, as this is used to load in the files downloaded via FTP.
 
 Step 3: You will need to create 2 databases on your master SQL server.  Call one ca_process and the other ca_search
+DROP DATABASE IF EXISTS ca_process;
+CREATE DATABASE ca_process CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+DROP DATABASE IF EXISTS ca_search;
+CREATE DATABASE ca_search CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 
 Step 4: Create two MySQL users for these database, one user will need full read/write access to both databases and will be used for the install and update process.  This user will also need load data local infile access (file access) granted to it. The other user can be granted SELECT only and is used just for the web page side.  The same user can be used for both processes if desired though not recommended.
 For the users in our demo system:
