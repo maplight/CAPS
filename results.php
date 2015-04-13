@@ -392,19 +392,21 @@ function display_data($parse_data)
     if(strpos($where, "smry_committees") !== false) {$search_join .= "INNER JOIN smry_committees USING(MapLightCommitteeID) ";}
     if(strpos($where, "smry_propositions") !== false) {$search_join .= "INNER JOIN smry_propositions USING(PropositionID) ";}
 
+    if ($_GET["debug"] == "y") {
+      echo "<b>totals</b>:<br>SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM(SELECT DISTINCT ContributionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContribs<br><pre>";
+      print_r($parse_data[3]);
+      echo "</pre><p>";
+    }
     $result = $web_db->prepare("SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM(SELECT DISTINCT ContributionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContribs");
     $result->execute($parse_data[3]);
     $totals_row = $result->fetchAll(PDO::FETCH_ASSOC); $totals_row = $totals_row[0];
-    $result = $web_db->prepare("SELECT COUNT(DISTINCT ContributionID) AS records FROM contributions_search {$search_join} {$where}");
-    $result->execute($parse_data[3]); 
-    $record_count = $result->fetchAll(PDO::FETCH_ASSOC); $record_count = $record_count[0];
 
-    if($record_count["records"] == 0) {
+    if($totals_row["records"] == 0) {
       echo "Your search did not return any records.";
     } else {
       # Calculate total pages based on display rows
       if(isset($_POST["return_rows"])) {$limit = $_POST["return_rows"];} else {$limit = 10;}
-      $total_pages = intval(($record_count["records"] - 1) / $limit) + 1;
+      $total_pages = intval(($totals_row["records"] - 1) / $limit) + 1;
  
       # Get page # to display
       if(isset($_POST["page"])) {$page = $_POST["page"];} else {$page = 1;}
@@ -422,8 +424,8 @@ function display_data($parse_data)
       # Determine rows being displayed
       $first_row =($page - 1) * $limit + 1;
       $last_row = $first_row + $limit - 1;
-      if($first_row > $record_count["records"]) {$first_row = 1;}
-      if($last_row > $record_count["records"]) {$last_row = $record_count["records"];}
+      if($first_row > $totals_row["records"]) {$first_row = 1;}
+      if($last_row > $totals_row["records"]) {$last_row = $totals_row["records"];}
 
       $sort = "TransactionDateEnd";
       $sort_order = "DESC";
@@ -509,6 +511,12 @@ function display_data($parse_data)
                               "ElectionCycle");
       if(! in_array($sort, $sort_validate)) {$sort = "TransactionDateEnd";}
 
+
+      if ($_GET["debug"] == "y") {
+        echo "<b>records</b>:<br>SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING(ContributionID) INNER JOIN contributions_search ON(contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} {$sort_order} LIMIT " .(($page - 1) * $limit) . ",{$limit}<br><pre>";
+        print_r($parse_data[3]);
+        echo "</pre><p>";
+      }
       $result = $web_db->prepare("SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING(ContributionID) INNER JOIN contributions_search ON(contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} {$sort_order} LIMIT " .(($page - 1) * $limit) . ",{$limit}");
       $result->execute($parse_data[3]);
       $rows_returned = $result->rowCount();
@@ -697,7 +705,7 @@ function display_data($parse_data)
 
       echo "</div> <!-- end filter_box -->";
 
-      echo "<div class=\"font_input\">Showing <strong>" . number_format($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format($record_count["records"], 0, ".", ",") . "</strong> rows ";
+      echo "<div class=\"font_input\">Showing <strong>" . number_format($first_row, 0, ".", ",") . "</strong> to <strong>" . number_format($last_row, 0, ".", ",") . "</strong> of <strong>" . number_format($totals_row["records"], 0, ".", ",") . "</strong> rows ";
       $field_msg = "Show more fields";
       if($field_set == "Show more fields") {$field_msg = "Show fewer fields";}
       echo "<input type=\"submit\" name=\"fields\" value=\"{$field_msg}\" id=\"caps_field_btn\">";
@@ -719,7 +727,7 @@ function display_data($parse_data)
       echo "</thead>";
       echo "<tbody>";
 
-      foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
+      while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         echo "<tr>";
         $count = 1;
         foreach ($fields as $field) {
