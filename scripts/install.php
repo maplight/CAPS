@@ -69,7 +69,7 @@ $query = "SELECT cal_access_candidates_committees.session, cal_access_candidates
             WHERE ISNULL(cal_access_committees.filer_id)";
 $result = $script_db->prepare($query);
 $result->execute();
-foreach ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
   $session = $row["session"];
   $filer_id = $row["filer_id"];
   get_committee_information($session, $filer_id, 1);
