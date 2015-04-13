@@ -5,6 +5,9 @@ require("cal_access_scraper.inc");
 
 # check to see if script is running, do not run if it is
 $ps_check = trim(shell_exec("ps aux | grep 'php update_data.php' | grep -v grep | wc -l"));
+
+echo $ps_check . "\n";
+
 # If nothing is returned then probably not running in LINUX
 if ($ps_check == "") {$ps_check = 1;}
 

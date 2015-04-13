@@ -76,8 +76,7 @@ while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 }
 
 # Process an update - the processes the ftp data
-#system("php update_data.php");
-system("ps aux");
+system("php update_data.php");
 
 echo "Install complete.... \n";
 
