@@ -41,7 +41,7 @@ echo "Scraping the cal-access data for all sessions (this process can take up to
 # Scrape the cal-access data for all sessions (this process can take up to 8 - 10 hours)
 $result = $script_db->prepare("SELECT session FROM cal_access_sessions ORDER BY session DESC");
 $result->execute();
-while ($row = $result->fetchAll(PDO::FETCH_ASSOC)) {
+while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
   echo "Retrieving data for session " . $row["session"] . "\n";
 #  get_propositions($row["session"], 1);
 #  get_propositions_committees($row["session"], 1);
@@ -76,7 +76,8 @@ while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 }
 
 # Process an update - the processes the ftp data
-system("php update_data.php");
+#system("php update_data.php");
+system("ps aux");
 
 echo "Install complete.... \n";
 
