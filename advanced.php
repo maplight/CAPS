@@ -19,8 +19,8 @@ require("connect.php");
 require("sidebar.php");
 require("results.php");
 
-# remove any potential XSS exploits\
-if (isset($_POST)) {foreach ($_POST as $key => $value) {$_POST[$key] = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);}}
+# remove any potential XSS exploits
+if (isset($_POST)) {foreach ($_POST as $key => $value) {if ($key != "cycles") {$_POST[$key] = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);}}}
 
 # Check for quick search entry
 if (isset($_POST["quick_search"])) {
@@ -217,7 +217,7 @@ if (isset($_POST["quick_search"])) {
             echo "<div class=\"left font_input caps_label4\">Election cycles</div>";
             echo "<div id=\"caps_cycles_box\">";
             if (isset($_POST["cycles"])) {$cycles = $_POST["cycles"];} else {$cycles = array("");}
-            fill_election_cycles($cycles, "");
+            fill_election_cycles($cycles);
             echo "</div> <!-- end caps_cycles_box -->";
 
             echo "<input type=\"submit\" name=\"search_btn\" value=\"Search\" id=\"caps_search_btn2\">";
@@ -241,4 +241,3 @@ if (isset($_POST["quick_search"])) {
 
 </body>
 </html>
-

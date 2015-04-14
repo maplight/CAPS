@@ -392,10 +392,12 @@ function display_data($parse_data)
     if(strpos($where, "smry_committees") !== false) {$search_join .= "INNER JOIN smry_committees USING(MapLightCommitteeID) ";}
     if(strpos($where, "smry_propositions") !== false) {$search_join .= "INNER JOIN smry_propositions USING(PropositionID) ";}
 
-    if ($_GET["debug"] == "y") {
-      echo "<b>totals</b>:<br>SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM(SELECT DISTINCT ContributionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContribs<br><pre>";
-      print_r($parse_data[3]);
-      echo "</pre><p>";
+    if (isset($_POST["debug"])) {
+      if ($_GET["debug"] == "y") {
+        echo "<b>totals</b>:<br>SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM(SELECT DISTINCT ContributionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContribs<br><pre>";
+        print_r($parse_data[3]);
+        echo "</pre><p>";
+      }
     }
     $result = $web_db->prepare("SELECT COUNT(*) AS records, SUM(TransactionAmount) AS total FROM(SELECT DISTINCT ContributionID, TransactionAmount FROM contributions_search {$search_join} {$where}) AS UniqueContribs");
     $result->execute($parse_data[3]);
@@ -511,11 +513,12 @@ function display_data($parse_data)
                               "ElectionCycle");
       if(! in_array($sort, $sort_validate)) {$sort = "TransactionDateEnd";}
 
-
-      if ($_GET["debug"] == "y") {
-        echo "<b>records</b>:<br>SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING(ContributionID) INNER JOIN contributions_search ON(contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} {$sort_order} LIMIT " .(($page - 1) * $limit) . ",{$limit}<br><pre>";
-        print_r($parse_data[3]);
-        echo "</pre><p>";
+      if (isset($_GET["debug"])) {
+        if ($_GET["debug"] == "y") {
+          echo "<b>records</b>:<br>SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING(ContributionID) INNER JOIN contributions_search ON(contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} {$sort_order} LIMIT " .(($page - 1) * $limit) . ",{$limit}<br><pre>";
+          print_r($parse_data[3]);
+          echo "</pre><p>";
+        }
       }
       $result = $web_db->prepare("SELECT contributions.*, ballot_measures FROM contributions LEFT JOIN contributions_grouped USING(ContributionID) INNER JOIN contributions_search ON(contributions.id = contributions_search.id) {$search_join} {$where} GROUP BY ContributionID ORDER BY {$sort} {$sort_order} LIMIT " .(($page - 1) * $limit) . ",{$limit}");
       $result->execute($parse_data[3]);
@@ -799,4 +802,3 @@ function display_tooltip($text, $pos_x, $pos_y, $width, $position)
 {
   echo "<img src=\"img/infotool.png\" class=\"{$position} caps_info\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, '{$text}', {$pos_x}, {$pos_y}, {$width});\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"{$text}\">";
 }
-
