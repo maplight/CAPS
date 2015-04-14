@@ -802,3 +802,16 @@ function display_tooltip($text, $pos_x, $pos_y, $width, $position)
 {
   echo "<img src=\"img/infotool.png\" class=\"{$position} caps_info\" onMouseOver=\"this.src='img/infotool-hover.png'; display_tooltip(event, '{$text}', {$pos_x}, {$pos_y}, {$width});\" onMouseOut=\"this.src='img/infotool.png'; document.getElementById('tooltip').style.display = 'none';\" alt=\"{$text}\">";
 }
+
+
+function filterPostData($inData)
+{
+  foreach ($inData as $key => $value) {
+    if (is_array($value)) {
+      $inData[$key] = filterPostData($value);
+    } else {
+      $inData[$key] = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    }
+  }
+  return $inData;
+}

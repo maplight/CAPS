@@ -20,7 +20,7 @@ require("sidebar.php");
 require("results.php");
 
 # remove any potential XSS exploits
-if (isset($_POST)) {foreach ($_POST as $key => $value) {if ($key != "cycles") {$_POST[$key] = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);}}}
+if (isset($_POST)) {$_POST = filterPostData($_POST);}
 
 # Check for quick search entry
 if (isset($_POST["quick_search"])) {
