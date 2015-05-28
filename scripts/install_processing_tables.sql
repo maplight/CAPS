@@ -234,6 +234,7 @@ CREATE TABLE ca_search.contributions (
   TransactionAmount DOUBLE NOT NULL,
   RecipientCommitteeID BIGINT NULL,
   RecipientCommitteeNameNormalized VARCHAR(200) NOT NULL,
+  RecipientCandidateID BIGINT NOT NULL DEFAULT 0,
   RecipientCandidateNameNormalized VARCHAR(250) NOT NULL,
   RecipientCandidateOffice VARCHAR(50) NOT NULL,
   RecipientCandidateDistrict VARCHAR(50) NOT NULL,
@@ -267,6 +268,7 @@ CREATE TABLE ca_search.contributions (
   KEY ContributionID(ContributionID),
   KEY CandidateContribution(CandidateContribution),
   KEY ElectionCycle(ElectionCycle),
+  KEY RecipientCandidateID(RecipientCandidateID),
   KEY MultiIndex1(Election,Target(20)),
   KEY MultiIndex2(RecipientCommitteeID,RecipientCommitteeNameNormalized(20))
 ) ENGINE = MyISAM;

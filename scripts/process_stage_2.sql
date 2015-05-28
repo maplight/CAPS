@@ -1239,6 +1239,7 @@ insert ca_search.contributions_temp (
   , TransactionAmount
   , RecipientCommitteeID
   , RecipientCommitteeNameNormalized
+  , RecipientCandidateID
   , RecipientCandidateNameNormalized
   , RecipientCandidateOffice
   , RecipientCandidateDistrict
@@ -1269,6 +1270,7 @@ select
   , TransactionAmount
   , RecipientCommitteeID
   , RecipientCommitteeNameNormalized
+  , RecipientCandidateID
   , RecipientCandidateNameNormalized
   , RecipientCandidateOffice
   , RecipientCandidateDistrict
