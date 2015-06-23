@@ -46,8 +46,8 @@ while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
   get_propositions_committees($row["session"], 1);
   get_candidate_names($row["session"], 1);
   get_candidate_data($row["session"], 1);
-  $result = $script_db->prepare("UPDATE cal_access_sessions SET last_ran = NOW() WHERE session = ?");
-  $result->execute(array($row["session"]));
+  $result2 = $script_db->prepare("UPDATE cal_access_sessions SET last_ran = NOW() WHERE session = ?");
+  $result2->execute(array($row["session"]));
 }
 
 echo "check for missing proposition committes \n";
