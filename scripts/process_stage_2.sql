@@ -1,4 +1,4 @@
-truncate table prop_filer_session_name_forms;
+truncate table prop_filer_session_name_forms;~
 insert into prop_filer_session_name_forms
 select
     ftp_filer_filings.filer_id
@@ -33,9 +33,9 @@ group by
   , ftp_filer_filings.session_id
   , ftp_cvr_campaign_disclosure.filer_naml
   , ftp_cvr_campaign_disclosure.form_type
-;
+;~
 
-truncate table prop_filer_sessions;
+truncate table prop_filer_sessions;~
 insert into prop_filer_sessions
 select
     prop_filer_session_name_forms.filer_id
@@ -51,10 +51,10 @@ from
 group by
     prop_filer_session_name_forms.filer_id
   , prop_filer_session_name_forms.session_id
-;
+;~
 
-drop table if exists contributions_full_temp;
-create table contributions_full_temp like contributions_full;
+drop table if exists contributions_full_temp;~
+create table contributions_full_temp like contributions_full;~
 
 insert into contributions_full_temp (
     Form
@@ -180,7 +180,7 @@ from
   left join prop_filer_sessions
     on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
-;
+;~
 
 insert into contributions_full_temp (
     Form
@@ -302,7 +302,7 @@ from
   left join prop_filer_sessions
     on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
-;
+;~
 
 insert into contributions_full_temp (
     Form
@@ -435,7 +435,7 @@ FROM
     on ftp_filer_filings.filer_id = prop_filer_sessions.filer_id
     and ftp_filer_filings.session_id = prop_filer_sessions.session_id
   left join filer_ids on ftp_filer_filings.filer_id = filer_ids.filer_id
-;
+;~
 
 insert into contributions_full_temp (
     Form
@@ -531,7 +531,7 @@ from
 where
   contributions.form_type in ('A','C')
   and contributions.line_item = 2
-;
+;~
 
 update
   filing_ids a
@@ -546,7 +546,7 @@ update
       on a.filing_id = b.FilingID
       and a.amend_id_to_use = b.AmendID
 set a.loan_total_from_itemized = b.Amount
-;
+;~
 update
   filing_ids a
   join ftp_smry b
@@ -556,7 +556,7 @@ set a.loan_total_from_summary = b.amount_a
 where
   b.form_type = 'B1'
   and b.line_item = '1'
-;
+;~
 
 insert into contributions_full_temp (
     Form
@@ -654,7 +654,7 @@ where
   and contributions.line_item = 1
   and round(ifnull(filing_ids.loan_total_from_summary,0)) - round(ifnull(filing_ids.loan_total_from_itemized,0)) > 0
   and ifnull(filing_ids.loan_total_from_summary,0) <> 0
-;
+;~
 
 update
   contributions_full_temp a
@@ -664,16 +664,16 @@ update
 set
     a.RecipientCandidateOffice501Code = b.office_501_code
   , a.RecipientCandidateOffice501Custom = b.office_501_custom
-;
+;~
 
 update contributions_full_temp
 set IsEmployee = 'Y'
 where
   Unitemized = 'Y'
   or DonorCommitteeEntity = 'IND'
-;
+;~
 
-truncate table contribution_ids;
+truncate table contribution_ids;~
 insert contribution_ids (
     FilingID
   , AmendID
@@ -688,21 +688,21 @@ select distinct
   , RecType
   , Schedule
 from contributions_full_temp
-;
+;~
 
 update
   contributions_full_temp a
   join contribution_ids b using (FilingID, AmendID, LineItem, RecType, Schedule)
 set a.ContributionID = b.ContributionID
-;
+;~
 
-set @CurrentYear = year(current_date);
+set @CurrentYear = year(current_date);~
 update contributions_full_temp
 set BadElectionCycle = 'Y'
 where
   ElectionCycle < 2000
   or ElectionCycle > @CurrentYear + 10
-;
+;~
 
 update contributions_full_temp
 set
@@ -716,7 +716,7 @@ set
   , RecipientCommitteeTypeOriginal = RecipientCommitteeType
   , RecipientCandidateNameNormalizedOriginal = RecipientCandidateNameNormalized
   , Election = ifnull(ElectionProp,ElectionCvr)
-;
+;~
 
 update
   contributions_full_temp a
@@ -731,7 +731,7 @@ where
     or a.RecipientCommitteeNameNormalized like '%re_elect%'
     or a.RecipientCommitteeNameNormalized like '%retain%'
     )
-;
+;~
 
 update contributions_full_temp
 set
@@ -746,7 +746,7 @@ where
     or RecipientCommitteeNameNormalized like '%re_elect%'
     or RecipientCommitteeNameNormalized like '%retain%'
     )
-;
+;~
 
 update contributions_full_temp
 set
@@ -786,7 +786,7 @@ set
       else ''
       end
 where RecipientCandidateOfficeNeedsCleanup = 'Y'
-;
+;~
 
 update
   contributions_full_temp a
@@ -795,7 +795,7 @@ set a.RecipientCandidateOffice = b.description
 where
   a.RecipientCandidateOffice = ''
   and b.office_cd_cvr <> 'OTH'
-;
+;~
 
 update contributions_full_temp
 set
@@ -804,7 +804,7 @@ set
 where
   RecipientCandidateOffice = ''
   and RecipientCandidateOffice501Custom <> ''
-;
+;~
 
 update contributions_full_temp
 set
@@ -844,7 +844,7 @@ set
       else ''
       end
 where RecipientCandidateOfficeNeedsCleanup = 'Y'
-;
+;~
 
 update
   contributions_full_temp a
@@ -854,7 +854,7 @@ where
   a.RecipientCandidateOffice = ''
   and a.RecipientCandidateOfficeCvrSoughtOrHeld = 'H'
   and a.RecipientCandidateOfficeCvrCode <> 'OTH'
-;
+;~
 
 update contributions_full_temp
 set
@@ -864,7 +864,7 @@ where
   RecipientCandidateOffice = ''
   and RecipientCandidateOfficeCvrSoughtOrHeld = 'H'
   and RecipientCandidateOfficeCvrCustom <> ''
-;
+;~
 
 update contributions_full_temp
 set
@@ -904,9 +904,9 @@ set
       else ''
       end
 where RecipientCandidateOfficeNeedsCleanup = 'Y'
-;
+;~
 
-drop table if exists tmp_committees_with_multiple_types;
+drop table if exists tmp_committees_with_multiple_types;~
 create table tmp_committees_with_multiple_types
 select
     RecipientCommitteeID
@@ -916,14 +916,14 @@ select
 from contributions_full_temp
 group by RecipientCommitteeID
 having RecipientCommitteeTypes like '%,%'
-;
+;~
 
 alter table tmp_committees_with_multiple_types
   add column BiggestNonBlankType char(1) not null default ''
 , add primary key (RecipientCommitteeID)
-;
+;~
 
-drop table if exists tmp_committee_types_with_multiple_types;
+drop table if exists tmp_committee_types_with_multiple_types;~
 create table tmp_committee_types_with_multiple_types
 select
     a.RecipientCommitteeID
@@ -938,11 +938,11 @@ group by
     a.RecipientCommitteeID
   , b.Amount
   , a.RecipientCommitteeType
-;
+;~
 
 alter table tmp_committee_types_with_multiple_types
 add primary key (RecipientCommitteeID, RecipientCommitteeType)
-;
+;~
 
 update tmp_committees_with_multiple_types a
 set a.BiggestNonBlankType = (
@@ -954,23 +954,23 @@ set a.BiggestNonBlankType = (
   order by b.Amount desc, b.RecipientCommitteeType
   limit 1
   )
-;
+;~
 
 update
   contributions_full_temp a
   join tmp_committees_with_multiple_types b using (RecipientCommitteeID)
 set a.RecipientCommitteeType = b.BiggestNonBlankType
 where a.RecipientCommitteeType = ''
-;
+;~
 
 update tmp_committees_with_multiple_types
 set RecipientCommitteeTypes = mid(RecipientCommitteeTypes,3,99)
 where left(RecipientCommitteeTypes,2) = ', '
-;
+;~
 
 delete from tmp_committees_with_multiple_types
 where RecipientCommitteeTypes not like '%,%'
-;
+;~
 
 update
   contributions_full_temp a
@@ -982,17 +982,17 @@ set a.RecipientCommitteeType = case
   when b.RecipientCommitteeTypes = 'G, P' then a.RecipientCommitteeType
   else a.RecipientCommitteeType
   end
-;
+;~
 
-drop table if exists tmp_committees_with_multiple_types;
-drop table if exists tmp_committee_types_with_multiple_types;
+drop table if exists tmp_committees_with_multiple_types;~
+drop table if exists tmp_committee_types_with_multiple_types;~
 
 update contributions_full_temp
 set BallotMeasureCommittee = 'Y'
 where
   RecipientCommitteeNameNormalized like '%ballot%'
   or RecipientCommitteeType = 'B'
-;
+;~
 
 update contributions_full_temp
 set OfficeHolderCommittee = 'Y'
@@ -1000,25 +1000,25 @@ where
   RecipientCommitteeNameNormalized like '%office%holder%'
   or RecipientCommitteeNameNormalized like '% oh com%'
   or RecipientCommitteeNameNormalized like '% oh account%'
-;
+;~
 
 update contributions_full_temp
 set LegalDefenseCommittee = 'Y'
 where
   RecipientCommitteeNameNormalized like '%legal def%'
-;
+;~
 
 update contributions_full_temp
 set
     RecipientCandidateNameNormalized = ''
   , RecipientCandidateOffice = ''
 where HasProposition = 'Y'
-;
+;~
 
 update contributions_full_temp
 set CandidateControlledCommittee = 'N'
 where RecipientCommitteeType in ('P','G','B')
-;
+;~
 
 update contributions_full_temp
 set CandidateElectionCommittee = 'N'
@@ -1026,7 +1026,7 @@ where
   LegalDefenseCommittee = 'Y'
   or OfficeHolderCommittee = 'Y'
   or BallotMeasureCommittee = 'Y'
-;
+;~
 
 update contributions_full_temp
 set IncludedSchedule = 'N'
@@ -1051,12 +1051,12 @@ where
     and Form = 'F460'
     and Schedule in ('A','B1','C')
     )
-;
+;~
 
 update contributions_full_temp
 set ForgivenLoan = 'Y'
 where TranType = 'F'
-;
+;~
 
 update
   contributions_full_temp a
@@ -1073,7 +1073,7 @@ where
        b.text4000 like '%forg_v%loan%'
     or b.text4000 like '%loan%forg_v%'
     )
-;
+;~
 
 update contributions_full_temp
 set NoNewLoanAmount = 'Y'
@@ -1083,14 +1083,14 @@ where
   and Schedule = 'B1'
   and TransactionAmount = 0
   and LoanPreExistingBalance > 0
-;
+;~
 
 update contributions_full_temp
 set TransferNotOriginal = 'Y'
 where
   TranType = 'X'
   and CandidateControlledCommittee = 'Y'
-;
+;~
 
 update contributions_full_temp
 set CandidateContribution = 'Y'
@@ -1102,24 +1102,24 @@ where
   and CandidateElectionCommittee = 'Y'
   and RecipientCommitteeEntity not in ('BMC', 'MDI', 'SMO')
   and (RecipientCommitteeEntity in ('CAO', 'CTL') or RecipientCandidateNameNormalized <> '')
-;
+;~
 
 update contributions_full_temp
 set BallotMeasureContribution = 'Y'
 where
   IncludedSchedule = 'Y'
   and HasProposition = 'Y'
-;
+;~
 
-drop table if exists tmp_prop_committees;
+drop table if exists tmp_prop_committees;~
 create table tmp_prop_committees
 select distinct RecipientCommitteeID, ElectionCycle, Election, Target, `Position`
 from contributions_full_temp
 where BallotMeasureContribution = 'Y'
-;
+;~
 alter table tmp_prop_committees
 add primary key (RecipientCommitteeID, ElectionCycle, Election, Target, `Position`)
-;
+;~
 update
   contributions_full_temp a
   join tmp_prop_committees b
@@ -1130,8 +1130,8 @@ update
     and a.`Position` = b.`Position`
 set a.AlliedCommittee = 'Y'
 where a.BallotMeasureContribution = 'Y'
-;
-drop table if exists tmp_prop_committees;
+;~
+drop table if exists tmp_prop_committees;~
 
 update contributions_full_temp
 set StateOffice = 'Y'
@@ -1154,7 +1154,7 @@ where
     or RecipientCandidateOffice like '%board of eq%'
     or RecipientCandidateOffice like '%boe%'
     )
-;
+;~
 
 update contributions_full_temp
 set LocalOffice = 'Y'
@@ -1175,7 +1175,7 @@ where
     or RecipientCandidateOffice like '%city attorn%y%'
     or RecipientCandidateOffice like '%district attorn%y%'
     )
-;
+;~
 
 update contributions_full_temp
 set StateOffice = 'Y'
@@ -1200,7 +1200,7 @@ where
     or RecipientCommitteeNameNormalized like '%board of eq%'
     or RecipientCommitteeNameNormalized like '%boe%'
     )
-;
+;~
 
 update contributions_full_temp
 set LocalOffice = 'Y'
@@ -1223,13 +1223,13 @@ where
     or RecipientCommitteeNameNormalized like '%city attorn%y%'
     or RecipientCommitteeNameNormalized like '%district attorn%y%'
     )
-;
+;~
 
-drop table if exists contributions_full;
-rename table contributions_full_temp to contributions_full;
+drop table if exists contributions_full;~
+rename table contributions_full_temp to contributions_full;~
 
-drop table if exists ca_search.contributions_temp;
-create table ca_search.contributions_temp like ca_search.contributions;
+drop table if exists ca_search.contributions_temp;~
+create table ca_search.contributions_temp like ca_search.contributions;~
 insert ca_search.contributions_temp (
     TransactionType
   , ElectionCycle
@@ -1301,5 +1301,5 @@ where
   and TransferNotOriginal = 'N'
   and (StateOffice = 'Y' or LocalOffice = 'N')
   and not (Unitemized = 'Y' and TransactionAmount = 0)
-;
+;~
 

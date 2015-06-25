@@ -1,4 +1,4 @@
-truncate table california_data_office_codes;
+truncate table california_data_office_codes;~
 insert california_data_office_codes (office_cd_cvr, description, region)
 select 'GOV', 'Governor', 'Statewide' union
 select 'LTG', 'Lieutenant Governor', 'Statewide' union
@@ -31,9 +31,9 @@ select 'SHC', 'Sheriff-Coroner', 'City/County/Local' union
 select 'SCJ', 'Superior Court Judge', 'City/County/Local' union
 select 'TRS', 'Local Treasurer', 'City/County/Local' union
 select 'OTH', 'Other', 'Miscellaneous/Other'
-;
+;~
 
-drop table if exists temp_501_codes;
+drop table if exists temp_501_codes;~
 create table temp_501_codes
 select
     code_id
@@ -53,22 +53,22 @@ from ftp_lookup_codes
 where
   code_type = 30000
   and code_id > 30000
-;
+;~
 update
   california_data_office_codes a
   join temp_501_codes b on a.description = b.code_desc_new
 set a.office_cd_501 = b.code_id
-;
+;~
 insert california_data_office_codes (office_cd_501, description)
 select b.code_id, b.code_desc
 from
   temp_501_codes b
   left join california_data_office_codes a on a.description = b.code_desc_new
 where a.description is null
-;
-drop table if exists temp_501_codes;
+;~
+drop table if exists temp_501_codes;~
 
-truncate table filer_ids;
+truncate table filer_ids;~
 insert filer_ids (filer_id, max_rpt_end)
 select ftp_filer_filings.filer_id
   , max(str_to_date(
@@ -85,36 +85,36 @@ from
     on disclosure_filer_ids.filer_id = ftp_filer_filings.filer_id
     and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
 group by ftp_filer_filings.filer_id
-;
+;~
 
-truncate table table_filing_ids;
+truncate table table_filing_ids;~
 insert table_filing_ids (OriginTable, filing_id, amend_id)
 select 'rcpt', filing_id, max(amend_id)
 from ftp_rcpt
 group by filing_id
-;
+;~
 insert table_filing_ids (OriginTable, filing_id, amend_id)
 select 'loan', filing_id, max(amend_id)
 from ftp_loan
 group by filing_id
-;
+;~
 insert table_filing_ids (OriginTable, filing_id, amend_id)
 select 's497', filing_id, max(amend_id)
 from ftp_s497
 group by filing_id
-;
+;~
 insert table_filing_ids (OriginTable, filing_id, amend_id)
 select 'smry', filing_id, max(amend_id) as amend_id_to_use
 from ftp_smry
 group by filing_id
-;
+;~
 insert table_filing_ids (OriginTable, filing_id, amend_id)
 select 'cvr', filing_id, max(amend_id) as amend_id_to_use
 from ftp_cvr_campaign_disclosure
 group by filing_id
-;
+;~
 
-truncate table filing_ids;
+truncate table filing_ids;~
 insert filing_ids (
     filing_id
   , amend_id_to_use
@@ -134,9 +134,9 @@ select
   , max(if(OriginTable='cvr',amend_id,null))
 from table_filing_ids
 group by filing_id
-;
+;~
 
-truncate table disclosure_filer_ids;
+truncate table disclosure_filer_ids;~
 insert disclosure_filer_ids (disclosure_filer_id, filer_id)
 select
     ftp_cvr_campaign_disclosure.filer_id as disclosure_filer_id
@@ -147,9 +147,9 @@ from
     on ftp_cvr_campaign_disclosure.filer_id = ftp_filer_xref.xref_id
     and ftp_filer_xref.xref_id <> 0
 group by ftp_cvr_campaign_disclosure.filer_id
-;
+;~
 
-truncate table f501_502_cleaned;
+truncate table f501_502_cleaned;~
 insert f501_502_cleaned (
     filing_id
   , amend_id
@@ -176,21 +176,21 @@ select
   , cand_namf
   , cand_naml
 from ftp_f501_502
-;
-set @CurrentYear = year(current_date);
+;~
+set @CurrentYear = year(current_date);~
 delete from f501_502_cleaned
 where
   form_type <> 'F501'
   or session < 2000
   or session > @CurrentYear + 10
   or filer_id <= 0
-;
+;~
 update f501_502_cleaned
 set rpt_date = '1950-01-01'
 where rpt_date is null
-;
+;~
 
-truncate table candidate_sessions;
+truncate table candidate_sessions;~
 insert candidate_sessions (
     candidate_id
   , session
@@ -233,10 +233,10 @@ group by
     aa.filer_id
   , aa.session
   , aa.office_cd
-;
+;~
 
 /* get candidates from scraped table */
-truncate table candidate_ids;
+truncate table candidate_ids;~
 insert candidate_ids (candidate_id, number_of_names, last_session)
 select
     id as candidate_id
@@ -244,14 +244,14 @@ select
   , max(session) as last_session
 from cal_access_candidates
 group by id
-;
+;~
 
 /* updated those candidates with their name from their most recent session */
 update
   candidate_ids a
   join cal_access_candidates b on a.candidate_id = b.id and a.last_session = b.session
 set a.candidate_name = b.name
-;
+;~
 
 /* append candidate_ids for committees */
 update
@@ -262,17 +262,17 @@ update
     group by filer_id
     ) b using (filer_id)
 set a.candidate_id = b.id
-;
+;~
 
 /* update candidate name for committees */
 update
   filer_ids a
   join candidate_ids b using (candidate_id)
 set a.candidate_name = b.candidate_name
-;
+;~
 
 /* set up the table holding the candidate name possibilities for every filing/amendment */
-truncate table filing_amends;
+truncate table filing_amends;~
 insert into filing_amends (
     filing_id
   , amend_id
@@ -301,5 +301,5 @@ from
     and ftp_cvr_campaign_disclosure.form_type = ftp_filer_filings.form_id
     and ftp_cvr_campaign_disclosure.amend_id = ftp_filer_filings.filing_sequence
   left join filer_ids on ftp_filer_filings.filer_id = filer_ids.filer_id
-;
+;~
 

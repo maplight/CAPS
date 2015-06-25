@@ -50,4 +50,3 @@ echo "Update done... \n";
 # release the lock file 
 ftruncate($lockFile, 0);
 flock($lockFile, LOCK_UN);
-

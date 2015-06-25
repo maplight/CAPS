@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS cal_access_candidates;
+DROP TABLE IF EXISTS cal_access_candidates;~
 CREATE TABLE cal_access_candidates (
   session smallint(6) NOT NULL,
   name varchar(100) NOT NULL,
@@ -9,9 +9,9 @@ CREATE TABLE cal_access_candidates (
   KEY name (name(10)),
   KEY id (id),
   KEY party (party(10))
-);
+);~
 
-DROP TABLE IF EXISTS cal_access_candidates_committees;
+DROP TABLE IF EXISTS cal_access_candidates_committees;~
 CREATE TABLE cal_access_candidates_committees (
   session smallint(6) NOT NULL,
   id bigint(20) NOT NULL,
@@ -20,9 +20,9 @@ CREATE TABLE cal_access_candidates_committees (
   KEY id (id),
   KEY filer_id (id),
   KEY multi_01 (filer_id,session)
-);
+);~
 
-DROP TABLE IF EXISTS cal_access_candidates_names;
+DROP TABLE IF EXISTS cal_access_candidates_names;~
 CREATE TABLE cal_access_candidates_names (
   session smallint(6) NOT NULL,
   id bigint(20) NOT NULL,
@@ -30,9 +30,9 @@ CREATE TABLE cal_access_candidates_names (
   KEY session (session),
   KEY id (id),
   KEY name (name(10))
-);
+);~
 
-DROP TABLE IF EXISTS cal_access_candidates_races;
+DROP TABLE IF EXISTS cal_access_candidates_races;~
 CREATE TABLE cal_access_candidates_races (
   session smallint(6) NOT NULL,
   id bigint(20) NOT NULL,
@@ -45,9 +45,9 @@ CREATE TABLE cal_access_candidates_races (
   KEY election_id (election_id),
   KEY office (office),
   KEY result (result)
-);
+);~
 
-DROP TABLE IF EXISTS cal_access_candidates_spending_limits;
+DROP TABLE IF EXISTS cal_access_candidates_spending_limits;~
 CREATE TABLE cal_access_candidates_spending_limits (
   session smallint(6) NOT NULL,
   id bigint(20) NOT NULL,
@@ -56,9 +56,9 @@ CREATE TABLE cal_access_candidates_spending_limits (
   KEY session (session),
   KEY id (id),
   KEY election (election(10))
-);
+);~
 
-DROP TABLE IF EXISTS cal_access_committees;
+DROP TABLE IF EXISTS cal_access_committees;~
 CREATE TABLE cal_access_committees (
   session smallint(6) NOT NULL,
   name varchar(250) NOT NULL,
@@ -96,9 +96,9 @@ CREATE TABLE cal_access_committees (
   KEY late_expenditures_made (late_expenditures_made),
   KEY status (status(10)),
   KEY last_date (last_date)
-);
+);~
 
-DROP TABLE IF EXISTS cal_access_committees_names;
+DROP TABLE IF EXISTS cal_access_committees_names;~
 CREATE TABLE cal_access_committees_names (
   session smallint(6) NOT NULL,
   filer_id bigint(20) NOT NULL,
@@ -106,9 +106,9 @@ CREATE TABLE cal_access_committees_names (
   KEY session (session),
   KEY name (name(10)),
   KEY filer_id (filer_id)
-);
+);~
 
-DROP TABLE IF EXISTS cal_access_elections;
+DROP TABLE IF EXISTS cal_access_elections;~
 CREATE TABLE cal_access_elections (
   election_id bigint(20) NOT NULL AUTO_INCREMENT,
   date date NOT NULL,
@@ -121,9 +121,9 @@ CREATE TABLE cal_access_elections (
   KEY special (special),
   KEY election_type (election_type),
   KEY office (office)
-);
+);~
 
-DROP TABLE IF EXISTS cal_access_propositions;
+DROP TABLE IF EXISTS cal_access_propositions;~
 CREATE TABLE cal_access_propositions (
   session smallint(6) NOT NULL,
   proposition_id bigint(20) NOT NULL,
@@ -134,9 +134,9 @@ CREATE TABLE cal_access_propositions (
   KEY proposition_id (proposition_id),
   KEY election_date (election_date),
   KEY name (name(10))
-);
+);~
 
-DROP TABLE IF EXISTS cal_access_propositions_committees;
+DROP TABLE IF EXISTS cal_access_propositions_committees;~
 CREATE TABLE cal_access_propositions_committees (
   session smallint(6) NOT NULL,
   proposition_id bigint(20) NOT NULL,
@@ -145,4 +145,4 @@ CREATE TABLE cal_access_propositions_committees (
   KEY session (session),
   KEY proposition_id (proposition_id),
   KEY filer_id (filer_id)
-);
+);~

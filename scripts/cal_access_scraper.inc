@@ -13,10 +13,11 @@ function process_sql_file($filename)
 
     $sql_contents = file_get_contents($filename);
     $sql_contents = rtrim(rtrim($sql_contents), ";");
-    $sql_contents = preg_split("/;(\n|\r)/", $sql_contents);
+    $sql_contents = explode(";~", $sql_contents);
 
     foreach ($sql_contents as $query) {
         if($query){
+            $query .= ";";
             $result = $script_db->prepare($query);
             $result->execute();
             if (!$result)
