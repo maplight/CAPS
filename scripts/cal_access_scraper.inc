@@ -20,7 +20,7 @@ function process_sql_file($filename)
                 if (trim($sql_str) != "") {
                     $result = $script_db->prepare($sql_str);
                     $result->execute();
-                    if (!$result)
+                    if (!$result) {
                         echo "Error on import of " . $sql_str . "\n";
                     }
                 }
@@ -33,7 +33,7 @@ function process_sql_file($filename)
     if (trim($sql_str) != "") {
         $result = $script_db->prepare($sql_str);
         $result->execute();
-        if (!$result)
+        if (!$result) {
             echo "Error on import of " . $sql_str . "\n";
         }
     }

@@ -319,4 +319,3 @@ from
     and ftp_cvr_campaign_disclosure.amend_id = ftp_filer_filings.filing_sequence
   left join filer_ids on ftp_filer_filings.filer_id = filer_ids.filer_id
 ;
-
