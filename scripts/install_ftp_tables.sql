@@ -1,12 +1,14 @@
-DROP TABLE IF EXISTS ftp_acronyms;~
+DROP TABLE IF EXISTS ftp_acronyms;
+
 CREATE TABLE ftp_acronyms (
   acronym VARCHAR(255) DEFAULT NULL,
   stands_for VARCHAR(255) DEFAULT NULL,
   effect_dt VARCHAR(255) DEFAULT NULL,
   a_desc VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_address;~
+DROP TABLE IF EXISTS ftp_address;
+
 CREATE TABLE ftp_address (
   adrid VARCHAR(255) DEFAULT NULL,
   city VARCHAR(255) DEFAULT NULL,
@@ -15,9 +17,10 @@ CREATE TABLE ftp_address (
   phon VARCHAR(255) DEFAULT NULL,
   fax VARCHAR(255) DEFAULT NULL,
   email VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_ballot_measures;~
+DROP TABLE IF EXISTS ftp_ballot_measures;
+
 CREATE TABLE ftp_ballot_measures (
   election_date VARCHAR(255) DEFAULT NULL,
   filer_id VARCHAR(255) DEFAULT NULL,
@@ -25,9 +28,10 @@ CREATE TABLE ftp_ballot_measures (
   measure_name VARCHAR(255) DEFAULT NULL,
   measure_short_name VARCHAR(255) DEFAULT NULL,
   jurisdiction VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_cvr2_campaign_disclosure;~
+DROP TABLE IF EXISTS ftp_cvr2_campaign_disclosure;
+
 CREATE TABLE ftp_cvr2_campaign_disclosure (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -67,9 +71,10 @@ CREATE TABLE ftp_cvr2_campaign_disclosure (
   bal_num VARCHAR(255) DEFAULT NULL,
   bal_juris VARCHAR(255) DEFAULT NULL,
   sup_opp_cd VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_cvr2_lobby_disclosure;~
+DROP TABLE IF EXISTS ftp_cvr2_lobby_disclosure;
+
 CREATE TABLE ftp_cvr2_lobby_disclosure (
   amend_id VARCHAR(255) DEFAULT NULL,
   entity_cd VARCHAR(255) DEFAULT NULL,
@@ -84,9 +89,10 @@ CREATE TABLE ftp_cvr2_lobby_disclosure (
   line_item VARCHAR(255) DEFAULT NULL,
   rec_type VARCHAR(255) DEFAULT NULL,
   tran_id VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_cvr2_registration;~
+DROP TABLE IF EXISTS ftp_cvr2_registration;
+
 CREATE TABLE ftp_cvr2_registration (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -100,9 +106,10 @@ CREATE TABLE ftp_cvr2_registration (
   enty_namf VARCHAR(255) DEFAULT NULL,
   enty_namt VARCHAR(255) DEFAULT NULL,
   enty_nams VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_cvr2_so;~
+DROP TABLE IF EXISTS ftp_cvr2_so;
+
 CREATE TABLE ftp_cvr2_so (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -137,9 +144,10 @@ CREATE TABLE ftp_cvr2_so (
   sup_opp_cd VARCHAR(255) DEFAULT NULL,
   year_elect VARCHAR(255) DEFAULT NULL,
   pof_title VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_cvr3_verification_info;~
+DROP TABLE IF EXISTS ftp_cvr3_verification_info;
+
 CREATE TABLE ftp_cvr3_verification_info (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -154,9 +162,10 @@ CREATE TABLE ftp_cvr3_verification_info (
   sig_namf VARCHAR(255) DEFAULT NULL,
   sig_namt VARCHAR(255) DEFAULT NULL,
   sig_nams VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_cvr_campaign_disclosure;~
+DROP TABLE IF EXISTS ftp_cvr_campaign_disclosure;
+
 CREATE TABLE ftp_cvr_campaign_disclosure (
   filing_id VARCHAR(255) NOT NULL DEFAULT '',
   amend_id VARCHAR(255) NOT NULL DEFAULT '',
@@ -251,9 +260,10 @@ CREATE TABLE ftp_cvr_campaign_disclosure (
   KEY form_type (form_type(10)),
   KEY office_cd (office_cd(10)),
   KEY entity_cd (entity_cd(10))
-);~
+);
 
-DROP TABLE IF EXISTS ftp_cvr_e530;~
+DROP TABLE IF EXISTS ftp_cvr_e530;
+
 CREATE TABLE ftp_cvr_e530 (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -287,9 +297,10 @@ CREATE TABLE ftp_cvr_e530 (
   type_billboards VARCHAR(255) DEFAULT NULL,
   type_other VARCHAR(255) DEFAULT NULL,
   other_desc VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_cvr_lobby_disclosure;~
+DROP TABLE IF EXISTS ftp_cvr_lobby_disclosure;
+
 CREATE TABLE ftp_cvr_lobby_disclosure (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -343,9 +354,10 @@ CREATE TABLE ftp_cvr_lobby_disclosure (
   major_nams VARCHAR(255) DEFAULT NULL,
   rcpcmte_nm VARCHAR(255) DEFAULT NULL,
   rcpcmte_id VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_cvr_registration;~
+DROP TABLE IF EXISTS ftp_cvr_registration;
+
 CREATE TABLE ftp_cvr_registration (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -418,9 +430,10 @@ CREATE TABLE ftp_cvr_registration (
   st_agency VARCHAR(255) DEFAULT NULL,
   lobby_cb VARCHAR(255) DEFAULT NULL,
   l_firm_cb VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_cvr_so;~
+DROP TABLE IF EXISTS ftp_cvr_so;
+
 CREATE TABLE ftp_cvr_so (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -476,9 +489,10 @@ CREATE TABLE ftp_cvr_so (
   sponsor_cb VARCHAR(255) DEFAULT NULL,
   brdbase_cb VARCHAR(255) DEFAULT NULL,
   smcont_qualdt VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_debt;~
+DROP TABLE IF EXISTS ftp_debt;
+
 CREATE TABLE ftp_debt (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -513,9 +527,10 @@ CREATE TABLE ftp_debt (
   bakref_tid VARCHAR(255) DEFAULT NULL,
   xref_schnm VARCHAR(255) DEFAULT NULL,
   xref_match VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_efs_filing_log;~
+DROP TABLE IF EXISTS ftp_efs_filing_log;
+
 CREATE TABLE ftp_efs_filing_log (
   filing_date VARCHAR(255) DEFAULT NULL,
   filingstatus VARCHAR(255) DEFAULT NULL,
@@ -523,9 +538,10 @@ CREATE TABLE ftp_efs_filing_log (
   filer_id VARCHAR(255) DEFAULT NULL,
   form_type VARCHAR(255) DEFAULT NULL,
   error_no VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_expn;~
+DROP TABLE IF EXISTS ftp_expn;
+
 CREATE TABLE ftp_expn (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -580,9 +596,10 @@ CREATE TABLE ftp_expn (
   g_from_e_f VARCHAR(255) DEFAULT NULL,
   xref_schnm VARCHAR(255) DEFAULT NULL,
   xref_match VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_f495p2;~
+DROP TABLE IF EXISTS ftp_f495p2;
+
 CREATE TABLE ftp_f495p2 (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -592,9 +609,10 @@ CREATE TABLE ftp_f495p2 (
   elect_date VARCHAR(255) DEFAULT NULL,
   electjuris VARCHAR(255) DEFAULT NULL,
   contribamt VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_f501_502;~
+DROP TABLE IF EXISTS ftp_f501_502;
+
 CREATE TABLE ftp_f501_502 (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -650,9 +668,10 @@ CREATE TABLE ftp_f501_502 (
   accept_limit_yn VARCHAR(255) DEFAULT NULL,
   did_exceed_dt VARCHAR(255) DEFAULT NULL,
   cntrb_prsnl_fnds_dt VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_f690p2;~
+DROP TABLE IF EXISTS ftp_f690p2;
+
 CREATE TABLE ftp_f690p2 (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -665,31 +684,35 @@ CREATE TABLE ftp_f690p2 (
   chg_parts VARCHAR(255) DEFAULT NULL,
   chg_sects VARCHAR(255) DEFAULT NULL,
   amend_txt1 VARCHAR(330) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filer_acronyms;~
+DROP TABLE IF EXISTS ftp_filer_acronyms;
+
 CREATE TABLE ftp_filer_acronyms (
   acronym VARCHAR(255) DEFAULT NULL,
   filer_id VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filer_address;~
+DROP TABLE IF EXISTS ftp_filer_address;
+
 CREATE TABLE ftp_filer_address (
   filer_id VARCHAR(255) DEFAULT NULL,
   adrid VARCHAR(255) DEFAULT NULL,
   effect_dt VARCHAR(255) DEFAULT NULL,
   add_type VARCHAR(255) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filer_ethics_class;~
+DROP TABLE IF EXISTS ftp_filer_ethics_class;
+
 CREATE TABLE ftp_filer_ethics_class (
   filer_id VARCHAR(255) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL,
   ethics_date VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filer_filings;~
+DROP TABLE IF EXISTS ftp_filer_filings;
+
 CREATE TABLE ftp_filer_filings (
   filer_id bigint(20) NOT NULL,
   filing_id VARCHAR(255) NOT NULL DEFAULT '',
@@ -715,17 +738,19 @@ CREATE TABLE ftp_filer_filings (
   KEY rpt_end (rpt_end(10)),
   KEY session_id (session_id),
   KEY multi_01 (filer_id,session_id)
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filer_interests;~
+DROP TABLE IF EXISTS ftp_filer_interests;
+
 CREATE TABLE ftp_filer_interests (
   filer_id VARCHAR(255) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL,
   interest_cd VARCHAR(255) DEFAULT NULL,
   effect_date VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filer_links;~
+DROP TABLE IF EXISTS ftp_filer_links;
+
 CREATE TABLE ftp_filer_links (
   filer_id_a VARCHAR(255) DEFAULT NULL,
   filer_id_b VARCHAR(255) DEFAULT NULL,
@@ -736,15 +761,17 @@ CREATE TABLE ftp_filer_links (
   effect_dt VARCHAR(255) DEFAULT NULL,
   dominate_filer VARCHAR(255) DEFAULT NULL,
   termination_dt VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filer_status_types;~
+DROP TABLE IF EXISTS ftp_filer_status_types;
+
 CREATE TABLE ftp_filer_status_types (
   status_type VARCHAR(255) DEFAULT NULL,
   status_desc VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filer_to_filer_type;~
+DROP TABLE IF EXISTS ftp_filer_to_filer_type;
+
 CREATE TABLE ftp_filer_to_filer_type (
   filer_id VARCHAR(255) DEFAULT NULL,
   filer_type VARCHAR(255) DEFAULT NULL,
@@ -762,18 +789,20 @@ CREATE TABLE ftp_filer_to_filer_type (
   party_cd VARCHAR(255) DEFAULT NULL,
   county_cd VARCHAR(255) DEFAULT NULL,
   district_cd VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filer_types;~
+DROP TABLE IF EXISTS ftp_filer_types;
+
 CREATE TABLE ftp_filer_types (
   filer_type VARCHAR(255) DEFAULT NULL,
   description VARCHAR(255) DEFAULT NULL,
   grp_type VARCHAR(255) DEFAULT NULL,
   calc_use VARCHAR(255) DEFAULT NULL,
   grace_period VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filer_xref;~
+DROP TABLE IF EXISTS ftp_filer_xref;
+
 CREATE TABLE ftp_filer_xref (
   filer_id bigint(20) DEFAULT NULL,
   xref_id bigint(20) DEFAULT NULL,
@@ -781,9 +810,10 @@ CREATE TABLE ftp_filer_xref (
   migration_source VARCHAR(255) DEFAULT NULL,
   KEY xref_id (xref_id),
   KEY filer_id (filer_id)
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filername;~
+DROP TABLE IF EXISTS ftp_filername;
+
 CREATE TABLE ftp_filername (
   xref_filer_id VARCHAR(255) DEFAULT NULL,
   filer_id VARCHAR(255) DEFAULT NULL,
@@ -802,14 +832,16 @@ CREATE TABLE ftp_filername (
   phon VARCHAR(255) DEFAULT NULL,
   fax VARCHAR(255) DEFAULT NULL,
   email VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filers;~
+DROP TABLE IF EXISTS ftp_filers;
+
 CREATE TABLE ftp_filers (
   filer_id VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filing_period;~
+DROP TABLE IF EXISTS ftp_filing_period;
+
 CREATE TABLE ftp_filing_period (
   period_id VARCHAR(255) DEFAULT NULL,
   start_date VARCHAR(255) DEFAULT NULL,
@@ -818,22 +850,25 @@ CREATE TABLE ftp_filing_period (
   per_grp_type VARCHAR(255) DEFAULT NULL,
   period_desc VARCHAR(255) DEFAULT NULL,
   deadline VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_filings;~
+DROP TABLE IF EXISTS ftp_filings;
+
 CREATE TABLE ftp_filings (
   filing_id VARCHAR(255) DEFAULT NULL,
   filing_type VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_group_types;~
+DROP TABLE IF EXISTS ftp_group_types;
+
 CREATE TABLE ftp_group_types (
   grp_id VARCHAR(255) DEFAULT NULL,
   grp_name VARCHAR(255) DEFAULT NULL,
   grp_desc VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_hdr;~
+DROP TABLE IF EXISTS ftp_hdr;
+
 CREATE TABLE ftp_hdr (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -844,9 +879,10 @@ CREATE TABLE ftp_hdr (
   soft_name VARCHAR(255) DEFAULT NULL,
   soft_ver VARCHAR(255) DEFAULT NULL,
   hdrcomment VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_header;~
+DROP TABLE IF EXISTS ftp_header;
+
 CREATE TABLE ftp_header (
   line_number VARCHAR(255) DEFAULT NULL,
   form_id VARCHAR(255) DEFAULT NULL,
@@ -860,18 +896,20 @@ CREATE TABLE ftp_header (
   column_c VARCHAR(255) DEFAULT NULL,
   show_c VARCHAR(255) DEFAULT NULL,
   show_b VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_image_links;~
+DROP TABLE IF EXISTS ftp_image_links;
+
 CREATE TABLE ftp_image_links (
   img_link_id VARCHAR(255) DEFAULT NULL,
   img_link_type VARCHAR(255) DEFAULT NULL,
   img_id VARCHAR(255) DEFAULT NULL,
   img_type VARCHAR(255) DEFAULT NULL,
   img_dt VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_latt;~
+DROP TABLE IF EXISTS ftp_latt;
+
 CREATE TABLE ftp_latt (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -893,9 +931,10 @@ CREATE TABLE ftp_latt (
   cumbeg_dt VARCHAR(255) DEFAULT NULL,
   memo_code VARCHAR(255) DEFAULT NULL,
   memo_refno VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lccm;~
+DROP TABLE IF EXISTS ftp_lccm;
+
 CREATE TABLE ftp_lccm (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -921,16 +960,18 @@ CREATE TABLE ftp_lccm (
   memo_code VARCHAR(255) DEFAULT NULL,
   memo_refno VARCHAR(255) DEFAULT NULL,
   bakref_tid VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_legislative_sessions;~
+DROP TABLE IF EXISTS ftp_legislative_sessions;
+
 CREATE TABLE ftp_legislative_sessions (
   session_id VARCHAR(255) DEFAULT NULL,
   begin_date VARCHAR(255) DEFAULT NULL,
   end_date VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lemp;~
+DROP TABLE IF EXISTS ftp_lemp;
+
 CREATE TABLE ftp_lemp (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -956,9 +997,10 @@ CREATE TABLE ftp_lemp (
   sub_st VARCHAR(255) DEFAULT NULL,
   sub_zip4 VARCHAR(255) DEFAULT NULL,
   sub_phon VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lexp;~
+DROP TABLE IF EXISTS ftp_lexp;
+
 CREATE TABLE ftp_lexp (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -985,9 +1027,10 @@ CREATE TABLE ftp_lexp (
   memo_code VARCHAR(255) DEFAULT NULL,
   memo_refno VARCHAR(255) DEFAULT NULL,
   bakref_tid VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_loan;~
+DROP TABLE IF EXISTS ftp_loan;
+
 CREATE TABLE ftp_loan (
   filing_id VARCHAR(255) NOT NULL DEFAULT '',
   amend_id VARCHAR(255) NOT NULL DEFAULT '',
@@ -1042,9 +1085,10 @@ CREATE TABLE ftp_loan (
   KEY filing_id (filing_id(10)),
   KEY amend_id (amend_id(10)),
   KEY form_type (form_type(10))
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobby_amendments;~
+DROP TABLE IF EXISTS ftp_lobby_amendments;
+
 CREATE TABLE ftp_lobby_amendments (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -1088,9 +1132,10 @@ CREATE TABLE ftp_lobby_amendments (
   other_desc VARCHAR(255) DEFAULT NULL,
   f606_yes VARCHAR(255) DEFAULT NULL,
   f606_no VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbying_chg_log;~
+DROP TABLE IF EXISTS ftp_lobbying_chg_log;
+
 CREATE TABLE ftp_lobbying_chg_log (
   filer_id VARCHAR(255) DEFAULT NULL,
   change_no VARCHAR(255) DEFAULT NULL,
@@ -1116,9 +1161,10 @@ CREATE TABLE ftp_lobbying_chg_log (
   entity_id VARCHAR(255) DEFAULT NULL,
   responsible_officer VARCHAR(380) DEFAULT NULL,
   effect_dt VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_contributions1;~
+DROP TABLE IF EXISTS ftp_lobbyist_contributions1;
+
 CREATE TABLE ftp_lobbyist_contributions1 (
   filer_id VARCHAR(255) DEFAULT NULL,
   filing_period_start_dt VARCHAR(255) DEFAULT NULL,
@@ -1127,9 +1173,10 @@ CREATE TABLE ftp_lobbyist_contributions1 (
   recipient_name VARCHAR(300) DEFAULT NULL,
   recipient_id VARCHAR(255) DEFAULT NULL,
   amount VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_contributions2;~
+DROP TABLE IF EXISTS ftp_lobbyist_contributions2;
+
 CREATE TABLE ftp_lobbyist_contributions2 (
   filer_id VARCHAR(255) DEFAULT NULL,
   filing_period_start_dt VARCHAR(255) DEFAULT NULL,
@@ -1138,9 +1185,10 @@ CREATE TABLE ftp_lobbyist_contributions2 (
   recipient_name VARCHAR(300) DEFAULT NULL,
   recipient_id VARCHAR(255) DEFAULT NULL,
   amount VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_contributions3;~
+DROP TABLE IF EXISTS ftp_lobbyist_contributions3;
+
 CREATE TABLE ftp_lobbyist_contributions3 (
   filer_id VARCHAR(255) DEFAULT NULL,
   filing_period_start_dt VARCHAR(255) DEFAULT NULL,
@@ -1149,9 +1197,10 @@ CREATE TABLE ftp_lobbyist_contributions3 (
   recipient_name VARCHAR(300) DEFAULT NULL,
   recipient_id VARCHAR(255) DEFAULT NULL,
   amount VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_emp_lobbyist1;~
+DROP TABLE IF EXISTS ftp_lobbyist_emp_lobbyist1;
+
 CREATE TABLE ftp_lobbyist_emp_lobbyist1 (
   lobbyist_id VARCHAR(255) DEFAULT NULL,
   employer_id VARCHAR(255) DEFAULT NULL,
@@ -1159,9 +1208,10 @@ CREATE TABLE ftp_lobbyist_emp_lobbyist1 (
   lobbyist_first_name VARCHAR(400) DEFAULT NULL,
   employer_name VARCHAR(400) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_emp_lobbyist2;~
+DROP TABLE IF EXISTS ftp_lobbyist_emp_lobbyist2;
+
 CREATE TABLE ftp_lobbyist_emp_lobbyist2 (
   lobbyist_id VARCHAR(255) DEFAULT NULL,
   employer_id VARCHAR(255) DEFAULT NULL,
@@ -1169,9 +1219,10 @@ CREATE TABLE ftp_lobbyist_emp_lobbyist2 (
   lobbyist_first_name VARCHAR(400) DEFAULT NULL,
   employer_name VARCHAR(400) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_employer1;~
+DROP TABLE IF EXISTS ftp_lobbyist_employer1;
+
 CREATE TABLE ftp_lobbyist_employer1 (
   employer_id VARCHAR(255) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL,
@@ -1193,9 +1244,10 @@ CREATE TABLE ftp_lobbyist_employer1 (
   qtr_6 VARCHAR(255) DEFAULT NULL,
   qtr_7 VARCHAR(255) DEFAULT NULL,
   qtr_8 VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_employer2;~
+DROP TABLE IF EXISTS ftp_lobbyist_employer2;
+
 CREATE TABLE ftp_lobbyist_employer2 (
   employer_id VARCHAR(255) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL,
@@ -1217,9 +1269,10 @@ CREATE TABLE ftp_lobbyist_employer2 (
   qtr_6 VARCHAR(255) DEFAULT NULL,
   qtr_7 VARCHAR(255) DEFAULT NULL,
   qtr_8 VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_employer3;~
+DROP TABLE IF EXISTS ftp_lobbyist_employer3;
+
 CREATE TABLE ftp_lobbyist_employer3 (
   employer_id VARCHAR(255) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL,
@@ -1241,27 +1294,30 @@ CREATE TABLE ftp_lobbyist_employer3 (
   qtr_6 VARCHAR(255) DEFAULT NULL,
   qtr_7 VARCHAR(255) DEFAULT NULL,
   qtr_8 VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_employer_firms1;~
+DROP TABLE IF EXISTS ftp_lobbyist_employer_firms1;
+
 CREATE TABLE ftp_lobbyist_employer_firms1 (
   employer_id VARCHAR(255) DEFAULT NULL,
   firm_id VARCHAR(255) DEFAULT NULL,
   firm_name VARCHAR(400) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL,
   termination_dt VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_employer_firms2;~
+DROP TABLE IF EXISTS ftp_lobbyist_employer_firms2;
+
 CREATE TABLE ftp_lobbyist_employer_firms2 (
   employer_id VARCHAR(255) DEFAULT NULL,
   firm_id VARCHAR(255) DEFAULT NULL,
   firm_name VARCHAR(400) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL,
   termination_dt VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_firm1;~
+DROP TABLE IF EXISTS ftp_lobbyist_firm1;
+
 CREATE TABLE ftp_lobbyist_firm1 (
   firm_id VARCHAR(255) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL,
@@ -1281,9 +1337,10 @@ CREATE TABLE ftp_lobbyist_firm1 (
   qtr_6 VARCHAR(255) DEFAULT NULL,
   qtr_7 VARCHAR(255) DEFAULT NULL,
   qtr_8 VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_firm2;~
+DROP TABLE IF EXISTS ftp_lobbyist_firm2;
+
 CREATE TABLE ftp_lobbyist_firm2 (
   firm_id VARCHAR(255) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL,
@@ -1303,9 +1360,10 @@ CREATE TABLE ftp_lobbyist_firm2 (
   qtr_6 VARCHAR(255) DEFAULT NULL,
   qtr_7 VARCHAR(255) DEFAULT NULL,
   qtr_8 VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_firm3;~
+DROP TABLE IF EXISTS ftp_lobbyist_firm3;
+
 CREATE TABLE ftp_lobbyist_firm3 (
   firm_id VARCHAR(255) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL,
@@ -1325,9 +1383,10 @@ CREATE TABLE ftp_lobbyist_firm3 (
   qtr_6 VARCHAR(255) DEFAULT NULL,
   qtr_7 VARCHAR(255) DEFAULT NULL,
   qtr_8 VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_firm_employer1;~
+DROP TABLE IF EXISTS ftp_lobbyist_firm_employer1;
+
 CREATE TABLE ftp_lobbyist_firm_employer1 (
   firm_id VARCHAR(255) DEFAULT NULL,
   filing_id VARCHAR(255) DEFAULT NULL,
@@ -1340,9 +1399,10 @@ CREATE TABLE ftp_lobbyist_firm_employer1 (
   cum_total VARCHAR(255) DEFAULT NULL,
   lby_actvty VARCHAR(255) DEFAULT NULL,
   ext_lby_actvty VARCHAR(4000) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_firm_employer2;~
+DROP TABLE IF EXISTS ftp_lobbyist_firm_employer2;
+
 CREATE TABLE ftp_lobbyist_firm_employer2 (
   firm_id VARCHAR(255) DEFAULT NULL,
   filing_id VARCHAR(255) DEFAULT NULL,
@@ -1355,9 +1415,10 @@ CREATE TABLE ftp_lobbyist_firm_employer2 (
   cum_total VARCHAR(255) DEFAULT NULL,
   lby_actvty VARCHAR(255) DEFAULT NULL,
   ext_lby_actvty VARCHAR(4000) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_firm_lobbyist1;~
+DROP TABLE IF EXISTS ftp_lobbyist_firm_lobbyist1;
+
 CREATE TABLE ftp_lobbyist_firm_lobbyist1 (
   lobbyist_id VARCHAR(255) DEFAULT NULL,
   firm_id VARCHAR(255) DEFAULT NULL,
@@ -1365,9 +1426,10 @@ CREATE TABLE ftp_lobbyist_firm_lobbyist1 (
   lobbyist_first_name VARCHAR(400) DEFAULT NULL,
   firm_name VARCHAR(400) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lobbyist_firm_lobbyist2;~
+DROP TABLE IF EXISTS ftp_lobbyist_firm_lobbyist2;
+
 CREATE TABLE ftp_lobbyist_firm_lobbyist2 (
   lobbyist_id VARCHAR(255) DEFAULT NULL,
   firm_id VARCHAR(255) DEFAULT NULL,
@@ -1375,16 +1437,18 @@ CREATE TABLE ftp_lobbyist_firm_lobbyist2 (
   lobbyist_first_name VARCHAR(400) DEFAULT NULL,
   firm_name VARCHAR(400) DEFAULT NULL,
   session_id VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lookup_codes;~
+DROP TABLE IF EXISTS ftp_lookup_codes;
+
 CREATE TABLE ftp_lookup_codes (
   code_type VARCHAR(255) DEFAULT NULL,
   code_id VARCHAR(255) DEFAULT NULL,
   code_desc VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_loth;~
+DROP TABLE IF EXISTS ftp_loth;
+
 CREATE TABLE ftp_loth (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -1406,9 +1470,10 @@ CREATE TABLE ftp_loth (
   cum_amt VARCHAR(255) DEFAULT NULL,
   memo_code VARCHAR(255) DEFAULT NULL,
   memo_refno VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_lpay;~
+DROP TABLE IF EXISTS ftp_lpay;
+
 CREATE TABLE ftp_lpay (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -1436,9 +1501,10 @@ CREATE TABLE ftp_lpay (
   memo_refno VARCHAR(255) DEFAULT NULL,
   bakref_tid VARCHAR(255) DEFAULT NULL,
   emplr_id VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_names;~
+DROP TABLE IF EXISTS ftp_names;
+
 CREATE TABLE ftp_names (
   namid VARCHAR(255) DEFAULT NULL,
   naml VARCHAR(255) DEFAULT NULL,
@@ -1450,9 +1516,10 @@ CREATE TABLE ftp_names (
   namm VARCHAR(255) DEFAULT NULL,
   fullname VARCHAR(255) DEFAULT NULL,
   naml_search VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_rcpt;~
+DROP TABLE IF EXISTS ftp_rcpt;
+
 CREATE TABLE ftp_rcpt (
   filing_id VARCHAR(255) NOT NULL DEFAULT '',
   amend_id VARCHAR(255) NOT NULL DEFAULT '',
@@ -1521,9 +1588,10 @@ CREATE TABLE ftp_rcpt (
   KEY filing_id (filing_id(10)),
   KEY amend_id (amend_id(10)),
   KEY form_type (form_type(10))
-);~
+);
 
-DROP TABLE IF EXISTS ftp_received_filings;~
+DROP TABLE IF EXISTS ftp_received_filings;
+
 CREATE TABLE ftp_received_filings (
   filer_id VARCHAR(255) DEFAULT NULL,
   filing_file_name VARCHAR(255) DEFAULT NULL,
@@ -1532,9 +1600,10 @@ CREATE TABLE ftp_received_filings (
   filing_id VARCHAR(255) DEFAULT NULL,
   form_id VARCHAR(255) DEFAULT NULL,
   receive_comment VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_reports;~
+DROP TABLE IF EXISTS ftp_reports;
+
 CREATE TABLE ftp_reports (
   rpt_id VARCHAR(255) DEFAULT NULL,
   rpt_name VARCHAR(255) DEFAULT NULL,
@@ -1544,9 +1613,10 @@ CREATE TABLE ftp_reports (
   parms_flg_y_n VARCHAR(255) DEFAULT NULL,
   rpt_type VARCHAR(255) DEFAULT NULL,
   parm_definition VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_s401;~
+DROP TABLE IF EXISTS ftp_s401;
+
 CREATE TABLE ftp_s401 (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -1585,9 +1655,10 @@ CREATE TABLE ftp_s401 (
   memo_code VARCHAR(255) DEFAULT NULL,
   memo_refno VARCHAR(255) DEFAULT NULL,
   bakref_tid VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_s496;~
+DROP TABLE IF EXISTS ftp_s496;
+
 CREATE TABLE ftp_s496 (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -1601,9 +1672,10 @@ CREATE TABLE ftp_s496 (
   memo_code VARCHAR(255) DEFAULT NULL,
   memo_refno VARCHAR(255) DEFAULT NULL,
   date_thru VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_s497;~
+DROP TABLE IF EXISTS ftp_s497;
+
 CREATE TABLE ftp_s497 (
   filing_id VARCHAR(255) NOT NULL DEFAULT '',
   amend_id VARCHAR(255) NOT NULL DEFAULT '',
@@ -1650,9 +1722,10 @@ CREATE TABLE ftp_s497 (
   KEY filing_id (filing_id(10)),
   KEY amend_id (amend_id(10)),
   KEY form_type (form_type(10))
-);~
+);
 
-DROP TABLE IF EXISTS ftp_s498;~
+DROP TABLE IF EXISTS ftp_s498;
+
 CREATE TABLE ftp_s498 (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -1691,9 +1764,10 @@ CREATE TABLE ftp_s498 (
   employer VARCHAR(255) DEFAULT NULL,
   occupation VARCHAR(255) DEFAULT NULL,
   selfemp_cb VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_smry;~
+DROP TABLE IF EXISTS ftp_smry;
+
 CREATE TABLE ftp_smry (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -1708,9 +1782,10 @@ CREATE TABLE ftp_smry (
   KEY amend_id (amend_id(10)),
   KEY line_item (line_item(10)),
   KEY amount_c (amount_c(10))
-);~
+);
 
-DROP TABLE IF EXISTS ftp_splt;~
+DROP TABLE IF EXISTS ftp_splt;
+
 CREATE TABLE ftp_splt (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -1720,9 +1795,10 @@ CREATE TABLE ftp_splt (
   elec_date VARCHAR(255) DEFAULT NULL,
   elec_amount VARCHAR(255) DEFAULT NULL,
   elec_code VARCHAR(255) DEFAULT NULL
-);~
+);
 
-DROP TABLE IF EXISTS ftp_text_memo;~
+DROP TABLE IF EXISTS ftp_text_memo;
+
 CREATE TABLE ftp_text_memo (
   filing_id VARCHAR(255) DEFAULT NULL,
   amend_id VARCHAR(255) DEFAULT NULL,
@@ -1731,5 +1807,4 @@ CREATE TABLE ftp_text_memo (
   form_type VARCHAR(255) DEFAULT NULL,
   ref_no VARCHAR(255) DEFAULT NULL,
   text4000 VARCHAR(4000) DEFAULT NULL
-);~
-
+);

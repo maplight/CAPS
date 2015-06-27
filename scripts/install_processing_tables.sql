@@ -1,4 +1,5 @@
-DROP TABLE IF EXISTS california_data_office_codes;~
+DROP TABLE IF EXISTS california_data_office_codes;
+
 CREATE TABLE california_data_office_codes (
   office_code_id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   office_cd_cvr CHAR(3) NULL,
@@ -8,17 +9,19 @@ CREATE TABLE california_data_office_codes (
   UNIQUE KEY office_cd_cvr (office_cd_cvr),
   UNIQUE KEY office_cd_501 (office_cd_501),
   KEY description (description)
-);~
+);
 
-DROP TABLE IF EXISTS candidate_ids;~
+DROP TABLE IF EXISTS candidate_ids;
+
 CREATE TABLE candidate_ids (
   candidate_id BIGINT NOT NULL PRIMARY KEY,
   number_of_names SMALLINT NOT NULL,
   last_session SMALLINT NOT NULL,
   candidate_name VARCHAR(100) NULL
-);~
+);
 
-DROP TABLE IF EXISTS candidate_sessions;~
+DROP TABLE IF EXISTS candidate_sessions;
+
 CREATE TABLE candidate_sessions (
   candidate_id BIGINT NOT NULL,
   session SMALLINT NOT NULL,
@@ -26,9 +29,10 @@ CREATE TABLE candidate_sessions (
   office_501_custom VARCHAR(50) NOT NULL DEFAULT '',
   candidate_name VARCHAR(255) NOT NULL DEFAULT '',
   PRIMARY KEY candidate_session (candidate_id, session)
-);~
+);
 
-DROP TABLE IF EXISTS contribution_ids;~
+DROP TABLE IF EXISTS contribution_ids;
+
 CREATE TABLE contribution_ids (
   ContributionID BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   FilingID BIGINT NOT NULL,
@@ -37,9 +41,10 @@ CREATE TABLE contribution_ids (
   RecType VARCHAR(5) NOT NULL DEFAULT '',
   Schedule VARCHAR(10) NOT NULL DEFAULT '',
   KEY FilingIDAmendIDLineItemRecTypeSchedule (FilingID, AmendID, LineItem, RecType, Schedule)
-);~
+);
 
-DROP TABLE IF EXISTS contributions_full;~
+DROP TABLE IF EXISTS contributions_full;
+
 CREATE TABLE contributions_full (
   TransactionType VARCHAR(100) NOT NULL DEFAULT '',
   Form VARCHAR(10) NOT NULL DEFAULT '',
@@ -127,16 +132,18 @@ CREATE TABLE contributions_full (
   KEY Form (Form),
   KEY Schedule (Schedule),
   KEY FiledDate (FiledDate)
-);~
+);
 
-DROP TABLE IF EXISTS disclosure_filer_ids;~
+DROP TABLE IF EXISTS disclosure_filer_ids;
+
 CREATE TABLE disclosure_filer_ids (
   disclosure_filer_id BIGINT NOT NULL PRIMARY KEY COMMENT 'links to ftp_cvr_campaign_disclosure.filer_id',
   filer_id BIGINT DEFAULT NULL COMMENT 'links to ftp_filer_filings.filer_id',
   KEY filer_id (filer_id)
-);~
+);
 
-DROP TABLE IF EXISTS f501_502_cleaned;~
+DROP TABLE IF EXISTS f501_502_cleaned;
+
 CREATE TABLE f501_502_cleaned (
   filing_id BIGINT NOT NULL,
   amend_id INTEGER NOT NULL,
@@ -151,18 +158,20 @@ CREATE TABLE f501_502_cleaned (
   cand_naml VARCHAR(50) NOT NULL DEFAULT '',
   PRIMARY KEY filing_amend (filing_id, amend_id),
   KEY filer_session_rptdate_filing_amend (filer_id, session, rpt_date, filing_id, amend_id)
-);~
+);
 
-DROP TABLE IF EXISTS filer_ids;~
+DROP TABLE IF EXISTS filer_ids;
+
 CREATE TABLE filer_ids (
   filer_id BIGINT NOT NULL PRIMARY KEY,
   max_rpt_end DATE NULL,
   candidate_id BIGINT NULL,
   candidate_name VARCHAR(100) NULL,
   KEY max_rpt_end (max_rpt_end)
-);~
+);
 
-DROP TABLE IF EXISTS filing_amends;~
+DROP TABLE IF EXISTS filing_amends;
+
 CREATE TABLE filing_amends (
   filing_id BIGINT NOT NULL,
   amend_id INTEGER NOT NULL,
@@ -182,9 +191,10 @@ CREATE TABLE filing_amends (
   display_name VARCHAR(200) NOT NULL DEFAULT '',
   id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   UNIQUE KEY filing_id_amend_id (filing_id, amend_id)
-);~
+);
 
-DROP TABLE IF EXISTS filing_ids;~
+DROP TABLE IF EXISTS filing_ids;
+
 CREATE TABLE filing_ids (
   filing_id BIGINT NOT NULL PRIMARY KEY,
   amend_id_to_use INTEGER NOT NULL,
@@ -195,9 +205,10 @@ CREATE TABLE filing_ids (
   cvr_amend_id INTEGER NULL,
   loan_total_from_itemized DOUBLE NULL,
   loan_total_from_summary DOUBLE NULL
-);~
+);
 
-DROP TABLE IF EXISTS prop_filer_session_name_forms;~
+DROP TABLE IF EXISTS prop_filer_session_name_forms;
+
 CREATE TABLE prop_filer_session_name_forms (
   filer_id BIGINT NOT NULL,
   session_id SMALLINT NOT NULL,
@@ -206,25 +217,28 @@ CREATE TABLE prop_filer_session_name_forms (
   positions TEXT,
   last_filing DATETIME DEFAULT NULL,
   KEY filer_id_session_id (filer_id, session_id)
-);~
+);
 
-DROP TABLE IF EXISTS prop_filer_sessions;~
+DROP TABLE IF EXISTS prop_filer_sessions;
+
 CREATE TABLE prop_filer_sessions (
   filer_id BIGINT NOT NULL,
   session_id SMALLINT NOT NULL,
   committee_name_to_use VARCHAR(255) NULL,
   PRIMARY KEY filer_id_session_id (filer_id, session_id)
-);~
+);
 
-DROP TABLE IF EXISTS table_filing_ids;~
+DROP TABLE IF EXISTS table_filing_ids;
+
 CREATE TABLE table_filing_ids (
   OriginTable VARCHAR(20) NOT NULL,
   filing_id BIGINT NOT NULL,
   amend_id INTEGER NOT NULL,
   PRIMARY KEY OriginTable_filing_id (OriginTable, filing_id)
-);~
+);
 
-DROP TABLE IF EXISTS ca_search.contributions;~
+DROP TABLE IF EXISTS ca_search.contributions;
+
 CREATE TABLE ca_search.contributions (
   TransactionType VARCHAR(100) NOT NULL,
   ElectionCycle SMALLINT NOT NULL,
@@ -271,5 +285,4 @@ CREATE TABLE ca_search.contributions (
   KEY RecipientCandidateID(RecipientCandidateID),
   KEY MultiIndex1(Election,Target(20)),
   KEY MultiIndex2(RecipientCommitteeID,RecipientCommitteeNameNormalized(20))
-) ENGINE = MyISAM;~
-
+) ENGINE = MyISAM;

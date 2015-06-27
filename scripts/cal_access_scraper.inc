@@ -11,17 +11,30 @@ function process_sql_file($filename)
 {
     global $script_db;
 
-    $sql_contents = file_get_contents($filename);
-    $sql_contents = rtrim(rtrim($sql_contents), ";");
-    $sql_contents = explode(";~", $sql_contents);
-
-    foreach ($sql_contents as $query) {
-        if($query){
-            $query .= ";";
-            $result = $script_db->prepare($query);
-            $result->execute();
-            if (!$result)
-                echo "Error on import of " . $query . "\n";
+    $sql_str = "";    
+    $sql_file = fopen($filename, "r");
+    
+    if ($sql_file) {
+        while (($line = fgets($sql_file)) !== false) {
+            if (trim($line) == "") {
+                if (trim($sql_str) != "") {
+                    $result = $script_db->prepare($sql_str);
+                    $result->execute();
+                    if (!$result)
+                        echo "Error on import of " . $sql_str . "\n";
+                    }
+                }
+                $sql_str = "";
+            } else {
+                $sql_str .= $line;
+            }
+        }
+    }
+    if (trim($sql_str) != "") {
+        $result = $script_db->prepare($sql_str);
+        $result->execute();
+        if (!$result)
+            echo "Error on import of " . $sql_str . "\n";
         }
     }
 }
