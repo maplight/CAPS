@@ -93,7 +93,8 @@ from
 group by ftp_filer_filings.filer_id
 ;
 
-truncate table table_filing_ids;~
+truncate table table_filing_ids;
+
 insert table_filing_ids (OriginTable, filing_id, amend_id)
 select 'rcpt', filing_id, max(amend_id)
 from ftp_rcpt
@@ -124,7 +125,8 @@ from ftp_cvr_campaign_disclosure
 group by filing_id
 ;
 
-truncate table filing_ids;~
+truncate table filing_ids;
+
 insert filing_ids (
     filing_id
   , amend_id_to_use
@@ -289,7 +291,8 @@ set a.candidate_name = b.candidate_name
 ;
 
 /* set up the table holding the candidate name possibilities for every filing/amendment */
-truncate table filing_amends;~
+truncate table filing_amends;
+
 insert into filing_amends (
     filing_id
   , amend_id
