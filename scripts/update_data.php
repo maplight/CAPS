@@ -23,6 +23,12 @@ system("php cal_access_data_scraper.php");
 echo "Get the ftp data \n";
 system("php get_ftp_data.php");
 
+echo "Reopen database connection \n";
+$script_db = new PDO("mysql:host={$hostname};dbname=ca_process;charset=utf8", $script_login, $script_pwd);
+$script_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$script_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+echo "Database connection reopened \n";
+
 echo "Process data for contributions table - stage 1 \n";
 process_sql_file("process_stage_1.sql");
 
