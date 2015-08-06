@@ -1,6 +1,6 @@
 <?php
-  $web_login = "caps"; $web_pwd = "caps_dev14";
-  $script_login = "caps_script"; $script_pwd = "97_caps_45";
+  $web_login = "caps"; $web_pwd = "##_caps_password_##";
+  $script_login = "caps_script"; $script_pwd = "##_caps_script_password_##";
   $error_email = "mike@maplight.org";
   $hostname = "localhost";
 
