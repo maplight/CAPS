@@ -1,6 +1,6 @@
 #CAL-ACCESS Campaign Power Search
 
-#### System Overview:
+## System Overview:
 The CAL-ACCESS Search is a series of php web pages with associated images, css, and javascript files, php scripts and sql files.  The php web pages will display and operate the CAL-ACCESS Campaign Power Search web pages.  The scripts and sql files are used to run a first install of the data and to maintain the data.
 
 ## Installation:
