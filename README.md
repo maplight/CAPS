@@ -1,14 +1,14 @@
 #CAL-ACCESS Campaign Power Search
 
-System Overview:
+#### System Overview:
 The CAL-ACCESS Search is a series of php web pages with associated images, css, and javascript files, php scripts and sql files.  The php web pages will display and operate the CAL-ACCESS Campaign Power Search web pages.  The scripts and sql files are used to run a first install of the data and to maintain the data.
 
+## Installation:
 Generally on the first install you will run the install script, which can take up to 10-12 hours to run depending on the bandwidth available as it scrapes web data back to 1999.  Once that is done the update_data script will need to be ran each time the data is ready to be updated.  This script takes about an hour and a half to two hours to run depending on server speed.  I suggest running this script right after http://campaignfinance.cdn.sos.ca.gov/dbwebexport.zip file has finished processing and that a cron is set up to run the update script.
 
 This system will use 2 MySQL databases, one called ca_process and the other called ca_search.  The ca_process database is used to store all of the working date files and temporary processing files.  The ca_search database will hold the final, read-only tables that the web pages require.  If a multiple server setup is used just the ca_search database needs to replicate across the servers and the ca_process database can stay on the master server.
 
 
-## Installation:
 * Step 1: Make sure the following configuration files are in your MySQL server configuration file:
 Under [mysql]
 local-infile = 1
